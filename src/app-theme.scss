@@ -1,0 +1,21 @@
+/*
+    Path: src/app-them.scss
+    Objetive: Create default app theme
+    Author: Esme López
+*/
+
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+// Defining the palette
+$SIPCE-WEB-primary: mat-palette($mat-indigo, 700);
+$SIPCE-WEB-accent: mat-palette($mat-orange, 800);
+
+$SIPCE-WEB-warn: mat-palette($mat-red);
+
+$SIPCE-WEB-theme: mat-light-theme($SIPCE-WEB-primary, $SIPCE-WEB-accent, $SIPCE-WEB-warn);
+
+// Include theme styles for core and each component used in the app.
+@include angular-material-theme($SIPCE-WEB-theme);
+
