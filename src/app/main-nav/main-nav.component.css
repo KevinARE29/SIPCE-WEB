@@ -1,0 +1,42 @@
+/*  
+  Path: app/main-nav/main-nav.component.css
+  Objetive: Define the main nav style
+  Author: Esme López
+*/
+
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 200px;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.container {
+  display: flex;
+}
+
+.username {
+  width: auto;
+}
+
+.avatar {
+  border-radius: 50%;
+  height: 45px;
+}
+
+.logo {
+  height: 45px;
+  margin-left: auto;
+  margin-right: auto;
+}

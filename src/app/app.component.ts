@@ -1,3 +1,9 @@
+/*  
+  Path: app/app.component.ts
+  Objetive: Control main view
+  Author: Esme López
+*/
+
 import { Component } from '@angular/core';
 
 @Component({
