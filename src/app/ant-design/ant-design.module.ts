@@ -9,6 +9,9 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { es_ES } from 'ng-zorro-antd/i18n';
@@ -26,7 +29,10 @@ const ngZorro = [
   HttpClientModule,
   NzAvatarModule,
   NzDropDownModule,
-  NzCheckboxModule
+  NzCheckboxModule,
+  NzInputNumberModule,
+  NzToolTipModule,
+  NzButtonModule
 ];
 
 @NgModule({
