@@ -1,56 +1,69 @@
-<!--  
-  Path: app/main-nav/main-nav.component.html
-  Objetive: Define the main navigation view
-  Author: Esme López 
--->
-
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav 
-    #drawer class="sidenav" fixedInViewport="false"
-      [ngClass]="{hidden: (isHandset$ | async) === false}"
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [opened]="(isHandset$ | async) === false">
-    <mat-toolbar color="primary">
-      <img src="../assets/psychology.png" alt="logo" class="logo">
-    </mat-toolbar>
-    <!-- Sidenav option -->
-    <mat-nav-list>
-      <mat-list-item *ngFor="let route of adminRoutes">
-        <a [routerLink]="route.path"> {{route.text}} </a>
-      </mat-list-item>
-    </mat-nav-list>
-  </mat-sidenav>
-
-  <mat-sidenav-content>
-    <mat-toolbar color="primary">
-      <button
-        type="button"
-        aria-label="Toggle sidenav"
-        mat-icon-button
-        (click)="drawer.toggle()">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
-
-      <span class="spacer"></span>
-
-      <div class="container">
-        <!-- User menu -->
-        <mat-menu #appMenu="matMenu" xPosition="after">
-          <button mat-menu-item>Cambiar contraseña</button>
-          <button mat-menu-item>Cerrar sesión</button>
-        </mat-menu>
-        <span class="spacer"></span>
-        <button mat-icon-button [matMenuTriggerFor]="appMenu" class="username">
-          {{user.username}}
-          <mat-icon>keyboard_arrow_down</mat-icon>
-        </button>
+<nz-layout class="app-layout">
+  <nz-sider class="menu-sidebar"
+            nzCollapsible
+            nzWidth="256px"
+            nzBreakpoint="md"
+            [(nzCollapsed)]="isCollapsed"
+            [nzTrigger]="null">
+    <div class="sidebar-logo">
+      <a href="https://ng.ant.design/" target="_blank">
+        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
+        <h1>Ant Design Of Angular</h1>
+      </a>
+    </div>
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/welcome">Welcome</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a>Monitor</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a>Workplace</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzOpen nzTitle="Form" nzIcon="form">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a>Basic Form</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <div class="app-header">
+        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+            <i class="trigger"
+               nz-icon
+               [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+            ></i>
+        </span>
         
-        <!-- Profile picture -->
-        <img [src]="user.avatar" alt="Profile picture" class="avatar">
+        <span class="user">
+          <a nz-dropdown [nzDropdownMenu]="menu">
+            Username
+            <i nz-icon nzType="down"></i>
+          </a>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item>1st menu item</li>
+              <li nz-menu-item>2nd menu item</li>
+              <li nz-menu-item>3rd menu item</li>
+            </ul>
+          </nz-dropdown-menu>
+          <nz-avatar nzText="U" style="color:#f56a00; background-color:#fde3cf;"></nz-avatar>
+        </span>
       </div>
-      
-    </mat-toolbar>
-    <ng-content></ng-content>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+    </nz-header>
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>
