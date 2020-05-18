@@ -1,7 +1,10 @@
-h1 {
-    text-align: center;
+.policies{
+    margin-top: 10px;
+    padding: 10px;;
 }
 
-nz-input-number {
-    width: 75px;
-}
+h1 { text-align: center; }
+
+nz-input-number { width: 75px; }
+
+/* button{ margin-top: 10px; } */

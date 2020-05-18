@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule }    from '@angular/common/http';
 
 import { AntDesignModule } from '../ant-design/ant-design.module';
 
@@ -12,6 +13,7 @@ import { SecurityPoliciesComponent } from './components/security-policies.compon
   ],
   imports: [
     CommonModule,
+    HttpClientModule,
     AntDesignModule,
     SecurityPoliciesRoutingModule
   ]
