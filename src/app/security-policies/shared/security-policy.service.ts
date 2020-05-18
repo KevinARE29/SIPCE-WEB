@@ -1,3 +1,9 @@
+/* 
+  Path: app/security-policies/shared/security-policy.service.ts
+  Objetive: Define methods to manage data related to security policies
+  Author: Esme López 
+*/
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';

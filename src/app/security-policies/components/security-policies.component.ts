@@ -1,3 +1,9 @@
+/* 
+  Path: app/security-policies/components/security-policies.component.ts
+  Objetive: Define security policies behavior
+  Author: Esme López 
+*/
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 

@@ -1,3 +1,9 @@
+/*  
+  Path: app/security-policies/security-policies.module.ts
+  Objetive: Contains components and modules used for security policies
+  Author: Esme López
+*/
+
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule }    from '@angular/common/http';
