@@ -1,3 +1,9 @@
+/* 
+  Path: app/main-nav/main-nav.component.ts
+  Objetive: Define main navigation behavior
+  Author: Esme López 
+*/
+
 import { Component, OnInit } from '@angular/core';
 
 @Component({

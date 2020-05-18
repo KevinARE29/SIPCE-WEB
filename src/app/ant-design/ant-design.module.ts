@@ -1,3 +1,9 @@
+/*  
+  Path: app/ant-design/ant-design.module.ts
+  Objetive: Contains Ant Design modules used in the app
+  Author: Esme López
+*/
+
 import { NgModule } from '@angular/core';
 
 import { IconsProviderModule } from '../icons-provider.module';
