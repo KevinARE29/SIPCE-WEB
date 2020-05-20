@@ -28,7 +28,7 @@ export class SecurityPolicyService {
   constructor(private http: HttpClient) { 
     this.baseUrl = environment.apiURL;
     // TODO: Change for the getToken method
-    localStorage.setItem('accessToken', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmcml2YXMiLCJlbWFpbCI6ImZlcm5hbmRvcml2YXNhcmV2YWxvMjdAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsyLDFdLCJpYXQiOjE1ODk3NzE1NTcsImV4cCI6MTU4OTc3MzM1N30.0Xgrbf2JVC7GuBQknMShn8zuAgzzxfGnz3tKX-IzdcY');
+    localStorage.setItem('accessToken', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbG9wZXoiLCJlbWFpbCI6ImxvcmVuYWVndWFkcm9uQGdtYWlsLmNvbSIsInBlcm1pc3Npb25zIjpbMiwxXSwiaWF0IjoxNTg5OTU0NDcyLCJleHAiOjE1ODk5NTYyNzJ9.ETwg1dg3apVnkqtevpfcDAEtPgBvg74LRQIx19eJFCk');
   }
 
   getSecurityPolicies(): Observable<SecurityPolicy> {
@@ -39,16 +39,16 @@ export class SecurityPolicyService {
         map(
           (response: SecurityPolicy) => {
             let securityPolicy = new SecurityPolicy;
-
+            
             securityPolicy = response['data'];
             securityPolicy.minActive = securityPolicy.minLength == 0 ? false : true;
-
+          
             return securityPolicy;
           }
         ),
         tap(h => {
-          const outcome = h ? `fetched` : `did not find`;
-          console.log(`{outcome} security policies`);
+          const outcome = h ? `Fetched` : `Did not find`;
+          console.log(`${outcome} security policies`);
         }),
         catchError(this.handleError<SecurityPolicy>(`getSecurityPolicies`))
       );

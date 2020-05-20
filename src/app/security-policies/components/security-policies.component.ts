@@ -7,6 +7,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+
 import { SecurityPolicy } from '../shared/security-policy.model';
 import { SecurityPolicyService } from '../shared/security-policy.service';
 
@@ -17,10 +19,12 @@ import { SecurityPolicyService } from '../shared/security-policy.service';
 })
 export class SecurityPoliciesComponent implements OnInit {
   securityPolicy: SecurityPolicy;
+  confirmModal?: NzModalRef;
 
   constructor(
     private router: Router,
-    private securityPolicyService: SecurityPolicyService
+    private securityPolicyService: SecurityPolicyService,
+    private modal: NzModalService
   ) { }
 
   ngOnInit(): void {
@@ -40,5 +44,17 @@ export class SecurityPoliciesComponent implements OnInit {
         },
         () => console.log('HTTP request completed.')
       );
+  }
+
+  showConfirm(): void {
+    console.log('Confirm');
+    this.confirmModal = this.modal.confirm({
+      nzTitle: '¿Desea actualizar las políticas de seguridad?',
+      nzContent: 'La acción no puede deshacerse.',
+      nzOnOk: () =>
+        new Promise((resolve, reject) => {
+          setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+        }).catch(() => console.log('Oops errors!'))
+    });
   }
 }

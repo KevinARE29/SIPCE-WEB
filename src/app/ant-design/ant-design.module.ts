@@ -18,6 +18,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { es_ES } from 'ng-zorro-antd/i18n';
@@ -38,7 +39,8 @@ const ngZorro = [
   NzCheckboxModule,
   NzInputNumberModule,
   NzToolTipModule,
-  NzButtonModule
+  NzButtonModule,
+  NzModalModule
 ];
 
 @NgModule({
