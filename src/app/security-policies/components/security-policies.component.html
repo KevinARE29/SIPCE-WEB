@@ -1,0 +1,35 @@
+<!--  
+  Path: app/security-policies/components/security-policies.component.html
+  Objetive: Define security policies view
+  Author: Esme López 
+-->
+
+<h1 nz-typography>Políticas de seguridad</h1>
+
+<hr>
+
+<div class="policies" nz-row>
+    <div nz-col nzSpan="8" nzOffset="8">
+      <div class="policy">
+        <label nz-checkbox [(ngModel)]="securityPolicy.minActive">Mínimo de caracteres: </label>
+        <nz-input-number  [nzMin]="6" [nzMax]="127" [nzStep]="1" [(ngModel)]="securityPolicy.minLength"></nz-input-number>
+      </div>
+      
+      <div><strong>Incluir en contraseña: </strong></div>
+      <div class="policy">
+        <label nz-checkbox [(ngModel)]="securityPolicy.numericChart">Dígitos</label>
+      </div>
+      <div class="policy">
+        <label nz-checkbox [(ngModel)]="securityPolicy.capitalLetter">Mayúsculas</label>
+      </div>
+      <div class="policy">
+        <label nz-checkbox [(ngModel)]="securityPolicy.lowerCase">Minúsculas</label>
+      </div>
+      <div class="policy">
+        <label nz-checkbox [(ngModel)]="securityPolicy.specialChart">Caracteres especiales</label>
+        <i nz-icon nzType="question-circle" nzTheme="outline" nz-tooltip nzTooltipTitle="Caracteres permitidos !  # $ % &  ( ) * + , - . / :  < = > ? @ [ \ ] ^ _  { | } ~"></i>
+      </div>
+
+      <button nz-button nzType="primary">ACTUALIZAR POLÍTICAS</button>
+    </div>
+</div>

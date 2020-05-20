@@ -1,3 +1,9 @@
+<!--  
+  Path: app/main-nav/main-nav.component.html
+  Objetive: Define main navigation view
+  Author: Esme López 
+-->
+
 <nz-layout class="app-layout">
   <nz-sider class="menu-sidebar"
             nzCollapsible
@@ -17,18 +23,12 @@
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/welcome">Welcome</a>
           </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>Monitor</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>Workplace</a>
-          </li>
         </ul>
       </li>
-      <li nz-submenu nzOpen nzTitle="Form" nzIcon="form">
+      <li nz-submenu nzOpen nzTitle="Políticas de seguridad" nzIcon="key">
         <ul>
           <li nz-menu-item nzMatchRouter>
-            <a>Basic Form</a>
+            <a routerLink="/politicas-seguridad">Políticas de seguridad</a>
           </li>
         </ul>
       </li>
