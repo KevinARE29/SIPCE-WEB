@@ -4,11 +4,15 @@
   Author: Esme López 
 */
 
-/* .policies{
+.policies{
     margin-top: 10px;
-    padding: 10px;;
-} */
+    padding: 20px;
+}
 
-/* h1 { text-align: center; }
+.policy{ padding: 5px; }
 
-nz-input-number { width: 75px; } */
+h1 { text-align: center; }
+
+nz-input-number { width: 75px; }
+
+button{ margin-top: 10px;}

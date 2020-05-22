@@ -9,9 +9,9 @@
 <hr>
 
 <div class="policies" nz-row>
-    <div nz-col nzSpan="8" nzOffset="8">
+    <div nz-col [nzXs]="{ span: 20, offset: 2 }" [nzSm]="{ span: 20, offset: 2 }"  [nzMd]="{ span: 20, offset: 2 }" [nzLg]="{ span: 8, offset: 8 }">
       <div class="policy">
-        <label nz-checkbox [(ngModel)]="securityPolicy.minActive">Mínimo de caracteres: </label>
+        <label nz-checkbox [(ngModel)]="securityPolicy.minActive" (change)="updateMin()">Mínimo de caracteres: </label>
         <nz-input-number  [nzMin]="6" [nzMax]="127" [nzStep]="1" [(ngModel)]="securityPolicy.minLength"></nz-input-number>
       </div>
       

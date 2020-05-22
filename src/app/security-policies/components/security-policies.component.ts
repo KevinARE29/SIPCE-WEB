@@ -28,6 +28,7 @@ export class SecurityPoliciesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.securityPolicy = new SecurityPolicy();
     this.getSecurityPolicies();
   }
 
@@ -36,13 +37,15 @@ export class SecurityPoliciesComponent implements OnInit {
       .subscribe(
         securityPolicy => {
           this.securityPolicy = securityPolicy;
-          console.log('HTTP response', securityPolicy)
         },
         err => {
-          console.log('HTTP Error', err);
-          // this.router.navigate(['/welcome']);
-        },
-        () => console.log('HTTP request completed.')
+          console.log('HTTP Error:', err);
+          if(err == 401){
+            // this.router.navigate(['/welcome']);
+          }
+          
+        }/*,
+        () => console.log('HTTP request completed.')*/
       );
   }
 
@@ -52,9 +55,18 @@ export class SecurityPoliciesComponent implements OnInit {
       nzTitle: '¿Desea actualizar las políticas de seguridad?',
       nzContent: 'La acción no puede deshacerse.',
       nzOnOk: () =>
-        new Promise((resolve, reject) => {
-          setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
-        }).catch(() => console.log('Oops errors!'))
+      this.securityPolicyService.updateSecurityPolicies(this.securityPolicy)      
+        .toPromise().then(securityPolicy => {
+          this.securityPolicy = securityPolicy;
+          if(this.securityPolicy.minLength == 4)
+            this.securityPolicy.minActive = false;
+        })
     });
+  }
+
+  updateMin(): void {
+    if(this.securityPolicy.minLength == 4){
+      this.securityPolicy.minLength = 6;
+    }
   }
 }
