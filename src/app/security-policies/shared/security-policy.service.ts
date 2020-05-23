@@ -17,8 +17,6 @@ import { Observable, of, throwError } from 'rxjs';
 })
 export class SecurityPolicyService {
   baseUrl: string;
-  // TODO: Delete
-  token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbG9wZXoiLCJlbWFpbCI6ImxvcmVuYWVndWFkcm9uQGdtYWlsLmNvbSIsInBlcm1pc3Npb25zIjpbMiwxXSwiaWF0IjoxNTkwMTM1NTYwLCJleHAiOjE1OTAxMzczNjB9.s3x4nrriagJQiDLFELj14wk1NjDjujOJ7dSevE8VTaY";
 
   httpOptions = {
     headers: new HttpHeaders({ 
@@ -29,8 +27,6 @@ export class SecurityPolicyService {
 
   constructor(private http: HttpClient) { 
     this.baseUrl = environment.apiURL;
-    // TODO: Delete
-    localStorage.setItem('accessToken', 'Bearer ' + this.token);
   }
 
   getSecurityPolicies(): Observable<any> {
@@ -43,7 +39,7 @@ export class SecurityPolicyService {
             let securityPolicy = new SecurityPolicy;
 
             securityPolicy = response['data'];
-            securityPolicy.minActive = securityPolicy.minLength == 4 ? false : true;
+            securityPolicy.minActive = securityPolicy.minLength == 0 ? false : true;
           
             return securityPolicy;
           }
@@ -60,7 +56,7 @@ export class SecurityPolicyService {
     let url = this.baseUrl + 'auth/politics/' + policies.id;
 
     if(!policies.minActive)  
-      policies.minLength = 4;
+      policies.minLength = 0;
 
     let data = JSON.stringify({
       id: policies.id,
@@ -70,8 +66,6 @@ export class SecurityPolicyService {
       numericChart: policies.numericChart,
       specialChart: policies.specialChart
     });
-
-    console.log(data);
 
     return this.http.put<SecurityPolicy>(url, data,this.httpOptions)
       .pipe(
@@ -100,8 +94,7 @@ export class SecurityPolicyService {
    */
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-    //  let errorMessage = `${operation} failed: ${error.message}`;
-      return throwError(error.status);
+      return throwError(error.error);
     };
   }
 }

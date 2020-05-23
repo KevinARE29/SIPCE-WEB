@@ -7,6 +7,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 
 import { SecurityPolicy } from '../shared/security-policy.model';
@@ -24,6 +25,7 @@ export class SecurityPoliciesComponent implements OnInit {
   constructor(
     private router: Router,
     private securityPolicyService: SecurityPolicyService,
+    private message: NzMessageService,
     private modal: NzModalService
   ) { }
 
@@ -38,19 +40,14 @@ export class SecurityPoliciesComponent implements OnInit {
         securityPolicy => {
           this.securityPolicy = securityPolicy;
         },
-        err => {
-          console.log('HTTP Error:', err);
-          if(err == 401){
-            // this.router.navigate(['/welcome']);
-          }
-          
-        }/*,
-        () => console.log('HTTP request completed.')*/
+        err => {          
+          if(err.StatusCode === 401 || err.StatusCode === 403)
+            console.log("ERROR");  // TODO: Cambiar por redirección
+        }
       );
   }
 
   showConfirm(): void {
-    console.log('Confirm');
     this.confirmModal = this.modal.confirm({
       nzTitle: '¿Desea actualizar las políticas de seguridad?',
       nzContent: 'La acción no puede deshacerse.',
@@ -58,15 +55,28 @@ export class SecurityPoliciesComponent implements OnInit {
       this.securityPolicyService.updateSecurityPolicies(this.securityPolicy)      
         .toPromise().then(securityPolicy => {
           this.securityPolicy = securityPolicy;
-          if(this.securityPolicy.minLength == 4)
+          if(this.securityPolicy.minLength === 0)
             this.securityPolicy.minActive = false;
+
+            this.message.success('Políticas de seguridad actualizadas con éxito');
+        }).catch(e => {
+          if(e.StatusCode == 401 || e.StatusCode == 403)
+            console.log("Error"); // TODO: Cambiar por redirección
+          else
+            e.message.forEach(element => {
+              this.message.error(element);
+            });
         })
     });
   }
 
   updateMin(): void {
-    if(this.securityPolicy.minLength == 4){
+    if(this.securityPolicy.minLength == 0){
       this.securityPolicy.minLength = 6;
     }
+
+    if(!this.securityPolicy.minActive && this.securityPolicy.minLength != 0)
+      this.securityPolicy.minLength = 0;
   }
+  
 }
