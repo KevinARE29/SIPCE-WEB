@@ -1,21 +1,17 @@
 <nz-layout class="app-layout">
-  <nz-sider class="menu-sidebar"
-            nzCollapsible
-            nzWidth="256px"
-            nzBreakpoint="md"
-            [(nzCollapsed)]="isCollapsed"
-            [nzTrigger]="null">
+  <nz-sider *ngIf="!!authservice.getToken()" class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md"
+    [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
     <div class="sidebar-logo">
       <a href="https://ng.ant.design/" target="_blank">
-        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
-        <h1>Ant Design Of Angular</h1>
+        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo" />
+        <h1>SIPCE</h1>
       </a>
     </div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
       <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
         <ul>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/welcome">Welcome</a>
+            <a>Welcome</a>
           </li>
           <li nz-menu-item nzMatchRouter>
             <a>Monitor</a>
@@ -35,31 +31,28 @@
     </ul>
   </nz-sider>
   <nz-layout>
-    <nz-header>
-      <div class="app-header">
+    <nz-page-header [nzGhost]="false" *ngIf="!!authservice.getToken()">
+      <nz-page-header-tags>
         <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
-            <i class="trigger"
-               nz-icon
-               [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-            ></i>
+          <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
         </span>
-        
+      </nz-page-header-tags>
+      <nz-page-header-extra>
         <span class="user">
           <a nz-dropdown [nzDropdownMenu]="menu">
-            Username
+            {{username}}
             <i nz-icon nzType="down"></i>
           </a>
           <nz-dropdown-menu #menu="nzDropdownMenu">
             <ul nz-menu>
-              <li nz-menu-item>1st menu item</li>
-              <li nz-menu-item>2nd menu item</li>
-              <li nz-menu-item>3rd menu item</li>
+              <li nz-menu-item (click)='logoutClicked()'> Cerrar sesión</li>
             </ul>
           </nz-dropdown-menu>
-          <nz-avatar nzText="U" style="color:#f56a00; background-color:#fde3cf;"></nz-avatar>
+          <nz-avatar nzText="{{avatar}}" style="color: #f56a00; background-color: #fde3cf;"></nz-avatar>
         </span>
-      </div>
-    </nz-header>
+
+      </nz-page-header-extra>
+    </nz-page-header>
     <nz-content>
       <div class="inner-content">
         <router-outlet></router-outlet>

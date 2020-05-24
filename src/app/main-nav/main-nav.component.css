@@ -55,12 +55,6 @@
     vertical-align: middle;
   }
   
-  nz-header {
-    padding: 0;
-    width: 100%;
-    z-index: 2;
-  }
-  
   .app-header {
     position: relative;
     height: 64px;
@@ -79,12 +73,3 @@
     height: 100%;
   }
   
-  /*  */
-  nz-avatar {
-    /* margin-top: 16px; */
-    margin-right: 16px;
-  }
-
-  .user {
-    text-align: right;
-  }

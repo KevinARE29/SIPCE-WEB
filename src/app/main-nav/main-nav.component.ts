@@ -1,16 +1,54 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../login/shared/auth.service';
 
 @Component({
   selector: 'app-main-nav',
   templateUrl: './main-nav.component.html',
   styleUrls: ['./main-nav.component.css']
 })
-export class MainNavComponent implements OnInit {
+export class MainNavComponent implements OnInit, AfterViewInit {
   isCollapsed = false;
-  
-  constructor() { }
+  jwt: any;
+  inicial: string;
+  avatar: string;
+  username: any;
+  responseLogIn: any;
+
+  constructor(private router: Router, public authservice: AuthService) { }
 
   ngOnInit(): void {
+
   }
 
+  ngAfterViewInit() {
+    this.getUsername();
+  }
+
+  ngOnChange() {
+
+  }
+
+  logoutClicked() {
+    console.log('este es el token');
+    console.log(this.authservice.getToken());
+    console.log(typeof (this.authservice.getToken()));
+    this.authservice.logout().subscribe(
+      (resp) => {
+        console.log('esto responde el logout', resp);
+        this.router.navigate(['/login']);
+      }, (error) => {
+        console.log('esto tiene error');
+        console.log(error);
+      });
+
+  }
+
+  getUsername() {
+    this.jwt = this.authservice.jwtDecoder(localStorage.getItem('accessToken'));
+    console.log('este es el username', this.jwt.sub);
+    this.username = this.jwt.sub;
+    this.inicial = this.username.charAt(0);
+    this.avatar = this.inicial.toUpperCase();
+  }
 }
