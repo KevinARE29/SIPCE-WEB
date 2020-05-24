@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthRoutingModule } from './auth-routing.module';
 
 import { LoginComponent } from './components/login.component';
+// import { ForbiddenComponent } from './components/forbidden.component';
 
 import { AntDesignModule } from '../ant-design/ant-design.module';
 

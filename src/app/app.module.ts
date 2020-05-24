@@ -15,7 +15,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginModule } from './login/login.module'; 
 import { AntDesignModule } from './ant-design/ant-design.module';
 import { MainNavComponent } from './main-nav/main-nav.component';
-import { WelcomeModule } from './pages/welcome/welcome.module';
 
 @NgModule({
   declarations: [AppComponent, MainNavComponent],
@@ -24,8 +23,7 @@ import { WelcomeModule } from './pages/welcome/welcome.module';
     AppRoutingModule,
     BrowserAnimationsModule,
     AntDesignModule,
-    LoginModule,
-    WelcomeModule
+    LoginModule
   ],
   bootstrap: [AppComponent],
 })

@@ -5,13 +5,13 @@
 */
 
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, CanLoad, Route } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { AuthService } from '../shared/auth.service';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AuthGuard implements CanActivate, CanLoad {
 
   constructor(
     private authService: AuthService,
@@ -25,12 +25,23 @@ export class AuthGuard implements CanActivate {
 
     return this.checkLogin(url, next);
   }
-  
+
+  canLoad(route: Route){
+    return true;
+  }
+
   checkLogin(url: string, next: ActivatedRouteSnapshot): boolean {
+    console.log(url);
+    let res = false;
     let token = this.authService.getToken();
 
-    if(!token) {
-      this.router.navigate(['/login'], {queryParams: { returnUrl: url }});
+    if(!token){
+      if(url !== '/login'){
+        this.router.navigate(['login']);
+      }
+      else{
+        res = true;
+      } 
     } else {
       let content = this.authService.jwtDecoder(token);
 
@@ -40,17 +51,16 @@ export class AuthGuard implements CanActivate {
           let permission = permissions.indexOf(next.data['permission']);
           
           if(permission == -1) {
-            // TODO: Redirect to 403
-            return false;
-          }
-        }
+            // this.router.navigate['/error403'];
+            res =  false;
+          } else
+            res = true;
+        }       
       } else {
-        return false; // Disable login if session is started
+        this.router.navigate(['welcome']);
       }
-      
-      return true;
     }
-
-    return false;
+    
+    return res;
   }
 }
