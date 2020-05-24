@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthRoutingModule } from './auth-routing.module';
-//componentes
-import { LoginComponent } from './components/login.component';
-//ant-design
-import { AntDesignModule } from '../ant-design/ant-design.module';
-// servicios
-import { AuthService } from './shared/auth.service';
 
+import { LoginComponent } from './components/login.component';
+// import { ForbiddenComponent } from './components/forbidden.component';
+
+import { AntDesignModule } from '../ant-design/ant-design.module';
+
+import { AuthService } from './shared/auth.service';
+import { AuthGuard } from './guards/auth.guard';
 
 @NgModule({
   declarations: [LoginComponent],
@@ -23,6 +24,7 @@ import { AuthService } from './shared/auth.service';
   ],
   providers: [
     AuthService,
+    AuthGuard
   ],
 })
 export class LoginModule { }

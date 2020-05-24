@@ -1,15 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LoginComponent } from './login/components/login.component';
+import { AuthGuard } from './login/guards/auth.guard';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/login' },
   {
     path: 'welcome',
-    loadChildren: () =>
-      import('./pages/welcome/welcome.module').then((m) => m.WelcomeModule),
-  },
-  // { path: 'login', component: LoginComponent },
+    loadChildren: () => import('./pages/welcome/welcome.module').then( m=> m.WelcomeModule),
+    canLoad: [AuthGuard]
+  }
 ];
 
 @NgModule({
