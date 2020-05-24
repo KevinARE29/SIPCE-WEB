@@ -1,3 +1,9 @@
+/* 
+  Path: app/main-nav/main-nav.component.ts
+  Objetive: Define main navigation behavior
+  Author: Esme López 
+*/
+
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../login/shared/auth.service';
