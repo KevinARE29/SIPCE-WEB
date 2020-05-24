@@ -6,15 +6,16 @@
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-// importando rutas de otros componentes
+
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { LoginModule } from './login/login.module'; // modulo del contexto login
+import { LoginModule } from './login/login.module'; 
 import { AntDesignModule } from './ant-design/ant-design.module';
 import { MainNavComponent } from './main-nav/main-nav.component';
+import { WelcomeModule } from './pages/welcome/welcome.module';
 
 @NgModule({
   declarations: [AppComponent, MainNavComponent],
@@ -24,6 +25,7 @@ import { MainNavComponent } from './main-nav/main-nav.component';
     BrowserAnimationsModule,
     AntDesignModule,
     LoginModule,
+    WelcomeModule
   ],
   bootstrap: [AppComponent],
 })
