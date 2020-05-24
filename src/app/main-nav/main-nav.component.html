@@ -1,4 +1,5 @@
-<nz-layout class="app-layout">
+<nz-layout>
+  <!-- class="app-layout" [ngClass]="(!!authservice.getToken())?'app-layou':'t'"-->
   <nz-sider *ngIf="!!authservice.getToken()" class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md"
     [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
     <div class="sidebar-logo">
@@ -31,6 +32,7 @@
     </ul>
   </nz-sider>
   <nz-layout>
+    <!--  -->
     <nz-page-header [nzGhost]="false" *ngIf="!!authservice.getToken()">
       <nz-page-header-tags>
         <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
@@ -53,8 +55,10 @@
 
       </nz-page-header-extra>
     </nz-page-header>
-    <nz-content>
-      <div class="inner-content">
+
+    <nz-content [ngClass]="(!!authservice.getToken())?'inner-content':''">
+      <!-- class="" -->
+      <div>
         <router-outlet></router-outlet>
       </div>
     </nz-content>

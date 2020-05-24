@@ -40,6 +40,8 @@ export class MainNavComponent implements OnInit, AfterViewInit {
       }, (error) => {
         console.log('esto tiene error');
         console.log(error);
+        this.authservice.cleanLocalStorage();
+        this.router.navigate(['/login']);
       });
 
   }
@@ -51,4 +53,7 @@ export class MainNavComponent implements OnInit, AfterViewInit {
     this.inicial = this.username.charAt(0);
     this.avatar = this.inicial.toUpperCase();
   }
+
+
+
 }

@@ -47,8 +47,8 @@ export class AuthService {
 	refreshToken() {
 		return this.httpClient.post<any>(`${this.baseUrl}/api/v1/auth/refresh-token`, {
 			'refreshToken': localStorage.getItem('refreshToken')
-		}).pipe(tap((res: IJwtResponse) => {
-			this.saveToken(res.data.accessToken, res.data.exp, res.data.refreshToken);
+		}).pipe(tap((jwtResponse: IJwtResponse) => {
+			this.saveToken(jwtResponse.data.accessToken, jwtResponse.data.exp, jwtResponse.data.refreshToken);
 		}
 		))
 	}
@@ -60,13 +60,14 @@ export class AuthService {
 	}
 
 	logout(): Observable<any> {
-		let headersLogOut: HttpHeaders;
-		headersLogOut = new HttpHeaders({
-			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-		});
-		console.log('este es el header');
-		return this.httpClient.delete(`${this.baseUrl}/api/v1/auth/logout/`, { headers: headersLogOut }).pipe(
+		// let headersLogOut: HttpHeaders;
+		// headersLogOut = new HttpHeaders({
+		// 	'Content-Type': 'application/json',
+		// 	'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+		// });
+		//{ headers: headersLogOut }
+		// console.log('este es el header');
+		return this.httpClient.delete(`${this.baseUrl}/api/v1/auth/logout/`).pipe(
 			map((resp) => {
 				this.cleanLocalStorage();
 			}
