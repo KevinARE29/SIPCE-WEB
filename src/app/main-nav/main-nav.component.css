@@ -4,7 +4,7 @@
   Author: Esme López 
 */
 
-:host {
+  :host {
     display: flex;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -61,12 +61,6 @@
     vertical-align: middle;
   }
   
-  nz-header {
-    padding: 0;
-    width: 100%;
-    z-index: 2;
-  }
-  
   .app-header {
     position: relative;
     height: 64px;
@@ -75,22 +69,13 @@
     box-shadow: 0 1px 4px rgba(0,21,41,.08);
   }
   
-  nz-content {
-    margin: 24px;
-  }
+  nz-content { margin: 24px; }
+
+  nz-avatar { margin-left: 5px; }
   
   .inner-content {
     padding: 24px;
     background: #fff;
     height: 100%;
   }
-  
-  /*  */
-  nz-avatar {
-    /* margin-top: 16px; */
-    margin-right: 16px;
-  }
 
-  .user {
-    text-align: right;
-  }

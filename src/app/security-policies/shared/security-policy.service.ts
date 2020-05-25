@@ -18,12 +18,12 @@ import { Observable, of, throwError } from 'rxjs';
 export class SecurityPolicyService {
   baseUrl: string;
 
-  httpOptions = {
-    headers: new HttpHeaders({ 
-      'Content-Type': 'application/json', 
-      'Authorization': localStorage.getItem('accessToken')
-    })
-  };
+  // httpOptions = {
+  //   headers: new HttpHeaders({ 
+  //     'Content-Type': 'application/json', 
+  //     'Authorization': localStorage.getItem('accessToken')
+  //   })
+  // };
 
   constructor(private http: HttpClient) { 
     this.baseUrl = environment.apiURL;
@@ -32,7 +32,7 @@ export class SecurityPolicyService {
   getSecurityPolicies(): Observable<any> {
     let url = this.baseUrl + 'auth/politics';
 
-    return this.http.get<SecurityPolicy>(url, this.httpOptions)
+    return this.http.get<SecurityPolicy>(`${this.baseUrl}auth/politics`)
       .pipe(
         map(
           (response: SecurityPolicy) => {
@@ -53,8 +53,6 @@ export class SecurityPolicyService {
   }
 
   updateSecurityPolicies(policies: SecurityPolicy){
-    let url = this.baseUrl + 'auth/politics/' + policies.id;
-
     if(!policies.minActive)  
       policies.minLength = 0;
 
@@ -67,7 +65,7 @@ export class SecurityPolicyService {
       specialChart: policies.specialChart
     });
 
-    return this.http.put<SecurityPolicy>(url, data,this.httpOptions)
+    return this.http.put<SecurityPolicy>(`${this.baseUrl}auth/politics/${policies.id}`, data)
       .pipe(
         map(
           (response: SecurityPolicy) => {            
