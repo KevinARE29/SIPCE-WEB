@@ -9,6 +9,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { LoginComponent } from './components/login.component';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { ServerErrorComponent } from './components/server-error/server-error.component';
 
@@ -16,9 +17,12 @@ import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   {
-    path: 'login',
+    path: '',
     component: LoginComponent,
     canActivate: [AuthGuard]
+  }, {
+    path: 'error401',
+    component: UnauthorizedComponent
   }, {
     path: 'error403',
     component: ForbiddenComponent
@@ -33,7 +37,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
 export class AuthRoutingModule { }

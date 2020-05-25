@@ -1,0 +1,19 @@
+/*
+  Path: app/login/components/unauthorized/unauthorized.component.css
+  Objetive: Define the unauthorized error style
+  Author: Esme López 
+*/
+
+#unauthorized{
+    text-align: center;
+    font-size: 1.8em;
+    margin-top: 20px;
+}
+
+.messages{
+     padding: 10px;
+}
+
+img{
+    max-width: 500px;
+}

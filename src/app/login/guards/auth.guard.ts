@@ -48,11 +48,12 @@ export class AuthGuard implements CanActivate, CanLoad {
         if(content){
           let permissions = content.permissions;
           let permission = permissions.indexOf(next.data['permission']);
-          
-          if(permission == -1) {
-            this.router.navigate(['error403']);
-          } else
+        
+          if(permission == -1 ) {
+            this.router.navigate(['login/error403']);
+          } else{
             res = true;
+          }
         }       
       } else {
         this.router.navigate(['welcome']);

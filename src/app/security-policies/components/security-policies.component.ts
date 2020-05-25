@@ -14,6 +14,7 @@ import { SecurityPolicy } from '../shared/security-policy.model';
 import { SecurityPolicyService } from '../shared/security-policy.service';
 import { AuthService } from '../../login/shared/auth.service';
 import { Permission } from '../../shared/permission.model';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-security-policies',
@@ -34,6 +35,8 @@ export class SecurityPoliciesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.securityPolicy = new SecurityPolicy;
+
     this.setPermissions();
     this.getSecurityPolicies();
   }
@@ -45,8 +48,18 @@ export class SecurityPoliciesComponent implements OnInit {
           this.securityPolicy = securityPolicy;
         },
         err => {          
-          if(err.StatusCode === 401 || err.StatusCode === 403)
-            console.log("ERROR");  // TODO: Cambiar por redirección
+          if(err.StatusCode === 401){
+            this.router.navigate(['login/error401']);
+          } else if( err.StatusCode === 403){
+            this.router.navigate(['login/error403']);
+          } else if(err.StatusCode >= 500 && err.StatusCode <= 599){
+            this.router.navigate(['login/error500']);
+          } else{
+            if(typeof err.message === 'string')
+              this.message.error(err.message);
+            else
+            err.message.forEach(element => { this.message.error(element); });
+        }
         }
       );
   }
@@ -70,6 +83,7 @@ export class SecurityPoliciesComponent implements OnInit {
     this.confirmModal = this.modal.confirm({
       nzTitle: '¿Desea actualizar las políticas de seguridad?',
       nzContent: 'La acción no puede deshacerse.',
+
       nzOnOk: () =>
       this.securityPolicyService.updateSecurityPolicies(this.securityPolicy)      
         .toPromise().then(securityPolicy => {
@@ -79,12 +93,18 @@ export class SecurityPoliciesComponent implements OnInit {
 
             this.message.success('Políticas de seguridad actualizadas con éxito');
         }).catch(e => {
-          if(e.StatusCode == 401 || e.StatusCode == 403)
-            console.log("Error"); // TODO: Cambiar por redirección
-          else
-            e.message.forEach(element => {
-              this.message.error(element);
-            });
+          if(e.StatusCode === 401){
+            this.router.navigate(['login/error401']);
+          } else if( e.StatusCode === 403){
+            this.router.navigate(['login/error403']);
+          } else if(e.StatusCode >= 500 && e.StatusCode <= 599){
+            this.router.navigate(['login/error500']);
+          } else{
+              if(typeof e.message === 'string')
+                this.message.error(e.message);
+              else
+                e.message.forEach(element => { this.message.error(element); });
+          }
         })
     });
   }

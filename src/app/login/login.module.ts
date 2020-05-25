@@ -10,9 +10,10 @@ import { AntDesignModule } from '../ant-design/ant-design.module';
 
 import { AuthService } from './shared/auth.service';
 import { AuthGuard } from './guards/auth.guard';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 
 @NgModule({
-  declarations: [LoginComponent],
+  declarations: [LoginComponent, UnauthorizedComponent],
   imports: [
     CommonModule,
     FormsModule,
