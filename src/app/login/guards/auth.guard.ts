@@ -31,7 +31,6 @@ export class AuthGuard implements CanActivate, CanLoad {
   }
 
   checkLogin(url: string, next: ActivatedRouteSnapshot): boolean {
-    console.log(url);
     let res = false;
     let token = this.authService.getToken();
 
@@ -51,8 +50,7 @@ export class AuthGuard implements CanActivate, CanLoad {
           let permission = permissions.indexOf(next.data['permission']);
           
           if(permission == -1) {
-            // this.router.navigate['/error403'];
-            res =  false;
+            this.router.navigate(['error403']);
           } else
             res = true;
         }       

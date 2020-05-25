@@ -1,0 +1,13 @@
+#forbidden{
+    text-align: center;
+    font-size: 1.8em;
+    margin-top: 20px;
+}
+
+.messages{
+     padding: 10px;
+}
+
+img{
+    max-width: 400px;
+}

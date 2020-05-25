@@ -15,10 +15,10 @@ const routes: Routes = [
     path: 'login', 
     component: LoginComponent,
     canActivate: [AuthGuard]
-  }/*, {
+  }, {
     path: 'error403',
     component: ForbiddenComponent
-  }*/
+  }
 ];
 
 @NgModule({
