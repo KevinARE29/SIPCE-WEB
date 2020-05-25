@@ -1,5 +1,10 @@
-<nz-layout>
-  <!-- class="app-layout" [ngClass]="(!!authservice.getToken())?'app-layou':'t'"-->
+<!--  
+  Path: app/main-nav/main-nav.component.html
+  Objetive: Define main navigation view
+  Author: Esme López 
+-->
+
+<nz-layout class="app-layout">
   <nz-sider *ngIf="!!authservice.getToken()" class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md"
     [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
     <div class="sidebar-logo">
@@ -14,18 +19,12 @@
           <li nz-menu-item nzMatchRouter>
             <a>Welcome</a>
           </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>Monitor</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>Workplace</a>
-          </li>
         </ul>
       </li>
-      <li nz-submenu nzOpen nzTitle="Form" nzIcon="form">
+      <li nz-submenu nzOpen nzTitle="Políticas de seguridad" nzIcon="key">
         <ul>
           <li nz-menu-item nzMatchRouter>
-            <a>Basic Form</a>
+            <a routerLink="/politicas-seguridad">Políticas de seguridad</a>
           </li>
         </ul>
       </li>
@@ -57,7 +56,6 @@
     </nz-page-header>
 
     <nz-content [ngClass]="(!!authservice.getToken())?'inner-content':''">
-      <!-- class="" -->
       <div>
         <router-outlet></router-outlet>
       </div>

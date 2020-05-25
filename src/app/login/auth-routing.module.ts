@@ -15,8 +15,8 @@ import { ServerErrorComponent } from './components/server-error/server-error.com
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
-  { 
-    path: 'login', 
+  {
+    path: 'login',
     component: LoginComponent,
     canActivate: [AuthGuard]
   }, {

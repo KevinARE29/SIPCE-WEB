@@ -1,4 +1,10 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+/* 
+  Path: app/main-nav/main-nav.component.ts
+  Objetive: Define main navigation behavior
+  Author: Esme López y Veronica Reyes
+*/
+
+import { Component, OnInit, AfterViewInit, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../login/shared/auth.service';
 
@@ -7,7 +13,7 @@ import { AuthService } from '../login/shared/auth.service';
   templateUrl: './main-nav.component.html',
   styleUrls: ['./main-nav.component.css']
 })
-export class MainNavComponent implements OnInit, AfterViewInit {
+export class MainNavComponent implements OnInit, AfterViewInit, OnChanges {
   isCollapsed = false;
   jwt: any;
   inicial: string;
@@ -18,28 +24,22 @@ export class MainNavComponent implements OnInit, AfterViewInit {
   constructor(private router: Router, public authservice: AuthService) { }
 
   ngOnInit(): void {
-
-  }
-
-  ngAfterViewInit() {
     this.getUsername();
   }
 
-  ngOnChange() {
+  ngAfterViewInit() {
+
+  }
+
+  ngOnChanges() {
 
   }
 
   logoutClicked() {
-    console.log('este es el token');
-    console.log(this.authservice.getToken());
-    console.log(typeof (this.authservice.getToken()));
     this.authservice.logout().subscribe(
       (resp) => {
-        console.log('esto responde el logout', resp);
         this.router.navigate(['/login']);
       }, (error) => {
-        console.log('esto tiene error');
-        console.log(error);
         this.authservice.cleanLocalStorage();
         this.router.navigate(['/login']);
       });
@@ -48,7 +48,6 @@ export class MainNavComponent implements OnInit, AfterViewInit {
 
   getUsername() {
     this.jwt = this.authservice.jwtDecoder(localStorage.getItem('accessToken'));
-    console.log('este es el username', this.jwt.sub);
     this.username = this.jwt.sub;
     this.inicial = this.username.charAt(0);
     this.avatar = this.inicial.toUpperCase();

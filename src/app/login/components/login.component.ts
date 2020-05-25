@@ -27,16 +27,12 @@ export class LoginComponent implements OnInit {
   }
 
   onlogin() {
-    console.log(this.userLogin.value);
     this.authService.login(this.userLogin.value).subscribe(
       (response) => {
         this.router.navigate(['welcome']);
       },
       (error) => {
-        console.log(error);
         this.mostrar = true;
-        console.log('esto tiene error');
-        console.log(error.message);
       }
     );
   }
