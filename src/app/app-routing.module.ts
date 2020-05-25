@@ -9,11 +9,27 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './login/guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: '/login' },
+  { path: '', pathMatch: 'full', redirectTo: '/welcome' },
+  // { path: 'login', pathMatch: 'full', redirectTo: '/login' },
+  {
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then( m => m.LoginModule),
+    canLoad: [AuthGuard]
+  },
   {
     path: 'welcome',
     loadChildren: () => import('./pages/welcome/welcome.module').then( m=> m.WelcomeModule),
     canLoad: [AuthGuard]
+  }, 
+  {
+    path: 'politicas-seguridad',
+    loadChildren: () => import('./security-policies/security-policies.module').then( m=> m.SecurityPoliciesModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: '**',
+    redirectTo: '/error404',
+    pathMatch: 'full'
   }
 ];
 

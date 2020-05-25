@@ -8,7 +8,7 @@
   <nz-sider *ngIf="!!authservice.getToken()" class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md"
     [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
     <div class="sidebar-logo">
-      <a href="https://ng.ant.design/" target="_blank">
+      <a>
         <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo" />
         <h1>SIPCE</h1>
       </a>
@@ -17,7 +17,7 @@
       <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
         <ul>
           <li nz-menu-item nzMatchRouter>
-            <a>Welcome</a>
+            <a routerLink="/welcome">Inicio</a>
           </li>
         </ul>
       </li>

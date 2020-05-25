@@ -24,7 +24,6 @@ import { InterceptorModule } from './Interceptors/interceptor.module';
 //clases
 import { AuthInterceptor } from './Interceptors/auth-interceptor';
 
-import { SecurityPoliciesModule } from './security-policies/security-policies.module';
 
 @NgModule({
   declarations: [AppComponent, MainNavComponent],
@@ -42,8 +41,7 @@ import { SecurityPoliciesModule } from './security-policies/security-policies.mo
     AntDesignModule,
     LoginModule,
     HttpClientModule,
-    InterceptorModule,
-    SecurityPoliciesModule
+    InterceptorModule
   ],
   bootstrap: [AppComponent],
 })
