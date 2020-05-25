@@ -1,3 +1,9 @@
+/*
+  Path: app/login/components/forbidden/forbidden.component.css
+  Objetive: Define the not found error style
+  Author: Esme López 
+*/
+
 #forbidden{
     text-align: center;
     font-size: 1.8em;

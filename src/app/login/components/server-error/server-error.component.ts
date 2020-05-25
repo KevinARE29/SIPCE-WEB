@@ -1,3 +1,9 @@
+/* 
+  Path: app/login/components/server-error/server-error.component.ts
+  Objetive: Define internal server error behavior
+  Author: Esme López 
+*/
+
 import { Component, OnInit } from '@angular/core';
 
 @Component({
