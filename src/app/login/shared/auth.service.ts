@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from './../../../environments/environment';
 import { IJwtResponse } from '../jwt-response';
 import { tap } from 'rxjs/operators';
@@ -15,7 +15,6 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 export class AuthService {
 	baseUrl: string;
 	authSubject = new BehaviorSubject(false);
-	headers: HttpHeaders;
 	decodedToken: any;
 	expirationDate: string;
 	loggedIn = new BehaviorSubject<boolean>(false);
@@ -23,18 +22,15 @@ export class AuthService {
 
 	constructor(private httpClient: HttpClient, private router: Router) {
 		this.baseUrl = environment.apiURL;
-		this.headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 	}
 
 	login(user: { username: string; password: string }): Observable<IJwtResponse> {
 		return this.httpClient
-			.post<IJwtResponse>(`${this.baseUrl}auth/login/`, user, {
-				headers: this.headers
-			})
+			.post<IJwtResponse>(`${this.baseUrl}auth/login/`, user)
 			.pipe(
 				tap((res: IJwtResponse) => {
 					if (res) {
-						// guardar token
+						// saving tokens
 						this.saveToken(res.data.accessToken, res.data.exp, res.data.refreshToken);
 					}
 				})

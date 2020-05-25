@@ -34,17 +34,31 @@ export class AuthInterceptor implements HttpInterceptor {
         } else if (url.includes('logout')) {
             const newRequest = this.appendAccessToken(request);
             return next.handle(newRequest);
+
+        } else if (url.includes('login')) {
+            const newRequest = this.appendContentType(request);
+            return next.handle(newRequest);
         }
         return next.handle(request);
     }
-    /* Method to append access token to the header of the request */
+
     private appendAccessToken(request: HttpRequest<any>): HttpRequest<any> {
         const token = localStorage.getItem('accessToken');
         if (token) {
             return request.clone({
-                headers: request.headers.set('Authorization', `Bearer ${token}`),
+                setHeaders: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
             });
         }
+        return request;
+    }
+
+    private appendContentType(request: HttpRequest<any>): HttpRequest<any> {
+        request.clone({
+            headers: request.headers.set('Content-Type', 'application/json'),
+        })
         return request;
     }
 

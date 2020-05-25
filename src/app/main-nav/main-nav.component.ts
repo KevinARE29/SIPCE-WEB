@@ -4,7 +4,7 @@
   Author: Esme López y Veronica Reyes
 */
 
-import { Component, OnInit, AfterViewInit, OnChanges } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../login/shared/auth.service';
 
@@ -13,27 +13,24 @@ import { AuthService } from '../login/shared/auth.service';
   templateUrl: './main-nav.component.html',
   styleUrls: ['./main-nav.component.css']
 })
-export class MainNavComponent implements OnInit, AfterViewInit, OnChanges {
+export class MainNavComponent implements OnInit, AfterViewInit {
   isCollapsed = false;
   jwt: any;
   inicial: string;
   avatar: string;
   username: any;
   responseLogIn: any;
+  data: any;
 
   constructor(private router: Router, public authservice: AuthService) { }
 
   ngOnInit(): void {
-    this.getUsername();
   }
 
   ngAfterViewInit() {
-
+    this.getUsername();
   }
 
-  ngOnChanges() {
-
-  }
 
   logoutClicked() {
     this.authservice.logout().subscribe(
@@ -52,6 +49,8 @@ export class MainNavComponent implements OnInit, AfterViewInit, OnChanges {
     this.inicial = this.username.charAt(0);
     this.avatar = this.inicial.toUpperCase();
   }
+
+
 
 
 
