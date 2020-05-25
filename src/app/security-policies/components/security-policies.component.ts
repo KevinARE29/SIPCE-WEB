@@ -12,6 +12,8 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 
 import { SecurityPolicy } from '../shared/security-policy.model';
 import { SecurityPolicyService } from '../shared/security-policy.service';
+import { AuthService } from '../../login/shared/auth.service';
+import { Permission } from '../../shared/permission.model';
 
 @Component({
   selector: 'app-security-policies',
@@ -21,16 +23,18 @@ import { SecurityPolicyService } from '../shared/security-policy.service';
 export class SecurityPoliciesComponent implements OnInit {
   securityPolicy: SecurityPolicy;
   confirmModal?: NzModalRef;
+  permissions: Array<Permission> = [];
 
   constructor(
     private router: Router,
+    private authService: AuthService,
     private securityPolicyService: SecurityPolicyService,
     private message: NzMessageService,
     private modal: NzModalService
   ) { }
 
   ngOnInit(): void {
-    this.securityPolicy = new SecurityPolicy();
+    this.setPermissions();
     this.getSecurityPolicies();
   }
 
@@ -45,6 +49,21 @@ export class SecurityPoliciesComponent implements OnInit {
             console.log("ERROR");  // TODO: Cambiar por redirección
         }
       );
+  }
+
+  setPermissions(){
+    let token = this.authService.getToken();
+    let content = this.authService.jwtDecoder(token);
+
+    let permissions = content.permissions;
+
+    this.permissions.push(new Permission(1, "Update"));
+
+    this.permissions.forEach(p => {
+      let index = permissions.indexOf(p.id);
+      
+      p.allow = (index == -1)? false : true;
+    });
   }
 
   showConfirm(): void {
@@ -79,4 +98,10 @@ export class SecurityPoliciesComponent implements OnInit {
       this.securityPolicy.minLength = 0;
   }
   
+  checkPermission(id: number){
+    let index = this.permissions.find( p => p.id === id);
+      
+    return index.allow;
+  }
+
 }

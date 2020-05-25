@@ -17,6 +17,11 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   }, 
   {
+    path: 'politicas-seguridad',
+    loadChildren: () => import('./security-policies/security-policies.module').then( m=> m.SecurityPoliciesModule),
+    canLoad: [AuthGuard]
+  },
+  {
     path: '**',
     redirectTo: '/error404',
     pathMatch: 'full'
