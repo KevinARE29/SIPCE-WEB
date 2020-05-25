@@ -7,7 +7,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './components/login.component';
-import { ForbiddenComponent } from './components/forbidden.component';
+import { ForbiddenComponent } from './components/forbidden/forbidden.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
@@ -18,6 +19,9 @@ const routes: Routes = [
   }, {
     path: 'error403',
     component: ForbiddenComponent
+  }, {
+    path: 'error404',
+    component: NotFoundComponent
   }
 ];
 

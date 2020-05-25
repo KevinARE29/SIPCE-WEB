@@ -11,6 +11,7 @@ import { AntDesignModule } from '../ant-design/ant-design.module';
 
 import { AuthService } from './shared/auth.service';
 import { AuthGuard } from './guards/auth.guard';
+// import { NotFoundComponent } from './components/not-found/not-found.component';
 
 @NgModule({
   declarations: [LoginComponent],

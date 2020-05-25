@@ -8,6 +8,11 @@ const routes: Routes = [
     path: 'welcome',
     loadChildren: () => import('./pages/welcome/welcome.module').then( m=> m.WelcomeModule),
     canLoad: [AuthGuard]
+  }, 
+  {
+    path: '**',
+    redirectTo: '/error404',
+    pathMatch: 'full'
   }
 ];
 

@@ -10,6 +10,11 @@ const routes: Routes = [
     component: WelcomeComponent,
     canActivate: [AuthGuard],
     data: {permission: 2} 
+  }, 
+  {
+    path: '**',
+    redirectTo: '/error404',
+    pathMatch: 'full'
   }
 ];
  
