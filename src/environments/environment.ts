@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiURL: "http://dev-sipce-api.herokuapp.com/api/v1/"
+  apiURL: "https://dev-sipce-api.herokuapp.com/api/v1/"
 };
 
 /*
