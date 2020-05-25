@@ -14,7 +14,6 @@ import { SecurityPolicy } from '../shared/security-policy.model';
 import { SecurityPolicyService } from '../shared/security-policy.service';
 import { AuthService } from '../../login/shared/auth.service';
 import { Permission } from '../../shared/permission.model';
-import { element } from 'protractor';
 
 @Component({
   selector: 'app-security-policies',

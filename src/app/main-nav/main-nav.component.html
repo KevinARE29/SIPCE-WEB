@@ -1,11 +1,11 @@
 <!--  
   Path: app/main-nav/main-nav.component.html
   Objetive: Define main navigation view
-  Author: Esme López 
+  Author: Esme López y Veronica Reyes
 -->
 
 <nz-layout class="app-layout">
-  <nz-sider *ngIf="!!authservice.getToken()" class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md"
+  <nz-sider *ngIf="!!getToken()" class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md"
     [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
     <div class="sidebar-logo">
       <a>
@@ -32,7 +32,7 @@
   </nz-sider>
   <nz-layout>
     <!--  -->
-    <nz-page-header [nzGhost]="false" *ngIf="!!authservice.getToken()">
+    <nz-page-header [nzGhost]="false" *ngIf="!!getToken()">
       <nz-page-header-tags>
         <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
           <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
@@ -55,7 +55,7 @@
       </nz-page-header-extra>
     </nz-page-header>
 
-    <nz-content [ngClass]="(!!authservice.getToken())?'inner-content':''">
+    <nz-content [ngClass]="(!!getToken())?'inner-content':''">
       <div>
         <router-outlet></router-outlet>
       </div>

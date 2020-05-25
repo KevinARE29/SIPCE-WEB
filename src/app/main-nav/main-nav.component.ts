@@ -4,7 +4,7 @@
   Author: Esme López y Veronica Reyes
 */
 
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterContentChecked } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../login/shared/auth.service';
 
@@ -13,7 +13,7 @@ import { AuthService } from '../login/shared/auth.service';
   templateUrl: './main-nav.component.html',
   styleUrls: ['./main-nav.component.css']
 })
-export class MainNavComponent implements OnInit, AfterViewInit {
+export class MainNavComponent implements OnInit, AfterContentChecked {
   isCollapsed = false;
   jwt: any;
   inicial: string;
@@ -22,36 +22,39 @@ export class MainNavComponent implements OnInit, AfterViewInit {
   responseLogIn: any;
   data: any;
 
-  constructor(private router: Router, public authservice: AuthService) { }
+  constructor(
+    private router: Router, 
+    private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
   }
 
-  ngAfterViewInit() {
-    this.getUsername();
+  ngAfterContentChecked() {
+    if(this.getToken()){
+      this.getUsername();
+    }
   }
 
-
   logoutClicked() {
-    this.authservice.logout().subscribe(
+    this.authService.logout().subscribe(
       (resp) => {
         this.router.navigate(['/login']);
       }, (error) => {
-        this.authservice.cleanLocalStorage();
+        this.authService.cleanLocalStorage();
         this.router.navigate(['/login']);
       });
-
   }
 
   getUsername() {
-    this.jwt = this.authservice.jwtDecoder(localStorage.getItem('accessToken'));
+    this.jwt = this.authService.jwtDecoder(localStorage.getItem('accessToken'));
     this.username = this.jwt.sub;
     this.inicial = this.username.charAt(0);
     this.avatar = this.inicial.toUpperCase();
   }
 
-
-
-
+  getToken(){
+    return this.authService.getToken();
+  }
 
 }
