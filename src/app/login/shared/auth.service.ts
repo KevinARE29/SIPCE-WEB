@@ -13,7 +13,6 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 	providedIn: 'root'
 })
 export class AuthService {
-	helper = new JwtHelperService();
 	baseUrl: string;
 	authSubject = new BehaviorSubject(false);
 	headers: HttpHeaders;
@@ -23,13 +22,13 @@ export class AuthService {
 	loggedOut = new BehaviorSubject<boolean>(true);
 
 	constructor(private httpClient: HttpClient, private router: Router) {
-		this.baseUrl = environment.apiUrl;
+		this.baseUrl = environment.apiURL;
 		this.headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 	}
 
 	login(user: { username: string; password: string }): Observable<IJwtResponse> {
 		return this.httpClient
-			.post<IJwtResponse>(`${this.baseUrl}/auth/login/`, user, {
+			.post<IJwtResponse>(`${this.baseUrl}auth/login/`, user, {
 				headers: this.headers
 			})
 			.pipe(
@@ -37,15 +36,13 @@ export class AuthService {
 					if (res) {
 						// guardar token
 						this.saveToken(res.data.accessToken, res.data.exp, res.data.refreshToken);
-						console.log('esto tiene la IJWTResponse');
-						console.log(res.data);
 					}
 				})
 			);
 	}
 
 	refreshToken() {
-		return this.httpClient.post<any>(`${this.baseUrl}/auth/refresh-token`, {
+		return this.httpClient.post<any>(`${this.baseUrl}auth/refresh-token`, {
 			'refreshToken': localStorage.getItem('refreshToken')
 		}).pipe(tap((jwtResponse: IJwtResponse) => {
 			this.saveToken(jwtResponse.data.accessToken, jwtResponse.data.exp, jwtResponse.data.refreshToken);
@@ -60,14 +57,7 @@ export class AuthService {
 	}
 
 	logout(): Observable<any> {
-		// let headersLogOut: HttpHeaders;
-		// headersLogOut = new HttpHeaders({
-		// 	'Content-Type': 'application/json',
-		// 	'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-		// });
-		//{ headers: headersLogOut }
-		// console.log('este es el header');
-		return this.httpClient.delete(`${this.baseUrl}/auth/logout/`).pipe(
+		return this.httpClient.delete(`${this.baseUrl}auth/logout/`).pipe(
 			map((resp) => {
 				this.cleanLocalStorage();
 			}
@@ -86,7 +76,8 @@ export class AuthService {
 	}
 
 	jwtDecoder(myRawToken: string) {
-		this.decodedToken = this.helper.decodeToken(myRawToken);
+		let helper = new JwtHelperService();
+		this.decodedToken = helper.decodeToken(myRawToken);
 		return this.decodedToken;
 	}
 
