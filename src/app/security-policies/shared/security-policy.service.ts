@@ -18,23 +18,21 @@ import { Observable, of, throwError } from 'rxjs';
 export class SecurityPolicyService {
   baseUrl: string;
 
-  httpOptions = {
-    headers: new HttpHeaders({ 
-      'Content-Type': 'application/json', 
-      'Authorization': localStorage.getItem('accessToken')
-    })
-  };
+  // httpOptions = {
+  //   headers: new HttpHeaders({ 
+  //     'Content-Type': 'application/json', 
+  //     'Authorization': localStorage.getItem('accessToken')
+  //   })
+  // };
 
   constructor(private http: HttpClient) { 
     this.baseUrl = environment.apiURL;
-    // TODO: Change for the getToken method
-    localStorage.setItem('accessToken', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmcml2YXMiLCJlbWFpbCI6ImZlcm5hbmRvcml2YXNhcmV2YWxvMjdAZ21haWwuY29tIiwicGVybWlzc2lvbnMiOlsyLDFdLCJpYXQiOjE1ODk3NzE1NTcsImV4cCI6MTU4OTc3MzM1N30.0Xgrbf2JVC7GuBQknMShn8zuAgzzxfGnz3tKX-IzdcY');
   }
 
-  getSecurityPolicies(): Observable<SecurityPolicy> {
+  getSecurityPolicies(): Observable<any> {
     let url = this.baseUrl + 'auth/politics';
 
-    return this.http.get<SecurityPolicy>(url, this.httpOptions)
+    return this.http.get<SecurityPolicy>(`${this.baseUrl}auth/politics`)
       .pipe(
         map(
           (response: SecurityPolicy) => {
@@ -42,15 +40,48 @@ export class SecurityPolicyService {
 
             securityPolicy = response['data'];
             securityPolicy.minActive = securityPolicy.minLength == 0 ? false : true;
-
+          
             return securityPolicy;
           }
         ),
         tap(h => {
-          const outcome = h ? `fetched` : `did not find`;
-          console.log(`{outcome} security policies`);
+          const outcome = h ? `Fetched` : `Did not find`;
+          console.log(`${outcome} security policies`);
         }),
         catchError(this.handleError<SecurityPolicy>(`getSecurityPolicies`))
+      );
+  }
+
+  updateSecurityPolicies(policies: SecurityPolicy){
+    if(!policies.minActive)  
+      policies.minLength = 0;
+
+    let data = JSON.stringify({
+      id: policies.id,
+      minLength: policies.minLength,
+      capitalLetter: policies.capitalLetter,
+      lowerCase: policies.lowerCase,
+      numericChart: policies.numericChart,
+      specialChart: policies.specialChart
+    });
+
+    return this.http.put<SecurityPolicy>(`${this.baseUrl}auth/politics/${policies.id}`, data)
+      .pipe(
+        map(
+          (response: SecurityPolicy) => {            
+            let securityPolicy = new SecurityPolicy;
+            
+            securityPolicy = response['data'];
+            securityPolicy.minActive = securityPolicy.minLength == 0 ? false : true;
+          
+            return securityPolicy;
+          }
+        ),
+        tap(h => {
+          const outcome = h ? `Fetched` : `Did not find`;
+          console.log(`${outcome} security policies`);
+        }),
+        catchError(this.handleError<SecurityPolicy>(`updateSecurityPolicies`))
       );
   }
 
@@ -61,12 +92,7 @@ export class SecurityPolicyService {
    */
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      console.error(error); 
-
-     let errorMessage = `${operation} failed: ${error.message}`;
-
-      // return of(result as T);
-      return throwError(errorMessage);
+      return throwError(error.error);
     };
   }
 }

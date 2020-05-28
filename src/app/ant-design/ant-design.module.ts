@@ -14,10 +14,17 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
-import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
-import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzMessageModule } from 'ng-zorro-antd/message';
 
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { es_ES } from 'ng-zorro-antd/i18n';
@@ -35,15 +42,23 @@ const ngZorro = [
   HttpClientModule,
   NzAvatarModule,
   NzDropDownModule,
-  NzCheckboxModule,
+  NzButtonModule,
+  NzPageHeaderModule,
+  NzFormModule,
+  NzCardModule,
+  NzInputModule,
   NzInputNumberModule,
+  NzGridModule,
+  NzAlertModule,
+  NzCheckboxModule,
   NzToolTipModule,
-  NzButtonModule
+  NzModalModule,
+  NzMessageModule
 ];
 
 @NgModule({
   imports: [ngZorro],
   exports: [ngZorro],
-  providers: [{ provide: NZ_I18N, useValue: es_ES }]
+  providers: [{ provide: NZ_I18N, useValue: es_ES }],
 })
 export class AntDesignModule { }

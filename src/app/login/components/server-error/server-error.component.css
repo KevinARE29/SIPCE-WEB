@@ -1,0 +1,19 @@
+/*
+  Path: app/login/components/server-error/server-error.component.css
+  Objetive: Define the internal server error style
+  Author: Esme López 
+*/
+
+#server-error{
+    text-align: center;
+    font-size: 1.8em;
+    margin-top: 20px;
+}
+
+.messages{
+     padding: 10px;
+}
+
+img{
+    max-width: 500px;
+}
