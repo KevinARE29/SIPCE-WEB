@@ -13,15 +13,13 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-//modulos de diferente contexto
-import { LoginModule } from './login/login.module'; // modulo del contexto login
+
+import { LoginModule } from './login/login.module'; 
 
 import { AntDesignModule } from './ant-design/ant-design.module';
 import { MainNavComponent } from './main-nav/main-nav.component';
 import { InterceptorModule } from './Interceptors/interceptor.module';
 
-// import { AuthService } from './login/shared/auth.service';
-//clases
 import { AuthInterceptor } from './Interceptors/auth-interceptor';
 
 

@@ -25,6 +25,9 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { es_ES } from 'ng-zorro-antd/i18n';
@@ -53,7 +56,10 @@ const ngZorro = [
   NzCheckboxModule,
   NzToolTipModule,
   NzModalModule,
-  NzMessageModule
+  NzMessageModule,
+  NzTableModule,
+  NzDividerModule,
+  NzSpinModule
 ];
 
 @NgModule({
