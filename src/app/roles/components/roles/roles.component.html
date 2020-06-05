@@ -1,7 +1,7 @@
 <h1>Roles</h1>
 
 <div class="search-bar" nz-row>
-    <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 20, offset: 2 }" [nzLg]="{ span: 8, offset: 8 }">
+    <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24}" [nzLg]="{ span: 8, offset: 6 }">
         <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
             <input type="text" nz-input placeholder="Buscar rol" [(ngModel)]="searchValue"/>
         </nz-input-group>
@@ -9,10 +9,14 @@
             <button nz-button nzType="{{color}}" nzSearch (click)="search()"><i nz-icon nzType="{{icon}}"></i></button>
         </ng-template>
     </div>
+    
+    <div  *ngIf="checkPermission(6)" id="new-role" nz-col [nzXs]="{ span: 1, offset: 7 }" [nzSm]="{ span: 1, offset: 7 }"  [nzMd]="{ span: 2, offset: 11 }" [nzLg]="{ span: 1, offset: 1 }">
+        <button nz-button nzType="primary" routerLink="/roles/0">Crear rol</button>
+    </div>
 </div>
 
 <div class="roles" nz-row>
-    <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 20, offset: 2 }" [nzLg]="{ span: 20, offset: 2 }" [nzXl]="{ span: 16, offset: 4 }">
+    <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 20, offset: 2 }" [nzXl]="{ span: 16, offset: 4 }">
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
             <nz-table #filterTable 
                 [nzData]="listOfDisplayData" 

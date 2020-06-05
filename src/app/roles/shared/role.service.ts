@@ -47,23 +47,23 @@ export class RoleService {
           break;
       }
       }
-    }
-
-    if(params){
-      if(params.sort[0].value){
-        queryParams += '&sort='+params.sort[0].key;
-        
-        switch(params.sort[0].value){
-          case "ascend":
-            queryParams += "-" + params.sort[0].value.substring(0,3);
-            break;
-          case "descend":
-            queryParams += "-" + params.sort[0].value.substring(0,4);
-            break;
+    }else{
+      if(params){
+        if(params.sort[0].value){
+          queryParams += '&sort='+params.sort[0].key;
+          
+          switch(params.sort[0].value){
+            case "ascend":
+              queryParams += "-" + params.sort[0].value.substring(0,3);
+              break;
+            case "descend":
+              queryParams += "-" + params.sort[0].value.substring(0,4);
+              break;
+          }
         }
       }
     }
-    
+
     url += queryParams;
     
     return this.http.get<Role[]>(url)

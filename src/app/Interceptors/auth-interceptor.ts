@@ -22,7 +22,7 @@ export class AuthInterceptor implements HttpInterceptor {
         Observable<HttpEvent<any>> {
         const url = request.url;
 
-        if (!url.includes('auth') || url.includes('politics') || url.includes('roles')) {
+        if (!url.includes('auth') || url.includes('politics') || url.includes('roles') || url.includes('permissions')) {
             const newRequest = this.appendAccessToken(request);
             return next.handle(newRequest).pipe(
                 catchError((error) => {

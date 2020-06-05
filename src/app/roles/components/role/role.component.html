@@ -1,0 +1,23 @@
+<h1>Rol</h1>
+
+<input nz-input placeholder="Nombre del rol" [(ngModel)]="value" />
+
+<nz-transfer
+    [nzDataSource]="list"
+    [nzTitles]="['Permisos disponibles', 'Permisos asignados']"
+    nzShowSearch
+    [nzSelectedKeys]
+    [nzListStyle]="{ 'width.px': 300, 'height.px': 400 }"
+    [nzRender]="render"
+    [nzFooter]="footer"
+    [nzFilterOption]="filterOption"
+    (nzSelectChange)="select($event)"
+    (nzChange)="change($event)"
+>
+    <ng-template #render let-item> {{ item.title }} </ng-template>
+    <ng-template #footer let-direction>
+    <button nz-button (click)="reload(direction)" [nzSize]="'medium'" style="float: right; margin: 5px;">
+        Recargar
+    </button>
+    </ng-template>
+</nz-transfer>
