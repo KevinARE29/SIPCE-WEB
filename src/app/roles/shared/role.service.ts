@@ -24,6 +24,28 @@ export class RoleService {
       );
   }
 
+  getRole(id: number): Observable<Role>{
+    return this.http.get<Role>(`${this.baseUrl}auth/roles/${id}`)
+      .pipe(
+        map(
+          (response: Role) => {
+            let role = new Role;
+            role.permissions = new Array<number>();
+
+            role.id = response['data'].id;
+            role.name = response['data'].name;
+
+            response['data'].permissions.forEach(p => {
+              role.permissions.push(p.id);
+            });
+
+            return role;
+          }
+        ),
+        catchError(this.handleError<Role>(`getRole`))
+      );
+  }
+
   searchRoles(params: NzTableQueryParams, search: string, paginate: boolean): Observable<Role[]> {
     let url = this.baseUrl + 'auth/roles';
     let queryParams = '?';
@@ -69,6 +91,13 @@ export class RoleService {
     return this.http.get<Role[]>(url)
       .pipe(
         catchError(this.handleError<Role[]>(`searchRoles`))
+      );
+  }
+
+  createRol(role: Role): Observable<Role> {
+    return this.http.post<Role>(`${this.baseUrl}auth/roles`, role)
+      .pipe(
+        catchError(this.handleError<Role>(`createRoles`))
       );
   }
 

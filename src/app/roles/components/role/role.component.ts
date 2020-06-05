@@ -9,6 +9,7 @@ import { PermissionService } from './../../shared/permission.service';
 import { Permission } from '../../../shared/permission.model';
 import { AppPermission } from '../../shared/app-permission.model';
 import { RoleService } from '../../shared/role.service';
+import { Role } from '../../shared/role.model';
 
 @Component({
   selector: 'app-role',
@@ -19,8 +20,10 @@ export class RoleComponent implements OnInit {
   id: number;
   permissions: Array<Permission> = [];
   appPermissions: Array<AppPermission> = [];
-  value: string;
   list: TransferItem[] = [];
+  role: Role = new Role();
+  btnLoading = false;
+  transferLoading = false;
 
   constructor(
     private router: Router,
@@ -32,10 +35,11 @@ export class RoleComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.setData();
     this.setPermissions();
     this.gateway();
-    this.getAppPermissions();
+
+    if(this.id === 0)
+      this.setData();
   }
 
   /* ---      Control page permissions      --- */
@@ -67,29 +71,26 @@ export class RoleComponent implements OnInit {
       
       if (typeof param === "string" && !Number.isNaN(Number(param))) {
         this.id = Number(param);
-
-        if(this.id === 0){
-          console.log("CREATE")
-        } else if(this.id >= 1 && this.id <= 5){
-          console.log("VIEW ONLY")
-        } else{
-          console.log("EDIT")
-        }
+        this.getAppPermissions();
       } else {
-        this.router.navigateByUrl("/role/{{param}}", { skipLocationChange: true });
+        this.router.navigateByUrl("/roles/{{param}}", { skipLocationChange: true });
       }
     });
   }
 
-  /* --- Create --- */
   getAppPermissions(){
+    this.transferLoading = true;
     this.permissionService.getPermissions()
       .subscribe(
         data => {
-          console.log("Permissions");
           this.appPermissions = data['data'];
-          console.log(this.appPermissions)
-          this.setData();
+          
+          if(this.id===0)
+            this.setData();
+          else
+            this.getRole();
+
+          this.transferLoading = false;
         },
         err => {  
           console.log(err);   
@@ -97,13 +98,44 @@ export class RoleComponent implements OnInit {
       )
   }
 
+  createRole(){
+    this.btnLoading = true;
+    this.transformSelectedItems();
+
+    this.roleService.createRol(this.role)
+      .subscribe(
+        data => {
+          this.role.id = data['data'].id;
+          this.message.success('Role ' + data['data'].name +' con éxito');
+          this.btnLoading = false;
+          this.router.navigateByUrl("/roles/"+this.role.id)
+        }, err => {
+          console.log(err);
+        }
+      )
+  }
+
+  getRole(){
+    this.roleService.getRole(this.id)
+      .subscribe(
+        data => {
+          this.role = data;
+          this.setData();
+        },
+        err => {  
+          if(err.statusCode === 404){
+            this.router.navigateByUrl("/role/"+this.id, { skipLocationChange: true });
+          } 
+        }
+      )
+  }
 
   /* ---      Transfer element     --- */
   setData(): void {
     const ret: TransferItem[] = [];
     
     if(this.id == 0){
-      this.appPermissions.forEach( p => {
+      this.appPermissions.forEach(p => {
         ret.push({
           key: p.id,
           title: p.name,
@@ -111,22 +143,32 @@ export class RoleComponent implements OnInit {
           direction: 'left'
         });
       });
+    } else {
+      this.appPermissions.forEach(p => {
+        ret.push({
+          key: p.id,
+          title: p.name,
+          description: p.codename,
+          direction: (this.role.permissions.find(x => x === p.id))? 'right' : 'left',
+          disabled: (this.id>=1 && this.id<=5)? true : false
+        });
+      });
     }
     
     this.list = ret;
   }
 
+  transformSelectedItems(): void{
+    this.role.permissions = Array<number>();
+    let assignedPermissions = this.list.filter(x => x.direction === 'right');
 
-  reload(direction: string): void {
+    assignedPermissions.forEach(p => {
+      this.role.permissions.push(p.key);
+    });
+  }
+
+  reload(): void {
     this.setData();
-  }
-
-  select(ret: {}): void {
-    console.log('nzSelectChange', ret);
-  }
-
-  change(ret: {}): void {
-    console.log('nzChange', ret);
   }
 
   filterOption(inputValue: string, item: any): boolean {

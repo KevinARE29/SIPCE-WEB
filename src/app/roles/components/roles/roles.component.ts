@@ -125,7 +125,6 @@ export class RolesComponent implements OnInit {
     this.roleService.searchRoles(null, this.searchValue, false)
       .subscribe(
         data => {
-          console.log(data);
           this.roles = data['data'];
           this.pagination = data['pagination'];
           this.listOfDisplayData = [...this.roles];
@@ -149,12 +148,8 @@ export class RolesComponent implements OnInit {
   }  
 
   /* ---    Secondary options      --- */
-  getRole(){
-    
-  }
-
-  createRol(){
-
+  getRole(id: number){
+    this.router.navigate(['roles/'+id]);
   }
 
   deleteRole(){
