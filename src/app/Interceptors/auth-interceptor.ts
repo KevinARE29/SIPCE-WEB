@@ -38,6 +38,9 @@ export class AuthInterceptor implements HttpInterceptor {
         } else if (url.includes('login')) {
             const newRequest = this.appendContentType(request);
             return next.handle(newRequest);
+        } else if (url.includes('forgot-password')) {
+            const newRequest = this.appendContentType(request);
+            return next.handle(newRequest);
         }
         return next.handle(request);
     }

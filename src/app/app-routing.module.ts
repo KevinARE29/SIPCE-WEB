@@ -13,18 +13,23 @@ const routes: Routes = [
   // { path: 'login', pathMatch: 'full', redirectTo: '/login' },
   {
     path: 'login',
-    loadChildren: () => import('./login/login.module').then( m => m.LoginModule),
+    loadChildren: () => import('./login/login.module').then(m => m.LoginModule),
     canLoad: [AuthGuard]
   },
   {
     path: 'welcome',
-    loadChildren: () => import('./pages/welcome/welcome.module').then( m=> m.WelcomeModule),
+    loadChildren: () => import('./pages/welcome/welcome.module').then(m => m.WelcomeModule),
     canLoad: [AuthGuard]
-  }, 
+  },
   {
     path: 'politicas-seguridad',
-    loadChildren: () => import('./security-policies/security-policies.module').then( m=> m.SecurityPoliciesModule),
+    loadChildren: () => import('./security-policies/security-policies.module').then(m => m.SecurityPoliciesModule),
     canLoad: [AuthGuard]
+  },
+  {
+    path: 'reestablecer-contrasena',
+    loadChildren: () => import('./manage-password/reset-password.module').then(m => m.ResetPasswordModule),
+    //    canLoad: [AuthGuard]
   },
   {
     path: '**',
