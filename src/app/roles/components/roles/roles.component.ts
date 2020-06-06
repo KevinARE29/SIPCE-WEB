@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 
 import { RoleService } from './../../shared/role.service';
 import { AuthService } from '../../../login/shared/auth.service';
@@ -25,12 +27,14 @@ export class RolesComponent implements OnInit {
   tableSize = 'small'; 
   icon = 'search';
   color = 'primary';
+  confirmModal?: NzModalRef;
   
   constructor(
     private router: Router,
     private roleService: RoleService,
     private authService: AuthService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private modal: NzModalService
   ) { }
 
   ngOnInit(): void { 
@@ -43,7 +47,7 @@ export class RolesComponent implements OnInit {
   setPermissions(){
     let token = this.authService.getToken();
     let content = this.authService.jwtDecoder(token);
-
+ 
     let permissions = content.permissions;
 
     this.permissions.push(new Permission(6, "Create role"));
@@ -154,5 +158,35 @@ export class RolesComponent implements OnInit {
 
   deleteRole(){
     
+  }
+
+  showConfirm(id: number): void {
+    let element = this.roles.find(x => x.id === id);
+
+    this.confirmModal = this.modal.confirm({
+      nzTitle: `¿Desea eliminar el rol "${element.name}"?`,
+      nzContent: (element.usersCount > 0)? `Eliminará el rol "${element.name}", el rol se ha asignado a ${element.usersCount} usuarios. La acción no puede deshacerse.`:
+                                           `Eliminará el rol "${element.name}". La acción no puede deshacerse.`,
+
+      nzOnOk: () =>
+      this.roleService.deleteRole(id)      
+        .toPromise().then(r => {
+            this.message.success(`El rol ${element.name} ha sido eliminado`);
+            this.getRoles();
+        }).catch(e => {
+          if(e.statusCode === 401){
+            this.router.navigate(['login/error401']);
+          } else if( e.statusCode === 403){
+            this.router.navigate(['login/error403']);
+          } else if(e.statusCode >= 500 && e.statusCode <= 599){
+            this.router.navigate(['login/error500']);
+          } else{
+              if(typeof e.message === 'string')
+                this.message.error(e.message);
+              else
+                e.message.forEach(element => { this.message.error(element); });
+          }
+        })
+    });
   }
 }

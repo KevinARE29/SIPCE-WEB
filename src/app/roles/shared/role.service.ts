@@ -108,6 +108,13 @@ export class RoleService {
       );
   }
 
+  deleteRole(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}auth/roles/${id}`)
+      .pipe(
+        catchError(this.handleError<any>(`deleteRole`))
+      );
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.

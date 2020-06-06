@@ -40,21 +40,23 @@
                         <td>{{ data.name }}</td>
                         <td>
                             <span *ngIf="data.id <= 5">
-                                <a nz-tooltip nzTooltipTitle="Ver" (click)="getRole(data.id)">
+                                <a *ngIf="checkPermission(7)" nz-tooltip nzTooltipTitle="Ver" (click)="getRole(data.id)">
                                     <i nz-icon nzType="eye" nzTheme="outline"></i>
                                 </a>
                             </span>
 
                             <span *ngIf="data.id > 5">
-                                <a nz-tooltip nzTooltipTitle="Actualizar" (click)="getRole(data.id)">
+                                <a *ngIf="checkPermission(8)" nz-tooltip nzTooltipTitle="Actualizar" (click)="getRole(data.id)">
                                     <i nz-icon nzType="edit" nzTheme="outline"></i>
                                 </a>
 
-                                <nz-divider nzType="vertical"></nz-divider>
+                                <span *ngIf="checkPermission(9)">
+                                    <nz-divider *ngIf="checkPermission(7) || checkPermission(8)" nzType="vertical"></nz-divider>
                                                     
-                                <a nz-tooltip nzTooltipTitle="Eliminar">
-                                    <i nz-icon nzType="delete" nzTheme="outline"></i>
-                                </a>
+                                    <a nz-tooltip nzTooltipTitle="Eliminar" (click)="showConfirm(data.id)">
+                                        <i nz-icon nzType="delete" nzTheme="outline"></i>
+                                    </a>
+                                </span>
                             </span>
                         </td>
                     </tr>
