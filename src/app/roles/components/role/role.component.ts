@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { TransferItem } from 'ng-zorro-antd/transfer';
@@ -24,10 +26,12 @@ export class RoleComponent implements OnInit {
   role: Role = new Role();
   btnLoading = false;
   transferLoading = false;
+  roleForm!: FormGroup;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private fb: FormBuilder,
     private authService: AuthService,
     private message: NzMessageService,
     private roleService: RoleService,
@@ -71,6 +75,11 @@ export class RoleComponent implements OnInit {
       
       if (typeof param === "string" && !Number.isNaN(Number(param))) {
         this.id = Number(param);
+
+        this.roleForm = this.fb.group({
+          name: [null, [Validators.required]]
+        });
+
         this.getAppPermissions();
       } else {
         this.router.navigateByUrl("/roles/{{param}}", { skipLocationChange: true });
@@ -98,16 +107,37 @@ export class RoleComponent implements OnInit {
       )
   }
 
+  submitForm(): void {
+    if((this.roleForm.controls["name"].value) === "")
+      this.roleForm.get('name')!.setValue(null);
+
+    for (const i in this.roleForm.controls) {
+      this.roleForm.controls[i].markAsDirty();
+      this.roleForm.controls[i].updateValueAndValidity();
+    }
+    
+    if(this.roleForm.valid){
+      this.role.name = this.roleForm.controls["name"].value;
+
+      if(this.id === 0){
+        this.createRole();
+      }else if(this.id > 5){
+        this.updateRole();
+      }
+    }
+  }
+  
   createRole(){
     this.btnLoading = true;
     this.transformSelectedItems();
-
-    this.roleService.createRol(this.role)
+    
+    this.roleService.createRole(this.role)
       .subscribe(
         data => {
           this.role.id = data['data'].id;
-          this.message.success('Role ' + data['data'].name +' con éxito');
+          this.message.success('Role ' + data['data'].name +' creado con éxito');
           this.btnLoading = false;
+
           this.router.navigateByUrl("/roles/"+this.role.id)
         }, err => {
           console.log(err);
@@ -116,16 +146,42 @@ export class RoleComponent implements OnInit {
   }
 
   getRole(){
+    this.btnLoading = true;
     this.roleService.getRole(this.id)
       .subscribe(
         data => {
+          this.btnLoading = false;
           this.role = data;
+
+          this.roleForm = this.fb.group({
+            name: [this.role.name, [Validators.required]]
+          });
+          
           this.setData();
         },
         err => {  
           if(err.statusCode === 404){
             this.router.navigateByUrl("/role/"+this.id, { skipLocationChange: true });
           } 
+        }
+      )
+  }
+
+  updateRole(){
+    this.btnLoading = true;
+    this.transformSelectedItems();
+    
+    this.roleService.updateRole(this.role)
+      .subscribe(
+        data => {
+          this.role = data['data'];
+          this.message.success('Role ' + this.role.name +' actualizado con éxito');
+          this.btnLoading = false;
+        },
+        err => {
+          if(err.statusCode === 404){
+            this.router.navigateByUrl("/role/"+this.id, { skipLocationChange: true });
+          }
         }
       )
   }

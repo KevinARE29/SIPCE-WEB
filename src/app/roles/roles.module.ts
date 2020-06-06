@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AntDesignModule } from '../ant-design/ant-design.module';
 
@@ -11,6 +13,8 @@ import { RoleComponent } from './components/role/role.component';
   declarations: [RolesComponent, RoleComponent],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     AntDesignModule,
     RolesRoutingModule
   ]

@@ -94,10 +94,17 @@ export class RoleService {
       );
   }
 
-  createRol(role: Role): Observable<Role> {
+  createRole(role: Role): Observable<Role> {
     return this.http.post<Role>(`${this.baseUrl}auth/roles`, role)
       .pipe(
         catchError(this.handleError<Role>(`createRoles`))
+      );
+  }
+
+  updateRole(role:Role): Observable<Role> {
+    return this.http.put<Role>(`${this.baseUrl}auth/roles/${role.id}`, role)
+      .pipe(
+        catchError(this.handleError<Role>(`updateRole`))
       );
   }
 

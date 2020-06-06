@@ -1,40 +1,44 @@
 <nz-spin nzTip="Cargando ..." [nzSpinning]="transferLoading">
     <h1>Rol</h1>
 
-    <div nz-row id="role-name" nzJustify="space-around">
-        <div nz-col nzXs="24" nzSm="24"  nzMd="12" nzLg="10">
-            <input nz-input placeholder="Nombre del rol" [(ngModel)]="role.name" />
-        </div>
-    </div>
+    <form nz-form [formGroup]="roleForm" (ngSubmit)="submitForm()">
+        <nz-form-item nzJustify="space-around">
+            <nz-form-control nzXs="24" nzSm="24"  nzMd="12" nzLg="10" nzErrorTip="El nombre del rol es requerido!">
+                <input nz-input formControlName="name" placeholder="Nombre del rol" />
+            </nz-form-control>
+        </nz-form-item>
 
+        <nz-form-item nzJustify="space-around">
+            <div nz-row id="permissions" nzJustify="space-around">
+                <nz-transfer
+                    [nzDataSource]="list"
+                    [nzTitles]="['Permisos disponibles', 'Permisos asignados']"
+                    nzShowSearch
+                    [nzListStyle]="{ 'width.px': 300, 'height.px': 400 }"
+                    [nzRender]="render"
+                    [nzFooter]="footer"
+                    [nzFilterOption]="filterOption"
+                >
+                    <ng-template #render let-item> {{ item.title }} </ng-template>
+                    <ng-template #footer let-direction>
+                        <button nz-button (click)="reload()" [nzSize]="'medium'" style="float: right; margin: 5px;">
+                            Recargar
+                        </button>
+                    </ng-template>
+                </nz-transfer>
+            </div>
+        </nz-form-item>
 
-    <div nz-row id="permissions" nzJustify="space-around">
-        <nz-transfer
-            [nzDataSource]="list"
-            [nzTitles]="['Permisos disponibles', 'Permisos asignados']"
-            nzShowSearch
-            [nzListStyle]="{ 'width.px': 300, 'height.px': 400 }"
-            [nzRender]="render"
-            [nzFooter]="footer"
-            [nzFilterOption]="filterOption"
-        >
-            <ng-template #render let-item> {{ item.title }} </ng-template>
-            <ng-template #footer let-direction>
-                <button nz-button (click)="reload()" [nzSize]="'medium'" style="float: right; margin: 5px;">
-                    Recargar
-                </button>
-            </ng-template>
-        </nz-transfer>
-    </div>
-
-
-    <div nz-row nzJustify="space-around" id="btn-permission">
-        <div *ngIf="checkPermission(6) && id==0" id="new-role">
-            <button nz-button nzType="primary" (click)="createRole()" [nzLoading]="btnLoading">Crear rol</button>
-        </div>
-        
-        <div *ngIf="checkPermission(8) && id > 5" id="update-role">
-            <button nz-button nzType="primary"  [nzLoading]="btnLoading" disabled>Actualizar rol</button>
-        </div>
-    </div>
+        <nz-form-item nzJustify="space-around" id="btn-permission">
+            <nz-form-control [nzSpan]="2">
+                <div *ngIf="checkPermission(6) && id==0" id="new-role">
+                    <button nz-button nzType="primary" (click)="createRole()" [nzLoading]="btnLoading">Crear rol</button>
+                </div>
+                
+                <div *ngIf="checkPermission(8) && id > 5" id="update-role">
+                    <button nz-button nzType="primary" (click)="updateRole()" [nzLoading]="btnLoading">Actualizar rol</button>
+                </div>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
 </nz-spin>
