@@ -27,6 +27,11 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'reset-pwd',
+    loadChildren: () => import('./reset-password/reset-password.module').then( m=> m.ResetPasswordModule),
+  //  canLoad: [AuthGuard]
+  },
+  {
     path: '**',
     redirectTo: '/error404',
     pathMatch: 'full'
