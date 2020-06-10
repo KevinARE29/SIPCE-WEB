@@ -45,20 +45,6 @@ export class SecurityPoliciesComponent implements OnInit {
       .subscribe(
         securityPolicy => {
           this.securityPolicy = securityPolicy;
-        },
-        err => {          
-          if(err.StatusCode === 401){
-            this.router.navigate(['login/error401']);
-          } else if( err.StatusCode === 403){
-            this.router.navigate(['login/error403']);
-          } else if(err.StatusCode >= 500 && err.StatusCode <= 599){
-            this.router.navigate(['login/error500']);
-          } else{
-            if(typeof err.message === 'string')
-              this.message.error(err.message);
-            else
-            err.message.forEach(element => { this.message.error(element); });
-        }
         }
       );
   }
@@ -91,19 +77,6 @@ export class SecurityPoliciesComponent implements OnInit {
             this.securityPolicy.minActive = false;
 
             this.message.success('Políticas de seguridad actualizadas con éxito');
-        }).catch(e => {
-          if(e.StatusCode === 401){
-            this.router.navigate(['login/error401']);
-          } else if( e.StatusCode === 403){
-            this.router.navigate(['login/error403']);
-          } else if(e.StatusCode >= 500 && e.StatusCode <= 599){
-            this.router.navigate(['login/error500']);
-          } else{
-              if(typeof e.message === 'string')
-                this.message.error(e.message);
-              else
-                e.message.forEach(element => { this.message.error(element); });
-          }
         })
     });
   }

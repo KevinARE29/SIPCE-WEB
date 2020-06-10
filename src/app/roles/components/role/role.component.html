@@ -32,11 +32,11 @@
         <nz-form-item nzJustify="space-around" id="btn-permission">
             <nz-form-control [nzSpan]="2">
                 <div *ngIf="checkPermission(6) && id==0" id="new-role">
-                    <button nz-button nzType="primary" (click)="createRole()" [nzLoading]="btnLoading">Crear rol</button>
+                    <button nz-button nzType="primary" [nzLoading]="btnLoading">Crear rol</button>
                 </div>
                 
                 <div *ngIf="checkPermission(8) && id > 5" id="update-role">
-                    <button nz-button nzType="primary" (click)="updateRole()" [nzLoading]="btnLoading">Actualizar rol</button>
+                    <button nz-button nzType="primary" [nzLoading]="btnLoading">Actualizar rol</button>
                 </div>
             </nz-form-control>
         </nz-form-item>

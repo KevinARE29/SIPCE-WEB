@@ -18,13 +18,6 @@ import { Observable, of, throwError } from 'rxjs';
 export class SecurityPolicyService {
   baseUrl: string;
 
-  // httpOptions = {
-  //   headers: new HttpHeaders({ 
-  //     'Content-Type': 'application/json', 
-  //     'Authorization': localStorage.getItem('accessToken')
-  //   })
-  // };
-
   constructor(private http: HttpClient) { 
     this.baseUrl = environment.apiURL;
   }
@@ -43,12 +36,7 @@ export class SecurityPolicyService {
           
             return securityPolicy;
           }
-        ),
-        tap(h => {
-          const outcome = h ? `Fetched` : `Did not find`;
-          console.log(`${outcome} security policies`);
-        }),
-        catchError(this.handleError<SecurityPolicy>(`getSecurityPolicies`))
+        )
       );
   }
 
@@ -76,23 +64,8 @@ export class SecurityPolicyService {
           
             return securityPolicy;
           }
-        ),
-        tap(h => {
-          const outcome = h ? `Fetched` : `Did not find`;
-          console.log(`${outcome} security policies`);
-        }),
-        catchError(this.handleError<SecurityPolicy>(`updateSecurityPolicies`))
+        )
       );
   }
 
-  /**
-   * Handle Http operation that failed.
-   * Let the app continue.
-   * @param operation - name of the operation that failed
-   */
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      return throwError(error.error);
-    };
-  }
 }

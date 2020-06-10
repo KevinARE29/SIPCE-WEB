@@ -1,7 +1,7 @@
 /*  
   Path: app/app.module.ts
   Objetive: Define app main container
-  Author: Esme López
+  Author: Esme López y Veronica Reyes
 */
 
 import { BrowserModule } from '@angular/platform-browser';
@@ -20,7 +20,8 @@ import { AntDesignModule } from './ant-design/ant-design.module';
 import { MainNavComponent } from './main-nav/main-nav.component';
 import { InterceptorModule } from './Interceptors/interceptor.module';
 
-import { AuthInterceptor } from './Interceptors/auth-interceptor';
+import { AuthInterceptor } from './interceptors/auth-interceptor';
+import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
 
 
 @NgModule({
@@ -29,6 +30,11 @@ import { AuthInterceptor } from './Interceptors/auth-interceptor';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptor,
       multi: true
     }
   ],
