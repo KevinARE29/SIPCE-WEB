@@ -33,11 +33,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             this.router.navigate(['login/error403']);
           } else if(error.error.StatusCode >= 500 && error.error.StatusCode <= 599){
             this.router.navigate(['login/error500']);
-          } else{
-            // TODO: Add localization to translate the entity atributte 
-
-          }
-
+          } 
           return throwError(error); // server-side error
         } else {
           return throwError(error); // client-side error

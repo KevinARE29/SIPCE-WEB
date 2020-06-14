@@ -75,16 +75,15 @@ export class RoleComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       let param: string = params.get('role');
       
+      this.roleForm = this.fb.group({
+        name: [null, [Validators.required, Validators.maxLength(32)]]
+      });
+
       if (typeof param === "string" && !Number.isNaN(Number(param))) {
         this.id = Number(param);
-
-        this.roleForm = this.fb.group({
-          name: [null, [Validators.required, Validators.maxLength(32)]]
-        });
-
         this.getAppPermissions();
       } else {
-        this.router.navigateByUrl("/roles/{{param}}", { skipLocationChange: true });
+        this.router.navigateByUrl("/role/"+this.id, { skipLocationChange: true });
       }
     });
   }
@@ -139,7 +138,16 @@ export class RoleComponent implements OnInit {
 
           this.router.navigateByUrl("/roles/"+this.role.id)
         }, err => {
-          console.log(err);
+          let statusCode = err.statusCode;
+          let notIn = [401, 403];
+          
+          if(!notIn.includes(statusCode) && statusCode<500){
+            this.notification.create(
+              'error',
+              'Ocurrío un error al crear el rol. Por favor verifique lo siguiente:',
+              err.message
+            );
+          }
         }
       )
   }
@@ -157,9 +165,18 @@ export class RoleComponent implements OnInit {
           this.setData();
         },
         err => {  
+          let statusCode = err.statusCode;
+          let notIn = [401, 403, 404];
+          
           if(err.statusCode === 404){
             this.router.navigateByUrl("/role/"+this.id, { skipLocationChange: true });
-          } 
+          } else if(!notIn.includes(statusCode) && statusCode<500){
+            this.notification.create(
+              'error',
+              'Ocurrío un error al obtener el rol. Por favor verifique lo siguiente:',
+              err.message
+            );
+          }
         }
       )
   }
@@ -176,8 +193,17 @@ export class RoleComponent implements OnInit {
           this.btnLoading = false;
         },
         err => {
+          let statusCode = err.statusCode;
+          let notIn = [401, 403, 404];
+          
           if(err.statusCode === 404){
             this.router.navigateByUrl("/role/"+this.id, { skipLocationChange: true });
+          } else if(!notIn.includes(statusCode) && statusCode<500){
+            this.notification.create(
+              'error',
+              'Ocurrío un error al actualizar el rol. Por favor verifique lo siguiente:',
+              err.message
+            );
           }
         }
       )

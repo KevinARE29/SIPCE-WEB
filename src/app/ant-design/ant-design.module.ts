@@ -29,6 +29,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTransferModule } from 'ng-zorro-antd/transfer';
+import { NzNotificationModule } from 'ng-zorro-antd/notification';
 
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { es_ES } from 'ng-zorro-antd/i18n';
@@ -61,7 +62,8 @@ const ngZorro = [
   NzTableModule,
   NzDividerModule,
   NzSpinModule,
-  NzTransferModule
+  NzTransferModule,
+  NzNotificationModule
 ];
 
 @NgModule({
