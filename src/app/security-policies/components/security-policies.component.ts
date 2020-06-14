@@ -1,6 +1,6 @@
 /* 
   Path: app/security-policies/components/security-policies.component.ts
-  Objetive: Define security policies behavior
+  Objective: Define security policies behavior
   Author: Esme López 
 */
 
@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 import { SecurityPolicy } from '../shared/security-policy.model';
 import { SecurityPolicyService } from '../shared/security-policy.service';
@@ -29,6 +30,7 @@ export class SecurityPoliciesComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private securityPolicyService: SecurityPolicyService,
+    private notification: NzNotificationService,
     private message: NzMessageService,
     private modal: NzModalService
   ) { }
@@ -45,6 +47,17 @@ export class SecurityPoliciesComponent implements OnInit {
       .subscribe(
         securityPolicy => {
           this.securityPolicy = securityPolicy;
+        }, err => {          
+          let statusCode = err.statusCode;
+          let notIn = [401, 403];
+          
+          if(!notIn.includes(statusCode) && statusCode<500){
+            this.notification.create(
+              'error',
+              'Ocurrío un error al obtener las políticas de seguridad.',
+              err.message
+            );
+          }
         }
       );
   }
@@ -77,6 +90,17 @@ export class SecurityPoliciesComponent implements OnInit {
             this.securityPolicy.minActive = false;
 
             this.message.success('Políticas de seguridad actualizadas con éxito');
+        }).catch(err => {
+          let statusCode = err.statusCode;
+          let notIn = [401, 403];
+          
+          if(!notIn.includes(statusCode) && statusCode<500){
+            this.notification.create(
+              'error',
+              'Ocurrío un error al actualizar las políticas de seguridad.',
+              err.message
+            );
+          }
         })
     });
   }

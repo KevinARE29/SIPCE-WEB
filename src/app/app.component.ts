@@ -1,6 +1,6 @@
 /* 
   Path: app/main-nav/main-nav.component.ts
-  Objetive: Define general app behavior
+  Objective: Define general app behavior
   Author: Esme López 
 */
 

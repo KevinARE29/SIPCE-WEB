@@ -1,6 +1,6 @@
 /*  
   Path: app/app.module.ts
-  Objetive: Define app main container
+  Objective: Define app main container
   Author: Esme López y Veronica Reyes
 */
 

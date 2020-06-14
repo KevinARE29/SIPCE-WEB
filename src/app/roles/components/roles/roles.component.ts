@@ -1,9 +1,16 @@
+/* 
+  Path: app/roles/components/roles/roles.component.ts
+  Objective: Define the roles behavior
+  Author: Esme López 
+*/
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 import { RoleService } from './../../shared/role.service';
 import { AuthService } from '../../../login/shared/auth.service';
@@ -34,6 +41,7 @@ export class RolesComponent implements OnInit {
     private roleService: RoleService,
     private authService: AuthService,
     private message: NzMessageService,
+    private notification: NzNotificationService,
     private modal: NzModalService
   ) { }
 
@@ -79,17 +87,15 @@ export class RolesComponent implements OnInit {
           this.loading = false;
         },
         err => {          
-          if(err.StatusCode === 401){
-            this.router.navigate(['login/error401']);
-          } else if( err.StatusCode === 403){
-            this.router.navigate(['login/error403']);
-          } else if(err.StatusCode >= 500 && err.StatusCode <= 599){
-            this.router.navigate(['login/error500']);
-          } else{
-            if(typeof err.message === 'string')
-              this.message.error(err.message);
-            else
-            err.message.forEach(element => { this.message.error(element); });
+          let statusCode = err.statusCode;
+          let notIn = [401, 403];
+          
+          if(!notIn.includes(statusCode) && statusCode<500){
+            this.notification.create(
+              'error',
+              'Ocurrío un error al obtener los roles.',
+              err.message
+            );
           }
         }
       )
@@ -105,19 +111,16 @@ export class RolesComponent implements OnInit {
           this.pagination = data['pagination'];
           this.listOfDisplayData = [...this.roles];
           this.loading = false;
-        },
-        err => {          
-          if(err.StatusCode === 401){
-            this.router.navigate(['login/error401']);
-          } else if( err.StatusCode === 403){
-            this.router.navigate(['login/error403']);
-          } else if(err.StatusCode >= 500 && err.StatusCode <= 599){
-            this.router.navigate(['login/error500']);
-          } else{
-            if(typeof err.message === 'string')
-              this.message.error(err.message);
-            else
-            err.message.forEach(element => { this.message.error(element); });
+        }, err => {          
+          let statusCode = err.statusCode;
+          let notIn = [401, 403];
+          
+          if(!notIn.includes(statusCode) && statusCode<500){
+            this.notification.create(
+              'error',
+              'Ocurrío un error al recargar roles.',
+              err.message
+            );
           }
         }
       )
@@ -133,19 +136,16 @@ export class RolesComponent implements OnInit {
           this.pagination = data['pagination'];
           this.listOfDisplayData = [...this.roles];
           this.loading = false;
-        },
-        err => {          
-          if(err.StatusCode === 401){
-            this.router.navigate(['login/error401']);
-          } else if( err.StatusCode === 403){
-            this.router.navigate(['login/error403']);
-          } else if(err.StatusCode >= 500 && err.StatusCode <= 599){
-            this.router.navigate(['login/error500']);
-          } else{
-            if(typeof err.message === 'string')
-              this.message.error(err.message);
-            else
-            err.message.forEach(element => { this.message.error(element); });
+        }, err => {          
+          let statusCode = err.statusCode;
+          let notIn = [401, 403];
+          
+          if(!notIn.includes(statusCode) && statusCode<500){
+            this.notification.create(
+              'error',
+              'Ocurrío un error al filtrar roles.',
+              err.message
+            );
           }
         }
       )
@@ -154,10 +154,6 @@ export class RolesComponent implements OnInit {
   /* ---    Secondary options      --- */
   getRole(id: number){
     this.router.navigate(['roles/'+id]);
-  }
-
-  deleteRole(){
-    
   }
 
   showConfirm(id: number): void {
@@ -173,18 +169,16 @@ export class RolesComponent implements OnInit {
         .toPromise().then(r => {
             this.message.success(`El rol ${element.name} ha sido eliminado`);
             this.getRoles();
-        }).catch(e => {
-          if(e.statusCode === 401){
-            this.router.navigate(['login/error401']);
-          } else if( e.statusCode === 403){
-            this.router.navigate(['login/error403']);
-          } else if(e.statusCode >= 500 && e.statusCode <= 599){
-            this.router.navigate(['login/error500']);
-          } else{
-              if(typeof e.message === 'string')
-                this.message.error(e.message);
-              else
-                e.message.forEach(element => { this.message.error(element); });
+        }).catch(err => {
+          let statusCode = err.statusCode;
+          let notIn = [401, 403];
+          
+          if(!notIn.includes(statusCode) && statusCode<500){
+            this.notification.create(
+              'error',
+              'Ocurrío un error al eliminar el rol.',
+              err.message
+            );
           }
         })
     });

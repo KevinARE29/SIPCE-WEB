@@ -1,3 +1,9 @@
+/* 
+  Path: app/roles/components/role/role.component.ts
+  Objective: Define the behavior of an role
+  Author: Esme López 
+*/
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -101,9 +107,6 @@ export class RoleComponent implements OnInit {
             this.getRole();
 
           this.transferLoading = false;
-        },
-        err => {  
-          console.log(err);   
         }
       )
   }

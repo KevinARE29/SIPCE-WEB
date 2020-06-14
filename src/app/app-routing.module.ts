@@ -1,6 +1,6 @@
 /*  
   Path: app/app-routing.module.ts
-  Objetive: Contain major routes
+  Objective: Contain major routes
   Author: Esme López
 */
 

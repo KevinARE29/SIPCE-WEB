@@ -1,6 +1,6 @@
 /* 
   Path: app/login/components/not-found/not-found.component.ts
-  Objetive: Define not found error behavior
+  Objective: Define not found error behavior
   Author: Esme López 
 */
 

@@ -1,6 +1,6 @@
 /*  
   Path: app/ant-design/ant-design.module.ts
-  Objetive: Contains Ant Design modules used in the app
+  Objective: Contains Ant Design modules used in the app
   Author: Esme López
 */
 

@@ -1,6 +1,6 @@
 /* 
   Path: app/main-nav/main-nav.component.ts
-  Objetive: Define main navigation behavior
+  Objective: Define main navigation behavior
   Author: Esme López y Veronica Reyes
 */
 

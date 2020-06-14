@@ -1,6 +1,6 @@
 /* 
   Path: app/interceptors/http-error.interceptor.ts
-  Objetive: Handle the http errors
+  Objective: Handle the http errors
   Author: Esme López 
 */
 

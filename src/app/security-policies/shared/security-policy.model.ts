@@ -1,6 +1,6 @@
 /* 
   Path: app/security-policies/shared/security-policy.model.ts
-  Objetive: Define security policy model
+  Objective: Define security policy model
   Author: Esme López 
 */
 

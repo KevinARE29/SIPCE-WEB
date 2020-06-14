@@ -1,11 +1,17 @@
-import { Injectable, ɵConsole } from '@angular/core';
+/* 
+  Path: app/roles/shared/role.service.ts
+  Objective: Define methods to manage data related to roles
+  Author: Esme López 
+*/
+
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
-import { Observable, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 import { environment } from './../../../environments/environment';
-import DictionaryJson from '../../../assets/dictionary.json';
+import { ErrorMessageService } from '../../shared/error-message.service';
 import { Role } from './role.model';
 
 @Injectable({
@@ -14,7 +20,10 @@ import { Role } from './role.model';
 export class RoleService {
   baseUrl: string;
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private errorMessageService: ErrorMessageService
+  ) {
     this.baseUrl = environment.apiURL;
   }
 
@@ -96,7 +105,6 @@ export class RoleService {
   }
 
   createRole(role: Role): Observable<Role> {
-    role.permissions = [1.1];
     return this.http.post<Role>(`${this.baseUrl}auth/roles`, role)
       .pipe(
         catchError(this.handleError())
@@ -123,31 +131,8 @@ export class RoleService {
    */
   private handleError() {
     return (error: any) => {
-      const dictionary = DictionaryJson.dictionary["roles"];
-      let errorMessage = error.error.message;
       
-      if(Array.isArray(errorMessage)){
-        let newMessage = new Array<string>();
-
-        errorMessage.forEach( m => {
-          let field  = m.split(":");
-
-          if(dictionary.hasOwnProperty(field[0])){
-            m = m.replace(field[0], dictionary[field[0]]);
-            newMessage.push(m);
-          }
-        });
-
-        error.error.message = newMessage;
-      } else if(typeof errorMessage === 'string'){
-        let field  = errorMessage.split(":");
-
-        if(dictionary.hasOwnProperty(field[0])){
-          errorMessage = errorMessage.replace(field[0], dictionary[field[0]]);
-          error.error.message = errorMessage;
-        }
-      }
-
+      error.error.message = this.errorMessageService.transformMessage("roles", error.error.message);
       return throwError(error.error);
     };
   }
