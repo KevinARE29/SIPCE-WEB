@@ -3,8 +3,12 @@
 
     <form nz-form [formGroup]="roleForm" (ngSubmit)="submitForm()">
         <nz-form-item nzJustify="space-around">
-            <nz-form-control nzXs="24" nzSm="24"  nzMd="12" nzLg="10" nzErrorTip="El nombre del rol es requerido!">
-                <input nz-input formControlName="name" placeholder="Nombre del rol" />
+            <nz-form-control nzXs="24" nzSm="24"  nzMd="12" nzLg="10" [nzErrorTip]="nameErrors">
+                <input nz-input formControlName="name" placeholder="Nombre"/>
+                <ng-template #nameErrors let-control>
+                    <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 32 caracteres</ng-container>
+                    <ng-container *ngIf="control.hasError('required')">El nombre es requerido</ng-container>
+                </ng-template>
             </nz-form-control>
         </nz-form-item>
 

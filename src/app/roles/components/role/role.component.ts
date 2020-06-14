@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import { TransferItem } from 'ng-zorro-antd/transfer';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 import { AuthService } from '../../../login/shared/auth.service';
 import { PermissionService } from './../../shared/permission.service';
@@ -27,6 +28,7 @@ export class RoleComponent implements OnInit {
   btnLoading = false;
   transferLoading = false;
   roleForm!: FormGroup;
+  newRole: string;
 
   constructor(
     private router: Router,
@@ -34,6 +36,7 @@ export class RoleComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private message: NzMessageService,
+    private notification: NzNotificationService,
     private roleService: RoleService,
     private permissionService: PermissionService
   ) { }
@@ -45,7 +48,6 @@ export class RoleComponent implements OnInit {
     if(this.id === 0)
       this.setData();
   }
-
   /* ---      Control page permissions      --- */
   setPermissions(){
     let token = this.authService.getToken();
@@ -77,7 +79,7 @@ export class RoleComponent implements OnInit {
         this.id = Number(param);
 
         this.roleForm = this.fb.group({
-          name: [null, [Validators.required]]
+          name: [null, [Validators.required, Validators.maxLength(32)]]
         });
 
         this.getAppPermissions();
@@ -108,9 +110,6 @@ export class RoleComponent implements OnInit {
   }
 
   submitForm(): void {
-    if((this.roleForm.controls["name"].value) === "")
-      this.roleForm.get('name')!.setValue(null);
-
     for (const i in this.roleForm.controls) {
       this.roleForm.controls[i].markAsDirty();
       this.roleForm.controls[i].updateValueAndValidity();
@@ -118,7 +117,7 @@ export class RoleComponent implements OnInit {
     
     if(this.roleForm.valid){
       this.role.name = this.roleForm.controls["name"].value;
-
+      
       if(this.id === 0){
         this.createRole();
       }else if(this.id > 5){
@@ -153,9 +152,7 @@ export class RoleComponent implements OnInit {
           this.btnLoading = false;
           this.role = data;
 
-          this.roleForm = this.fb.group({
-            name: [this.role.name, [Validators.required]]
-          });
+          this.roleForm.get('name')!.setValue(this.role.name);
           
           this.setData();
         },
