@@ -25,6 +25,7 @@ export class SecurityPoliciesComponent implements OnInit {
   securityPolicy: SecurityPolicy;
   confirmModal?: NzModalRef;
   permissions: Array<Permission> = [];
+  loading = false;
 
   constructor(
     private router: Router,
@@ -43,10 +44,12 @@ export class SecurityPoliciesComponent implements OnInit {
   }
 
   getSecurityPolicies(): void {
+    this.loading = true;
     this.securityPolicyService.getSecurityPolicies()
       .subscribe(
         securityPolicy => {
           this.securityPolicy = securityPolicy;
+          this.loading = false;
         }, err => {          
           let statusCode = err.statusCode;
           let notIn = [401, 403];
@@ -55,7 +58,8 @@ export class SecurityPoliciesComponent implements OnInit {
             this.notification.create(
               'error',
               'Ocurrío un error al obtener las políticas de seguridad.',
-              err.message
+              err.message,
+              { nzDuration: 0 }
             );
           }
         }
@@ -98,7 +102,8 @@ export class SecurityPoliciesComponent implements OnInit {
             this.notification.create(
               'error',
               'Ocurrío un error al actualizar las políticas de seguridad.',
-              err.message
+              err.message,
+              { nzDuration: 0 }
             );
           }
         })

@@ -94,7 +94,8 @@ export class RolesComponent implements OnInit {
             this.notification.create(
               'error',
               'Ocurrío un error al obtener los roles.',
-              err.message
+              err.message,
+              { nzDuration: 0 }
             );
           }
         }
@@ -119,7 +120,8 @@ export class RolesComponent implements OnInit {
             this.notification.create(
               'error',
               'Ocurrío un error al recargar roles.',
-              err.message
+              err.message,
+              { nzDuration: 0 }
             );
           }
         }
@@ -144,7 +146,8 @@ export class RolesComponent implements OnInit {
             this.notification.create(
               'error',
               'Ocurrío un error al filtrar roles.',
-              err.message
+              err.message,
+              { nzDuration: 0 }
             );
           }
         }
@@ -177,7 +180,8 @@ export class RolesComponent implements OnInit {
             this.notification.create(
               'error',
               'Ocurrío un error al eliminar el rol.',
-              err.message
+              err.message,
+              { nzDuration: 0 }
             );
           }
         })

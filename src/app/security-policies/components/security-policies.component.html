@@ -8,7 +8,8 @@
 
 <hr>
 
-<div class="policies" nz-row>
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+  <div class="policies" nz-row>
     <div nz-col [nzXs]="{ span: 20, offset: 2 }" [nzSm]="{ span: 20, offset: 2 }"  [nzMd]="{ span: 20, offset: 2 }" [nzLg]="{ span: 8, offset: 8 }">
       <div class="policy">
         <label nz-checkbox [(ngModel)]="securityPolicy.minActive" (change)="updateMin()" [nzDisabled]="!checkPermission(1)">Mínimo de caracteres: </label>
@@ -32,4 +33,5 @@
 
       <button *ngIf="checkPermission(1)" nz-button nzType="primary" (click)="showConfirm()">ACTUALIZAR POLÍTICAS</button>
     </div>
-</div>
+  </div>
+</nz-spin>

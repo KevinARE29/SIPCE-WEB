@@ -148,7 +148,8 @@ export class RoleComponent implements OnInit {
             this.notification.create(
               'error',
               'Ocurrío un error al crear el rol. Por favor verifique lo siguiente:',
-              err.message
+              err.message,
+              { nzDuration: 0 }
             );
           }
         }
@@ -156,11 +157,11 @@ export class RoleComponent implements OnInit {
   }
 
   getRole(){
-    this.btnLoading = true;
+    this.transferLoading = true;
     this.roleService.getRole(this.id)
       .subscribe(
         data => {
-          this.btnLoading = false;
+          this.transferLoading = false;
           this.role = data;
 
           this.roleForm.get('name')!.setValue(this.role.name);
@@ -177,7 +178,8 @@ export class RoleComponent implements OnInit {
             this.notification.create(
               'error',
               'Ocurrío un error al obtener el rol. Por favor verifique lo siguiente:',
-              err.message
+              err.message,
+              { nzDuration: 0 }
             );
           }
         }
@@ -205,7 +207,8 @@ export class RoleComponent implements OnInit {
             this.notification.create(
               'error',
               'Ocurrío un error al actualizar el rol. Por favor verifique lo siguiente:',
-              err.message
+              err.message,
+              { nzDuration: 0 }
             );
           }
         }
