@@ -1,6 +1,6 @@
 /*  
   Path: app/security-policies/security-policies-routing.module.ts
-  Objetive: Contains security policies routes
+  Objective: Contains security policies routes
   Author: Esme López
 */
 

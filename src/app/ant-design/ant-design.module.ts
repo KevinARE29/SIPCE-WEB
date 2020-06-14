@@ -1,6 +1,6 @@
 /*  
   Path: app/ant-design/ant-design.module.ts
-  Objetive: Contains Ant Design modules used in the app
+  Objective: Contains Ant Design modules used in the app
   Author: Esme López
 */
 
@@ -25,6 +25,11 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzTransferModule } from 'ng-zorro-antd/transfer';
+import { NzNotificationModule } from 'ng-zorro-antd/notification';
 
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { es_ES } from 'ng-zorro-antd/i18n';
@@ -53,7 +58,12 @@ const ngZorro = [
   NzCheckboxModule,
   NzToolTipModule,
   NzModalModule,
-  NzMessageModule
+  NzMessageModule,
+  NzTableModule,
+  NzDividerModule,
+  NzSpinModule,
+  NzTransferModule,
+  NzNotificationModule
 ];
 
 @NgModule({

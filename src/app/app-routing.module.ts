@@ -1,6 +1,6 @@
 /*  
   Path: app/app-routing.module.ts
-  Objetive: Contain major routes
+  Objective: Contain major routes
   Author: Esme López
 */
 
@@ -10,7 +10,6 @@ import { AuthGuard } from './login/guards/auth.guard';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/welcome' },
-  // { path: 'login', pathMatch: 'full', redirectTo: '/login' },
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then( m => m.LoginModule),
@@ -24,6 +23,11 @@ const routes: Routes = [
   {
     path: 'politicas-seguridad',
     loadChildren: () => import('./security-policies/security-policies.module').then( m=> m.SecurityPoliciesModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'roles',
+    loadChildren: () => import('./roles/roles.module').then( m=> m.RolesModule),
     canLoad: [AuthGuard]
   },
   {

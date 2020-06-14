@@ -1,6 +1,6 @@
 /*
   Path: app/logIn/app-routing.module.ts
-  Objetive: Contain Login routes
+  Objective: Contain Login routes
   Author: Veronica Reyes
 */
 
