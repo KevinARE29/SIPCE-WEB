@@ -14,24 +14,31 @@
       </a>
     </div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
+      <li nz-submenu nzTitle="Dashboard" nzIcon="dashboard">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/welcome">Inicio</a>
           </li>
         </ul>
       </li>
-      <li nz-submenu nzOpen nzTitle="Políticas de seguridad" nzIcon="key">
+      <li nz-submenu nzTitle="Políticas de seguridad" nzIcon="key">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/politicas-seguridad">Políticas de seguridad</a>
           </li>
         </ul>
       </li>
-      <li nz-submenu nzOpen nzTitle="Roles" nzIcon="lock">
+      <li nz-submenu nzTitle="Roles" nzIcon="lock">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/roles">Roles</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Bitácoras" nzIcon="profile">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/bitacora/accesos">Bitácora de accesos</a>
           </li>
         </ul>
       </li>

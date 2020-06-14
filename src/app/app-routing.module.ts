@@ -31,6 +31,11 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'bitacora',
+    loadChildren: () => import('./logs/logs.module').then(m => m.LogsModule),
+    canLoad: [AuthGuard]
+  },
+  {
     path: '**',
     redirectTo: '/error404',
     pathMatch: 'full'
