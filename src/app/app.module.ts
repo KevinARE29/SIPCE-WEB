@@ -18,10 +18,10 @@ import { LoginModule } from './login/login.module';
 
 import { AntDesignModule } from './ant-design/ant-design.module';
 import { MainNavComponent } from './main-nav/main-nav.component';
-import { InterceptorModule } from './NTRCPTR/interceptor.module';
+import { InterceptorModule } from './interceptors/interceptor.module';
 
-import { AuthInterceptor } from './NTRCPTR/auth-interceptor';
-import { HttpErrorInterceptor } from './NTRCPTR/http-error.interceptor';
+import { AuthInterceptor } from './interceptors/auth-interceptor';
+import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
 
 
 @NgModule({
