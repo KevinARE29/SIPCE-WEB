@@ -46,28 +46,29 @@ export class AccessLogService {
       queryParams += '?page=' + params.pageIndex;
 
     // Params
-    let sort = '&sort=';
-    params.sort.forEach(param => {
-      if(param.value){
-        // console.log(param);
-        sort += param.key;
-        switch(param.value){
-          case "ascend":
-            sort += "-" + param.value.substring(0,3) + ',';
-            break;
-          case "descend":
-            sort += "-" + param.value.substring(0,4) + ',';
-            break;
+    if(params){
+      let sort = '&sort=';
+      params.sort.forEach(param => {
+        if(param.value){
+          sort += param.key;
+          switch(param.value){
+            case "ascend":
+              sort += "-" + param.value.substring(0,3) + ',';
+              break;
+            case "descend":
+              sort += "-" + param.value.substring(0,4) + ',';
+              break;
+          }
         }
+      });
+
+      if(sort.length>6){
+        if(sort.charAt(sort.length-1)===',')
+          sort = sort.slice(0, -1);
+
+        queryParams += sort;
       }
-    });
-
-    if(sort.length>6){{
-      if(sort.charAt(sort.length-1)===',')
-        sort = sort.slice(0, -1);
-
-      queryParams += sort;
-    }}
+    }
 
     // Search params
     if(search){

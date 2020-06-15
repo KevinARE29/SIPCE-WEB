@@ -54,9 +54,55 @@ export class ActionsLogComponent implements OnInit {
     )
   }
 
-  search(): void{}
+  search(): void{
+    this.loading = true;
+    this.actionsLogService.searchAccessLog(null, this.searchParams, false)
+      .subscribe(
+        data => {
+          this.actionsLogs = data['data'];
+          this.pagination = data['pagination'];
+          this.listOfDisplayData = [...this.actionsLogs];
+          this.loading = false;
+        }, err => {          
+          let statusCode = err.statusCode;
+          let notIn = [401, 403];
+          
+          if(!notIn.includes(statusCode) && statusCode<500){
+            this.notification.create(
+              'error',
+              'Ocurrío un error al filtrar la bitácora de acciones.',
+              err.message,
+              { nzDuration: 0 }
+            );
+          }
+        }
+      )
+  }
 
-  recharge(params: NzTableQueryParams): void{}
+  recharge(params: NzTableQueryParams): void{
+    this.loading = true;
+    this.actionsLogService.searchAccessLog(params, this.searchParams, params.pageIndex !== this.pagination.page)
+      .subscribe(
+        data => {
+          this.actionsLogs = data['data'];
+          this.pagination = data['pagination'];
+          this.listOfDisplayData = [...this.actionsLogs];
+          this.loading = false;
+        }, err => {          
+          let statusCode = err.statusCode;
+          let notIn = [401, 403];
+          
+          if(!notIn.includes(statusCode) && statusCode<500){
+            this.notification.create(
+              'error',
+              'Ocurrío un error al recargar la bitácora de acciones.',
+              err.message,
+              { nzDuration: 0 }
+            );
+          }
+        }
+      )
+  }
 
   onChangeDatePicker(result: Date[]): void {
     this.searchParams.attemptTime[0] = result[0];

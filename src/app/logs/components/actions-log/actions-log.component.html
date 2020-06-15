@@ -42,7 +42,7 @@
     <!-- Action -->
     <div class="action" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5">
         <label>Acción: </label>
-        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.statusCode" (ngModelChange)="search()">
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.action" (ngModelChange)="search()">
             <nz-option nzLabel="Actualizar" nzValue="1"></nz-option>
             <nz-option nzLabel="Consultar" nzValue="2"></nz-option>
             <nz-option nzLabel="Crear" nzValue="3"></nz-option>
