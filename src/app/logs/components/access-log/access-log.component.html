@@ -1,19 +1,36 @@
 <h1>Bitácora de accesos</h1>
 
 <div class="search" nz-row nzJustify="space-around">
+    <!-- Username -->
     <div class="user" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="4">
-        <input nz-input placeholder="Buscar usuario" />
+        <nz-input-group [nzSuffix]="inputClearUser">
+            <input nz-input [(ngModel)]="searchParams.username" placeholder="Buscar usuario" />
+        </nz-input-group>
+        <ng-template #inputClearUser>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.username" (click)="searchParams.username = null; search()"></i>
+        </ng-template>
     </div>
+
+    <!-- IP -->
     <div class="ip" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="4">
-        <input nz-input placeholder="Buscar IP" />
+        <nz-input-group [nzSuffix]="inputClearIP">
+            <input nz-input [(ngModel)]="searchParams.ip" placeholder="Buscar IP" />
+        </nz-input-group>
+        <ng-template #inputClearIP>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.ip" (click)="searchParams.ip = null; search()"></i>
+        </ng-template>
     </div>
+
+    <!-- Status Code -->
     <div class="status-code" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="5">
         <label>Código de respuesta: </label>
-        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar">
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.statusCode" (ngModelChange)="search()">
             <nz-option nzLabel="201" nzValue="201"></nz-option>
             <nz-option nzLabel="401" nzValue="401"></nz-option>
         </nz-select>
     </div>
+
+    <!-- Date range -->
     <div class="date" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="6">
         <label>Fecha: </label>
         <nz-range-picker 
@@ -23,6 +40,7 @@
             (ngModelChange)="onChangeDatePicker($event)"
         ></nz-range-picker>
     </div>
+
     <div nz-col nzXs="24" nzSm="24" nzMd="2" nzLg="4" nzXl="1">
         <button nz-button nzType="primary" (click)="search()">Buscar</button>
     </div>
@@ -43,10 +61,10 @@
             >
                 <thead>
                     <tr>
-                        <th nzColumnKey="user" [nzSortFn]="true">Usuario</th>
-                        <th nzColumnKey="ip" [nzSortFn]="true">IP</th>
-                        <th nzColumnKey="statusCode" [nzSortFn]="true">Código de respuesta</th>
-                        <th nzColumnKey="attemptTime" [nzSortFn]="true">Fecha y hora</th>
+                        <th nzColumnKey="username" [nzSortFn]="true" [nzSortPriority]="1">Usuario</th>
+                        <th nzColumnKey="ip" [nzSortFn]="true" [nzSortPriority]="2">IP</th>
+                        <th nzColumnKey="statusCode" [nzSortFn]="true" [nzSortPriority]="3">Código de respuesta</th>
+                        <th nzColumnKey="attemptTime" [nzSortFn]="true" [nzSortPriority]="4">Fecha y hora</th>
                     </tr>
                 </thead>
                 

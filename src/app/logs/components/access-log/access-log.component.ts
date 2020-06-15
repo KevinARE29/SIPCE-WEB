@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzDateMode } from 'ng-zorro-antd/date-picker';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { subMonths, differenceInCalendarDays } from 'date-fns';
 
 import { AccessLogService } from './../../shared/access-log.service';
@@ -22,8 +23,10 @@ export class AccessLogComponent implements OnInit {
   tableSize = 'small'; 
   dateFormat = 'dd/MM/yyyy';
 
+  inputValue: string;
   constructor(
-    private accessLogService: AccessLogService
+    private accessLogService: AccessLogService,
+    private notification: NzNotificationService
   ) { }
 
   ngOnInit(): void {
@@ -51,9 +54,52 @@ export class AccessLogComponent implements OnInit {
   }
 
   recharge(params: NzTableQueryParams): void{
+    this.loading = true;
+    this.accessLogService.searchAccessLog(params, this.searchParams, params.pageIndex !== this.pagination.page)
+      .subscribe(
+        data => {
+          this.accessLogs = data['data'];
+          this.pagination = data['pagination'];
+          this.listOfDisplayData = [...this.accessLogs];
+          this.loading = false;
+        }, err => {          
+          let statusCode = err.statusCode;
+          let notIn = [401, 403];
+          
+          if(!notIn.includes(statusCode) && statusCode<500){
+            this.notification.create(
+              'error',
+              'Ocurrío un error al recargar la bitácora de accesos.',
+              err.message,
+              { nzDuration: 0 }
+            );
+          }
+        }
+      )
   }
 
   search(): void{
+    this.accessLogService.searchAccessLog(null, this.searchParams, false)
+      .subscribe(
+        data => {
+          this.accessLogs = data['data'];
+          this.pagination = data['pagination'];
+          this.listOfDisplayData = [...this.accessLogs];
+          this.loading = false;
+        }, err => {          
+          let statusCode = err.statusCode;
+          let notIn = [401, 403];
+          
+          if(!notIn.includes(statusCode) && statusCode<500){
+            this.notification.create(
+              'error',
+              'Ocurrío un error al filtrar la bitácora de accesos.',
+              err.message,
+              { nzDuration: 0 }
+            );
+          }
+        }
+      )
   }
 
   onChangeDatePicker(result: Date[]): void {
