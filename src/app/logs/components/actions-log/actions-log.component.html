@@ -1,0 +1,133 @@
+<h1>Bitácora de acciones</h1>
+
+<div class="actions-log" nz-row>
+    <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 24 }" [nzXl]="{ span: 20, offset: 2 }">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <nz-table #filterTable 
+                [nzData]="listOfDisplayData" 
+                nzTableLayout="fixed"
+                [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems"
+                [nzPageSize]="pagination.perPage"
+                [nzPageIndex]="pagination.page"
+                [nzSize]="tableSize"
+                (nzQueryParams)="recharge($event)"
+            >
+                <thead>
+                    <tr>
+                        <th nzColumnKey="username" [nzSortFn]="true" [nzSortPriority]="1">Usuario</th>
+                        <th nzColumnKey="action" [nzSortFn]="true" [nzSortPriority]="2">Acción</th>
+                        <th nzColumnKey="endpoint" [nzSortFn]="true" [nzSortPriority]="3">Ruta</th>
+                        <th nzColumnKey="statusCode" [nzSortFn]="true" [nzSortPriority]="4">Código de respuesta</th>
+                        <th nzColumnKey="attemptTime" [nzSortFn]="true" [nzSortPriority]="5">Fecha y hora</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <tr *ngFor="let data of filterTable.data">
+                        <td>{{ data.user.username }}</td>
+                        <td>{{ data.action }}</td>
+                        <td>{{ data.endpoint }}</td>
+                        <td [ngClass]="{ 
+                            'success': data.statusCode >= 200 && data.statusCode <= 299, 
+                            'error': data.statusCode >= 400 && data.statusCode <= 499,
+                            'server': data.statusCode >= 500 && data.statusCode <= 599}">
+                            {{ data.statusCode }} 
+                        </td>
+                        <td>{{ data.attemptTime | date:"dd/MM/yyyy hh:mm aa" }}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>
+
+<div class="status-codes" nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 15 }">
+    <nz-table nzTemplateMode [nzSize]="tableSize">
+        <thead>
+          <tr>
+            <th>Código de respuesta</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="success">200</td>
+            <td>
+                <strong>OK. </strong>
+                <span>La petición fue completada de manera exitosa.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="success">201</td>
+            <td>
+                <strong>Created. </strong>
+                <span>La petición del navegador se ha completado correctamente y se ha creado un nuevo recurso.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="success">204</td>
+            <td>
+                <strong>No Content. </strong>
+                <span>La petición del navegador se ha completado correctamente, pero la respuesta no muestra ningún tipo de contenido..</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="error">400</td>
+            <td>
+                <strong>Bad Request. </strong>
+                <span>El servidor no entiende la petición del navegador porque su sintaxis no es correcta.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="error">401</td>
+            <td>
+                <strong>Unauthorized. </strong>
+                <span>La petición que realiza el navegador precisa autenticación.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="error">403</td>
+            <td>
+                <strong>Forbidden. </strong>
+                <span>La petición que realiza el navegador es correcta, pero se ha denegado el acceso al recurso solicitado.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="error">404</td>
+            <td>
+                <strong>Not Found. </strong>
+                <span>El recurso que solicita el navegador no se encuentra o no está disponible en el servidor.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="error">409</td>
+            <td>
+                <strong>Conflict. </strong>
+                <span>No se ha podido completar la petición porque se ha producido un conflicto con el recurso solicitado.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="error">415</td>
+            <td>
+                <strong>Unsupported Media Type. </strong>
+                <span>La petición del navegador tiene un formato que no entiende el servidor y por eso no se procesa.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="error">422</td>
+            <td>
+                <strong>Unprocessable Entity. </strong>
+                <span>La solicitud está bien formada pero fue imposible seguirla debido a errores semánticos.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="server">500</td>
+            <td>
+                <strong>Internal Server Error. </strong>
+                <span>No se puede completar la petición realizada por el navegador ya que se ha producido un error inesperado en el navegador.</span>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+</div>

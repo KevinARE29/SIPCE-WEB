@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
-import { NzDateMode } from 'ng-zorro-antd/date-picker';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { subMonths, differenceInCalendarDays } from 'date-fns';
 
@@ -23,7 +22,6 @@ export class AccessLogComponent implements OnInit {
   tableSize = 'small'; 
   dateFormat = 'dd/MM/yyyy';
 
-  inputValue: string;
   constructor(
     private accessLogService: AccessLogService,
     private notification: NzNotificationService

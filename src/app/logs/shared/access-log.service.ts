@@ -9,7 +9,6 @@ import { subMonths } from 'date-fns';
 import { environment } from './../../../environments/environment';
 import { ErrorMessageService } from '../../shared/error-message.service';
 import { AccessLog } from './access-log.model';
-import { AccessLogComponent } from '../components/access-log/access-log.component';
 
 @Injectable({
   providedIn: 'root'

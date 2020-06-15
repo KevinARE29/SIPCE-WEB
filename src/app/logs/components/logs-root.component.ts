@@ -10,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
         <a routerLink="/bitacora/accesos">Bitácora de accesos</a>
       </div>
       <div nz-card-grid [ngStyle]="gridStyle">
-        Bitácora de acciones
+      <a routerLink="/bitacora/acciones">Bitácora de acciones</a>
       </div>
     </nz-card>
   </div>
