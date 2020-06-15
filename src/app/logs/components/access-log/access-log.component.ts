@@ -17,6 +17,7 @@ export class AccessLogComponent implements OnInit {
   loading = false;
   pagination: Pagination;
   tableSize = 'small'; 
+  dateFormat = 'dd/MM/yyyy';
 
   constructor(
     private accessLogService: AccessLogService
@@ -27,7 +28,7 @@ export class AccessLogComponent implements OnInit {
     this.getAccessLog();
   }
 
-  getAccessLog(){
+  getAccessLog(): void{
     this.loading = true;
     let currentDate = new Date(new Date().getFullYear(),new Date().getMonth() , new Date().getDate(), 23, 59, 59);
     
@@ -41,7 +42,11 @@ export class AccessLogComponent implements OnInit {
     )
   }
 
-  recharge(params: NzTableQueryParams){
+  recharge(params: NzTableQueryParams): void{
+    console.log(params);
+  }
+
+  search(): void{
 
   }
 }
