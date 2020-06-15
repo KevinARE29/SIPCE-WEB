@@ -30,6 +30,8 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzTransferModule } from 'ng-zorro-antd/transfer';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { es_ES } from 'ng-zorro-antd/i18n';
@@ -63,7 +65,9 @@ const ngZorro = [
   NzDividerModule,
   NzSpinModule,
   NzTransferModule,
-  NzNotificationModule
+  NzNotificationModule,
+  NzSelectModule,
+  NzDatePickerModule
 ];
 
 @NgModule({
