@@ -1,1 +1,63 @@
-<p>access-log works!</p>
+<h1>Bitácora de accesos</h1>
+
+<div class="access-log" nz-row>
+    <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 24 }" [nzXl]="{ span: 20, offset: 2 }">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <nz-table #filterTable 
+                [nzData]="listOfDisplayData" 
+                nzTableLayout="fixed"
+                [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems"
+                [nzPageSize]="pagination.perPage"
+                [nzPageIndex]="pagination.page"
+                [nzSize]="tableSize"
+                (nzQueryParams)="recharge($event)"
+            >
+                <thead>
+                    <tr>
+                        <th nzColumnKey="user" [nzSortFn]="true">Usuario</th>
+                        <th nzColumnKey="ip" [nzSortFn]="true">IP</th>
+                        <th nzColumnKey="statusCode" [nzSortFn]="true">Código de respuesta</th>
+                        <th nzColumnKey="attemptTime" [nzSortFn]="true">Fecha y hora</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <tr *ngFor="let data of filterTable.data">
+                        <td>{{ data.username }}</td>
+                        <td>{{ data.ip }}</td>
+                        <td [ngClass]="{ 'success': data.statusCode==201 , 'error': data.statusCode==401}">{{ data.statusCode }}</td>
+                        <td>{{ data.attemptTime | date:"dd/MM/yyyy hh:mm aa" }}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>
+
+<div class="status-codes" nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 12 }">
+    <nz-table nzTemplateMode [nzSize]="tableSize">
+        <thead>
+          <tr>
+            <th>Código de respuesta</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="success">201</td>
+            <td>
+                <strong>Created. </strong>
+                <span>La petición del navegador se ha completado correctamente y se ha creado un nuevo recurso.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="error">401</td>
+            <td>
+                <strong>Unauthorized. </strong>
+                <span>La petición que realiza el navegador precisa autenticación.</span>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+</div>
