@@ -3,5 +3,5 @@ export class AccessLog {
     username: string;
     ip: string;
     statusCode: number;
-    attemptTime: string;
+    attemptTime: any;
 }

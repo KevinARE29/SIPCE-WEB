@@ -16,10 +16,15 @@
     </div>
     <div class="date" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="6">
         <label>Fecha: </label>
-        <nz-range-picker nzFormat="dd/MM/yyyy"></nz-range-picker>
+        <nz-range-picker 
+            nzFormat="dd/MM/yyyy" 
+            [ngModel]="searchParams.attemptTime"
+            [nzDisabledDate]="disabledDate"
+            (ngModelChange)="onChangeDatePicker($event)"
+        ></nz-range-picker>
     </div>
     <div nz-col nzXs="24" nzSm="24" nzMd="2" nzLg="4" nzXl="1">
-        <button nz-button nzType="primary">Buscar</button>
+        <button nz-button nzType="primary" (click)="search()">Buscar</button>
     </div>
 </div>
 
