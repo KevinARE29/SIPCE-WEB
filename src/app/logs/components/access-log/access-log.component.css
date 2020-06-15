@@ -8,9 +8,6 @@
 
 .search{ margin-bottom: 20px;}
 
-@media (max-width: screen-xs-max) { 
-    .search{ background-color: red; } 
-}
 @media (max-width: 767px) {
     .search div{ margin-top: 5px; } 
 }

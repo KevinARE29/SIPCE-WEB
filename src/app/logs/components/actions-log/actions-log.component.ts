@@ -30,6 +30,8 @@ export class ActionsLogComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchParams = new ActionLog();
+    this.searchParams.user = new User();
+
     this.pagination = new Pagination();
     this.getActionsLog();
   }
@@ -52,5 +54,17 @@ export class ActionsLogComponent implements OnInit {
     )
   }
 
+  search(): void{}
+
   recharge(params: NzTableQueryParams): void{}
+
+  onChangeDatePicker(result: Date[]): void {
+    this.searchParams.attemptTime[0] = result[0];
+    this.searchParams.attemptTime[1] = result[1];
+  }
+
+  disabledDate = (current: Date): boolean => {
+    // Can not select days before today
+    return differenceInCalendarDays(current, new Date()) > 0;
+  };
 }

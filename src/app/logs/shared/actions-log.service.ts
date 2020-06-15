@@ -37,6 +37,8 @@ export class ActionsLogService {
       );
   }
 
+  // searchActionsLog()
+  
   /**
    * Handle Http operation that failed.
    * Let the app continue.

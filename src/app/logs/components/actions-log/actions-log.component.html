@@ -1,5 +1,71 @@
 <h1>Bitácora de acciones</h1>
 
+<div class="search" nz-row nzJustify="space-around">
+    <!-- Username -->
+    <div class="user" nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="6" [nzXl]="{ span: 5, offset: 1}">
+        <nz-input-group [nzSuffix]="inputClearUser">
+            <input nz-input [(ngModel)]="searchParams.user.username" placeholder="Buscar usuario" />
+        </nz-input-group>
+        <ng-template #inputClearUser>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.user.username" (click)="searchParams.user.username = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Endpoint -->
+    <div class="user" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="7" nzXl="6">
+        <nz-input-group [nzSuffix]="inputClearEndpoint">
+            <input nz-input [(ngModel)]="searchParams.endpoint" placeholder="Buscar ruta" />
+        </nz-input-group>
+        <ng-template #inputClearEndpoint>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.endpoint" (click)="searchParams.endpoint = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Status Code -->
+    <div class="status-code" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="8">
+        <label>Código de respuesta: </label>
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.statusCode" (ngModelChange)="search()">
+            <nz-option nzLabel="200" nzValue="200"></nz-option>
+            <nz-option nzLabel="201" nzValue="201"></nz-option>
+            <nz-option nzLabel="204" nzValue="204"></nz-option>
+            <nz-option nzLabel="400" nzValue="400"></nz-option>
+            <nz-option nzLabel="401" nzValue="401"></nz-option>
+            <nz-option nzLabel="403" nzValue="403"></nz-option>
+            <nz-option nzLabel="404" nzValue="404"></nz-option>
+            <nz-option nzLabel="409" nzValue="409"></nz-option>
+            <nz-option nzLabel="415" nzValue="415"></nz-option>
+            <nz-option nzLabel="422" nzValue="422"></nz-option>
+            <nz-option nzLabel="500" nzValue="500"></nz-option>
+        </nz-select>
+    </div>
+
+    <!-- Action -->
+    <div class="action" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5">
+        <label>Acción: </label>
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.statusCode" (ngModelChange)="search()">
+            <nz-option nzLabel="Actualizar" nzValue="1"></nz-option>
+            <nz-option nzLabel="Consultar" nzValue="2"></nz-option>
+            <nz-option nzLabel="Crear" nzValue="3"></nz-option>
+            <nz-option nzLabel="Eliminar" nzValue="4"></nz-option>
+        </nz-select>
+    </div>
+
+    <!-- Date range -->
+    <div class="date" nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="11" nzXl="9">
+        <label>Fecha: </label>
+        <nz-range-picker 
+            nzFormat="dd/MM/yyyy" 
+            [ngModel]="searchParams.attemptTime"
+            [nzDisabledDate]="disabledDate"
+            (ngModelChange)="onChangeDatePicker($event)"
+        ></nz-range-picker>
+    </div>
+
+    <div nz-col nzXs="8" nzSm="20" nzMd="2" nzLg="1" nzXl="5">
+        <button nz-button nzType="primary" (click)="search()">Buscar</button>
+    </div>
+</div>
+
 <div class="actions-log" nz-row>
     <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 24 }" [nzXl]="{ span: 20, offset: 2 }">
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
@@ -42,7 +108,7 @@
     </div>
 </div>
 
-<div class="status-codes" nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 15 }">
+<div class="status-codes" nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 15 }">
     <nz-table nzTemplateMode [nzSize]="tableSize">
         <thead>
           <tr>
