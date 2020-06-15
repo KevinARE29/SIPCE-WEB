@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ResetPasswordService } from '../shared/reset-password.service';
+import { SecurityPolicy } from '../../security-policies/shared/security-policy.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-reset-password',
@@ -12,12 +14,17 @@ export class ResetPasswordComponent implements OnInit {
   resetPwd: FormGroup;
   show: boolean = true;
   message: boolean = false;
+  securityPolicy: SecurityPolicy;
+  isLoading = false;
+  resetPasswordToken  = '';
 
   ngOnInit(): void {
     this.resetPwd = this.fb.group({
       password: ['', [Validators.required]],
       confirm: ['', [this.confirmValidator]],
     });
+
+    this.politicsPassword();
   }
 
   submitForm(value: { password: string; confirm: string }): void {
@@ -28,19 +35,12 @@ export class ResetPasswordComponent implements OnInit {
     console.log(value);
   }
 
-  resetForm(e: MouseEvent): void {
-    e.preventDefault();
-    this.resetPwd.reset();
-    for (const key in this.resetPwd.controls) {
-      this.resetPwd.controls[key].markAsPristine();
-      this.resetPwd.controls[key].updateValueAndValidity();
-    }
-  }
 
   validateConfirmPassword(): void {
     setTimeout(() => this.resetPwd.controls.confirm.updateValueAndValidity());
   }
-/*
+
+  /*
   userNameAsyncValidator = (control: FormControl) =>
     new Observable((observer: Observer<ValidationErrors | null>) => {
       setTimeout(() => {
@@ -65,18 +65,27 @@ export class ResetPasswordComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private resetPasswordService: ResetPasswordService,
-    private router: Router) { }
+    private router: Router,
+  //  private activatedRoute: ActivatedRoute
+    ) {
+  //    this.activatedRoute.queryParams.subscribe(data => {
+// this.resetPasswordToken =data.resetPasswordToken;
+// console.log(this.resetPasswordToken);
+ //     });
+     }
 
 
 
-  sendEmail() {
+  sendPassword() {
+    this.isLoading = true;
     // validating the form 
     for (const i in this.resetPwd.controls) {
       this.resetPwd.controls[i].markAsDirty();
       this.resetPwd.controls[i].updateValueAndValidity();
     }
-
+    
     if (this.resetPwd.valid) {
+      this.isLoading = false;
      // console.log(this.resetPassword.value)
      // this.resetPasswordService.forgotPassword(this.resetPassword.value).subscribe(
        // (response) => {
@@ -86,8 +95,23 @@ export class ResetPasswordComponent implements OnInit {
          // console.log('entro al error');
         // }
      // );
+    } else {
+     // this.isLoading = false;
     }
   }
+ 
+  politicsPassword() {
+    this.resetPasswordService.getPolitics().subscribe(
+       (response) => {
+        // this.show = false;
+        console.log(response);
+       // }
+        },
+        (error) => {
+        console.log('entro al error');
+        }
+     );
+  }
 
-  
+
 }
