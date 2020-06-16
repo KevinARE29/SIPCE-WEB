@@ -27,8 +27,6 @@ export class SecurityPolicyService {
   }
 
   getSecurityPolicies(): Observable<any> {
-    let url = this.baseUrl + 'auth/politics';
-
     return this.http.get<SecurityPolicy>(`${this.baseUrl}auth/politics`)
       .pipe(
         map(
