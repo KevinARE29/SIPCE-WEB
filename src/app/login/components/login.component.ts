@@ -10,8 +10,7 @@ import { AuthService } from '../shared/auth.service';
 })
 export class LoginComponent implements OnInit {
   userLogin: FormGroup;
-  // jwt: IJwtResponse;
-  mostrar: boolean;
+  errorMessage: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -32,7 +31,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['welcome']);
       },
       (error) => {
-        this.mostrar = true;
+        this.errorMessage = true;
       }
     );
   }
