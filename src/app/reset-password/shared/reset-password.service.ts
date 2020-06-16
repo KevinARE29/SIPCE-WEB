@@ -37,12 +37,13 @@ export class ResetPasswordService {
           const outcome = h ? `Fetched` : `Did not find`;
           console.log(`${outcome} security policies`);
         }),
-        catchError(this.handleError<SecurityPolicy>(`getSecurityPolicies`))
+        catchError(this.handleError<Politics>(`getPolitics`))
       );
   }
    
-  resetPassword(){
-    
+  resetPassword(password){
+      return this.http.post<any>(`${this.baseUrl}auth/reset-password?resetPasswordToken=${this.resetPasswordToken}`, password)
+       
   }
     /**
    * Handle Http operation that failed.

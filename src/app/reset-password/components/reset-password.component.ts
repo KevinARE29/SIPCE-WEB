@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ResetPasswordService } from '../shared/reset-password.service';
 import { SecurityPolicy } from '../../security-policies/shared/security-policy.model';
 import { ActivatedRoute } from '@angular/router';
+import { Politics } from '../politics';
 
 @Component({
   selector: 'app-reset-password',
@@ -16,6 +17,7 @@ export class ResetPasswordComponent implements OnInit {
   message: boolean = false;
   securityPolicy: SecurityPolicy;
   isLoading = false;
+  politics: Politics;
   resetPasswordToken  = '';
 
   ngOnInit(): void {
@@ -35,6 +37,9 @@ export class ResetPasswordComponent implements OnInit {
     console.log(value);
   }
 
+  getPassword() {
+   return this.resetPwd.value.password;
+  }
 
   validateConfirmPassword(): void {
     setTimeout(() => this.resetPwd.controls.confirm.updateValueAndValidity());
@@ -85,18 +90,23 @@ export class ResetPasswordComponent implements OnInit {
     }
     
     if (this.resetPwd.valid) {
+      console.log('variable password');
+        console.log(this.getPassword);
+      this.resetPasswordService.resetPassword(this.getPassword).subscribe(
+      (response) => {
+     //   this.politics =response.data;
+        console.log('esto se guarda en politics');
+        console.log(response);
       this.isLoading = false;
-     // console.log(this.resetPassword.value)
-     // this.resetPasswordService.forgotPassword(this.resetPassword.value).subscribe(
-       // (response) => {
-         // this.show = false;
-        // },
-        // (error) => {
-         // console.log('entro al error');
-        // }
-     // );
+      },
+     (error) => {
+      console.log('esto tiene el error');
+     console.log(error);
+     this.isLoading = false;
+        }
+    );
     } else {
-     // this.isLoading = false;
+      this.isLoading = false;
     }
   }
  
@@ -104,7 +114,8 @@ export class ResetPasswordComponent implements OnInit {
     this.resetPasswordService.getPolitics().subscribe(
        (response) => {
         // this.show = false;
-        console.log(response);
+       this.politics = response;
+        console.log(response.data);
        // }
         },
         (error) => {
