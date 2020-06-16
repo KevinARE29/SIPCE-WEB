@@ -1,0 +1,15 @@
+{
+    "dictionary":{
+        "roles": {
+            "name": "Nombre",
+            "permissions": "Permisos"
+        },
+        "security-policies": {
+            "minLength": "Mínimo de caracteres",
+            "capitalLetter": "Mayúsculas",
+            "lowerCase": "Mínusculas",
+            "specialChart": "Caracteres especiales",
+            "numericChart": "Dígitos"
+        }
+    }
+}

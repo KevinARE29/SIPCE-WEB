@@ -1,6 +1,6 @@
 /*
   Path: app/main-nav/main-nav.component.css
-  Objetive: Define main navigation style
+  Objective: Define main navigation style
   Author: Esme López 
 */
 
@@ -12,7 +12,7 @@
   }
   
   .app-layout {
-    height: 100vh;
+    min-height: 100vh;
   }
   
   .menu-sidebar {
@@ -69,7 +69,7 @@
     box-shadow: 0 1px 4px rgba(0,21,41,.08);
   }
   
-  nz-content { margin: 24px; }
+  nz-content { margin: 24px; overflow: initial; }
 
   nz-avatar { margin-left: 5px; }
   

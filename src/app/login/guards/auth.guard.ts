@@ -1,6 +1,6 @@
 /*  
   Path: app/login/guards/auth.guard.ts
-  Objetive: Control access to routes
+  Objective: Control access to routes
   Author: Esme López
 */
 

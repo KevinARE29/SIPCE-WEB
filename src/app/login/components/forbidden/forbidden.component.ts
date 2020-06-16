@@ -1,6 +1,6 @@
 /* 
   Path: app/login/components/forbidden/forbidden.component.ts
-  Objetive: Define forbidden error behavior
+  Objective: Define forbidden error behavior
   Author: Esme López 
 */
 

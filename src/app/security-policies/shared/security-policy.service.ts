@@ -1,16 +1,17 @@
 /* 
   Path: app/security-policies/shared/security-policy.service.ts
-  Objetive: Define methods to manage data related to security policies
+  Objective: Define methods to manage data related to security policies
   Author: Esme López 
 */
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { catchError, map } from 'rxjs/operators';
 
 import { environment } from './../../../environments/environment';
+import { ErrorMessageService } from '../../shared/error-message.service';
 import { SecurityPolicy } from './security-policy.model';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,14 +19,10 @@ import { Observable, of, throwError } from 'rxjs';
 export class SecurityPolicyService {
   baseUrl: string;
 
-  // httpOptions = {
-  //   headers: new HttpHeaders({ 
-  //     'Content-Type': 'application/json', 
-  //     'Authorization': localStorage.getItem('accessToken')
-  //   })
-  // };
-
-  constructor(private http: HttpClient) { 
+  constructor(
+    private http: HttpClient,
+    private errorMessageService: ErrorMessageService
+  ) { 
     this.baseUrl = environment.apiURL;
   }
 
@@ -44,11 +41,7 @@ export class SecurityPolicyService {
             return securityPolicy;
           }
         ),
-        tap(h => {
-          const outcome = h ? `Fetched` : `Did not find`;
-          console.log(`${outcome} security policies`);
-        }),
-        catchError(this.handleError<SecurityPolicy>(`getSecurityPolicies`))
+        catchError(this.handleError())
       );
   }
 
@@ -77,21 +70,18 @@ export class SecurityPolicyService {
             return securityPolicy;
           }
         ),
-        tap(h => {
-          const outcome = h ? `Fetched` : `Did not find`;
-          console.log(`${outcome} security policies`);
-        }),
-        catchError(this.handleError<SecurityPolicy>(`updateSecurityPolicies`))
+        catchError(this.handleError())
       );
   }
 
   /**
    * Handle Http operation that failed.
    * Let the app continue.
-   * @param operation - name of the operation that failed
    */
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
+  private handleError() {
+    return (error: any) => {
+      
+      error.error.message = this.errorMessageService.transformMessage("security-policies", error.error.message);
       return throwError(error.error);
     };
   }
