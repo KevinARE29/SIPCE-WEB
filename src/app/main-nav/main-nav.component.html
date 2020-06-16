@@ -21,30 +21,16 @@
           </li>
         </ul>
       </li>
-      <li nz-submenu nzTitle="Políticas de seguridad" nzIcon="key">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/politicas-seguridad">Políticas de seguridad</a>
-          </li>
-        </ul>
-      </li>
-      <li nz-submenu nzTitle="Roles" nzIcon="lock">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/roles">Roles</a>
-          </li>
-        </ul>
-      </li>
-      <li nz-submenu nzTitle="Bitácoras" nzIcon="profile">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/bitacora/accesos">Bitácora de accesos</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/bitacora/acciones">Bitácora de acciones</a>
-          </li>
-        </ul>
-      </li>
+
+      <div *ngFor="let option of menuOptions">
+        <li *ngIf="option.allow" nz-submenu [nzTitle]="option.title" [nzIcon]="option.icon">
+          <ul>
+            <li *ngFor="let subOption of option.children" nz-menu-item nzMatchRouter>
+              <a [routerLink]="subOption.route">{{ subOption.name }}</a>
+            </li>
+          </ul>
+        </li>
+      </div>
     </ul>
   </nz-sider>
   <nz-layout>
