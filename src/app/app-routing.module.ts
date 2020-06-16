@@ -27,9 +27,9 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
-    path: 'reestablecer-contrasena',
+    path: 'restablecer-contrasena',
     loadChildren: () => import('./manage-password/reset-password.module').then(m => m.ResetPasswordModule),
-    //    canLoad: [AuthGuard]
+//canLoad: [AuthGuard]
   },
   {
     path: '**',
