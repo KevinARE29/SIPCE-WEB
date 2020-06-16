@@ -20,7 +20,7 @@
           <input type="password" nz-input placeholder="Contraseña" formControlName="password" />
         </nz-input-group>
       </nz-form-item>
-      <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'">
+      <button nz-button class="login-form-button login-form-margin" [nzLoading]="btnLoading" [nzType]="'primary'">
         Ingresar
       </button>
     </form>
