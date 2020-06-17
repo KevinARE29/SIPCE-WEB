@@ -131,7 +131,6 @@ export class RoleService {
    */
   private handleError() {
     return (error: any) => {
-      
       error.error.message = this.errorMessageService.transformMessage("roles", error.error.message);
       return throwError(error.error);
     };

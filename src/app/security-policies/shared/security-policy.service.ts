@@ -78,7 +78,6 @@ export class SecurityPolicyService {
    */
   private handleError() {
     return (error: any) => {
-      
       error.error.message = this.errorMessageService.transformMessage("security-policies", error.error.message);
       return throwError(error.error);
     };
