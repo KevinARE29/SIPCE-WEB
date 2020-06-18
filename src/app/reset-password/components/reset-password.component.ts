@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl,  ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ResetPasswordService } from '../shared/reset-password.service';
 import { SecurityPolicy } from '../../security-policies/shared/security-policy.model';
 import { ActivatedRoute } from '@angular/router';
 import { Politics } from '../politics';
+import { Observable, Observer } from 'rxjs';
 
 @Component({
   selector: 'app-reset-password',
@@ -18,11 +19,15 @@ export class ResetPasswordComponent implements OnInit {
   securityPolicy: SecurityPolicy;
   isLoading = false;
   politics: Politics;
-  resetPasswordToken  = '';
+  passwordJson;
+  //  message of politics available
+  availablePolitics: string;
+  regexExpression: string;
+  length: number;
 
   ngOnInit(): void {
     this.resetPwd = this.fb.group({
-      password: ['', [Validators.required]],
+      password: ['', [Validators.required], [this.politicsAsyncValidator]],
       confirm: ['', [this.confirmValidator]],
     });
 
@@ -37,28 +42,41 @@ export class ResetPasswordComponent implements OnInit {
     console.log(value);
   }
 
-  getPassword() {
-   return this.resetPwd.value.password;
+  get password() {
+    return this.resetPwd.get('password');
   }
 
   validateConfirmPassword(): void {
     setTimeout(() => this.resetPwd.controls.confirm.updateValueAndValidity());
   }
 
-  /*
-  userNameAsyncValidator = (control: FormControl) =>
+
+  politicsAsyncValidator = (control: FormControl) =>
     new Observable((observer: Observer<ValidationErrors | null>) => {
       setTimeout(() => {
-        if (control.value === 'JasonWood') {
-          // you have to return `{error: true}` to mark it as an error event
-          observer.next({ error: true, duplicated: true });
-        } else {
-          observer.next(null);
+        if (control && (control.value !== null || control.value !== undefined))
+        {
+          // validationg if the string has an upper case
+          if (this.politics.data.capitalLetter === true) {
+            // this.regexExpression
+            const regex = new RegExp('(.*[A-Z].*)(.*[a-z].*)(.*\d.*)');
+            if (!regex.test(control.value)) {
+              // you have to return `{error: true}` to mark it as an error event
+              observer.next({ error: true, pattern: true });
+            } else {
+               observer.next(null);
+                   }
+        //    observer.complete();
+          } 
         }
-        observer.complete();
+       observer.complete();
       }, 1000);
     });
-*/
+  
+  
+  
+  
+
     confirmValidator = (control: FormControl): { [s: string]: boolean } => {
     if (!control.value) {
         return { error: true, required: true };
@@ -70,16 +88,9 @@ export class ResetPasswordComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private resetPasswordService: ResetPasswordService,
-    private router: Router,
-  //  private activatedRoute: ActivatedRoute
-    ) {
-  //    this.activatedRoute.queryParams.subscribe(data => {
-// this.resetPasswordToken =data.resetPasswordToken;
-// console.log(this.resetPasswordToken);
- //     });
+    private router: Router) {
+  
      }
-
-
 
   sendPassword() {
     this.isLoading = true;
@@ -91,38 +102,66 @@ export class ResetPasswordComponent implements OnInit {
     
     if (this.resetPwd.valid) {
       console.log('variable password');
-        console.log(this.getPassword);
-      this.resetPasswordService.resetPassword(this.getPassword).subscribe(
+        console.log(this.password);
+        this.passwordJson =
+        {
+          'password': this.password.value
+        };
+        console.log(this.passwordJson);
+    this.resetPasswordService.resetPassword(this.passwordJson).subscribe(
       (response) => {
-     //   this.politics =response.data;
-        console.log('esto se guarda en politics');
-        console.log(response);
       this.isLoading = false;
       },
      (error) => {
-      console.log('esto tiene el error');
-     console.log(error);
      this.isLoading = false;
         }
     );
     } else {
       this.isLoading = false;
     }
+  
   }
  
   politicsPassword() {
+    this.availablePolitics = ''; // cleaning the message variable
     this.resetPasswordService.getPolitics().subscribe(
        (response) => {
         // this.show = false;
        this.politics = response;
-        console.log(response.data);
-       // }
-        },
-        (error) => {
-        console.log('entro al error');
+        console.log(this.politics.data);
+        if (this.politics.data.capitalLetter === true)
+        {
+          this.availablePolitics = 'mayúsculas';
+          this.regexExpression = '(?=.*[A-Z])';
+        }
+        if (this.politics.data.lowerCase === true)
+        {
+          this.availablePolitics = this.availablePolitics + ', ' + 'minusculas';
+          this.regexExpression = this.regexExpression + '(?=.*[a-z])';
+        }
+        if (this.politics.data.numericChart === true)
+        {
+          this.availablePolitics = this.availablePolitics + ', ' + 'números';
+          this.regexExpression = this.regexExpression + '(.*\d.*)';
+        }
+        if (this.politics.data.specialChart === true) {
+          this.availablePolitics = this.availablePolitics + ', ' + 'caracteres especiales como ' + this.politics.data.typeSpecial;
+          this.regexExpression = this.regexExpression + '(?=.*\%)(?=.*\$)(?=.*\#)';
+        }      
+        if (this.politics.data.minLength === 0)
+        {
+          this.length = 6;
+          console.log(this.length);
+          this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de 6 caracteres';
+         } else {
+                  this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de ' + this.politics.data.minLength + ' caracteres';
+                  this.length = this.politics.data.minLength;
+        }
+        console.log(this.regexExpression);
+
+       }, (error) => {
+       
         }
      );
   }
-
-
 }

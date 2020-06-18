@@ -41,7 +41,7 @@ export class ResetPasswordService {
       );
   }
    
-  resetPassword(password){
+  resetPassword(password) {
       return this.http.post<any>(`${this.baseUrl}auth/reset-password?resetPasswordToken=${this.resetPasswordToken}`, password)
        
   }
