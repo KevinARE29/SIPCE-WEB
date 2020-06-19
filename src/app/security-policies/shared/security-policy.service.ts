@@ -27,8 +27,6 @@ export class SecurityPolicyService {
   }
 
   getSecurityPolicies(): Observable<any> {
-    let url = this.baseUrl + 'auth/politics';
-
     return this.http.get<SecurityPolicy>(`${this.baseUrl}auth/politics`)
       .pipe(
         map(
@@ -80,7 +78,6 @@ export class SecurityPolicyService {
    */
   private handleError() {
     return (error: any) => {
-      
       error.error.message = this.errorMessageService.transformMessage("security-policies", error.error.message);
       return throwError(error.error);
     };

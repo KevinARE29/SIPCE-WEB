@@ -10,8 +10,11 @@ export class ErrorMessageService {
   constructor() { }
 
   transformMessage(module: string, error: any): any{
-    const dictionary = DictionaryJson.dictionary[module];
-    let response: any;
+    let dictionary: any;
+    let response: any = error;
+
+    if(module)
+      dictionary = DictionaryJson.dictionary[module];
 
     if(Array.isArray(error)){
       let newMessage = new Array<string>();
@@ -21,8 +24,9 @@ export class ErrorMessageService {
 
         if(dictionary.hasOwnProperty(field[0])){
           m = m.replace(field[0], dictionary[field[0]]);
-          newMessage.push(m);
         }
+        
+        newMessage.push(m);
       });
 
       response = newMessage;
@@ -31,8 +35,9 @@ export class ErrorMessageService {
 
       if(dictionary.hasOwnProperty(field[0])){
         error = error.replace(field[0], dictionary[field[0]]);
-        response = error;
-      }
+      } 
+
+      response = error;
     }
 
     return response;

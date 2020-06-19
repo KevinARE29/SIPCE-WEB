@@ -152,6 +152,8 @@ export class RoleComponent implements OnInit {
               { nzDuration: 0 }
             );
           }
+
+          this.btnLoading = false;
         }
       )
   }
@@ -170,7 +172,7 @@ export class RoleComponent implements OnInit {
         },
         err => {  
           let statusCode = err.statusCode;
-          let notIn = [401, 403, 404];
+          let notIn = [401, 403];
           
           if(err.statusCode === 404){
             this.router.navigateByUrl("/role/"+this.id, { skipLocationChange: true });
@@ -182,6 +184,7 @@ export class RoleComponent implements OnInit {
               { nzDuration: 0 }
             );
           }
+          
         }
       )
   }
@@ -199,7 +202,7 @@ export class RoleComponent implements OnInit {
         },
         err => {
           let statusCode = err.statusCode;
-          let notIn = [401, 403, 404];
+          let notIn = [401, 403];
           
           if(err.statusCode === 404){
             this.router.navigateByUrl("/role/"+this.id, { skipLocationChange: true });
@@ -211,6 +214,7 @@ export class RoleComponent implements OnInit {
               { nzDuration: 0 }
             );
           }
+          this.btnLoading = false;
         }
       )
   }

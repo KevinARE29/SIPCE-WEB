@@ -1,13 +1,13 @@
 <nz-page-header [nzGhost]="false">
-  <nz-page-header-title>SIPCE</nz-page-header-title>
-  <nz-page-header-extra>Inicio de Sesión</nz-page-header-extra>
-</nz-page-header>
+    <nz-page-header-title>SIAPCE</nz-page-header-title>
+    <nz-page-header-extra>Inicio de Sesión</nz-page-header-extra>
+  </nz-page-header>
+  
+  <div nz-row class="imageBackToSchool">
+    <nz-card class="loginBackground" nz-col [nzXs]="{ span: 22, offset: 1 }" [nzSm]="{ span: 20, offset: 2 }"
+      [nzMd]="{ span: 20, offset: 2 }" [nzLg]="{ span: 16, offset: 4 }"  [nzXl]="{ span: 10, offset: 7 }">
 
-<div nz-row class="imageBackToSchool">
-  <nz-card class="loginBackground" nz-col [nzXs]="{ span: 20, offset: 2 }" [nzSm]="{ span: 20, offset: 2 }"
-    [nzMd]="{ span: 20, offset: 2 }" [nzLg]="{ span: 8, offset: 8 }">
-
-    <nz-alert *ngIf="mostrar" nzType="warning" nzMessage="Usuario o contraseña incorrecta" nzShowIcon></nz-alert>
+    <nz-alert *ngIf="errorMessage" nzType="warning" nzMessage="Usuario o contraseña incorrecta" nzShowIcon></nz-alert>
     <br>
     <form nz-form class=" login-form" [formGroup]="userLogin" (submit)="onlogin()">
       <nz-form-item>
@@ -23,7 +23,7 @@
       <div nz-row>   
         <a class="login-form-forgot" routerLink="/restablecer-contrasena">¿Olvidaste tu contraseña?</a>
       </div>
-      <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'">
+      <button nz-button class="login-form-button login-form-margin" [nzLoading]="btnLoading" [nzType]="'primary'">
         Ingresar
       </button>
     </form>
