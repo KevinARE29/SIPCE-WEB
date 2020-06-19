@@ -14,11 +14,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
-import { LoginModule } from './login/login.module'; 
+import { LoginModule } from './login/login.module';
 
 import { AntDesignModule } from './ant-design/ant-design.module';
 import { MainNavComponent } from './main-nav/main-nav.component';
 import { InterceptorModule } from './interceptors/interceptor.module';
+
 
 import { AuthInterceptor } from './interceptors/auth-interceptor';
 import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
