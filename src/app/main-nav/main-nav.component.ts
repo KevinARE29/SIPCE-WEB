@@ -26,6 +26,7 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   username: any;
   responseLogIn: any;
   data: any;
+  year: number;
 
   constructor(
     private router: Router, 
@@ -33,6 +34,7 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   ) { }
 
   ngOnInit(): void {
+    this.year = (new Date()).getFullYear();
   }
 
   ngAfterContentChecked() {

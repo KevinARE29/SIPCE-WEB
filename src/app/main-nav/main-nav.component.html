@@ -34,7 +34,6 @@
     </ul>
   </nz-sider>
   <nz-layout>
-    <!--  -->
     <nz-page-header [nzGhost]="false" *ngIf="!!getToken()">
       <nz-page-header-tags>
         <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
@@ -63,5 +62,17 @@
         <router-outlet></router-outlet>
       </div>
     </nz-content>
+
+    <nz-footer nz-row nzJustify="center" nzAlign="middle">
+      <div nzcol>
+        <p class="height-100">
+          <img src="./assets/Minerva.png" alt="Universidad de El Salvador">
+        </p>
+      </div>
+      <div nzcol>
+        <span> {{ year }} Universidad de El Salvador </span>
+        <p> Todos los derechos reservados. </p>
+      </div>
+    </nz-footer>
   </nz-layout>
 </nz-layout>

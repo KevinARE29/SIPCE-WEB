@@ -79,3 +79,11 @@
     height: 100%;
   }
 
+  .ant-layout-footer{
+    padding: 0%;
+  }
+
+  nz-footer img{
+    height: 50px;
+    margin-right: 5px;;
+  }
