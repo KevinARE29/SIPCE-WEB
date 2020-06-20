@@ -147,7 +147,7 @@ export class RoleComponent implements OnInit {
           if(!notIn.includes(statusCode) && statusCode<500){
             this.notification.create(
               'error',
-              'Ocurrío un error al crear el rol. Por favor verifique lo siguiente:',
+              'Ocurrió un error al crear el rol. Por favor verifique lo siguiente:',
               err.message,
               { nzDuration: 0 }
             );
@@ -179,7 +179,7 @@ export class RoleComponent implements OnInit {
           } else if(!notIn.includes(statusCode) && statusCode<500){
             this.notification.create(
               'error',
-              'Ocurrío un error al obtener el rol. Por favor verifique lo siguiente:',
+              'Ocurrió un error al obtener el rol. Por favor verifique lo siguiente:',
               err.message,
               { nzDuration: 0 }
             );
@@ -209,7 +209,7 @@ export class RoleComponent implements OnInit {
           } else if(!notIn.includes(statusCode) && statusCode<500){
             this.notification.create(
               'error',
-              'Ocurrío un error al actualizar el rol. Por favor verifique lo siguiente:',
+              'Ocurrió un error al actualizar el rol. Por favor verifique lo siguiente:',
               err.message,
               { nzDuration: 0 }
             );

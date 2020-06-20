@@ -93,7 +93,7 @@ export class RolesComponent implements OnInit {
           if(!notIn.includes(statusCode) && statusCode<500){
             this.notification.create(
               'error',
-              'Ocurrío un error al obtener los roles.',
+              'Ocurrió un error al obtener los roles.',
               err.message,
               { nzDuration: 0 }
             );
@@ -119,7 +119,7 @@ export class RolesComponent implements OnInit {
           if(!notIn.includes(statusCode) && statusCode<500){
             this.notification.create(
               'error',
-              'Ocurrío un error al recargar roles.',
+              'Ocurrió un error al obtener los roles.',
               err.message,
               { nzDuration: 0 }
             );
@@ -145,7 +145,7 @@ export class RolesComponent implements OnInit {
           if(!notIn.includes(statusCode) && statusCode<500){
             this.notification.create(
               'error',
-              'Ocurrío un error al filtrar roles.',
+              'Ocurrió un error al filtrar roles.',
               err.message,
               { nzDuration: 0 }
             );
@@ -179,7 +179,7 @@ export class RolesComponent implements OnInit {
           if(!notIn.includes(statusCode) && statusCode<500){
             this.notification.create(
               'error',
-              'Ocurrío un error al eliminar el rol.',
+              'Ocurrió un error al eliminar el rol.',
               err.message,
               { nzDuration: 0 }
             );

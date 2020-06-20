@@ -70,7 +70,7 @@ export class ActionsLogComponent implements OnInit {
           if(!notIn.includes(statusCode) && statusCode<500){
             this.notification.create(
               'error',
-              'Ocurrío un error al filtrar la bitácora de acciones.',
+              'Ocurrió un error al filtrar la bitácora de acciones.',
               err.message,
               { nzDuration: 0 }
             );
@@ -95,7 +95,7 @@ export class ActionsLogComponent implements OnInit {
           if(!notIn.includes(statusCode) && statusCode<500){
             this.notification.create(
               'error',
-              'Ocurrío un error al recargar la bitácora de acciones.',
+              'Ocurrió un error al recargar la bitácora de acciones.',
               err.message,
               { nzDuration: 0 }
             );
