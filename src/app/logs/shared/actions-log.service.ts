@@ -24,20 +24,6 @@ export class ActionsLogService {
     this.baseUrl = environment.apiURL;
   }
 
-  getActionsLog(currentDate: any): Observable<ActionLog[]> {
-    let url = this.baseUrl + 'logs/action-logs';
-    let date = subMonths(currentDate, 1);
-    date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
-    
-    let queryParams = '?attemptTimeStart='+ date.toISOString() + '&attemptTimeEnd=' + currentDate.toISOString();
-
-    url += queryParams;
-    return this.http.get<ActionLog[]>(url)
-      .pipe(
-        catchError(this.handleError())
-      );
-  }
-
   searchAccessLog(params: NzTableQueryParams, search: ActionLog, paginate: boolean): Observable<ActionLog[]> {
     let url = this.baseUrl + 'logs/action-logs';
     let queryParams: string = '';

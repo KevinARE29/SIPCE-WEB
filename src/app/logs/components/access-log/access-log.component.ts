@@ -28,27 +28,20 @@ export class AccessLogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.searchParams = new AccessLog();
-    this.pagination = new Pagination();
-    this.getAccessLog();
+    this.init();
   }
 
-  getAccessLog(): void{
-    this.loading = true;
+  init(){
     let currentDate = new Date(new Date().getFullYear(),new Date().getMonth() , new Date().getDate(), 23, 59, 59);
     let date = subMonths(currentDate, 1);
     date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
     
-    this.searchParams.attemptTime = [date, currentDate];
+    this.searchParams = new AccessLog();
+    this.pagination = new Pagination();
 
-    this.accessLogService.getAccessLog(currentDate).subscribe(
-      data => {
-        this.accessLogs = data['data'];
-        this.pagination = data['pagination'];
-        this.listOfDisplayData = [...this.accessLogs];
-        this.loading = false;
-      }
-    )
+    this.searchParams.attemptTime = [date, currentDate];
+    this.pagination.perPage = 10;
+    this.pagination.page = 1;
   }
 
   recharge(params: NzTableQueryParams): void{

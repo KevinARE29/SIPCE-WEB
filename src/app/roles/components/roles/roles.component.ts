@@ -35,7 +35,7 @@ export class RolesComponent implements OnInit {
   icon = 'search';
   color = 'primary';
   confirmModal?: NzModalRef;
-  
+
   constructor(
     private router: Router,
     private roleService: RoleService,
@@ -47,8 +47,9 @@ export class RolesComponent implements OnInit {
 
   ngOnInit(): void { 
     this.pagination = new Pagination();
+    this.pagination.perPage = 10;
+    this.pagination.page = 1;
     this.setPermissions();
-    this.getRoles();
   }
 
   /* ---      Control page permissions      --- */
@@ -76,32 +77,6 @@ export class RolesComponent implements OnInit {
   }
 
   /* ---      Main options      --- */
-  getRoles(){
-    this.loading = true;
-    this.roleService.getRoles()
-      .subscribe(
-        data => {
-          this.roles = data['data'];
-          this.pagination = data['pagination'];
-          this.listOfDisplayData = [...this.roles];
-          this.loading = false;
-        },
-        err => {          
-          let statusCode = err.statusCode;
-          let notIn = [401, 403];
-          
-          if(!notIn.includes(statusCode) && statusCode<500){
-            this.notification.create(
-              'error',
-              'Ocurrió un error al obtener los roles.',
-              err.message,
-              { nzDuration: 0 }
-            );
-          }
-        }
-      )
-  }
-
   recharge(params: NzTableQueryParams){
     this.loading = true;
 
@@ -171,7 +146,7 @@ export class RolesComponent implements OnInit {
       this.roleService.deleteRole(id)      
         .toPromise().then(r => {
             this.message.success(`El rol ${element.name} ha sido eliminado`);
-            this.getRoles();
+            this.search();
         }).catch(err => {
           let statusCode = err.statusCode;
           let notIn = [401, 403];

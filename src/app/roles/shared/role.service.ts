@@ -27,13 +27,6 @@ export class RoleService {
     this.baseUrl = environment.apiURL;
   }
 
-  getRoles(): Observable<Role[]> {
-    return this.http.get<Role[]>(`${this.baseUrl}auth/roles`)
-      .pipe(
-        catchError(this.handleError())
-      );
-  }
-
   getRole(id: number): Observable<Role>{
     return this.http.get<Role>(`${this.baseUrl}auth/roles/${id}`)
       .pipe(
@@ -58,46 +51,34 @@ export class RoleService {
 
   searchRoles(params: NzTableQueryParams, search: string, paginate: boolean): Observable<Role[]> {
     let url = this.baseUrl + 'auth/roles';
-    let queryParams = '?';
+    let queryParams: string = '';
 
-    if(search){
-      queryParams += 'name='+search;
-    }
-
-    if(paginate){
+    if(search)
+      queryParams += '?name='+search;
+    
+    if(paginate)
       queryParams += '&page='+params.pageIndex;
-      
+
+    if(params){
       if(params.sort[0].value){
         queryParams += '&sort='+params.sort[0].key;
       
-      switch(params.sort[0].value){
-        case "ascend":
-          queryParams += "-" + params.sort[0].value.substring(0,3);
-          break;
-        case "descend":
-          queryParams += "-" + params.sort[0].value.substring(0,4);
-          break;
-      }
-      }
-    }else{
-      if(params){
-        if(params.sort[0].value){
-          queryParams += '&sort='+params.sort[0].key;
-          
-          switch(params.sort[0].value){
-            case "ascend":
-              queryParams += "-" + params.sort[0].value.substring(0,3);
-              break;
-            case "descend":
-              queryParams += "-" + params.sort[0].value.substring(0,4);
-              break;
-          }
+        switch(params.sort[0].value){
+          case "ascend":
+            queryParams += "-" + params.sort[0].value.substring(0,3);
+            break;
+          case "descend":
+            queryParams += "-" + params.sort[0].value.substring(0,4);
+            break;
         }
-      }
-    }
+      }      
+    }  
+
+    if(queryParams.charAt(0)==='&')
+      queryParams = queryParams.replace('&','?');
 
     url += queryParams;
-    
+
     return this.http.get<Role[]>(url)
       .pipe(
         catchError(this.handleError())

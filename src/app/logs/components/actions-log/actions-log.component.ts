@@ -29,29 +29,21 @@ export class ActionsLogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.searchParams = new ActionLog();
-    this.searchParams.user = new User();
-
-    this.pagination = new Pagination();
-    this.getActionsLog();
+    this.init();
   }
 
-  getActionsLog(): void{
-    this.loading = true;
+  init(){
     let currentDate = new Date(new Date().getFullYear(),new Date().getMonth() , new Date().getDate(), 23, 59, 59);
     let date = subMonths(currentDate, 1);
     date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
     
-    this.searchParams.attemptTime = [date, currentDate];
+    this.searchParams = new ActionLog();
+    this.searchParams.user = new User();
+    this.pagination = new Pagination();
 
-    this.actionsLogService.getActionsLog(currentDate).subscribe(
-      data => {
-        this.actionsLogs = data['data'];
-        this.pagination = data['pagination'];
-        this.listOfDisplayData = [...this.actionsLogs];
-        this.loading = false;
-      }
-    )
+    this.searchParams.attemptTime = [date, currentDate];
+    this.pagination.perPage = 10;
+    this.pagination.page = 1;
   }
 
   search(): void{
@@ -70,7 +62,7 @@ export class ActionsLogComponent implements OnInit {
           if(!notIn.includes(statusCode) && statusCode<500){
             this.notification.create(
               'error',
-              'Ocurrió un error al filtrar la bitácora de acciones.',
+              'Ocurrío un error al filtrar la bitácora de acciones.',
               err.message,
               { nzDuration: 0 }
             );
@@ -95,7 +87,7 @@ export class ActionsLogComponent implements OnInit {
           if(!notIn.includes(statusCode) && statusCode<500){
             this.notification.create(
               'error',
-              'Ocurrió un error al recargar la bitácora de acciones.',
+              'Ocurrío un error al recargar la bitácora de acciones.',
               err.message,
               { nzDuration: 0 }
             );

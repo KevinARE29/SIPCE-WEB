@@ -23,20 +23,6 @@ export class AccessLogService {
     this.baseUrl = environment.apiURL;
   }
 
-  getAccessLog(currentDate: any): Observable<AccessLog[]> {
-    let url = this.baseUrl + 'logs/access-logs';
-    let date = subMonths(currentDate, 1);
-    date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
-    
-    let queryParams = '?attemptTimeStart='+ date.toISOString() + '&attemptTimeEnd=' + currentDate.toISOString();
-
-    url += queryParams;
-    return this.http.get<AccessLog[]>(url)
-      .pipe(
-        catchError(this.handleError())
-      );
-  }
-
   searchAccessLog(params: NzTableQueryParams, search: AccessLog, paginate: boolean): Observable<AccessLog[]> {
     let url = this.baseUrl + 'logs/access-logs';
     let queryParams: string = '';
