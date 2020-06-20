@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl,  ValidationErrors } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl,  ValidationErrors, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ResetPasswordService } from '../shared/reset-password.service';
 import { SecurityPolicy } from '../../security-policies/shared/security-policy.model';
-import { ActivatedRoute } from '@angular/router';
 import { Politics } from '../politics';
 import { Observable, Observer } from 'rxjs';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-reset-password',
@@ -14,32 +14,38 @@ import { Observable, Observer } from 'rxjs';
 })
 export class ResetPasswordComponent implements OnInit {
   resetPwd: FormGroup;
-  show: boolean = true;
-  message: boolean = false;
   securityPolicy: SecurityPolicy;
   isLoading = false;
   politics: Politics;
-  passwordJson;
-  //  message of politics available
-  availablePolitics: string;
-  regexExpression: string;
-  length: number;
+  passwordJson; // variable that contains a validated password 
+  availablePolitics: string; // string that contains the message of the politics that are available
+  regexExpression: string; // dinamic regex expression formed according the available politics
+  length: number; // minlegth for a passwprd
+  str: string; //substring used in the method lengthAsyncValidator
+
+  constructor(private fb: FormBuilder,
+    private resetPasswordService: ResetPasswordService,
+    private router: Router,
+    private message: NzMessageService) {
+  }
 
   ngOnInit(): void {
     this.resetPwd = this.fb.group({
-      password: ['', [Validators.required], [this.politicsAsyncValidator]],
+      password: ['', [Validators.required], [this.politicsAsyncValidator, this.lengthAsyncValidator]],
       confirm: ['', [this.confirmValidator]],
     });
 
     this.politicsPassword();
   }
 
+  
+
   submitForm(value: { password: string; confirm: string }): void {
     for (const key in this.resetPwd.controls) {
       this.resetPwd.controls[key].markAsDirty();
       this.resetPwd.controls[key].updateValueAndValidity();
     }
-    console.log(value);
+  
   }
 
   get password() {
@@ -47,7 +53,7 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   validateConfirmPassword(): void {
-    setTimeout(() => this.resetPwd.controls.confirm.updateValueAndValidity());
+    setTimeout(() => this.resetPwd.controls.confirm.updateValueAndValidity() );
   }
 
 
@@ -56,64 +62,70 @@ export class ResetPasswordComponent implements OnInit {
       setTimeout(() => {
         if (control && (control.value !== null || control.value !== undefined))
         {
-          // validationg if the string has an upper case
-          if (this.politics.data.capitalLetter === true) {
-            // this.regexExpression
-            const regex = new RegExp('(.*[A-Z].*)(.*[a-z].*)(.*\d.*)');
-            if (!regex.test(control.value)) {
-              // you have to return `{error: true}` to mark it as an error event
-              observer.next({ error: true, pattern: true });
-            } else {
-               observer.next(null);
-                   }
-        //    observer.complete();
-          } 
+          // validationg the password with the available politics
+            const regex = new RegExp(this.regexExpression);
+          if (!regex.test(control.value)) {
+            observer.next({ error: true, expression: true });
+          } else {
+            observer.next(null);
+          }
         }
-       observer.complete();
-      }, 1000);
+   observer.complete();
+      },300);
     });
   
+    lengthAsyncValidator = (control: FormControl) =>
+    new Observable((observer: Observer<ValidationErrors | null>) => {
+      setTimeout(() => {
+        if (control && (control.value !== null || control.value !== undefined)) {
+          // validationg if the string has 6 characters
+          if (this.politics.data.minLength === 0) {
+            this.str = control.value;
+            if ((this.str.length === 6) || (this.str.length > 6) )
+            {
+              observer.next(null);
+            } else {
+              observer.next({ error: true, minLengthPassword: true });
+            }
+          } else {
+            // validationg if the string has x characters
+            this.str = control.value;
+            if ((this.str.length === this.politics.data.minLength) || (this.str.length > this.politics.data.minLength)) {
+              observer.next(null);
+            } else {
+              observer.next({ error: true, minLengthPassword: true });
+            }
+          }
+        }
+         observer.complete();
+            }, 300);
+    });
   
-  
-  
-
+    
     confirmValidator = (control: FormControl): { [s: string]: boolean } => {
-    if (!control.value) {
+      if (!control.value) {
         return { error: true, required: true };
       } else if (control.value !== this.resetPwd.controls.password.value) {
         return { confirm: true, error: true };
       }
       return {};
-    };
-
-  constructor(private fb: FormBuilder,
-    private resetPasswordService: ResetPasswordService,
-    private router: Router) {
+  };
   
-     }
-
   sendPassword() {
     this.isLoading = true;
-    // validating the form 
-    for (const i in this.resetPwd.controls) {
-      this.resetPwd.controls[i].markAsDirty();
-      this.resetPwd.controls[i].updateValueAndValidity();
-    }
-    
-    if (this.resetPwd.valid) {
-      console.log('variable password');
-        console.log(this.password);
+      if (this.resetPwd.valid) {
         this.passwordJson =
         {
           'password': this.password.value
         };
-        console.log(this.passwordJson);
-    this.resetPasswordService.resetPassword(this.passwordJson).subscribe(
-      (response) => {
-      this.isLoading = false;
-      },
-     (error) => {
-     this.isLoading = false;
+     
+      this.resetPasswordService.resetPassword(this.passwordJson).subscribe(
+        (response) => {
+          this.isLoading = false;
+          this.message.success('Contraseña restablecida con éxito');
+        },
+        (error) => {
+          this.isLoading = false;
         }
     );
     } else {
@@ -126,39 +138,37 @@ export class ResetPasswordComponent implements OnInit {
     this.availablePolitics = ''; // cleaning the message variable
     this.resetPasswordService.getPolitics().subscribe(
        (response) => {
-        // this.show = false;
        this.politics = response;
-        console.log(this.politics.data);
+
         if (this.politics.data.capitalLetter === true)
         {
           this.availablePolitics = 'mayúsculas';
-          this.regexExpression = '(?=.*[A-Z])';
+          this.regexExpression = '(?=(?:.*[A-Z]))';
         }
         if (this.politics.data.lowerCase === true)
         {
           this.availablePolitics = this.availablePolitics + ', ' + 'minusculas';
-          this.regexExpression = this.regexExpression + '(?=.*[a-z])';
+          this.regexExpression = this.regexExpression + '(?=(?:.*[a-z]))';
         }
         if (this.politics.data.numericChart === true)
         {
           this.availablePolitics = this.availablePolitics + ', ' + 'números';
-          this.regexExpression = this.regexExpression + '(.*\d.*)';
+          this.regexExpression = this.regexExpression + '(?=(?:.*[0-9]))';
         }
         if (this.politics.data.specialChart === true) {
           this.availablePolitics = this.availablePolitics + ', ' + 'caracteres especiales como ' + this.politics.data.typeSpecial;
-          this.regexExpression = this.regexExpression + '(?=.*\%)(?=.*\$)(?=.*\#)';
+          this.regexExpression = this.regexExpression + '(?=(?:.*[#%$]))';
         }      
         if (this.politics.data.minLength === 0)
         {
           this.length = 6;
-          console.log(this.length);
+         
           this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de 6 caracteres';
          } else {
                   this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de ' + this.politics.data.minLength + ' caracteres';
                   this.length = this.politics.data.minLength;
-        }
-        console.log(this.regexExpression);
-
+                 }
+       
        }, (error) => {
        
         }

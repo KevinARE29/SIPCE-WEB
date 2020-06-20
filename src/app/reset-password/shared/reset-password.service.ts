@@ -19,7 +19,6 @@ export class ResetPasswordService {
     this.baseUrl = environment.apiURL;
     this.activatedRoute.queryParams.subscribe(data => {
       this.resetPasswordToken =data.resetPasswordToken;
-      console.log(this.resetPasswordToken);
             });
    }
 
