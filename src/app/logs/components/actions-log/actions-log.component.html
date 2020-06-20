@@ -1,0 +1,199 @@
+<h1>Bitácora de acciones</h1>
+
+<div class="search" nz-row nzJustify="space-around">
+    <!-- Username -->
+    <div class="user" nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="6" [nzXl]="{ span: 5, offset: 1}">
+        <nz-input-group [nzSuffix]="inputClearUser">
+            <input nz-input [(ngModel)]="searchParams.user.username" placeholder="Buscar usuario" />
+        </nz-input-group>
+        <ng-template #inputClearUser>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.user.username" (click)="searchParams.user.username = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Endpoint -->
+    <div class="user" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="7" nzXl="6">
+        <nz-input-group [nzSuffix]="inputClearEndpoint">
+            <input nz-input [(ngModel)]="searchParams.endpoint" placeholder="Buscar ruta" />
+        </nz-input-group>
+        <ng-template #inputClearEndpoint>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.endpoint" (click)="searchParams.endpoint = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Status Code -->
+    <div class="status-code" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="8">
+        <label>Código de respuesta: </label>
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.statusCode" (ngModelChange)="search()">
+            <nz-option nzLabel="200" nzValue="200"></nz-option>
+            <nz-option nzLabel="201" nzValue="201"></nz-option>
+            <nz-option nzLabel="204" nzValue="204"></nz-option>
+            <nz-option nzLabel="400" nzValue="400"></nz-option>
+            <nz-option nzLabel="401" nzValue="401"></nz-option>
+            <nz-option nzLabel="403" nzValue="403"></nz-option>
+            <nz-option nzLabel="404" nzValue="404"></nz-option>
+            <nz-option nzLabel="409" nzValue="409"></nz-option>
+            <nz-option nzLabel="415" nzValue="415"></nz-option>
+            <nz-option nzLabel="422" nzValue="422"></nz-option>
+            <nz-option nzLabel="500" nzValue="500"></nz-option>
+        </nz-select>
+    </div>
+
+    <!-- Action -->
+    <div class="action" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5">
+        <label>Acción: </label>
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.action" (ngModelChange)="search()">
+            <nz-option nzLabel="Actualizar" nzValue="1"></nz-option>
+            <nz-option nzLabel="Consultar" nzValue="2"></nz-option>
+            <nz-option nzLabel="Crear" nzValue="3"></nz-option>
+            <nz-option nzLabel="Eliminar" nzValue="4"></nz-option>
+        </nz-select>
+    </div>
+
+    <!-- Date range -->
+    <div class="date" nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="11" nzXl="9">
+        <label>Fecha: </label>
+        <nz-range-picker 
+            nzFormat="dd/MM/yyyy" 
+            [ngModel]="searchParams.attemptTime"
+            [nzDisabledDate]="disabledDate"
+            (ngModelChange)="onChangeDatePicker($event)"
+        ></nz-range-picker>
+    </div>
+
+    <div nz-col nzXs="8" nzSm="20" nzMd="2" nzLg="1" nzXl="5">
+        <button nz-button nzType="primary" (click)="search()">Buscar</button>
+    </div>
+</div>
+
+<div class="actions-log" nz-row>
+    <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 24 }" [nzXl]="{ span: 20, offset: 2 }">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <nz-table #filterTable 
+                [nzData]="listOfDisplayData" 
+                nzTableLayout="fixed"
+                [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems"
+                [nzPageSize]="pagination.perPage"
+                [nzPageIndex]="pagination.page"
+                [nzSize]="tableSize"
+                (nzQueryParams)="recharge($event)"
+            >
+                <thead>
+                    <tr>
+                        <th nzColumnKey="username" [nzSortFn]="true" [nzSortPriority]="1">Usuario</th>
+                        <th nzColumnKey="action" [nzSortFn]="true" [nzSortPriority]="2">Acción</th>
+                        <th nzColumnKey="endpoint" [nzSortFn]="true" [nzSortPriority]="3">Ruta</th>
+                        <th nzColumnKey="statusCode" [nzSortFn]="true" [nzSortPriority]="4">Código de respuesta</th>
+                        <th nzColumnKey="attemptTime" [nzSortFn]="true" [nzSortPriority]="5">Fecha y hora</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <tr *ngFor="let data of filterTable.data">
+                        <td>{{ data.user.username }}</td>
+                        <td>{{ data.action }}</td>
+                        <td>{{ data.endpoint }}</td>
+                        <td [ngClass]="{ 
+                            'success': data.statusCode >= 200 && data.statusCode <= 299, 
+                            'error': data.statusCode >= 400 && data.statusCode <= 499,
+                            'server': data.statusCode >= 500 && data.statusCode <= 599}">
+                            {{ data.statusCode }} 
+                        </td>
+                        <td>{{ data.attemptTime | date:"dd/MM/yyyy hh:mm aa" }}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>
+
+<div class="status-codes" nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 15 }">
+    <nz-table nzTemplateMode [nzSize]="tableSize">
+        <thead>
+          <tr>
+            <th>Código de respuesta</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="success">200</td>
+            <td>
+                <strong>OK. </strong>
+                <span>La petición fue completada de manera exitosa.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="success">201</td>
+            <td>
+                <strong>Created. </strong>
+                <span>La petición del navegador se ha completado correctamente y se ha creado un nuevo recurso.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="success">204</td>
+            <td>
+                <strong>No Content. </strong>
+                <span>La petición del navegador se ha completado correctamente, pero la respuesta no muestra ningún tipo de contenido..</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="error">400</td>
+            <td>
+                <strong>Bad Request. </strong>
+                <span>El servidor no entiende la petición del navegador porque su sintaxis no es correcta.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="error">401</td>
+            <td>
+                <strong>Unauthorized. </strong>
+                <span>La petición que realiza el navegador precisa autenticación.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="error">403</td>
+            <td>
+                <strong>Forbidden. </strong>
+                <span>La petición que realiza el navegador es correcta, pero se ha denegado el acceso al recurso solicitado.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="error">404</td>
+            <td>
+                <strong>Not Found. </strong>
+                <span>El recurso que solicita el navegador no se encuentra o no está disponible en el servidor.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="error">409</td>
+            <td>
+                <strong>Conflict. </strong>
+                <span>No se ha podido completar la petición porque se ha producido un conflicto con el recurso solicitado.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="error">415</td>
+            <td>
+                <strong>Unsupported Media Type. </strong>
+                <span>La petición del navegador tiene un formato que no entiende el servidor y por eso no se procesa.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="error">422</td>
+            <td>
+                <strong>Unprocessable Entity. </strong>
+                <span>La solicitud está bien formada pero fue imposible seguirla debido a errores semánticos.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="server">500</td>
+            <td>
+                <strong>Internal Server Error. </strong>
+                <span>No se puede completar la petición realizada por el navegador ya que se ha producido un error inesperado en el navegador.</span>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+</div>

@@ -26,7 +26,7 @@ export class AuthService {
 
 	login(user: { username: string; password: string }): Observable<IJwtResponse> {
 		return this.httpClient
-			.post<IJwtResponse>(`${this.baseUrl}auth/login/`, user)
+			.post<IJwtResponse>(`${this.baseUrl}auth/login`, user)
 			.pipe(
 				tap((res: IJwtResponse) => {
 					if (res) {
@@ -53,7 +53,7 @@ export class AuthService {
 	}
 
 	logout(): Observable<any> {
-		return this.httpClient.delete(`${this.baseUrl}auth/logout/`).pipe(
+		return this.httpClient.delete(`${this.baseUrl}auth/logout`).pipe(
 			map((resp) => {
 				this.cleanLocalStorage();
 			}

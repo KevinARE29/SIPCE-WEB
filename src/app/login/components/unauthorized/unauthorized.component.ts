@@ -1,6 +1,6 @@
 /* 
   Path: app/login/components/unauthorized/unauthorized.component.ts
-  Objetive: Define unauthorized error behavior
+  Objective: Define unauthorized error behavior
   Author: Esme López 
 */
 

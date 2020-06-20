@@ -1,6 +1,6 @@
 /* 
   Path: app/shared/permission.model.ts
-  Objetive: Define permission model
+  Objective: Define permission model
   Author: Esme López 
 */
 

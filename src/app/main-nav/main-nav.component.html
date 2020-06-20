@@ -1,6 +1,6 @@
 <!--  
   Path: app/main-nav/main-nav.component.html
-  Objetive: Define main navigation view
+  Objective: Define main navigation view
   Author: Esme López y Veronica Reyes
 -->
 
@@ -10,28 +10,30 @@
     <div class="sidebar-logo">
       <a>
         <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo" />
-        <h1>SIPCE</h1>
+        <h1>SIAPCE</h1>
       </a>
     </div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
+      <li nz-submenu nzTitle="Dashboard" nzIcon="dashboard">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/welcome">Inicio</a>
           </li>
         </ul>
       </li>
-      <li nz-submenu nzOpen nzTitle="Políticas de seguridad" nzIcon="key">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/politicas-seguridad">Políticas de seguridad</a>
-          </li>
-        </ul>
-      </li>
+
+      <div *ngFor="let option of menuOptions">
+        <li *ngIf="option.allow" nz-submenu [nzTitle]="option.title" [nzIcon]="option.icon">
+          <ul>
+            <li *ngFor="let subOption of option.children" nz-menu-item nzMatchRouter>
+              <a [routerLink]="subOption.route">{{ subOption.name }}</a>
+            </li>
+          </ul>
+        </li>
+      </div>
     </ul>
   </nz-sider>
   <nz-layout>
-    <!--  -->
     <nz-page-header [nzGhost]="false" *ngIf="!!getToken()">
       <nz-page-header-tags>
         <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
@@ -60,5 +62,17 @@
         <router-outlet></router-outlet>
       </div>
     </nz-content>
+
+    <nz-footer nz-row nzJustify="center" nzAlign="middle">
+      <div nzcol>
+        <p class="height-100">
+          <img src="./assets/Minerva.png" alt="Universidad de El Salvador">
+        </p>
+      </div>
+      <div nzcol>
+        <span> {{ year }} Universidad de El Salvador </span>
+        <p> Todos los derechos reservados. </p>
+      </div>
+    </nz-footer>
   </nz-layout>
 </nz-layout>

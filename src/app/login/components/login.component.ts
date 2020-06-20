@@ -10,8 +10,8 @@ import { AuthService } from '../shared/auth.service';
 })
 export class LoginComponent implements OnInit {
   userLogin: FormGroup;
-  // jwt: IJwtResponse;
-  mostrar: boolean;
+  errorMessage: boolean;
+  btnLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -27,13 +27,20 @@ export class LoginComponent implements OnInit {
   }
 
   onlogin() {
+    this.btnLoading = true;
     this.authService.login(this.userLogin.value).subscribe(
       (response) => {
         this.router.navigate(['welcome']);
+        this.btnLoading = false;
       },
       (error) => {
-        this.mostrar = true;
+        this.errorMessage = true;
+        this.btnLoading = false;
       }
     );
+  }
+
+  resetPassword() {
+    this.router.navigate(['restablecer-contrasena'])
   }
 }

@@ -1,0 +1,109 @@
+<h1>Bitácora de accesos</h1>
+
+<div class="search" nz-row nzJustify="space-around">
+    <!-- Username -->
+    <div class="user" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="4">
+        <nz-input-group [nzSuffix]="inputClearUser">
+            <input nz-input [(ngModel)]="searchParams.username" placeholder="Buscar usuario" />
+        </nz-input-group>
+        <ng-template #inputClearUser>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.username" (click)="searchParams.username = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- IP -->
+    <div class="ip" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="4">
+        <nz-input-group [nzSuffix]="inputClearIP">
+            <input nz-input [(ngModel)]="searchParams.ip" placeholder="Buscar IP" />
+        </nz-input-group>
+        <ng-template #inputClearIP>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.ip" (click)="searchParams.ip = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Status Code -->
+    <div class="status-code" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="5">
+        <label>Código de respuesta: </label>
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.statusCode" (ngModelChange)="search()">
+            <nz-option nzLabel="201" nzValue="201"></nz-option>
+            <nz-option nzLabel="401" nzValue="401"></nz-option>
+        </nz-select>
+    </div>
+
+    <!-- Date range -->
+    <div class="date" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="6">
+        <label>Fecha: </label>
+        <nz-range-picker 
+            nzFormat="dd/MM/yyyy" 
+            [ngModel]="searchParams.attemptTime"
+            [nzDisabledDate]="disabledDate"
+            (ngModelChange)="onChangeDatePicker($event)"
+        ></nz-range-picker>
+    </div>
+
+    <div nz-col nzXs="24" nzSm="24" nzMd="2" nzLg="4" nzXl="1">
+        <button nz-button nzType="primary" (click)="search()">Buscar</button>
+    </div>
+</div>
+
+<div class="access-log" nz-row>
+    <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 24 }" [nzXl]="{ span: 20, offset: 2 }">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <nz-table #filterTable 
+                [nzData]="listOfDisplayData" 
+                nzTableLayout="fixed"
+                [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems"
+                [nzPageSize]="pagination.perPage"
+                [nzPageIndex]="pagination.page"
+                [nzSize]="tableSize"
+                (nzQueryParams)="recharge($event)"
+            >
+                <thead>
+                    <tr>
+                        <th nzColumnKey="username" [nzSortFn]="true" [nzSortPriority]="1">Usuario</th>
+                        <th nzColumnKey="ip" [nzSortFn]="true" [nzSortPriority]="2">IP</th>
+                        <th nzColumnKey="statusCode" [nzSortFn]="true" [nzSortPriority]="3">Código de respuesta</th>
+                        <th nzColumnKey="attemptTime" [nzSortFn]="true" [nzSortPriority]="4">Fecha y hora</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <tr *ngFor="let data of filterTable.data">
+                        <td>{{ data.username }}</td>
+                        <td>{{ data.ip }}</td>
+                        <td [ngClass]="{ 'success': data.statusCode==201 , 'error': data.statusCode==401}">{{ data.statusCode }}</td>
+                        <td>{{ data.attemptTime | date:"dd/MM/yyyy hh:mm aa" }}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>
+
+<div class="status-codes" nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 12 }">
+    <nz-table nzTemplateMode [nzSize]="tableSize">
+        <thead>
+          <tr>
+            <th>Código de respuesta</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="success">201</td>
+            <td>
+                <strong>Created. </strong>
+                <span>La petición del navegador se ha completado correctamente y se ha creado un nuevo recurso.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="error">401</td>
+            <td>
+                <strong>Unauthorized. </strong>
+                <span>La petición que realiza el navegador precisa autenticación.</span>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+</div>
