@@ -9,14 +9,10 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ResetPasswordComponent } from './components/reset-password.component';
 
-// import { AuthGuard } from './../login/guards/auth.guard';
-
 const routes: Routes = [
   { 
     path: '', 
-    component: ResetPasswordComponent,
-   // canActivate: [AuthGuard],
-    // data: {permission: 2}  
+    component: ResetPasswordComponent 
   }, 
   {
     path: '**',
