@@ -25,7 +25,6 @@ export class ResetPasswordComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private resetPasswordService: ResetPasswordService,
-    private router: Router,
     private message: NzMessageService) {
   }
 
@@ -53,9 +52,8 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   validateConfirmPassword(): void {
-    setTimeout(() => this.resetPwd.controls.confirm.updateValueAndValidity() );
+    setTimeout(() => this.resetPwd.controls.confirm.updateValueAndValidity());
   }
-
 
   politicsAsyncValidator = (control: FormControl) =>
     new Observable((observer: Observer<ValidationErrors | null>) => {
@@ -106,7 +104,7 @@ export class ResetPasswordComponent implements OnInit {
       if (!control.value) {
         return { error: true, required: true };
       } else if (control.value !== this.resetPwd.controls.password.value) {
-        return { confirm: true, error: true };
+        return { error: true, confirm: true };
       }
       return {};
   };
