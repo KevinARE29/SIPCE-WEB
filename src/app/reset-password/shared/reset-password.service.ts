@@ -44,6 +44,11 @@ export class ResetPasswordService {
       return this.http.post<any>(`${this.baseUrl}auth/reset-password?resetPasswordToken=${this.resetPasswordToken}`, password)
        
   }
+
+  updatePassword(password) {
+    return this.http.post<any>(`${this.baseUrl}users/me/password`, password)
+     
+}
     /**
    * Handle Http operation that failed.
    * Let the app continue.

@@ -25,10 +25,15 @@ const routes: Routes = [
     loadChildren: () => import('./security-policies/security-policies.module').then(m => m.SecurityPoliciesModule),
     canLoad: [AuthGuard]
   },
+  // {
+  //   path: 'restablecer-contrasena',
+  //   loadChildren: () => import('./manage-password/reset-password.module').then(m => m.ResetPasswordModule),
+  //   canLoad: [AuthGuard]
+  // },
   {
-    path: 'restablecer-contrasena',
+    path: 'contrasena',
     loadChildren: () => import('./manage-password/reset-password.module').then(m => m.ResetPasswordModule),
-    canLoad: [AuthGuard]
+  //s  canLoad: [AuthGuard]
 },
 {
     path: 'roles',
