@@ -20,7 +20,7 @@ const routes: Routes = [
     {
         path: 'cambiar',
         component: UpgradePasswordComponent,
-   //     canActivate: [AuthGuard]
+       canActivate: [AuthGuard]
     },
     {
         path: '**',

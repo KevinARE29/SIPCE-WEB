@@ -34,9 +34,8 @@ export class AuthGuard implements CanActivate, CanLoad {
     let res = false;
     let token = this.authService.getToken();
 
-    if (!token) {
-         
-      if(url !== '/login' && url != '/restablecer-contrasena' && url === '/contrasena/cambiar' ){
+    if (!token) {         
+      if(url !== '/login' && url != '/restablecer-contrasena'){
         this.router.navigate(['login']);
       }
       else{
@@ -44,11 +43,10 @@ export class AuthGuard implements CanActivate, CanLoad {
       } 
     } else {
       let content = this.authService.jwtDecoder(token);
-      if (url === '/contrasena/cambiar') {
-        res = true;
-      }
       
-     if (url !== '/login' && url !== '/restablecer-contrasena') {
+      if (url === '/contrasena/cambiar' || url === '/welcome') {
+        res = true;
+      } else if (url !== '/login' && url !== '/restablecer-contrasena') {
         if(content){
           let permissions = content.permissions;
           let permission = permissions.indexOf(next.data['permission']);
@@ -61,9 +59,7 @@ export class AuthGuard implements CanActivate, CanLoad {
         }       
       } else {
         this.router.navigate(['welcome']);
-      }
-
-     
+      }     
     }
     
     return res;
