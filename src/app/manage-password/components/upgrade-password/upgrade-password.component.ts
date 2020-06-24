@@ -24,11 +24,13 @@ export class UpgradePasswordComponent implements OnInit {
   length: number; // minlegth for a passwprd
   str: string; //substring used in the method lengthAsyncValidator
 
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     private resetPasswordService: ResetPasswordService,
     private router: Router,
     private notification: NzNotificationService,
-    private message: NzMessageService) { }
+    private message: NzMessageService
+  ) { }
 
   ngOnInit(): void {
     this.resetPwd = this.fb.group({
@@ -45,7 +47,6 @@ export class UpgradePasswordComponent implements OnInit {
       this.resetPwd.controls[key].markAsDirty();
       this.resetPwd.controls[key].updateValueAndValidity();
     }
-  
   }
 
   get oldPassword() {
@@ -60,7 +61,6 @@ export class UpgradePasswordComponent implements OnInit {
     setTimeout(() => this.resetPwd.controls.confirm.updateValueAndValidity() );
   }
 
-
   politicsAsyncValidator = (control: FormControl) =>
     new Observable((observer: Observer<ValidationErrors | null>) => {
       setTimeout(() => {
@@ -74,7 +74,7 @@ export class UpgradePasswordComponent implements OnInit {
             observer.next(null);
           }
         }
-   observer.complete();
+        observer.complete();
       },300);
     });
   
@@ -101,11 +101,10 @@ export class UpgradePasswordComponent implements OnInit {
             }
           }
         }
-         observer.complete();
-            }, 300);
+        observer.complete();
+      }, 300);
     });
   
-    
     confirmValidator = (control: FormControl): { [s: string]: boolean } => {
       if (!control.value) {
         return { error: true, required: true };
@@ -123,9 +122,7 @@ export class UpgradePasswordComponent implements OnInit {
           'oldPassword': this.oldPassword.value,
           'newPassword': this.password.value,
         };
-     
-        console.log(this.passwordJson);
-      
+
         this.resetPasswordService.updatePassword(this.passwordJson).subscribe(
         (response) => {
           this.isLoading = false;
@@ -150,45 +147,43 @@ export class UpgradePasswordComponent implements OnInit {
     } else {
       this.isLoading = false;
     }
-  
   }
  
   politicsPassword() {
     this.availablePolitics = ''; // cleaning the message variable
     this.resetPasswordService.getPolitics().subscribe(
         (response) => {
-       this.politics = response;
+          this.politics = response;
 
-        if (this.politics.data.capitalLetter === true)
-        {
-          this.availablePolitics = 'mayúsculas';
-          this.regexExpression = '(?=(?:.*[A-Z]))';
+          if (this.politics.data.capitalLetter === true)
+          {
+            this.availablePolitics = 'mayúsculas';
+            this.regexExpression = '(?=(?:.*[A-Z]))';
+          }
+          if (this.politics.data.lowerCase === true)
+          {
+            this.availablePolitics = this.availablePolitics + ', ' + 'minusculas';
+            this.regexExpression = this.regexExpression + '(?=(?:.*[a-z]))';
+          }
+          if (this.politics.data.numericChart === true)
+          {
+            this.availablePolitics = this.availablePolitics + ', ' + 'números';
+            this.regexExpression = this.regexExpression + '(?=(?:.*[0-9]))';
+          }
+          if (this.politics.data.specialChart === true) {
+            this.availablePolitics = this.availablePolitics + ', ' + 'caracteres especiales como ' + this.politics.data.typeSpecial;
+            this.regexExpression = this.regexExpression + '(?=(?:.*[#%$]))';
+          }      
+          if (this.politics.data.minLength === 0)
+          {
+            this.length = 6;
+          
+            this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de 6 caracteres';
+          } else {
+            this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de ' + this.politics.data.minLength + ' caracteres';
+            this.length = this.politics.data.minLength;
+          }
         }
-        if (this.politics.data.lowerCase === true)
-        {
-          this.availablePolitics = this.availablePolitics + ', ' + 'minusculas';
-          this.regexExpression = this.regexExpression + '(?=(?:.*[a-z]))';
-        }
-        if (this.politics.data.numericChart === true)
-        {
-          this.availablePolitics = this.availablePolitics + ', ' + 'números';
-          this.regexExpression = this.regexExpression + '(?=(?:.*[0-9]))';
-        }
-        if (this.politics.data.specialChart === true) {
-          this.availablePolitics = this.availablePolitics + ', ' + 'caracteres especiales como ' + this.politics.data.typeSpecial;
-          this.regexExpression = this.regexExpression + '(?=(?:.*[#%$]))';
-        }      
-        if (this.politics.data.minLength === 0)
-        {
-          this.length = 6;
-         
-          this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de 6 caracteres';
-         } else {
-                  this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de ' + this.politics.data.minLength + ' caracteres';
-                  this.length = this.politics.data.minLength;
-                 }
-       
-        }
-      );
+    );
   }
 }
