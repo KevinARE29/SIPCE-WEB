@@ -6,6 +6,7 @@ import { SecurityPolicy } from '../../../security-policies/shared/security-polic
 import { Politics } from '../../../reset-password/politics';
 import { Observable, Observer } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-upgrade-password',
@@ -26,6 +27,7 @@ export class UpgradePasswordComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private resetPasswordService: ResetPasswordService,
     private router: Router,
+    private notification: NzNotificationService,
     private message: NzMessageService) { }
 
   ngOnInit(): void {
@@ -122,12 +124,26 @@ export class UpgradePasswordComponent implements OnInit {
           'newPassword': this.oldPassword.value
         };
      
-      this.resetPasswordService.updatePassword(this.passwordJson).subscribe(
+        console.log(this.passwordJson);
+      
+        this.resetPasswordService.updatePassword(this.passwordJson).subscribe(
         (response) => {
           this.isLoading = false;
           this.message.success('Contraseña restablecida con éxito');
         },
-        (error) => {
+          (error) => {
+            let statusCode = error.statusCode;
+            let notIn = [401, 403];
+            
+            if(!notIn.includes(statusCode) && statusCode<500){
+              this.notification.create(
+                'error',
+                'Ocurrió un error al cambiar la contraseña. Por favor verifique lo siguiente:',
+                error.message,
+                { nzDuration: 0 }
+              );
+            }
+
           this.isLoading = false;
         }
     );

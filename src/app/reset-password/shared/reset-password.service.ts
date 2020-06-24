@@ -7,6 +7,8 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, of, throwError } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { Politics } from '../politics';
+import { updatePasswordI } from '../../manage-password/update-password';
+import { ErrorMessageService } from '../../shared/error-message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +16,9 @@ import { Politics } from '../politics';
 export class ResetPasswordService {
   baseUrl: string;
   resetPasswordToken = '';
+  updatePsw: updatePasswordI;
 
-  constructor(private http: HttpClient, private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private http: HttpClient,  private errorMessageService: ErrorMessageService, private router: Router, private activatedRoute: ActivatedRoute) {
     this.baseUrl = environment.apiURL;
     this.activatedRoute.queryParams.subscribe(data => {
       this.resetPasswordToken =data.resetPasswordToken;
@@ -34,9 +37,8 @@ export class ResetPasswordService {
         ),
         tap(h => {
           const outcome = h ? `Fetched` : `Did not find`;
-          console.log(`${outcome} security policies`);
         }),
-        catchError(this.handleError<Politics>(`getPolitics`))
+        catchError(this.handleError())
       );
   }
    
@@ -46,19 +48,26 @@ export class ResetPasswordService {
   }
 
   updatePassword(password) {
-    return this.http.post<any>(`${this.baseUrl}users/me/password`, password)
-     
+    return this.http.patch<updatePasswordI>(`${this.baseUrl}users/me/password`, password)
+    .pipe(
+      map(
+        (response: updatePasswordI) => {                    
+          this.updatePsw.data = response.data;  
+          return this.updatePsw;
+        }
+      ),
+      catchError(this.handleError())
+    ); 
 }
     /**
    * Handle Http operation that failed.
    * Let the app continue.
-   * @param operation - name of the operation that failed
    */
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      return throwError(error.error);
+  private handleError() {
+    return (error: any) => {
+      error.error.message = this.errorMessageService.transformMessage("update-password", error.error.message);
+     return throwError(error.error);
     };
   }
-
 
 }

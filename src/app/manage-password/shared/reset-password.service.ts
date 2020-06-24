@@ -20,9 +20,5 @@ export class ResetPasswordService {
     return this.httpClient.post<any>(`${this.baseUrl}auth/forgot-password`, email)
   }
 
-  updatePassword(data) {
-    return this.httpClient.patch<any>(`${this.baseUrl}authgot-password`, data)
-  }
-
 
 }
