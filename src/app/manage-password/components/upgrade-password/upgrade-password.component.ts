@@ -124,10 +124,10 @@ export class UpgradePasswordComponent implements OnInit {
         };
 
         this.resetPasswordService.updatePassword(this.passwordJson).subscribe(
-        (response) => {
-          this.isLoading = false;
-          this.message.success('Contraseña restablecida con éxito');
-        },
+          (response) => {
+            this.isLoading = false;
+            this.message.success('Contraseña restablecida con éxito');
+          },
           (error) => {
             let statusCode = error.statusCode;
             let notIn = [401, 403];
