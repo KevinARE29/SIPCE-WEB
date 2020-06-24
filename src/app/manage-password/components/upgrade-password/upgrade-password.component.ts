@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl,  ValidationErrors, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ResetPasswordService } from '../shared/reset-password.service';
-import { SecurityPolicy } from '../../security-policies/shared/security-policy.model';
-import { Politics } from '../politics';
+import { ResetPasswordService } from '../../../reset-password/shared/reset-password.service';
+import { SecurityPolicy } from '../../../security-policies/shared/security-policy.model';
+import { Politics } from '../../../reset-password/politics';
 import { Observable, Observer } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
-  selector: 'app-reset-password',
-  templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.css']
+  selector: 'app-upgrade-password',
+  templateUrl: './upgrade-password.component.html',
+  styleUrls: ['./upgrade-password.component.css']
 })
-export class ResetPasswordComponent implements OnInit {
+export class UpgradePasswordComponent implements OnInit {
   resetPwd: FormGroup;
   securityPolicy: SecurityPolicy;
   isLoading = false;
@@ -26,11 +27,12 @@ export class ResetPasswordComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private resetPasswordService: ResetPasswordService,
     private router: Router,
-    private message: NzMessageService) {
-  }
+    private notification: NzNotificationService,
+    private message: NzMessageService) { }
 
   ngOnInit(): void {
     this.resetPwd = this.fb.group({
+      oldPassword: ['', [Validators.required]],
       password: ['', [Validators.required], [this.politicsAsyncValidator, this.lengthAsyncValidator]],
       confirm: ['', [this.confirmValidator]],
     });
@@ -38,14 +40,16 @@ export class ResetPasswordComponent implements OnInit {
     this.politicsPassword();
   }
 
-  
-
   submitForm(value: { password: string; confirm: string }): void {
     for (const key in this.resetPwd.controls) {
       this.resetPwd.controls[key].markAsDirty();
       this.resetPwd.controls[key].updateValueAndValidity();
     }
   
+  }
+
+  get oldPassword() {
+    return this.resetPwd.get('oldPassword');
   }
 
   get password() {
@@ -116,15 +120,30 @@ export class ResetPasswordComponent implements OnInit {
       if (this.resetPwd.valid) {
         this.passwordJson =
         {
-          'password': this.password.value
+          'oldPassword': this.password.value,
+          'newPassword': this.oldPassword.value
         };
      
-      this.resetPasswordService.resetPassword(this.passwordJson).subscribe(
+        console.log(this.passwordJson);
+      
+        this.resetPasswordService.updatePassword(this.passwordJson).subscribe(
         (response) => {
           this.isLoading = false;
           this.message.success('Contraseña restablecida con éxito');
         },
-        (error) => {
+          (error) => {
+            let statusCode = error.statusCode;
+            let notIn = [401, 403];
+            
+            if(!notIn.includes(statusCode) && statusCode<500){
+              this.notification.create(
+                'error',
+                'Ocurrió un error al cambiar la contraseña. Por favor verifique lo siguiente:',
+                error.message,
+                { nzDuration: 0 }
+              );
+            }
+
           this.isLoading = false;
         }
     );
@@ -137,7 +156,7 @@ export class ResetPasswordComponent implements OnInit {
   politicsPassword() {
     this.availablePolitics = ''; // cleaning the message variable
     this.resetPasswordService.getPolitics().subscribe(
-       (response) => {
+        (response) => {
        this.politics = response;
 
         if (this.politics.data.capitalLetter === true)
@@ -169,7 +188,7 @@ export class ResetPasswordComponent implements OnInit {
                   this.length = this.politics.data.minLength;
                  }
        
-       }
-     );
+        }
+      );
   }
 }

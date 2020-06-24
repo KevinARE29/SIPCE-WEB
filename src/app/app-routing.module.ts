@@ -26,11 +26,11 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
-    path: 'restablecer-contrasena',
+    path: 'contrasena',
     loadChildren: () => import('./manage-password/reset-password.module').then(m => m.ResetPasswordModule),
     canLoad: [AuthGuard]
-},
-{
+  },
+  {
     path: 'roles',
     loadChildren: () => import('./roles/roles.module').then( m=> m.RolesModule),
     canLoad: [AuthGuard]
@@ -43,7 +43,7 @@ const routes: Routes = [
   {
     path: 'reset-psw',
     loadChildren: () => import('./reset-password/reset-password.module').then( m=> m.ResetPasswordModule),
-  //  canLoad: [AuthGuard]
+    canLoad: [AuthGuard]
   },
   {
     path: '**',

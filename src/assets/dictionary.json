@@ -10,6 +10,10 @@
             "lowerCase": "Mínusculas",
             "specialChart": "Caracteres especiales",
             "numericChart": "Dígitos"
+        },
+        "update-password": {
+          "oldPassword": "Contraseña actual",
+          "newPassword": "Nueva contraseña"
         }
     }
 }
