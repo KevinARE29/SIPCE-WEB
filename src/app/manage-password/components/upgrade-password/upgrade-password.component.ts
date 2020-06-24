@@ -180,8 +180,8 @@ export class UpgradePasswordComponent implements OnInit {
           
             this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de 6 caracteres';
           } else {
-                    this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de ' + this.politics.data.minLength + ' caracteres';
-                    this.length = this.politics.data.minLength;
+            this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de ' + this.politics.data.minLength + ' caracteres';
+            this.length = this.politics.data.minLength;
           }
         }
     );
