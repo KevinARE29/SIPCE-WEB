@@ -119,8 +119,8 @@ export class UpgradePasswordComponent implements OnInit {
       if (this.resetPwd.valid) {
         this.passwordJson =
         {
-          'oldPassword': this.password.value,
-          'newPassword': this.oldPassword.value
+          'oldPassword': this.oldPassword.value,
+          'newPassword': this.password.value,
         };
 
         this.resetPasswordService.updatePassword(this.passwordJson).subscribe(
