@@ -44,12 +44,12 @@ export class ResetPasswordService {
       );
   }
    
-  resetPassword(password) {
-    this.http.post<any>(`${this.baseUrl}auth/reset-password?resetPasswordToken=${this.resetPasswordToken}`, password);
+  resetPassword(password: any): Observable<any> { 
+    return this.http.post<any>(`${this.baseUrl}auth/reset-password?resetPasswordToken=${this.resetPasswordToken}`, password)
   }
 
-  updatePassword(password) {
-    return this.http.patch<updatePasswordI>(`${this.baseUrl}users/me/password`, password)
+  updatePassword(password: any): Observable<any> {
+    return this.http.patch<any>(`${this.baseUrl}users/me/password`, password)
     .pipe(
       catchError(this.handleError())
     ); 

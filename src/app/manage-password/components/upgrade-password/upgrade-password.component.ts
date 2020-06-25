@@ -7,6 +7,8 @@ import { Politics } from '../../../reset-password/politics';
 import { Observable, Observer } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { SecurityPolicyService } from '../../../security-policies/shared/security-policy.service';
+
 
 @Component({
   selector: 'app-upgrade-password',
@@ -28,6 +30,7 @@ export class UpgradePasswordComponent implements OnInit {
     private fb: FormBuilder,
     private resetPasswordService: ResetPasswordService,
     private router: Router,
+    private securityPolicyService: SecurityPolicyService,
     private notification: NzNotificationService,
     private message: NzMessageService
   ) { }
@@ -40,6 +43,7 @@ export class UpgradePasswordComponent implements OnInit {
     });
 
     this.politicsPassword();
+  //  this.getSecurityPolicies();
   }
 
   submitForm(value: { password: string; confirm: string }): void {
@@ -60,6 +64,16 @@ export class UpgradePasswordComponent implements OnInit {
   validateConfirmPassword(): void {
     setTimeout(() => this.resetPwd.controls.confirm.updateValueAndValidity() );
   }
+
+  getSecurityPolicies(): void {
+    this.securityPolicyService.getSecurityPolicies()
+    .subscribe(
+      securityPolicy => {
+        this.securityPolicy = securityPolicy;
+        console.log(this.securityPolicy);
+      }
+    );
+}
 
   politicsAsyncValidator = (control: FormControl) =>
     new Observable((observer: Observer<ValidationErrors | null>) => {

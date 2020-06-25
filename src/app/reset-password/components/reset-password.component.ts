@@ -6,6 +6,7 @@ import { SecurityPolicy } from '../../security-policies/shared/security-policy.m
 import { Politics } from '../politics';
 import { Observable, Observer } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { SecurityPolicyService } from '../../security-policies/shared/security-policy.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -26,6 +27,7 @@ export class ResetPasswordComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private resetPasswordService: ResetPasswordService,
     private router: Router,
+    private securityPolicyService: SecurityPolicyService,
     private message: NzMessageService) {
   }
 
@@ -133,6 +135,17 @@ export class ResetPasswordComponent implements OnInit {
     }
   
   }
+
+  getSecurityPolicies(): void {
+      this.securityPolicyService.getSecurityPolicies()
+      .subscribe(
+        securityPolicy => {
+          this.securityPolicy = securityPolicy;
+          console.log(this.securityPolicy);
+        }
+      );
+  }
+
  
   politicsPassword() {
     this.availablePolitics = ''; // cleaning the message variable
