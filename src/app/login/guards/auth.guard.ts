@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate, CanLoad {
     let token = this.authService.getToken();
 
     if (!token) {         
-      if(url !== '/login' && url !== '/contrasena/recuperar' && url !== '/reset-psw'){
+      if(url !== '/login' && url !== '/contrasena/recuperar'){
         this.router.navigate(['login']);
       }
       else{
