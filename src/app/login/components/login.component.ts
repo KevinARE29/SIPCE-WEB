@@ -40,7 +40,4 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  resetPassword() {
-    this.router.navigate(['restablecer-contrasena'])
-  }
 }
