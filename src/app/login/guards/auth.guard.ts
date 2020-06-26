@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate, CanLoad {
     let token = this.authService.getToken();
 
     if (!token) {         
-      if(url !== '/login' && url != '/restablecer-contrasena'){
+      if(url !== '/login' && url !== '/contrasena/recuperar'){
         this.router.navigate(['login']);
       }
       else{
@@ -46,7 +46,7 @@ export class AuthGuard implements CanActivate, CanLoad {
       
       if (url === '/contrasena/cambiar' || url === '/welcome') {
         res = true;
-      } else if (url !== '/login' && url !== '/restablecer-contrasena') {
+      } else if (url !== '/login' && url !== '/contrasena/recuperar') {
         if(content){
           let permissions = content.permissions;
           let permission = permissions.indexOf(next.data['permission']);
