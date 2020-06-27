@@ -70,7 +70,6 @@ export class UpgradePasswordComponent implements OnInit {
     .subscribe(
       securityPolicy => {
         this.securityPolicy = securityPolicy;
-        console.log(this.securityPolicy);
       }
     );
 }

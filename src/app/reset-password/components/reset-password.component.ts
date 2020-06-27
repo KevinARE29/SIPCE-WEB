@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl,  ValidationErrors, AbstractControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, FormControl,  ValidationErrors } from '@angular/forms';
 import { ResetPasswordService } from '../shared/reset-password.service';
 import { SecurityPolicy } from '../../security-policies/shared/security-policy.model';
 import { Politics } from '../politics';
@@ -24,9 +23,9 @@ export class ResetPasswordComponent implements OnInit {
   length: number; // minlegth for a passwprd
   str: string; //substring used in the method lengthAsyncValidator
 
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     private resetPasswordService: ResetPasswordService,
-    private router: Router,
     private securityPolicyService: SecurityPolicyService,
     private message: NzMessageService) {
   }
@@ -40,14 +39,11 @@ export class ResetPasswordComponent implements OnInit {
     this.politicsPassword();
   }
 
-  
-
   submitForm(value: { password: string; confirm: string }): void {
     for (const key in this.resetPwd.controls) {
       this.resetPwd.controls[key].markAsDirty();
       this.resetPwd.controls[key].updateValueAndValidity();
     }
-  
   }
 
   get password() {
@@ -57,7 +53,6 @@ export class ResetPasswordComponent implements OnInit {
   validateConfirmPassword(): void {
     setTimeout(() => this.resetPwd.controls.confirm.updateValueAndValidity() );
   }
-
 
   politicsAsyncValidator = (control: FormControl) =>
     new Observable((observer: Observer<ValidationErrors | null>) => {
@@ -72,7 +67,7 @@ export class ResetPasswordComponent implements OnInit {
             observer.next(null);
           }
         }
-   observer.complete();
+      observer.complete();
       },300);
     });
   
@@ -133,7 +128,6 @@ export class ResetPasswordComponent implements OnInit {
     } else {
       this.isLoading = false;
     }
-  
   }
 
   getSecurityPolicies(): void {
@@ -141,48 +135,44 @@ export class ResetPasswordComponent implements OnInit {
       .subscribe(
         securityPolicy => {
           this.securityPolicy = securityPolicy;
-          console.log(this.securityPolicy);
         }
       );
   }
-
  
   politicsPassword() {
     this.availablePolitics = ''; // cleaning the message variable
     this.resetPasswordService.getPolitics().subscribe(
-       (response) => {
-       this.politics = response;
+      (response) => {
+        this.politics = response;
 
-        if (this.politics.data.capitalLetter === true)
-        {
+        if (this.politics.data.capitalLetter === true) {
           this.availablePolitics = 'mayúsculas';
           this.regexExpression = '(?=(?:.*[A-Z]))';
         }
-        if (this.politics.data.lowerCase === true)
-        {
+
+        if (this.politics.data.lowerCase === true) {
           this.availablePolitics = this.availablePolitics + ', ' + 'minusculas';
           this.regexExpression = this.regexExpression + '(?=(?:.*[a-z]))';
         }
-        if (this.politics.data.numericChart === true)
-        {
+
+        if (this.politics.data.numericChart === true) {
           this.availablePolitics = this.availablePolitics + ', ' + 'números';
           this.regexExpression = this.regexExpression + '(?=(?:.*[0-9]))';
         }
+
         if (this.politics.data.specialChart === true) {
           this.availablePolitics = this.availablePolitics + ', ' + 'caracteres especiales como ' + this.politics.data.typeSpecial;
           this.regexExpression = this.regexExpression + '(?=(?:.*[#%$]))';
-        }      
-        if (this.politics.data.minLength === 0)
-        {
-          this.length = 6;
-         
+        }  
+
+        if (this.politics.data.minLength === 0) {
+          this.length = 6;         
           this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de 6 caracteres';
-         } else {
-                  this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de ' + this.politics.data.minLength + ' caracteres';
-                  this.length = this.politics.data.minLength;
-                 }
-       
-       }
-     );
+        } else {
+          this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de ' + this.politics.data.minLength + ' caracteres';
+          this.length = this.politics.data.minLength;
+        }
+      }
+    );
   }
 }
