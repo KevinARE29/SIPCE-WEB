@@ -42,8 +42,8 @@ export class UpgradePasswordComponent implements OnInit {
       confirm: ['', [this.confirmValidator]],
     });
 
-    this.politicsPassword();
-  //  this.getSecurityPolicies();
+   this.politicsPassword();
+//    this.getSecurityPolicies();
   }
 
   submitForm(value: { password: string; confirm: string }): void {
@@ -65,15 +65,48 @@ export class UpgradePasswordComponent implements OnInit {
     setTimeout(() => this.resetPwd.controls.confirm.updateValueAndValidity() );
   }
 
-  getSecurityPolicies(): void {
-    this.securityPolicyService.getSecurityPolicies()
+
+politicsPassword() {
+  this.availablePolitics = ''; // cleaning the message variable
+  this.regexExpression = '';
+  this.securityPolicyService.getSecurityPolicies()
     .subscribe(
-      securityPolicy => {
-        this.securityPolicy = securityPolicy;
-        console.log(this.securityPolicy);
+     securityPolicy => {
+         this.securityPolicy = securityPolicy;
+         console.log(this.securityPolicy);
+        if (this.securityPolicy.capitalLetter === true)
+        {
+          this.availablePolitics = 'mayúsculas' + ', ';
+          this.regexExpression = '(?=(?:.*[A-Z]))';
+        }
+        if (this.securityPolicy.lowerCase === true)
+        {
+          this.availablePolitics = this.availablePolitics + 'minusculas' + ', ' ;
+          this.regexExpression = this.regexExpression + '(?=(?:.*[a-z]))';
+        }
+        if (this.securityPolicy.numericChart === true)
+        {
+          this.availablePolitics = this.availablePolitics + 'números' + ', ';
+          this.regexExpression = this.regexExpression + '(?=(?:.*[0-9]))';
+        }
+        if (this.securityPolicy.specialChart === true) {
+          this.availablePolitics = this.availablePolitics + 'caracteres especiales como #%$' + ', ';
+          this.regexExpression = this.regexExpression + '(?=(?:.*[#%$]))';
+        }      
+        if (this.securityPolicy.minLength === 0)
+        {
+          this.length = 6;
+        
+          this.availablePolitics = this.availablePolitics + 'contener una longitud de 6 caracteres';
+        } else {
+          this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de ' + this.securityPolicy.minLength + ' caracteres';
+          this.length = this.securityPolicy.minLength;
+        }
       }
-    );
+  );
 }
+
+  
 
   politicsAsyncValidator = (control: FormControl) =>
     new Observable((observer: Observer<ValidationErrors | null>) => {
@@ -82,8 +115,9 @@ export class UpgradePasswordComponent implements OnInit {
         {
           // validationg the password with the available politics
             const regex = new RegExp(this.regexExpression);
+          console.log(regex);
           if (!regex.test(control.value)) {
-            observer.next({ error: true, expression: true });
+            observer.next({ error: true, invalidExpression: true });
           } else {
             observer.next(null);
           }
@@ -97,7 +131,7 @@ export class UpgradePasswordComponent implements OnInit {
       setTimeout(() => {
         if (control && (control.value !== null || control.value !== undefined)) {
           // validationg if the string has 6 characters
-          if (this.politics.data.minLength === 0) {
+          if (this.securityPolicy.minLength === 0) {
             this.str = control.value;
             if ((this.str.length === 6) || (this.str.length > 6) )
             {
@@ -108,7 +142,7 @@ export class UpgradePasswordComponent implements OnInit {
           } else {
             // validationg if the string has x characters
             this.str = control.value;
-            if ((this.str.length === this.politics.data.minLength) || (this.str.length > this.politics.data.minLength)) {
+            if ((this.str.length === this.securityPolicy.minLength) || (this.str.length > this.securityPolicy.minLength)) {
               observer.next(null);
             } else {
               observer.next({ error: true, minLengthPassword: true });
@@ -163,41 +197,41 @@ export class UpgradePasswordComponent implements OnInit {
     }
   }
  
-  politicsPassword() {
-    this.availablePolitics = ''; // cleaning the message variable
-    this.resetPasswordService.getPolitics().subscribe(
-        (response) => {
-          this.politics = response;
-
-          if (this.politics.data.capitalLetter === true)
-          {
-            this.availablePolitics = 'mayúsculas';
-            this.regexExpression = '(?=(?:.*[A-Z]))';
-          }
-          if (this.politics.data.lowerCase === true)
-          {
-            this.availablePolitics = this.availablePolitics + ', ' + 'minusculas';
-            this.regexExpression = this.regexExpression + '(?=(?:.*[a-z]))';
-          }
-          if (this.politics.data.numericChart === true)
-          {
-            this.availablePolitics = this.availablePolitics + ', ' + 'números';
-            this.regexExpression = this.regexExpression + '(?=(?:.*[0-9]))';
-          }
-          if (this.politics.data.specialChart === true) {
-            this.availablePolitics = this.availablePolitics + ', ' + 'caracteres especiales como ' + this.politics.data.typeSpecial;
-            this.regexExpression = this.regexExpression + '(?=(?:.*[#%$]))';
-          }      
-          if (this.politics.data.minLength === 0)
-          {
-            this.length = 6;
+  // politicsPassword() {
+  //   this.availablePolitics = ''; // cleaning the message variable
+  //   this.resetPasswordService.getPolitics().subscribe(
+  //       (response) => {
+  //         this.politics = response;
+  //       this.regexExpression = '';
+  //         if (this.politics.data.capitalLetter === true)
+  //         {
+  //           this.availablePolitics = 'mayúsculas';
+  //           this.regexExpression = '(?=(?:.*[A-Z]))';
+  //         }
+  //         if (this.politics.data.lowerCase === true)
+  //         {
+  //           this.availablePolitics = this.availablePolitics + ', ' + 'minusculas';
+  //           this.regexExpression = this.regexExpression + '(?=(?:.*[a-z]))';
+  //         }
+  //         if (this.politics.data.numericChart === true)
+  //         {
+  //           this.availablePolitics = this.availablePolitics + ', ' + 'números';
+  //           this.regexExpression = this.regexExpression + '(?=(?:.*[0-9]))';
+  //         }
+  //         if (this.politics.data.specialChart === true) {
+  //           this.availablePolitics = this.availablePolitics + ', ' + 'caracteres especiales como ' + this.politics.data.typeSpecial;
+  //           this.regexExpression = this.regexExpression + '(?=(?:.*[#%$]))';
+  //         }      
+  //         if (this.politics.data.minLength === 0)
+  //         {
+  //           this.length = 6;
           
-            this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de 6 caracteres';
-          } else {
-            this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de ' + this.politics.data.minLength + ' caracteres';
-            this.length = this.politics.data.minLength;
-          }
-        }
-    );
-  }
+  //           this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de 6 caracteres';
+  //         } else {
+  //           this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de ' + this.politics.data.minLength + ' caracteres';
+  //           this.length = this.politics.data.minLength;
+  //         }
+  //       }
+  //   );
+  // }
 }

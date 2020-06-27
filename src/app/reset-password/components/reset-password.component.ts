@@ -55,7 +55,7 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   validateConfirmPassword(): void {
-    setTimeout(() => this.resetPwd.controls.confirm.updateValueAndValidity() );
+    setTimeout(() => this.resetPwd.controls.confirm.updateValueAndValidity());
   }
 
 
@@ -65,9 +65,10 @@ export class ResetPasswordComponent implements OnInit {
         if (control && (control.value !== null || control.value !== undefined))
         {
           // validationg the password with the available politics
-            const regex = new RegExp(this.regexExpression);
+          const regex = new RegExp(this.regexExpression);
+          console.log(regex);
           if (!regex.test(control.value)) {
-            observer.next({ error: true, expression: true });
+            observer.next({ error: true, invalidExpression: true });
           } else {
             observer.next(null);
           }
@@ -102,15 +103,14 @@ export class ResetPasswordComponent implements OnInit {
          observer.complete();
             }, 300);
     });
-  
-    
-    confirmValidator = (control: FormControl): { [s: string]: boolean } => {
-      if (!control.value) {
-        return { error: true, required: true };
-      } else if (control.value !== this.resetPwd.controls.password.value) {
-        return { confirm: true, error: true };
-      }
-      return {};
+
+  confirmValidator = (control: FormControl): { [s: string]: boolean } => {
+    if (!control.value) {
+      return { error: true, required: true };
+    } else if (control.value !== this.resetPwd.controls.password.value) {
+      return { confirm: true, error: true };
+    }
+    return {};
   };
   
   sendPassword() {
@@ -149,6 +149,7 @@ export class ResetPasswordComponent implements OnInit {
  
   politicsPassword() {
     this.availablePolitics = ''; // cleaning the message variable
+    this.regexExpression = '';
     this.resetPasswordService.getPolitics().subscribe(
        (response) => {
        this.politics = response;
