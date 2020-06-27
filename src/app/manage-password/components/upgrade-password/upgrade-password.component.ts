@@ -165,6 +165,7 @@ export class UpgradePasswordComponent implements OnInit {
  
   politicsPassword() {
     this.availablePolitics = ''; // cleaning the message variable
+    this.regexExpression = ''; // cleaning the regex expression variable
     this.resetPasswordService.getPolitics().subscribe(
         (response) => {
           this.politics = response;
