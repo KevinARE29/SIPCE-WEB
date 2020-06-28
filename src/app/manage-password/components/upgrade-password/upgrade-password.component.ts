@@ -3,12 +3,10 @@ import { FormBuilder, FormGroup, Validators, FormControl,  ValidationErrors, Abs
 import { Router } from '@angular/router';
 import { ResetPasswordService } from '../../../reset-password/shared/reset-password.service';
 import { SecurityPolicy } from '../../../security-policies/shared/security-policy.model';
-import { Politics } from '../../../reset-password/politics';
 import { Observable, Observer } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { SecurityPolicyService } from '../../../security-policies/shared/security-policy.service';
-
 
 @Component({
   selector: 'app-upgrade-password',
@@ -19,7 +17,6 @@ export class UpgradePasswordComponent implements OnInit {
   resetPwd: FormGroup;
   securityPolicy: SecurityPolicy;
   isLoading = false;
-  politics: Politics;
   passwordJson; // variable that contains a validated password 
   availablePolitics: string; // string that contains the message of the politics that are available
   regexExpression: string; // dinamic regex expression formed according the available politics
@@ -43,7 +40,7 @@ export class UpgradePasswordComponent implements OnInit {
     });
 
    this.politicsPassword();
-//    this.getSecurityPolicies();
+
   }
 
   submitForm(value: { password: string; confirm: string }): void {
@@ -73,7 +70,6 @@ politicsPassword() {
     .subscribe(
      securityPolicy => {
          this.securityPolicy = securityPolicy;
-         console.log(this.securityPolicy);
         if (this.securityPolicy.capitalLetter === true)
         {
           this.availablePolitics = 'mayúsculas' + ', ';
@@ -115,7 +111,6 @@ politicsPassword() {
         {
           // validationg the password with the available politics
             const regex = new RegExp(this.regexExpression);
-          console.log(regex);
           if (!regex.test(control.value)) {
             observer.next({ error: true, invalidExpression: true });
           } else {
@@ -197,41 +192,4 @@ politicsPassword() {
     }
   }
  
-  // politicsPassword() {
-  //   this.availablePolitics = ''; // cleaning the message variable
-  //   this.resetPasswordService.getPolitics().subscribe(
-  //       (response) => {
-  //         this.politics = response;
-  //       this.regexExpression = '';
-  //         if (this.politics.data.capitalLetter === true)
-  //         {
-  //           this.availablePolitics = 'mayúsculas';
-  //           this.regexExpression = '(?=(?:.*[A-Z]))';
-  //         }
-  //         if (this.politics.data.lowerCase === true)
-  //         {
-  //           this.availablePolitics = this.availablePolitics + ', ' + 'minusculas';
-  //           this.regexExpression = this.regexExpression + '(?=(?:.*[a-z]))';
-  //         }
-  //         if (this.politics.data.numericChart === true)
-  //         {
-  //           this.availablePolitics = this.availablePolitics + ', ' + 'números';
-  //           this.regexExpression = this.regexExpression + '(?=(?:.*[0-9]))';
-  //         }
-  //         if (this.politics.data.specialChart === true) {
-  //           this.availablePolitics = this.availablePolitics + ', ' + 'caracteres especiales como ' + this.politics.data.typeSpecial;
-  //           this.regexExpression = this.regexExpression + '(?=(?:.*[#%$]))';
-  //         }      
-  //         if (this.politics.data.minLength === 0)
-  //         {
-  //           this.length = 6;
-          
-  //           this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de 6 caracteres';
-  //         } else {
-  //           this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de ' + this.politics.data.minLength + ' caracteres';
-  //           this.length = this.politics.data.minLength;
-  //         }
-  //       }
-  //   );
-  // }
 }

@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators, FormControl,  ValidationErrors, Abs
 import { Router } from '@angular/router';
 import { ResetPasswordService } from '../shared/reset-password.service';
 import { SecurityPolicy } from '../../security-policies/shared/security-policy.model';
-import { Politics } from '../politics';
 import { Observable, Observer } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { SecurityPolicyService } from '../../security-policies/shared/security-policy.service';
@@ -17,7 +16,6 @@ export class ResetPasswordComponent implements OnInit {
   resetPwd: FormGroup;
   securityPolicy: SecurityPolicy;
   isLoading = false;
-  politics: Politics;
   passwordJson; // variable that contains a validated password 
   availablePolitics: string; // string that contains the message of the politics that are available
   regexExpression: string; // dinamic regex expression formed according the available politics
@@ -57,25 +55,6 @@ export class ResetPasswordComponent implements OnInit {
   validateConfirmPassword(): void {
     setTimeout(() => this.resetPwd.controls.confirm.updateValueAndValidity());
   }
-
-
-  // politicsAsyncValidator = (control: FormControl) =>
-  //   new Observable((observer: Observer<ValidationErrors | null>) => {
-  //     setTimeout(() => {
-  //       if (control && (control.value !== null || control.value !== undefined))
-  //       {
-  //         // validationg the password with the available politics
-  //         const regex = new RegExp(this.regexExpression);
-  //         console.log(regex);
-  //         if (!regex.test(control.value)) {
-  //           observer.next({ error: true, invalidExpression: true });
-  //         } else {
-  //           observer.next(null);
-  //         }
-  //       }
-  //  observer.complete();
-  //     },300);
-  //   });
   
   politicsAsyncValidator = (control: FormControl) =>
   new Observable((observer: Observer<ValidationErrors | null>) => {
@@ -165,46 +144,6 @@ export class ResetPasswordComponent implements OnInit {
       );
   }
 
-  // politicsPassword() {
-  //   this.availablePolitics = ''; // cleaning the message variable
-  //   this.regexExpression = '';
-  //   this.securityPolicyService.getSecurityPolicies()
-  //     .subscribe(
-  //      securityPolicy => {
-  //          this.securityPolicy = securityPolicy;
-  //          console.log(this.securityPolicy);
-  //         if (this.securityPolicy.capitalLetter === true)
-  //         {
-  //           this.availablePolitics = 'mayúsculas' + ', ';
-  //           this.regexExpression = '(?=(?:.*[A-Z]))';
-  //         }
-  //         if (this.securityPolicy.lowerCase === true)
-  //         {
-  //           this.availablePolitics = this.availablePolitics + 'minusculas' + ', ' ;
-  //           this.regexExpression = this.regexExpression + '(?=(?:.*[a-z]))';
-  //         }
-  //         if (this.securityPolicy.numericChart === true)
-  //         {
-  //           this.availablePolitics = this.availablePolitics + 'números' + ', ';
-  //           this.regexExpression = this.regexExpression + '(?=(?:.*[0-9]))';
-  //         }
-  //         if (this.securityPolicy.specialChart === true) {
-  //           this.availablePolitics = this.availablePolitics + 'caracteres especiales como #%$' + ', ';
-  //           this.regexExpression = this.regexExpression + '(?=(?:.*[#%$]))';
-  //         }      
-  //         if (this.securityPolicy.minLength === 0)
-  //         {
-  //           this.length = 6;
-          
-  //           this.availablePolitics = this.availablePolitics + 'contener una longitud de 6 caracteres';
-  //         } else {
-  //           this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de ' + this.securityPolicy.minLength + ' caracteres';
-  //           this.length = this.securityPolicy.minLength;
-  //         }
-  //       }
-  //   );
-  // }
-  
   politicsPassword() {
     this.availablePolitics = ''; // cleaning the message variable
     this.regexExpression = '';
