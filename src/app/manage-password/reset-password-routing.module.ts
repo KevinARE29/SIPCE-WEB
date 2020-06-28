@@ -7,11 +7,17 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { ResetPswComponent } from './components/reset-psw/reset-psw.component';  
 import { ResetPasswordComponent } from './components/reset-password.component';
-import { UpgradePasswordComponent } from './components/upgrade-password/upgrade-password.component';
+import { UpdatePasswordComponent } from './components/update-password/update-password.component';
 import { AuthGuard } from '../login/guards/auth.guard';
 
 const routes: Routes = [
+    {
+        path: '',
+        component: ResetPswComponent,
+        canActivate: [AuthGuard]
+    },
     {
         path: 'recuperar',
         component: ResetPasswordComponent,
@@ -19,7 +25,7 @@ const routes: Routes = [
     },
     {
         path: 'cambiar',
-        component: UpgradePasswordComponent,
+        component: UpdatePasswordComponent,
        canActivate: [AuthGuard]
     },
     {

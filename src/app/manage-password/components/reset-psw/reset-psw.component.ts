@@ -1,22 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl,  ValidationErrors } from '@angular/forms';
-import { ResetPasswordService } from '../shared/reset-password.service';
-import { SecurityPolicy } from '../../security-policies/shared/security-policy.model';
-import { Politics } from '../politics';
+import { ResetPasswordService } from '../../shared/reset-password.service';
+import { SecurityPolicy } from '../../../security-policies/shared/security-policy.model';
 import { Observable, Observer } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { SecurityPolicyService } from '../../security-policies/shared/security-policy.service';
+import { SecurityPolicyService } from '../../../security-policies/shared/security-policy.service';
+
 
 @Component({
-  selector: 'app-reset-password',
-  templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.css']
+  selector: 'app-reset-psw',
+  templateUrl: './reset-psw.component.html',
+  styleUrls: ['./reset-psw.component.css']
 })
-export class ResetPasswordComponent implements OnInit {
+export class ResetPswComponent implements OnInit {
   resetPwd: FormGroup;
   securityPolicy: SecurityPolicy;
   isLoading = false;
-  politics: Politics;
   passwordJson; // variable that contains a validated password 
   availablePolitics: string; // string that contains the message of the politics that are available
   regexExpression: string; // dinamic regex expression formed according the available politics
@@ -51,22 +50,21 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   validateConfirmPassword(): void {
-    setTimeout(() => this.resetPwd.controls.confirm.updateValueAndValidity() );
+    setTimeout(() => this.resetPwd.controls.confirm.updateValueAndValidity());
   }
 
   politicsAsyncValidator = (control: FormControl) =>
-    new Observable((observer: Observer<ValidationErrors | null>) => {
-      setTimeout(() => {
-        if (control && (control.value !== null || control.value !== undefined))
-        {
-          // validationg the password with the available politics
-            const regex = new RegExp(this.regexExpression);
-          if (!regex.test(control.value)) {
-            observer.next({ error: true, expression: true });
-          } else {
-            observer.next(null);
-          }
+  new Observable((observer: Observer<ValidationErrors | null>) => {
+    setTimeout(() => {
+      if (control && (control.value !== null || control.value !== undefined)) {
+        // validationg the password with the available politics
+        const regex = new RegExp(this.regexExpression);
+        if (!regex.test(control.value)) {
+          observer.next({ error: true, invalidExpression: true });
+        } else {
+          observer.next(null);
         }
+      }
       observer.complete();
       },300);
     });
@@ -76,7 +74,7 @@ export class ResetPasswordComponent implements OnInit {
       setTimeout(() => {
         if (control && (control.value !== null || control.value !== undefined)) {
           // validationg if the string has 6 characters
-          if (this.politics.data.minLength === 0) {
+          if (this.securityPolicy.minLength === 0) {
             this.str = control.value;
             if ((this.str.length === 6) || (this.str.length > 6) )
             {
@@ -87,25 +85,25 @@ export class ResetPasswordComponent implements OnInit {
           } else {
             // validationg if the string has x characters
             this.str = control.value;
-            if ((this.str.length === this.politics.data.minLength) || (this.str.length > this.politics.data.minLength)) {
+            if ((this.str.length === this.securityPolicy.minLength) || (this.str.length > this.securityPolicy.minLength)) {
               observer.next(null);
             } else {
               observer.next({ error: true, minLengthPassword: true });
             }
           }
         }
-         observer.complete();
-            }, 300);
+        observer.complete();
+      }, 300);
     });
   
-    
-    confirmValidator = (control: FormControl): { [s: string]: boolean } => {
-      if (!control.value) {
-        return { error: true, required: true };
-      } else if (control.value !== this.resetPwd.controls.password.value) {
-        return { confirm: true, error: true };
-      }
-      return {};
+
+  confirmValidator = (control: FormControl): { [s: string]: boolean } => {
+    if (!control.value) {
+      return { error: true, required: true };
+    } else if (control.value !== this.resetPwd.controls.password.value) {
+      return { confirm: true, error: true };
+    }
+    return {};
   };
   
   sendPassword() {
@@ -138,41 +136,49 @@ export class ResetPasswordComponent implements OnInit {
         }
       );
   }
- 
+
   politicsPassword() {
     this.availablePolitics = ''; // cleaning the message variable
-    this.resetPasswordService.getPolitics().subscribe(
-      (response) => {
-        this.politics = response;
+    this.regexExpression = '';
 
-        if (this.politics.data.capitalLetter === true) {
-          this.availablePolitics = 'mayúsculas';
-          this.regexExpression = '(?=(?:.*[A-Z]))';
+    this.securityPolicyService.getSecurityPolicies()
+      .subscribe(
+       securityPolicy => {
+           this.securityPolicy = securityPolicy;
+          
+          if (this.securityPolicy.capitalLetter === true)
+          {
+            this.availablePolitics = 'mayúsculas' + ', ';
+            this.regexExpression = '(?=(?:.*[A-Z]))';
+          }
+
+          if (this.securityPolicy.lowerCase === true)
+          {
+            this.availablePolitics = this.availablePolitics + 'minusculas' + ', ' ;
+            this.regexExpression = this.regexExpression + '(?=(?:.*[a-z]))';
+          }
+
+          if (this.securityPolicy.numericChart === true)
+          {
+            this.availablePolitics = this.availablePolitics + 'números' + ', ';
+            this.regexExpression = this.regexExpression + '(?=(?:.*[0-9]))';
+          }
+
+          if (this.securityPolicy.specialChart === true) {
+            this.availablePolitics = this.availablePolitics + 'caracteres especiales como #%$' + ', ';
+            this.regexExpression = this.regexExpression + '(?=(?:.*[#%$]))';
+          }  
+          
+          if (this.securityPolicy.minLength === 0)
+          {
+            this.length = 6;
+          
+            this.availablePolitics = this.availablePolitics + 'contener una longitud de 6 caracteres';
+          } else {
+            this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de ' + this.securityPolicy.minLength + ' caracteres';
+            this.length = this.securityPolicy.minLength;
+          }
         }
-
-        if (this.politics.data.lowerCase === true) {
-          this.availablePolitics = this.availablePolitics + ', ' + 'minusculas';
-          this.regexExpression = this.regexExpression + '(?=(?:.*[a-z]))';
-        }
-
-        if (this.politics.data.numericChart === true) {
-          this.availablePolitics = this.availablePolitics + ', ' + 'números';
-          this.regexExpression = this.regexExpression + '(?=(?:.*[0-9]))';
-        }
-
-        if (this.politics.data.specialChart === true) {
-          this.availablePolitics = this.availablePolitics + ', ' + 'caracteres especiales como ' + this.politics.data.typeSpecial;
-          this.regexExpression = this.regexExpression + '(?=(?:.*[#%$]))';
-        }  
-
-        if (this.politics.data.minLength === 0) {
-          this.length = 6;         
-          this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de 6 caracteres';
-        } else {
-          this.availablePolitics = this.availablePolitics + ', ' + 'contener una longitud de ' + this.politics.data.minLength + ' caracteres';
-          this.length = this.politics.data.minLength;
-        }
-      }
     );
   }
 }

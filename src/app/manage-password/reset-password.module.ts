@@ -7,10 +7,11 @@ import { ResetPasswordComponent } from './components/reset-password.component';
 
 import { PasswordRoutingModule } from './reset-password-routing.module';
 import { AntDesignModule } from '../ant-design/ant-design.module';
-import { UpgradePasswordComponent } from './components/upgrade-password/upgrade-password.component';
+import { UpdatePasswordComponent } from './components/update-password/update-password.component';
+import { ResetPswComponent } from './components/reset-psw/reset-psw.component';
 
 @NgModule({
-  declarations: [ResetPasswordComponent, UpgradePasswordComponent],
+  declarations: [ResetPasswordComponent, UpdatePasswordComponent, ResetPswComponent],
   imports: [
     CommonModule,
     PasswordRoutingModule,
