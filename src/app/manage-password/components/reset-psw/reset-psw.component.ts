@@ -59,7 +59,6 @@ export class ResetPswComponent implements OnInit {
       if (control && (control.value !== null || control.value !== undefined)) {
         // validationg the password with the available politics
         const regex = new RegExp(this.regexExpression);
-        console.log(regex);
         if (!regex.test(control.value)) {
           observer.next({ error: true, invalidExpression: true });
         } else {
@@ -146,7 +145,6 @@ export class ResetPswComponent implements OnInit {
       .subscribe(
        securityPolicy => {
            this.securityPolicy = securityPolicy;
-          console.log(this.securityPolicy);
           
           if (this.securityPolicy.capitalLetter === true)
           {

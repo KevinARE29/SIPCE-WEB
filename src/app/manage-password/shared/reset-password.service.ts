@@ -22,7 +22,7 @@ export class ResetPasswordService {
     });
   }
 
-  forgotPassword(email): Observable<any> {
+  forgotPassword(email: any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}auth/forgot-password`, email)
   }
 
