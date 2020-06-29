@@ -13,28 +13,30 @@ export class ResetPasswordService {
   baseUrl: string;
   resetPasswordToken = '';
 
-  constructor(private http: HttpClient,
-    private errorMessageService: ErrorMessageService, 
-    private activatedRoute: ActivatedRoute) {
-      this.baseUrl = environment.apiURL;
-      this.activatedRoute.queryParams.subscribe(data => {
-      this.resetPasswordToken =data.resetPasswordToken;
+  constructor(
+    private http: HttpClient,
+    private errorMessageService: ErrorMessageService,
+    private activatedRoute: ActivatedRoute
+  ) {
+    this.baseUrl = environment.apiURL;
+    this.activatedRoute.queryParams.subscribe((data) => {
+      this.resetPasswordToken = data.resetPasswordToken;
     });
   }
 
   forgotPassword(email: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}auth/forgot-password`, email)
+    return this.http.post<any>(`${this.baseUrl}auth/forgot-password`, email);
   }
 
-  resetPassword(password: any): Observable<any> { 
-    return this.http.post<any>(`${this.baseUrl}auth/reset-password?resetPasswordToken=${this.resetPasswordToken}`, password)
+  resetPassword(password: any): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}auth/reset-password?resetPasswordToken=${this.resetPasswordToken}`,
+      password
+    );
   }
 
   updatePassword(password: any): Observable<any> {
-    return this.http.patch<any>(`${this.baseUrl}users/me/password`, password)
-    .pipe(
-      catchError(this.handleError())
-    ); 
+    return this.http.patch<any>(`${this.baseUrl}users/me/password`, password).pipe(catchError(this.handleError()));
   }
 
   /**
@@ -43,9 +45,8 @@ export class ResetPasswordService {
    */
   private handleError() {
     return (error: any) => {
-      error.error.message = this.errorMessageService.transformMessage("update-password", error.error.message);
-     return throwError(error.error);
+      error.error.message = this.errorMessageService.transformMessage('update-password', error.error.message);
+      return throwError(error.error);
     };
   }
-
 }

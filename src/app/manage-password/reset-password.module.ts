@@ -12,13 +12,6 @@ import { ResetPswComponent } from './components/reset-psw/reset-psw.component';
 
 @NgModule({
   declarations: [ResetPasswordComponent, UpdatePasswordComponent, ResetPswComponent],
-  imports: [
-    CommonModule,
-    PasswordRoutingModule,
-    FormsModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    AntDesignModule
-  ]
+  imports: [CommonModule, PasswordRoutingModule, FormsModule, HttpClientModule, ReactiveFormsModule, AntDesignModule]
 })
-export class ResetPasswordModule { }
+export class ResetPasswordModule {}
