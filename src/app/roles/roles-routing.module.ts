@@ -7,17 +7,17 @@ import { RoleComponent } from './components/role/role.component';
 import { AuthGuard } from '../login/guards/auth.guard';
 
 const routes: Routes = [
-  { 
-    path: '', 
+  {
+    path: '',
     component: RolesComponent,
     canActivate: [AuthGuard],
-    data: { permission: 4 }  // TODO: update to the correct permission
+    data: { permission: 4 }
   },
   {
     path: ':role',
     component: RoleComponent,
     canActivate: [AuthGuard],
-    data: { permission: 4 }
+    data: { permission: 7 }
   }
 ];
 
@@ -25,4 +25,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class RolesRoutingModule { }
+export class RolesRoutingModule {}

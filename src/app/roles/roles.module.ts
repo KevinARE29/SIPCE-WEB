@@ -11,12 +11,6 @@ import { RoleComponent } from './components/role/role.component';
 
 @NgModule({
   declarations: [RolesComponent, RoleComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AntDesignModule,
-    RolesRoutingModule
-  ]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, AntDesignModule, RolesRoutingModule]
 })
-export class RolesModule { }
+export class RolesModule {}
