@@ -92,9 +92,8 @@
           }
         },
         "lint": {
-          "builder": "@angular-eslint/builder:lint:eslint",
+          "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "eslintConfig": ".eslintrc.js",
             "tsConfig": [
               "tsconfig.app.json",
               "tsconfig.spec.json",
