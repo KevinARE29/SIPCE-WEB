@@ -4,20 +4,20 @@
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": false
     },
-    "editor.formatOnSave": false
+    "editor.formatOnSave": true
   },
   "[typescript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": false
     },
-    "editor.formatOnSave": false
+    "editor.formatOnSave": true
   },
   "[json]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": false
     },
-    "editor.formatOnSave": false
+    "editor.formatOnSave": true
   }
 }
