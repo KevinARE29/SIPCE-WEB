@@ -19,23 +19,20 @@ export class AccessLogComponent implements OnInit {
   listOfDisplayData: AccessLog[];
   loading = false;
   pagination: Pagination;
-  tableSize = 'small'; 
+  tableSize = 'small';
   dateFormat = 'dd/MM/yyyy';
 
-  constructor(
-    private accessLogService: AccessLogService,
-    private notification: NzNotificationService
-  ) { }
+  constructor(private accessLogService: AccessLogService, private notification: NzNotificationService) {}
 
   ngOnInit(): void {
     this.init();
   }
 
-  init(){
-    let currentDate = new Date(new Date().getFullYear(),new Date().getMonth() , new Date().getDate(), 23, 59, 59);
+  init(): void {
+    const currentDate = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 23, 59, 59);
     let date = subMonths(currentDate, 1);
     date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
-    
+
     this.searchParams = new AccessLog();
     this.pagination = new Pagination();
 
@@ -44,53 +41,49 @@ export class AccessLogComponent implements OnInit {
     this.pagination.page = 1;
   }
 
-  recharge(params: NzTableQueryParams): void{
+  recharge(params: NzTableQueryParams): void {
     this.loading = true;
-    this.accessLogService.searchAccessLog(params, this.searchParams, params.pageIndex !== this.pagination.page)
+    this.accessLogService
+      .searchAccessLog(params, this.searchParams, params.pageIndex !== this.pagination.page)
       .subscribe(
-        data => {
+        (data) => {
           this.accessLogs = data['data'];
           this.pagination = data['pagination'];
           this.listOfDisplayData = [...this.accessLogs];
           this.loading = false;
-        }, err => {          
-          let statusCode = err.statusCode;
-          let notIn = [401, 403];
-          
-          if(!notIn.includes(statusCode) && statusCode<500){
-            this.notification.create(
-              'error',
-              'Ocurrió un error al recargar la bitácora de accesos.',
-              err.message,
-              { nzDuration: 0 }
-            );
+        },
+        (err) => {
+          const statusCode = err.statusCode;
+          const notIn = [401, 403];
+
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create('error', 'Ocurrió un error al recargar la bitácora de accesos.', err.message, {
+              nzDuration: 0
+            });
           }
         }
-      )
+      );
   }
 
-  search(): void{
-    this.accessLogService.searchAccessLog(null, this.searchParams, false)
-      .subscribe(
-        data => {
-          this.accessLogs = data['data'];
-          this.pagination = data['pagination'];
-          this.listOfDisplayData = [...this.accessLogs];
-          this.loading = false;
-        }, err => {          
-          let statusCode = err.statusCode;
-          let notIn = [401, 403];
-          
-          if(!notIn.includes(statusCode) && statusCode<500){
-            this.notification.create(
-              'error',
-              'Ocurrió un error al filtrar la bitácora de accesos.',
-              err.message,
-              { nzDuration: 0 }
-            );
-          }
+  search(): void {
+    this.accessLogService.searchAccessLog(null, this.searchParams, false).subscribe(
+      (data) => {
+        this.accessLogs = data['data'];
+        this.pagination = data['pagination'];
+        this.listOfDisplayData = [...this.accessLogs];
+        this.loading = false;
+      },
+      (err) => {
+        const statusCode = err.statusCode;
+        const notIn = [401, 403];
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create('error', 'Ocurrió un error al filtrar la bitácora de accesos.', err.message, {
+            nzDuration: 0
+          });
         }
-      )
+      }
+    );
   }
 
   onChangeDatePicker(result: Date[]): void {

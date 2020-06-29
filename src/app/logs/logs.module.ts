@@ -10,10 +10,6 @@ import { ActionsLogComponent } from './components/actions-log/actions-log.compon
 
 @NgModule({
   declarations: [AccessLogComponent, LogsRootComponent, ActionsLogComponent],
-  imports: [
-    CommonModule,
-    AntDesignModule,
-    LogsRoutingModule
-  ]
+  imports: [CommonModule, AntDesignModule, LogsRoutingModule]
 })
-export class LogsModule { }
+export class LogsModule {}
