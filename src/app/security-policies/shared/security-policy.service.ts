@@ -19,35 +19,28 @@ import { Observable, throwError } from 'rxjs';
 export class SecurityPolicyService {
   baseUrl: string;
 
-  constructor(
-    private http: HttpClient,
-    private errorMessageService: ErrorMessageService
-  ) { 
+  constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
     this.baseUrl = environment.apiURL;
   }
 
-  getSecurityPolicies(): Observable<any> {
-    return this.http.get<SecurityPolicy>(`${this.baseUrl}auth/politics`)
-      .pipe(
-        map(
-          (response: SecurityPolicy) => {
-            let securityPolicy = new SecurityPolicy;
+  getSecurityPolicies(): Observable<SecurityPolicy> {
+    return this.http.get<SecurityPolicy>(`${this.baseUrl}auth/politics`).pipe(
+      map((response: SecurityPolicy) => {
+        let securityPolicy = new SecurityPolicy();
 
-            securityPolicy = response['data'];
-            securityPolicy.minActive = securityPolicy.minLength == 0 ? false : true;
-          
-            return securityPolicy;
-          }
-        ),
-        catchError(this.handleError())
-      );
+        securityPolicy = response['data'];
+        securityPolicy.minActive = securityPolicy.minLength == 0 ? false : true;
+
+        return securityPolicy;
+      }),
+      catchError(this.handleError())
+    );
   }
 
-  updateSecurityPolicies(policies: SecurityPolicy){
-    if(!policies.minActive)  
-      policies.minLength = 0;
+  updateSecurityPolicies(policies: SecurityPolicy): Observable<SecurityPolicy> {
+    if (!policies.minActive) policies.minLength = 0;
 
-    let data = JSON.stringify({
+    const data = JSON.stringify({
       id: policies.id,
       minLength: policies.minLength,
       capitalLetter: policies.capitalLetter,
@@ -56,20 +49,17 @@ export class SecurityPolicyService {
       specialChart: policies.specialChart
     });
 
-    return this.http.put<SecurityPolicy>(`${this.baseUrl}auth/politics/${policies.id}`, data)
-      .pipe(
-        map(
-          (response: SecurityPolicy) => {            
-            let securityPolicy = new SecurityPolicy;
-            
-            securityPolicy = response['data'];
-            securityPolicy.minActive = securityPolicy.minLength == 0 ? false : true;
-          
-            return securityPolicy;
-          }
-        ),
-        catchError(this.handleError())
-      );
+    return this.http.put<SecurityPolicy>(`${this.baseUrl}auth/politics/${policies.id}`, data).pipe(
+      map((response: SecurityPolicy) => {
+        let securityPolicy = new SecurityPolicy();
+
+        securityPolicy = response['data'];
+        securityPolicy.minActive = securityPolicy.minLength == 0 ? false : true;
+
+        return securityPolicy;
+      }),
+      catchError(this.handleError())
+    );
   }
 
   /**
@@ -77,8 +67,9 @@ export class SecurityPolicyService {
    * Let the app continue.
    */
   private handleError() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (error: any) => {
-      error.error.message = this.errorMessageService.transformMessage("security-policies", error.error.message);
+      error.error.message = this.errorMessageService.transformMessage('security-policies', error.error.message);
       return throwError(error.error);
     };
   }

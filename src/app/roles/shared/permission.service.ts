@@ -18,5 +18,4 @@ export class PermissionService {
   getPermissions(): Observable<AppPermission[]> {
     return this.http.get<AppPermission[]>(`${this.baseUrl}auth/permissions`);
   }
-
 }

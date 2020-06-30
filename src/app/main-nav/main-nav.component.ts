@@ -28,54 +28,53 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   data: any;
   year: number;
 
-  constructor(
-    private router: Router, 
-    private authService: AuthService
-  ) { }
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.year = (new Date()).getFullYear();
+    this.year = new Date().getFullYear();
   }
 
-  ngAfterContentChecked() {
-    if(this.getToken()){
+  ngAfterContentChecked(): void {
+    if (this.getToken()) {
       this.getUsername();
       this.setPermissions();
     }
   }
 
-  logoutClicked() {
+  logoutClicked(): void {
     this.authService.logout().subscribe(
-      (resp) => {
+      () => {
         this.router.navigate(['/login']);
-      }, (error) => {
+      },
+      () => {
         this.authService.cleanLocalStorage();
         this.router.navigate(['/login']);
-      });
+      }
+    );
   }
 
-  getUsername() {
+  getUsername(): void {
     this.jwt = this.authService.jwtDecoder(localStorage.getItem('accessToken'));
     this.username = this.jwt.sub;
     this.inicial = this.username.charAt(0);
     this.avatar = this.inicial.toUpperCase();
   }
 
-  getToken(){
+  getToken(): string {
     return this.authService.getToken();
   }
 
-  setPermissions(){
-    let token = this.authService.getToken();
-    let content = this.authService.jwtDecoder(token);
+  setPermissions(): void {
+    const token = this.authService.getToken();
+    const content = this.authService.jwtDecoder(token);
 
-    let permissions = content.permissions;
+    const permissions = content.permissions;
 
     this.menuOptions = MenuJson.menu;
 
-    this.menuOptions.forEach(menu => {
-      let index = permissions.indexOf(menu.permission);
-      menu.allow = (index == -1)? false : true;
+    this.menuOptions.forEach((menu) => {
+      const index = permissions.indexOf(menu.permission);
+      menu.allow = index == -1 ? false : true;
     });
   }
 }

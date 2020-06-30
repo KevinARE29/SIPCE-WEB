@@ -20,15 +20,9 @@
                     nzShowSearch
                     [nzListStyle]="{ 'width.px': 300, 'height.px': 400 }"
                     [nzRender]="render"
-                    [nzFooter]="footer"
                     [nzFilterOption]="filterOption"
                 >
                     <ng-template #render let-item> {{ item.title }} </ng-template>
-                    <ng-template #footer let-direction>
-                        <button nz-button (click)="reload()" [nzSize]="'medium'" style="float: right; margin: 5px;">
-                            Recargar
-                        </button>
-                    </ng-template>
                 </nz-transfer>
             </div>
         </nz-form-item>

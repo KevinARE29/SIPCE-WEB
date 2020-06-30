@@ -1,31 +1,52 @@
-.error{ color: #f5222d }
+.error {
+  color: #f5222d;
+}
 
-.success{ color: #52c41a }
+.success {
+  color: #52c41a;
+}
 
-.server{ color: #0050b3; }
+.server {
+  color: #0050b3;
+}
 
-.search{ margin-bottom: 25px; }
+.search {
+  margin-bottom: 25px;
+}
 
 @media (max-width: 767px) {
-    .search div{ margin-top: 5px; } 
+  .search div {
+    margin-top: 5px;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
-    .date, .status-code, .action, button{ margin-top: 5px; }
+  .date,
+  .status-code,
+  .action,
+  button {
+    margin-top: 5px;
+  }
 }
 
-@media (min-width: 992px) and (max-width: 1147px){
-    .action, .date, button{ margin-top: 5px; }
+@media (min-width: 992px) and (max-width: 1147px) {
+  .action,
+  .date,
+  button {
+    margin-top: 5px;
+  }
 }
 
-@media (min-width: 992px) and (max-width: 1077px){
-    button{ margin-top: 27px; }
+@media (min-width: 992px) and (max-width: 1077px) {
+  button {
+    margin-top: 27px;
+  }
 }
 
-@media (min-width: 1148px){
-    .action, .date, button{ margin-top: 5px; }
+@media (min-width: 1148px) {
+  .action,
+  .date,
+  button {
+    margin-top: 5px;
+  }
 }
-
-/* @media (min-width: 1195px){
-    button{ margin-left: -100px!important; }
-} */

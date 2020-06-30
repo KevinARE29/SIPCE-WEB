@@ -20,10 +20,8 @@ import { AntDesignModule } from './ant-design/ant-design.module';
 import { MainNavComponent } from './main-nav/main-nav.component';
 import { InterceptorModule } from './interceptors/interceptor.module';
 
-
 import { AuthInterceptor } from './interceptors/auth-interceptor';
 import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
-
 
 @NgModule({
   declarations: [AppComponent, MainNavComponent],
@@ -48,6 +46,6 @@ import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
     HttpClientModule,
     InterceptorModule
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

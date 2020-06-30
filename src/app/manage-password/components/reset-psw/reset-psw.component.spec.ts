@@ -8,9 +8,8 @@ describe('ResetPswComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ResetPswComponent ]
-    })
-    .compileComponents();
+      declarations: [ResetPswComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

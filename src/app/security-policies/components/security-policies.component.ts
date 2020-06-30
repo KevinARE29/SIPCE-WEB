@@ -5,7 +5,6 @@
 */
 
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
@@ -28,16 +27,15 @@ export class SecurityPoliciesComponent implements OnInit {
   loading = false;
 
   constructor(
-    private router: Router,
     private authService: AuthService,
     private securityPolicyService: SecurityPolicyService,
     private notification: NzNotificationService,
     private message: NzMessageService,
     private modal: NzModalService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.securityPolicy = new SecurityPolicy;
+    this.securityPolicy = new SecurityPolicy();
 
     this.setPermissions();
     this.getSecurityPolicies();
@@ -45,39 +43,36 @@ export class SecurityPoliciesComponent implements OnInit {
 
   getSecurityPolicies(): void {
     this.loading = true;
-    this.securityPolicyService.getSecurityPolicies()
-      .subscribe(
-        securityPolicy => {
-          this.securityPolicy = securityPolicy;
-          this.loading = false;
-        }, err => {          
-          let statusCode = err.statusCode;
-          let notIn = [401, 403];
-          
-          if(!notIn.includes(statusCode) && statusCode<500){
-            this.notification.create(
-              'error',
-              'Ocurrió un error al obtener las políticas de seguridad.',
-              err.message,
-              { nzDuration: 0 }
-            );
-          }
+    this.securityPolicyService.getSecurityPolicies().subscribe(
+      (securityPolicy) => {
+        this.securityPolicy = securityPolicy;
+        this.loading = false;
+      },
+      (err) => {
+        const statusCode = err.statusCode;
+        const notIn = [401, 403];
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create('error', 'Ocurrió un error al obtener las políticas de seguridad.', err.message, {
+            nzDuration: 0
+          });
         }
-      );
+      }
+    );
   }
 
-  setPermissions(){
-    let token = this.authService.getToken();
-    let content = this.authService.jwtDecoder(token);
+  setPermissions(): void {
+    const token = this.authService.getToken();
+    const content = this.authService.jwtDecoder(token);
 
-    let permissions = content.permissions;
+    const permissions = content.permissions;
 
-    this.permissions.push(new Permission(1, "Update"));
+    this.permissions.push(new Permission(1, 'Update'));
 
-    this.permissions.forEach(p => {
-      let index = permissions.indexOf(p.id);
-      
-      p.allow = (index == -1)? false : true;
+    this.permissions.forEach((p) => {
+      const index = permissions.indexOf(p.id);
+
+      p.allow = index == -1 ? false : true;
     });
   }
 
@@ -87,42 +82,42 @@ export class SecurityPoliciesComponent implements OnInit {
       nzContent: 'La acción no puede deshacerse.',
 
       nzOnOk: () =>
-      this.securityPolicyService.updateSecurityPolicies(this.securityPolicy)      
-        .toPromise().then(securityPolicy => {
-          this.securityPolicy = securityPolicy;
-          if(this.securityPolicy.minLength === 0)
-            this.securityPolicy.minActive = false;
+        this.securityPolicyService
+          .updateSecurityPolicies(this.securityPolicy)
+          .toPromise()
+          .then((securityPolicy) => {
+            this.securityPolicy = securityPolicy;
+            if (this.securityPolicy.minLength === 0) this.securityPolicy.minActive = false;
 
             this.message.success('Políticas de seguridad actualizadas con éxito');
-        }).catch(err => {
-          let statusCode = err.statusCode;
-          let notIn = [401, 403];
-          
-          if(!notIn.includes(statusCode) && statusCode<500){
-            this.notification.create(
-              'error',
-              'Ocurrió un error al actualizar las políticas de seguridad.',
-              err.message,
-              { nzDuration: 0 }
-            );
-          }
-        })
+          })
+          .catch((err) => {
+            const statusCode = err.statusCode;
+            const notIn = [401, 403];
+
+            if (!notIn.includes(statusCode) && statusCode < 500) {
+              this.notification.create(
+                'error',
+                'Ocurrió un error al actualizar las políticas de seguridad.',
+                err.message,
+                { nzDuration: 0 }
+              );
+            }
+          })
     });
   }
 
   updateMin(): void {
-    if(this.securityPolicy.minLength == 0){
+    if (this.securityPolicy.minLength == 0) {
       this.securityPolicy.minLength = 6;
     }
 
-    if(!this.securityPolicy.minActive && this.securityPolicy.minLength != 0)
-      this.securityPolicy.minLength = 0;
-  }
-  
-  checkPermission(id: number){
-    let index = this.permissions.find( p => p.id === id);
-      
-    return index.allow;
+    if (!this.securityPolicy.minActive && this.securityPolicy.minLength != 0) this.securityPolicy.minLength = 0;
   }
 
+  checkPermission(id: number): boolean {
+    const index = this.permissions.find((p) => p.id === id);
+
+    return index.allow;
+  }
 }

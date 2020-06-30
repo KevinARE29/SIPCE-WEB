@@ -1,29 +1,46 @@
-.error{
-    color: #f5222d
+.error {
+  color: #f5222d;
 }
 
-.success{
-    color: #52c41a
+.success {
+  color: #52c41a;
 }
 
-.search{ margin-bottom: 20px;}
+.search {
+  margin-bottom: 20px;
+}
 
 @media (max-width: 767px) {
-    .search div{ margin-top: 5px; } 
+  .search div {
+    margin-top: 5px;
+  }
 }
 @media (min-width: 768px) and (max-width: 991px) {
-    .status-code, .date, button{ margin-top: 5px;}
+  .status-code,
+  .date,
+  button {
+    margin-top: 5px;
+  }
 }
-@media (min-width: 992px) and (max-width: 1200px) { 
-    .date{ margin-top:15px; }
+@media (min-width: 992px) and (max-width: 1200px) {
+  .date {
+    margin-top: 15px;
+  }
 
-    button{ margin-top: 15px; }
+  button {
+    margin-top: 15px;
+  }
 }
 
-@media (min-width: 992px) and (max-width: 1147px){
-    button{ margin-top: 35px; }
+@media (min-width: 992px) and (max-width: 1147px) {
+  button {
+    margin-top: 35px;
+  }
 }
 
-@media (min-width: 1200px) and (max-width: 1650px){
-    button{ margin-top: 20px; margin-left: -10px;}
+@media (min-width: 1200px) and (max-width: 1650px) {
+  button {
+    margin-top: 20px;
+    margin-left: -10px;
+  }
 }

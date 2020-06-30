@@ -4,16 +4,16 @@
   Author: Esme López 
 */
 
-#error404{
-    text-align: center;
-    font-size: 1.8em;
-    margin-top: 20px;
+#error404 {
+  text-align: center;
+  font-size: 1.8em;
+  margin-top: 20px;
 }
 
-.messages{
-     padding: 10px;
+.messages {
+  padding: 10px;
 }
 
-img{
-    max-width: 400px;
+img {
+  max-width: 400px;
 }

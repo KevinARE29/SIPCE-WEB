@@ -45,70 +45,64 @@ export class RoleComponent implements OnInit {
     private notification: NzNotificationService,
     private roleService: RoleService,
     private permissionService: PermissionService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.setPermissions();
     this.gateway();
 
-    if(this.id === 0)
-      this.setData();
+    if (this.id === 0) this.setData();
   }
   /* ---      Control page permissions      --- */
-  setPermissions(){
-    let token = this.authService.getToken();
-    let content = this.authService.jwtDecoder(token);
+  setPermissions(): void {
+    const token = this.authService.getToken();
+    const content = this.authService.jwtDecoder(token);
 
-    let permissions = content.permissions;
+    const permissions = content.permissions;
 
-    this.permissions.push(new Permission(6, "Create role"));
-    this.permissions.push(new Permission(7, "Read role"));
-    this.permissions.push(new Permission(8, "Update role"));
+    this.permissions.push(new Permission(6, 'Create role'));
+    this.permissions.push(new Permission(7, 'Read role'));
+    this.permissions.push(new Permission(8, 'Update role'));
 
-    this.permissions.forEach(p => {
-      let index = permissions.indexOf(p.id);
-      p.allow = (index == -1)? false : true;
+    this.permissions.forEach((p) => {
+      const index = permissions.indexOf(p.id);
+      p.allow = index === -1 ? false : true;
     });
   }
 
-  checkPermission(id: number){
-    let index = this.permissions.find( p => p.id === id);
+  checkPermission(id: number): boolean {
+    const index = this.permissions.find((p) => p.id === id);
     return index.allow;
   }
 
   /* ---      Control actions      --- */
-  gateway(){
-    this.route.paramMap.subscribe(params => {
-      let param: string = params.get('role');
-      
+  gateway(): void {
+    this.route.paramMap.subscribe((params) => {
+      const param: string = params.get('role');
+
       this.roleForm = this.fb.group({
         name: [null, [Validators.required, Validators.maxLength(32)]]
       });
 
-      if (typeof param === "string" && !Number.isNaN(Number(param))) {
+      if (typeof param === 'string' && !Number.isNaN(Number(param))) {
         this.id = Number(param);
         this.getAppPermissions();
       } else {
-        this.router.navigateByUrl("/role/"+this.id, { skipLocationChange: true });
+        this.router.navigateByUrl('/role/' + this.id, { skipLocationChange: true });
       }
     });
   }
 
-  getAppPermissions(){
+  getAppPermissions(): void {
     this.transferLoading = true;
-    this.permissionService.getPermissions()
-      .subscribe(
-        data => {
-          this.appPermissions = data['data'];
-          
-          if(this.id===0)
-            this.setData();
-          else
-            this.getRole();
+    this.permissionService.getPermissions().subscribe((data) => {
+      this.appPermissions = data['data'];
 
-          this.transferLoading = false;
-        }
-      )
+      if (this.id === 0) this.setData();
+      else this.getRole();
+
+      this.transferLoading = false;
+    });
   }
 
   submitForm(): void {
@@ -116,115 +110,112 @@ export class RoleComponent implements OnInit {
       this.roleForm.controls[i].markAsDirty();
       this.roleForm.controls[i].updateValueAndValidity();
     }
-    
-    if(this.roleForm.valid){
-      this.role.name = this.roleForm.controls["name"].value;
-      
-      if(this.id === 0){
+
+    if (this.roleForm.valid) {
+      this.role.name = this.roleForm.controls['name'].value;
+
+      if (this.id === 0) {
         this.createRole();
-      }else if(this.id > 5){
+      } else if (this.id > 5) {
         this.updateRole();
       }
     }
   }
-  
-  createRole(){
+
+  createRole(): void {
     this.btnLoading = true;
     this.transformSelectedItems();
-    
-    this.roleService.createRole(this.role)
-      .subscribe(
-        data => {
-          this.role.id = data['data'].id;
-          this.message.success('Role ' + data['data'].name +' creado con éxito');
-          this.btnLoading = false;
 
-          this.router.navigateByUrl("/roles/"+this.role.id)
-        }, err => {
-          let statusCode = err.statusCode;
-          let notIn = [401, 403];
-          
-          if(!notIn.includes(statusCode) && statusCode<500){
-            this.notification.create(
-              'error',
-              'Ocurrió un error al crear el rol. Por favor verifique lo siguiente:',
-              err.message,
-              { nzDuration: 0 }
-            );
-          }
+    this.roleService.createRole(this.role).subscribe(
+      (data) => {
+        this.role.id = data['data'].id;
+        this.message.success('Role ' + data['data'].name + ' creado con éxito');
+        this.btnLoading = false;
 
-          this.btnLoading = false;
+        this.router.navigateByUrl('/roles/' + this.role.id);
+      },
+      (err) => {
+        const statusCode = err.statusCode;
+        const notIn = [401, 403];
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create(
+            'error',
+            'Ocurrió un error al crear el rol. Por favor verifique lo siguiente:',
+            err.message,
+            { nzDuration: 0 }
+          );
         }
-      )
+
+        this.btnLoading = false;
+      }
+    );
   }
 
-  getRole(){
+  getRole(): void {
     this.transferLoading = true;
-    this.roleService.getRole(this.id)
-      .subscribe(
-        data => {
-          this.transferLoading = false;
-          this.role = data;
+    this.roleService.getRole(this.id).subscribe(
+      (data) => {
+        this.transferLoading = false;
+        this.role = data;
 
-          this.roleForm.get('name')!.setValue(this.role.name);
-          
-          this.setData();
-        },
-        err => {  
-          let statusCode = err.statusCode;
-          let notIn = [401, 403];
-          
-          if(err.statusCode === 404){
-            this.router.navigateByUrl("/role/"+this.id, { skipLocationChange: true });
-          } else if(!notIn.includes(statusCode) && statusCode<500){
-            this.notification.create(
-              'error',
-              'Ocurrió un error al obtener el rol. Por favor verifique lo siguiente:',
-              err.message,
-              { nzDuration: 0 }
-            );
-          }
-          
+        this.roleForm.get('name')?.setValue(this.role.name);
+
+        this.setData();
+      },
+      (err) => {
+        const statusCode = err.statusCode;
+        const notIn = [401, 403];
+
+        if (err.statusCode === 404) {
+          this.router.navigateByUrl('/role/' + this.id, { skipLocationChange: true });
+        } else if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create(
+            'error',
+            'Ocurrió un error al obtener el rol. Por favor verifique lo siguiente:',
+            err.message,
+            { nzDuration: 0 }
+          );
         }
-      )
+      }
+    );
   }
 
-  updateRole(){
+  updateRole(): void {
     this.btnLoading = true;
     this.transformSelectedItems();
-    
-    this.roleService.updateRole(this.role)
-      .subscribe(
-        data => {
-          this.role = data['data'];
-          this.message.success('Role ' + this.role.name +' actualizado con éxito');
-          this.btnLoading = false;
-        },
-        err => {
-          let statusCode = err.statusCode;
-          let notIn = [401, 403];
-          
-          if(err.statusCode === 404){
-            this.router.navigateByUrl("/role/"+this.id, { skipLocationChange: true });
-          } else if(!notIn.includes(statusCode) && statusCode<500){
-            this.notification.create(
-              'error',
-              'Ocurrió un error al actualizar el rol. Por favor verifique lo siguiente:',
-              err.message,
-              { nzDuration: 0 }
-            );
-          }
-          this.btnLoading = false;
+
+    this.roleService.updateRole(this.role).subscribe(
+      (data) => {
+        this.role = data['data'];
+        this.message.success('Role ' + this.role.name + ' actualizado con éxito');
+        this.btnLoading = false;
+      },
+      (err) => {
+        const statusCode = err.statusCode;
+        const notIn = [401, 403];
+
+        if (err.statusCode === 404) {
+          this.router.navigateByUrl('/role/' + this.id, { skipLocationChange: true });
+        } else if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create(
+            'error',
+            'Ocurrió un error al actualizar el rol. Por favor verifique lo siguiente:',
+            err.message,
+            { nzDuration: 0 }
+          );
         }
-      )
+        this.btnLoading = false;
+      }
+    );
   }
 
   /* ---      Transfer element     --- */
   setData(): void {
     const ret: TransferItem[] = [];
-    
-    if(this.id == 0){
-      this.appPermissions.forEach(p => {
+
+    if (this.id == 0) {
+      this.appPermissions.forEach((p) => {
         ret.push({
           key: p.id,
           title: p.name,
@@ -233,34 +224,30 @@ export class RoleComponent implements OnInit {
         });
       });
     } else {
-      this.appPermissions.forEach(p => {
+      this.appPermissions.forEach((p) => {
         ret.push({
           key: p.id,
           title: p.name,
           description: p.codename,
-          direction: (this.role.permissions.find(x => x === p.id))? 'right' : 'left',
-          disabled: (this.id>=1 && this.id<=5)? true : false
+          direction: this.role.permissions.find((x) => x === p.id) ? 'right' : 'left',
+          disabled: this.id >= 1 && this.id <= 5 ? true : false
         });
       });
     }
-    
+
     this.list = ret;
   }
 
-  transformSelectedItems(): void{
+  transformSelectedItems(): void {
     this.role.permissions = Array<number>();
-    let assignedPermissions = this.list.filter(x => x.direction === 'right');
+    const assignedPermissions = this.list.filter((x) => x.direction === 'right');
 
-    assignedPermissions.forEach(p => {
+    assignedPermissions.forEach((p) => {
       this.role.permissions.push(p.key);
     });
   }
 
-  reload(): void {
-    this.setData();
-  }
-
   filterOption(inputValue: string, item: any): boolean {
-    return (item.description.toLowerCase()).indexOf(inputValue.toLowerCase()) > -1;
+    return item.description.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
   }
 }
