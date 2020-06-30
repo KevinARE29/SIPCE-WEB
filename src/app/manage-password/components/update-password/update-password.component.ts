@@ -155,6 +155,12 @@ export class UpdatePasswordComponent implements OnInit {
       this.resetPasswordService.updatePassword(this.passwordJson).subscribe(
         () => {
           this.isLoading = false;
+          // Restore form to initial state
+          this.resetPwd.reset();
+          for (const key in this.resetPwd.controls) {
+            this.resetPwd.controls[key].markAsPristine();
+            this.resetPwd.controls[key].updateValueAndValidity();
+          }
           this.message.success('Contraseña restablecida con éxito');
         },
         (error) => {
