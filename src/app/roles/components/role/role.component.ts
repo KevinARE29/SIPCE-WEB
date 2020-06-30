@@ -247,10 +247,6 @@ export class RoleComponent implements OnInit {
     });
   }
 
-  reload(): void {
-    this.setData();
-  }
-
   filterOption(inputValue: string, item: any): boolean {
     return item.description.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
   }
