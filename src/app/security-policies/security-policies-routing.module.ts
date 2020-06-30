@@ -1,6 +1,6 @@
 /*  
   Path: app/security-policies/security-policies-routing.module.ts
-  Objetive: Contains security policies routes
+  Objective: Contains security policies routes
   Author: Esme López
 */
 
@@ -12,12 +12,12 @@ import { SecurityPoliciesComponent } from './components/security-policies.compon
 import { AuthGuard } from './../login/guards/auth.guard';
 
 const routes: Routes = [
-  { 
-    path: '', 
+  {
+    path: '',
     component: SecurityPoliciesComponent,
     canActivate: [AuthGuard],
-    data: {permission: 2}  
-  }, 
+    data: { permission: 2 }
+  },
   {
     path: '**',
     redirectTo: '/error404',
@@ -29,4 +29,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class SecurityPoliciesRoutingModule { }
+export class SecurityPoliciesRoutingModule {}

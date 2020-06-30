@@ -14,17 +14,7 @@ import { UnauthorizedComponent } from './components/unauthorized/unauthorized.co
 
 @NgModule({
   declarations: [LoginComponent, UnauthorizedComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AuthRoutingModule,
-    HttpClientModule,
-    AntDesignModule,
-  ],
-  providers: [
-    AuthService,
-    AuthGuard
-  ],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, AuthRoutingModule, HttpClientModule, AntDesignModule],
+  providers: [AuthService, AuthGuard]
 })
-export class LoginModule { }
+export class LoginModule {}

@@ -1,65 +1,71 @@
 /*  
   Path: app/login/guards/auth.guard.ts
-  Objetive: Control access to routes
+  Objective: Control access to routes
   Author: Esme López
 */
 
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, CanLoad, Route } from '@angular/router';
+import {
+  CanActivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  UrlTree,
+  Router,
+  CanLoad,
+  Route
+} from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { AuthService } from '../shared/auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanLoad {
-
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ){}
+  constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(
     next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    let url: string = state.url;
+    state: RouterStateSnapshot
+  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    const url: string = state.url;
 
     return this.checkLogin(url, next);
   }
 
-  canLoad(route: Route){
+  canLoad(route: Route) {
     return true;
   }
 
   checkLogin(url: string, next: ActivatedRouteSnapshot): boolean {
     let res = false;
-    let token = this.authService.getToken();
+    const token = this.authService.getToken();
 
-    if(!token){
-      if(url !== '/login'){
+    if (!token) {
+      if (url !== '/login' && url !== '/contrasena/recuperar' && !url.includes('reset-psw')) {
         this.router.navigate(['login']);
-      }
-      else{
+      } else {
         res = true;
-      } 
+      }
     } else {
-      let content = this.authService.jwtDecoder(token);
+      const content = this.authService.jwtDecoder(token);
 
-      if(url !== '/login'){
-        if(content){
-          let permissions = content.permissions;
-          let permission = permissions.indexOf(next.data['permission']);
-        
-          if(permission == -1 ) {
+      if (url === '/contrasena/cambiar' || url === '/welcome') {
+        res = true;
+      } else if (url !== '/login' && url !== '/contrasena/recuperar' && !url.includes('reset-psw')) {
+        if (content) {
+          const permissions = content.permissions;
+          const permission = permissions.indexOf(next.data['permission']);
+
+          if (permission == -1) {
             this.router.navigate(['login/error403']);
-          } else{
+          } else {
             res = true;
           }
-        }       
+        }
       } else {
         this.router.navigate(['welcome']);
       }
     }
-    
+
     return res;
   }
 }

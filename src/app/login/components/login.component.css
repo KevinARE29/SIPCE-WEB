@@ -1,20 +1,15 @@
 .imageBackToSchool {
-  background-image: url("../../../assets/back-to-school-wallpaper.jpg");
-/*  max-width: 1000px;
-  max-height: 1000px; */
+  background-image: url('../../../assets/back-to-school-wallpaper.jpg');
   background-size: cover;
   background-repeat: no-repeat;
-/*  background-position: 50% 50%; */
-
-background-position: center center;
-
-/* Background image is fixed in the viewport so that it doesn't move when 
-   the content's height is greater than the image's height */
-background-attachment: fixed;
-padding: 100px;
+  background-position: center center;
+  /* Background image is fixed in the viewport so that it doesn't move when 
+    the content's height is greater than the image's height */
+  background-attachment: fixed;
+  padding-top: 100px;
+  height: 80vh;
 }
 
 .loginBackground {
-  padding: 25px;
+  height: 260px;
 }
-

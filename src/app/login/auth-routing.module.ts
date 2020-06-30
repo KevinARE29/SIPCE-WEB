@@ -1,6 +1,6 @@
 /*
   Path: app/logIn/app-routing.module.ts
-  Objetive: Contain Login routes
+  Objective: Contain Login routes
   Author: Veronica Reyes
 */
 
@@ -20,24 +20,27 @@ const routes: Routes = [
     path: '',
     component: LoginComponent,
     canActivate: [AuthGuard]
-  }, {
+  },
+  {
     path: 'error401',
     component: UnauthorizedComponent
-  }, {
+  },
+  {
     path: 'error403',
     component: ForbiddenComponent
-  }, {
+  },
+  {
     path: 'error404',
     component: NotFoundComponent
-  }, {
+  },
+  {
     path: 'error500',
     component: ServerErrorComponent
   }
-
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
-export class AuthRoutingModule { }
+export class AuthRoutingModule {}

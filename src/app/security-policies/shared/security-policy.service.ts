@@ -1,16 +1,17 @@
 /* 
   Path: app/security-policies/shared/security-policy.service.ts
-  Objetive: Define methods to manage data related to security policies
+  Objective: Define methods to manage data related to security policies
   Author: Esme López 
 */
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { catchError, map } from 'rxjs/operators';
 
 import { environment } from './../../../environments/environment';
+import { ErrorMessageService } from '../../shared/error-message.service';
 import { SecurityPolicy } from './security-policy.model';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,45 +19,28 @@ import { Observable, of, throwError } from 'rxjs';
 export class SecurityPolicyService {
   baseUrl: string;
 
-  // httpOptions = {
-  //   headers: new HttpHeaders({ 
-  //     'Content-Type': 'application/json', 
-  //     'Authorization': localStorage.getItem('accessToken')
-  //   })
-  // };
-
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
     this.baseUrl = environment.apiURL;
   }
 
-  getSecurityPolicies(): Observable<any> {
-    let url = this.baseUrl + 'auth/politics';
+  getSecurityPolicies(): Observable<SecurityPolicy> {
+    return this.http.get<SecurityPolicy>(`${this.baseUrl}auth/politics`).pipe(
+      map((response: SecurityPolicy) => {
+        let securityPolicy = new SecurityPolicy();
 
-    return this.http.get<SecurityPolicy>(`${this.baseUrl}auth/politics`)
-      .pipe(
-        map(
-          (response: SecurityPolicy) => {
-            let securityPolicy = new SecurityPolicy;
+        securityPolicy = response['data'];
+        securityPolicy.minActive = securityPolicy.minLength == 0 ? false : true;
 
-            securityPolicy = response['data'];
-            securityPolicy.minActive = securityPolicy.minLength == 0 ? false : true;
-          
-            return securityPolicy;
-          }
-        ),
-        tap(h => {
-          const outcome = h ? `Fetched` : `Did not find`;
-          console.log(`${outcome} security policies`);
-        }),
-        catchError(this.handleError<SecurityPolicy>(`getSecurityPolicies`))
-      );
+        return securityPolicy;
+      }),
+      catchError(this.handleError())
+    );
   }
 
-  updateSecurityPolicies(policies: SecurityPolicy){
-    if(!policies.minActive)  
-      policies.minLength = 0;
+  updateSecurityPolicies(policies: SecurityPolicy): Observable<SecurityPolicy> {
+    if (!policies.minActive) policies.minLength = 0;
 
-    let data = JSON.stringify({
+    const data = JSON.stringify({
       id: policies.id,
       minLength: policies.minLength,
       capitalLetter: policies.capitalLetter,
@@ -65,33 +49,27 @@ export class SecurityPolicyService {
       specialChart: policies.specialChart
     });
 
-    return this.http.put<SecurityPolicy>(`${this.baseUrl}auth/politics/${policies.id}`, data)
-      .pipe(
-        map(
-          (response: SecurityPolicy) => {            
-            let securityPolicy = new SecurityPolicy;
-            
-            securityPolicy = response['data'];
-            securityPolicy.minActive = securityPolicy.minLength == 0 ? false : true;
-          
-            return securityPolicy;
-          }
-        ),
-        tap(h => {
-          const outcome = h ? `Fetched` : `Did not find`;
-          console.log(`${outcome} security policies`);
-        }),
-        catchError(this.handleError<SecurityPolicy>(`updateSecurityPolicies`))
-      );
+    return this.http.put<SecurityPolicy>(`${this.baseUrl}auth/politics/${policies.id}`, data).pipe(
+      map((response: SecurityPolicy) => {
+        let securityPolicy = new SecurityPolicy();
+
+        securityPolicy = response['data'];
+        securityPolicy.minActive = securityPolicy.minLength == 0 ? false : true;
+
+        return securityPolicy;
+      }),
+      catchError(this.handleError())
+    );
   }
 
   /**
    * Handle Http operation that failed.
    * Let the app continue.
-   * @param operation - name of the operation that failed
    */
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
+  private handleError() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (error: any) => {
+      error.error.message = this.errorMessageService.transformMessage('security-policies', error.error.message);
       return throwError(error.error);
     };
   }

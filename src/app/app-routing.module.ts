@@ -1,6 +1,6 @@
 /*  
   Path: app/app-routing.module.ts
-  Objetive: Contain major routes
+  Objective: Contain major routes
   Author: Esme López
 */
 
@@ -10,20 +10,39 @@ import { AuthGuard } from './login/guards/auth.guard';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/welcome' },
-  // { path: 'login', pathMatch: 'full', redirectTo: '/login' },
   {
     path: 'login',
-    loadChildren: () => import('./login/login.module').then( m => m.LoginModule),
+    loadChildren: () => import('./login/login.module').then((m) => m.LoginModule),
     canLoad: [AuthGuard]
   },
   {
     path: 'welcome',
-    loadChildren: () => import('./pages/welcome/welcome.module').then( m=> m.WelcomeModule),
+    loadChildren: () => import('./pages/welcome/welcome.module').then((m) => m.WelcomeModule),
     canLoad: [AuthGuard]
-  }, 
+  },
   {
     path: 'politicas-seguridad',
-    loadChildren: () => import('./security-policies/security-policies.module').then( m=> m.SecurityPoliciesModule),
+    loadChildren: () => import('./security-policies/security-policies.module').then((m) => m.SecurityPoliciesModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'contrasena',
+    loadChildren: () => import('./manage-password/reset-password.module').then((m) => m.ResetPasswordModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'roles',
+    loadChildren: () => import('./roles/roles.module').then((m) => m.RolesModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'bitacora',
+    loadChildren: () => import('./logs/logs.module').then((m) => m.LogsModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'reset-psw',
+    loadChildren: () => import('./manage-password/reset-password.module').then((m) => m.ResetPasswordModule),
     canLoad: [AuthGuard]
   },
   {
@@ -35,6 +54,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -1,13 +1,19 @@
 /*
     Path: styles.css
-    Objetive: Define the general style for the app
+    Objective: Define the general style for the app
     Author: Esme López
 */
 
-html, body { height: 100%; }
+html,
+body {
+  height: 100%;
+}
 
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
 
 #main {
-    padding: 25px;
+  padding: 25px;
 }

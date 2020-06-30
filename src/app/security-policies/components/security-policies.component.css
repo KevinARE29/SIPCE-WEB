@@ -1,18 +1,26 @@
 /*
   Path: app/security-policies/components/security-policies.component.css
-  Objetive: Define security policies style
+  Objective: Define security policies style
   Author: Esme López 
 */
 
-.policies{
-    margin-top: 10px;
-    padding: 20px;
+.policies {
+  margin-top: 10px;
+  padding: 20px;
 }
 
-.policy{ padding: 5px; }
+.policy {
+  padding: 5px;
+}
 
-h1 { text-align: center; }
+h1 {
+  text-align: center;
+}
 
-nz-input-number { width: 75px; }
+nz-input-number {
+  width: 75px;
+}
 
-button{ margin-top: 10px;}
+button {
+  margin-top: 10px;
+}

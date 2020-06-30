@@ -1,0 +1,20 @@
+{
+    "dictionary":{
+        "roles": {
+            "name": "Nombre",
+            "permissions": "Permisos"
+        },
+        "security-policies": {
+            "minLength": "Mínimo de caracteres",
+            "capitalLetter": "Mayúsculas",
+            "lowerCase": "Mínusculas",
+            "specialChart": "Caracteres especiales",
+            "numericChart": "Dígitos"
+        },
+        "update-password": {
+          "oldPassword": "Contraseña actual",
+          "newPassword": "Nueva contraseña",
+          "resetPasswordToken": "Enlace para actualizar contraseña"
+        }
+    }
+}

@@ -1,0 +1,41 @@
+{
+    "menu": [
+        {
+            "title": "Políticas de seguridad",
+            "icon": "key",
+            "permission": 2,
+            "allow": null,
+            "children": [
+                {
+                    "route": "/politicas-seguridad",
+                    "name": "Políticas de seguridad"
+                }
+            ]
+        }, {
+            "title": "Roles",
+            "icon": "lock",
+            "permission": 4,
+            "allow": null,
+            "children": [
+                {
+                    "route": "/roles",
+                    "name": "Roles"
+                }
+            ]
+        }, {
+            "title": "Bitácoras",
+            "icon": "profile",
+            "permission": 10,
+            "allow": null,
+            "children": [
+                {
+                    "route": "/bitacora/accesos",
+                    "name": "Bitácora de accesos"
+                }, {
+                    "route": "/bitacora/acciones",
+                    "name": "Bitácora de acciones"
+                }
+            ]
+        }
+    ]  
+}
