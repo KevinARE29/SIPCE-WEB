@@ -69,25 +69,29 @@ export class UpdatePasswordComponent implements OnInit {
         this.availablePolitics = 'mayúsculas' + ', ';
         this.regexExpression = '(?=(?:.*[A-Z]))';
       }
+
       if (this.securityPolicy.lowerCase === true) {
-        this.availablePolitics = this.availablePolitics + 'minusculas' + ', ';
+        this.availablePolitics = this.availablePolitics + 'minúsculas' + ', ';
         this.regexExpression = this.regexExpression + '(?=(?:.*[a-z]))';
       }
+
       if (this.securityPolicy.numericChart === true) {
         this.availablePolitics = this.availablePolitics + 'números' + ', ';
         this.regexExpression = this.regexExpression + '(?=(?:.*[0-9]))';
       }
+
       if (this.securityPolicy.specialChart === true) {
-        this.availablePolitics = this.availablePolitics + 'caracteres especiales como #%$' + ', ';
-        this.regexExpression = this.regexExpression + '(?=(?:.*[#%$]))';
+        this.availablePolitics =
+          this.availablePolitics + 'caracteres especiales como ' + this.securityPolicy.typeSpecial + ', ';
+        this.regexExpression = this.regexExpression + '(?=(?:.*[' + this.securityPolicy.typeSpecial + ']))';
       }
+
       if (this.securityPolicy.minLength === 0) {
         this.length = 6;
-
-        this.availablePolitics = this.availablePolitics + 'contener una longitud de 6 caracteres';
+        this.availablePolitics = this.availablePolitics + 'al menos 6 caracteres.';
       } else {
         this.availablePolitics =
-          this.availablePolitics + ', ' + 'contener una longitud de ' + this.securityPolicy.minLength + ' caracteres';
+          this.availablePolitics + 'al menos ' + this.securityPolicy.minLength + ' caracteres.';
         this.length = this.securityPolicy.minLength;
       }
     });

@@ -20,7 +20,6 @@
                     nzShowSearch
                     [nzListStyle]="{ 'width.px': 300, 'height.px': 400 }"
                     [nzRender]="render"
-                    [nzFooter]="footer"
                     [nzFilterOption]="filterOption"
                 >
                     <ng-template #render let-item> {{ item.title }} </ng-template>

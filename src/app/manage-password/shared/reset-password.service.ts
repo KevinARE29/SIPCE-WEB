@@ -24,15 +24,14 @@ export class ResetPasswordService {
     });
   }
 
-  forgotPassword(email: any): Observable<any> {
+  forgotPassword(email: string): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}auth/forgot-password`, email);
   }
 
   resetPassword(password: any): Observable<any> {
-    return this.http.post<any>(
-      `${this.baseUrl}auth/reset-password?resetPasswordToken=${this.resetPasswordToken}`,
-      password
-    );
+    return this.http
+      .post<any>(`${this.baseUrl}auth/reset-password?resetPasswordToken=${this.resetPasswordToken}`, password)
+      .pipe(catchError(this.handleError()));
   }
 
   updatePassword(password: any): Observable<any> {

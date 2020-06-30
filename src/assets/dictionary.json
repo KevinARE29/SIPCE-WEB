@@ -13,7 +13,8 @@
         },
         "update-password": {
           "oldPassword": "Contraseña actual",
-          "newPassword": "Nueva contraseña"
+          "newPassword": "Nueva contraseña",
+          "resetPasswordToken": "Enlace para actualizar contraseña"
         }
     }
 }

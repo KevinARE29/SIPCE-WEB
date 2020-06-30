@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, ValidationErrors, AbstractControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ResetPasswordService } from '../../shared/reset-password.service';
 import { SecurityPolicy } from '../../../security-policies/shared/security-policy.model';
 import { Observable, Observer } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { SecurityPolicyService } from '../../../security-policies/shared/security-policy.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-reset-psw',
@@ -23,8 +25,10 @@ export class ResetPswComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private router: Router,
     private resetPasswordService: ResetPasswordService,
     private securityPolicyService: SecurityPolicyService,
+    private notification: NzNotificationService,
     private message: NzMessageService
   ) {}
 
@@ -114,9 +118,16 @@ export class ResetPswComponent implements OnInit {
         () => {
           this.isLoading = false;
           this.message.success('Contraseña restablecida con éxito');
+          this.router.navigate(['login']);
         },
-        () => {
+        (error) => {
           this.isLoading = false;
+          this.notification.create(
+            'error',
+            'Ocurrió un error al cambiar la contraseña. Por favor verifique lo siguiente:',
+            error.message,
+            { nzDuration: 0 }
+          );
         }
       );
     } else {
@@ -143,7 +154,7 @@ export class ResetPswComponent implements OnInit {
       }
 
       if (this.securityPolicy.lowerCase === true) {
-        this.availablePolitics = this.availablePolitics + 'minusculas' + ', ';
+        this.availablePolitics = this.availablePolitics + 'minúsculas' + ', ';
         this.regexExpression = this.regexExpression + '(?=(?:.*[a-z]))';
       }
 
@@ -153,17 +164,16 @@ export class ResetPswComponent implements OnInit {
       }
 
       if (this.securityPolicy.specialChart === true) {
-        this.availablePolitics = this.availablePolitics + 'caracteres especiales como #%$' + ', ';
-        this.regexExpression = this.regexExpression + '(?=(?:.*[#%$]))';
+        this.availablePolitics =
+          this.availablePolitics + 'caracteres especiales como ' + this.securityPolicy.typeSpecial + ', ';
+        this.regexExpression = this.regexExpression + '(?=(?:.*[' + this.securityPolicy.typeSpecial + ']))';
       }
 
       if (this.securityPolicy.minLength === 0) {
         this.length = 6;
-
-        this.availablePolitics = this.availablePolitics + 'contener una longitud de 6 caracteres';
+        this.availablePolitics = this.availablePolitics + 'al menos 6 caracteres.';
       } else {
-        this.availablePolitics =
-          this.availablePolitics + ', ' + 'contener una longitud de ' + this.securityPolicy.minLength + ' caracteres';
+        this.availablePolitics = this.availablePolitics + 'al menos ' + this.securityPolicy.minLength + ' caracteres.';
         this.length = this.securityPolicy.minLength;
       }
     });

@@ -12,4 +12,5 @@ export class SecurityPolicy {
   public specialChart: boolean;
   public numericChart: boolean;
   public minActive: boolean;
+  public typeSpecial: boolean;
 }

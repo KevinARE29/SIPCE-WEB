@@ -34,7 +34,7 @@ export class AuthService {
     );
   }
 
-  refreshToken(): any {
+  refreshToken(): Observable<IJwtResponse> {
     return this.httpClient
       .post<any>(`${this.baseUrl}auth/refresh-token`, {
         refreshToken: localStorage.getItem('refreshToken')
@@ -52,7 +52,7 @@ export class AuthService {
     localStorage.removeItem('refreshToken');
   }
 
-  logout(): Observable<any> {
+  logout(): Observable<void> {
     return this.httpClient.delete(`${this.baseUrl}auth/logout`).pipe(
       map(() => {
         this.cleanLocalStorage();
