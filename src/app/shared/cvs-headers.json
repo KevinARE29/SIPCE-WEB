@@ -1,0 +1,315 @@
+{
+    "headers":{
+        "teachers": {
+            "firstname": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "Los nombres son requeridos"
+                    }, {
+                        "value": "text",
+                        "message": "Los nombres deben ser texto"
+                    }
+                ]
+            },
+            "lastname": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "Los apellidos son requeridos"
+                    }, {
+                        "value": "text",
+                        "message": "Los apellidos deben ser texto"
+                    }
+                ]
+            },
+            "username": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El nombre de usuario es requerido"
+                    }, {
+                        "value": "text",
+                        "message": "El nombre de usuario debe ser texto"
+                    }, {
+                        "value": "unique",
+                        "message": "El nombre de usuario debe ser único"
+                    }
+                ]
+            },
+            "email": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El correo electrónico es requerido"
+                    }, {
+                        "value": "email",
+                        "message": "Formato incorrecto (ej. usuario@ejemplo)"
+                    }, {
+                        "value": "unique",
+                        "message": "El correo electrónico debe ser único"
+                    }
+                ]
+            }, "code": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El código es requerido"
+                    }, {
+                        "value": "unique",
+                        "message": "El códigos debe ser único"
+                    }
+                ]
+            }, "cycle": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El ciclo es requerido"
+                    }, {
+                        "value": "exists",
+                        "message": "El ciclo no existe en el sistema"
+                    }
+                ]
+            }, "grade": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El grado es requerido"
+                    }, {
+                        "value": "exists",
+                        "message": "El grado no existe en el sistema"
+                    }
+                ]
+            }, "section": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "La sección es requerida"
+                    }, {
+                        "value": "exists",
+                        "message": "La sección no existe en el sistema"
+                    }
+                ]
+            }
+        },
+        "counselors": {
+            "firstname": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "Los nombres son requeridos"
+                    }, {
+                        "value": "text",
+                        "message": "Los nombres deben ser texto"
+                    }
+                ]
+            },
+            "lastname": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "Los apellidos son requeridos"
+                    }, {
+                        "value": "text",
+                        "message": "Los apellidos deben ser texto"
+                    }
+                ]
+            },
+            "username": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El nombre de usuario es requerido"
+                    }, {
+                        "value": "text",
+                        "message": "El nombre de usuario debe ser texto"
+                    }, {
+                        "value": "unique",
+                        "message": "El nombre de usuario debe ser único"
+                    }
+                ]
+            },
+            "email": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El correo electrónico es requerido"
+                    }, {
+                        "value": "email",
+                        "message": "Formato incorrecto (ej. usuario@ejemplo)"
+                    }, {
+                        "value": "unique",
+                        "message": "El correo electrónico debe ser único"
+                    }
+                ]
+            }, "code": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El código es requerido"
+                    }, {
+                        "value": "unique",
+                        "message": "El códigos debe ser único"
+                    }
+                ]
+            }, "grade": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El grado es requerido"
+                    }, {
+                        "value": "exists",
+                        "message": "El grado no existe en el sistema"
+                    }
+                ]
+            }
+        }, 
+        "cycleCoordinators": {
+            "firstname": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "Los nombres son requeridos"
+                    }, {
+                        "value": "text",
+                        "message": "Los nombres deben ser texto"
+                    }
+                ]
+            },
+            "lastname": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "Los apellidos son requeridos"
+                    }, {
+                        "value": "text",
+                        "message": "Los apellidos deben ser texto"
+                    }
+                ]
+            },
+            "username": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El nombre de usuario es requerido"
+                    }, {
+                        "value": "text",
+                        "message": "El nombre de usuario debe ser texto"
+                    }, {
+                        "value": "unique",
+                        "message": "El nombre de usuario debe ser único"
+                    }
+                ]
+            },
+            "email": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El correo electrónico es requerido"
+                    }, {
+                        "value": "email",
+                        "message": "Formato incorrecto (ej. usuario@ejemplo)"
+                    }, {
+                        "value": "unique",
+                        "message": "El correo electrónico debe ser único"
+                    }
+                ]
+            }, "code": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El código es requerido"
+                    }, {
+                        "value": "unique",
+                        "message": "El códigos debe ser único"
+                    }
+                ]
+            }, "cycle": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El ciclo es requerido"
+                    }, {
+                        "value": "exists",
+                        "message": "El ciclo no existe en el sistema"
+                    }
+                ]
+            }
+        }, 
+        "administrativeStaff": {
+            "firstname": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "Los nombres son requeridos"
+                    }, {
+                        "value": "text",
+                        "message": "Los nombres deben ser texto"
+                    }
+                ]
+            },
+            "lastname": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "Los apellidos son requeridos"
+                    }, {
+                        "value": "text",
+                        "message": "Los apellidos deben ser texto"
+                    }
+                ]
+            },
+            "username": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El nombre de usuario es requerido"
+                    }, {
+                        "value": "text",
+                        "message": "El nombre de usuario debe ser texto"
+                    }, {
+                        "value": "unique",
+                        "message": "El nombre de usuario debe ser único"
+                    }
+                ]
+            },
+            "email": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El correo electrónico es requerido"
+                    }, {
+                        "value": "email",
+                        "message": "Formato incorrecto (ej. usuario@ejemplo)"
+                    }, {
+                        "value": "unique",
+                        "message": "El correo electrónico debe ser único"
+                    }
+                ]
+            }, "code": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El código es requerido"
+                    }, {
+                        "value": "unique",
+                        "message": "El códigos debe ser único"
+                    }
+                ]
+            }, "role": {
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El rol es requerido"
+                    }, {
+                        "value": "text",
+                        "message": "El nombre de usuario debe ser texto"
+                    }, {
+                        "value": "exists",
+                        "message": "El rol no existe en el sistema"
+                    }
+                ]
+            }
+        }
+    }
+}
