@@ -22,7 +22,7 @@
         </ul>
       </li>
 
-      <div *ngFor="let option of menuOptions">
+      <ng-container *ngFor="let option of menuOptions">
         <li *ngIf="option.allow" nz-submenu [nzTitle]="option.title" [nzIcon]="option.icon">
           <ul>
             <li *ngFor="let subOption of option.children" nz-menu-item nzMatchRouter>
@@ -30,7 +30,7 @@
             </li>
           </ul>
         </li>
-      </div>
+      </ng-container>
     </ul>
   </nz-sider>
   <nz-layout>

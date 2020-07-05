@@ -1,3 +1,28 @@
-<nz-upload [nzFileList]="fileList" [nzBeforeUpload]="beforeUpload" [nzCustomRequest]="customReq">
-    <button nz-button>Seleccionar archivo</button>
-</nz-upload>
+<h1>Cargar usuarios</h1>
+
+<div nz-row nzJustify="space-around" [nzGutter]="[0, 10]">
+    <div nz-col nzSm="24" nzMd="24" nzLg="6" nzXl="5" class="gutter-row">
+        <nz-upload [nzFileList]="fileList" [nzBeforeUpload]="beforeUpload" [nzCustomRequest]="customReq">
+            <button nz-button>Seleccionar archivo</button>
+        </nz-upload>
+        <span class="error">{{uploadMsg}}</span>
+    </div>
+
+    <div nz-col nzSm="24" nzMd="14" nzLg="10" nzXl="8" class="gutter-row">
+        <span>Grupo de usuarios: </span>
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="userGroup" (ngModelChange)="toggleMessage()">
+            <nz-option *ngFor="let option of userGroups" [nzLabel]="option.value" [nzValue]="option.id"></nz-option>
+        </nz-select>
+        <p class="error">{{groupMsg}}</p>
+    </div>
+    <div nz-col nzSm="24" nzMd="10" nzLg="7" nzXl="6" class="gutter-row">
+        <span>Turno: </span>
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="shift" (ngModelChange)="toggleMessage()">
+            <nz-option *ngFor="let option of shifts" [nzLabel]="option.value" [nzValue]="option.id"></nz-option>
+        </nz-select>
+        <p class="error">{{shiftMsg}}</p>
+    </div>
+    <div nz-col nzSm="24" nzMd="5">
+        <button nz-button nzType="primary" (click)="uploadCsv()">Iniciar carga de usuarios</button>
+    </div>
+</div>

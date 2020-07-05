@@ -22,6 +22,7 @@
             "username": "Nombre de usuario",
             "cycle": "Ciclo",
             "grades": "Grados",
+            "grade": "Grado",
             "section": "Sección",
             "email": "Correo electrónico",
             "code": "Código"

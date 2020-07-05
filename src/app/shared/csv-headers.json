@@ -152,11 +152,11 @@
                         "message": "El códigos debe ser único"
                     }
                 ]
-            }, "grade": {
+            }, "grades": {
                 "validations": [
                     {
                         "value": "empty",
-                        "message": "El grado es requerido"
+                        "message": "Los grados son requeridos"
                     }, {
                         "value": "exists",
                         "message": "El grado no existe en el sistema"
