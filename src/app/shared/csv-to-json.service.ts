@@ -57,38 +57,41 @@ export class CsvToJsonService {
     for (let i = 1; i < lines.length; i++) {
       const obj = {};
       const currentline = lines[i].split(',');
+      obj['id'] = i - 1;
 
-      for (let j = 0; j < realHeaders.length; j++) {
-        if (currentline[j] !== undefined) {
-          if (currentline[j].includes(';')) {
-            const field = currentline[j].split(';');
-            const multiple = {};
+      if (currentline.length === realHeaders.length) {
+        for (let j = 0; j < realHeaders.length; j++) {
+          if (currentline[j] !== undefined) {
+            if (currentline[j].includes(';')) {
+              const field = currentline[j].split(';');
+              const multiple = {};
 
-            for (let k = 0; k < field.length; k++) {
-              multiple[k] = { value: field[k], isValid: true, message: null };
+              for (let k = 0; k < field.length; k++) {
+                multiple[k] = { value: field[k], isValid: true, message: null };
+              }
+
+              obj[realHeaders[j]] = {
+                value: multiple, // The field to be written in the table
+                isValid: true, // Define if the value is valid
+                message: null // Indicate the error message related to the field
+              };
+            } else {
+              obj[realHeaders[j]] = {
+                value: currentline[j].trim(),
+                isValid: true,
+                message: null
+              };
             }
-
-            obj[realHeaders[j]] = {
-              value: multiple, // The field to be written in the table
-              isValid: true, // Define if the value is valid
-              message: null // Indicate the error message related to the field
-            };
-          } else {
-            obj[realHeaders[j]] = {
-              value: currentline[j].trim(),
-              isValid: true,
-              message: null
-            };
+            // Validate the field
+            this.validateField(availableHeaders[realHeaders[j]], obj[realHeaders[j]]);
           }
-          // Validate the field
-          this.validateField(availableHeaders[realHeaders[j]], obj[realHeaders[j]]);
         }
-      }
 
-      result.push(obj);
+        result.push(obj);
+      }
     }
 
-    return result; //JSON
+    return { headers: realHeaders, data: result }; //JSON
   }
 
   /*--------------- Validate fields and rows ---------------*/

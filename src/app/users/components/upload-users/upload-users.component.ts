@@ -4,7 +4,15 @@ import { Observable, Observer } from 'rxjs';
 
 import { NzMessageService } from 'ng-zorro-antd/message';
 
+import DictionaryJson from './../../../../assets/dictionary.json';
 import { CsvToJsonService } from './../../../shared/csv-to-json.service';
+
+interface ItemData {
+  id: string;
+  name: string;
+  age: number;
+  address: string;
+}
 
 @Component({
   selector: 'app-upload-users',
@@ -24,6 +32,12 @@ export class UploadUsersComponent implements OnInit {
   uploadMsg: string;
   groupMsg: string;
   shiftMsg: string;
+
+  // Table structure
+  listOfColumns = {};
+  _listOfColumns = {};
+  listOfData: [];
+  editCache: { [key: string]: { edit: boolean; data: unknown } } = {};
 
   constructor(private csvToJsonService: CsvToJsonService, private message: NzMessageService) {}
 
@@ -95,6 +109,8 @@ export class UploadUsersComponent implements OnInit {
         this.csvToJsonService.csvJSON(this.csv, this.userGroup).subscribe(
           (r) => {
             console.log(r);
+            this._listOfColumns = JSON.parse(JSON.stringify(r['headers']));
+            this.generateTable(r);
           },
           (error) => {
             console.log('Error');
@@ -125,5 +141,48 @@ export class UploadUsersComponent implements OnInit {
         ? (this.shiftMsg = 'El turno es requerido')
         : (this.shiftMsg = '');
     }
+  }
+
+  generateTable(r): void {
+    const dictionary = DictionaryJson.dictionary['users'];
+
+    for (let i = 0; i < r.headers.length; i++) {
+      if (dictionary.hasOwnProperty(r.headers[i])) {
+        r.headers[i] = dictionary[r.headers[i]];
+      }
+    }
+
+    this.listOfColumns = r.headers;
+    this.listOfData = r.data;
+    this.updateEditCache();
+  }
+
+  startEdit(id: string): void {
+    this.editCache[id].edit = true;
+    console.log(this.editCache[id].data);
+  }
+
+  cancelEdit(id: string): void {
+    const index = this.listOfData.findIndex((item) => item['id'] === id);
+    this.editCache[id] = {
+      data: { ...this.listOfData[index] },
+      edit: false
+    };
+    console.log(this.editCache);
+  }
+
+  saveEdit(id: string): void {
+    const index = this.listOfData.findIndex((item) => item['id'] === id);
+    Object.assign(this.listOfData[index], this.editCache[id].data);
+    this.editCache[id].edit = false;
+  }
+
+  updateEditCache(): void {
+    this.listOfData.forEach((item) => {
+      this.editCache[item['id']] = {
+        edit: false,
+        data: { item }
+      };
+    });
   }
 }
