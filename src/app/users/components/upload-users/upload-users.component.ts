@@ -92,9 +92,15 @@ export class UploadUsersComponent implements OnInit {
       }
 
       if (allowed) {
-        this.csvToJsonService.csvJSON(this.csv, this.userGroup).subscribe((r) => {
-          console.log(r);
-        });
+        this.csvToJsonService.csvJSON(this.csv, this.userGroup).subscribe(
+          (r) => {
+            console.log(r);
+          },
+          (error) => {
+            console.log('Error');
+            console.log(error);
+          }
+        );
       }
     }
   }
