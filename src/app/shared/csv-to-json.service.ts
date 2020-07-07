@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import CsvHeaders from './../shared/csv-headers.json';
 import DictionaryJson from '../../assets/dictionary.json';
@@ -66,14 +66,50 @@ export class CsvToJsonService {
               const field = currentline[j].split(';');
               const multiple = {};
 
-              for (let k = 0; k < field.length; k++) {
-                multiple[k] = { value: field[k], isValid: true, message: null };
+              if (realHeaders[j] === 'grades') {
+                for (let k = 0; k < field.length; k++) {
+                  multiple[k] = { value: field[k].trim(), isValid: true, message: null, grade: null };
+                }
+              } else {
+                for (let k = 0; k < field.length; k++) {
+                  multiple[k] = { value: field[k].trim(), isValid: true, message: null };
+                }
               }
 
               obj[realHeaders[j]] = {
                 value: multiple, // The field to be written in the table
                 isValid: true, // Define if the value is valid
                 message: null // Indicate the error message related to the field
+              };
+            } else if (realHeaders[j] === 'cycle') {
+              obj[realHeaders[j]] = {
+                value: currentline[j].trim(),
+                isValid: true,
+                message: null,
+                cycle: null
+              };
+            } else if (realHeaders[j] === 'grades') {
+              const multiple = {};
+              multiple[0] = { value: currentline[j].trim(), isValid: true, message: null, grade: null };
+
+              obj[realHeaders[j]] = {
+                value: multiple,
+                isValid: true,
+                message: null
+              };
+            } else if (realHeaders[j] === 'section') {
+              obj[realHeaders[j]] = {
+                value: currentline[j].trim(),
+                isValid: true,
+                message: null,
+                section: null
+              };
+            } else if (realHeaders[j] === 'role') {
+              obj[realHeaders[j]] = {
+                value: currentline[j].trim(),
+                isValid: true,
+                message: null,
+                role: null
               };
             } else {
               obj[realHeaders[j]] = {
@@ -82,8 +118,9 @@ export class CsvToJsonService {
                 message: null
               };
             }
+
             // Validate the field
-            this.validateField(availableHeaders[realHeaders[j]], obj[realHeaders[j]]);
+            this.validateField(availableHeaders[realHeaders[j]], obj[realHeaders[j]], realHeaders[j]);
           }
         }
 
@@ -95,7 +132,7 @@ export class CsvToJsonService {
   }
 
   /*--------------- Validate fields and rows ---------------*/
-  validateField(header, field): void {
+  validateField(header, field, entity): void {
     const initState = field.isValid;
 
     header['validations'].forEach((validate) => {
@@ -164,8 +201,51 @@ export class CsvToJsonService {
               }
             }
             break;
-          // case 'exist':
-          //   break;
+          case 'exists':
+            if (typeof field.value === 'object') {
+              Object.keys(field.value).forEach((value) => {
+                const temporalField = field['value'][value].value;
+                const assign = this.exists(temporalField, entity);
+
+                if (!assign) {
+                  field.isValid = false;
+                  field.message = validate.message;
+                } else {
+                  field.isValid = true;
+                  field.message = null;
+                }
+
+                switch (entity) {
+                  case 'grades':
+                    field.grade = assign;
+                    break;
+                }
+              });
+            } else if (typeof field.value === 'string') {
+              const temporalField = field.value;
+              const assign = this.exists(temporalField, entity);
+
+              if (!this.exists(field.value, entity)) {
+                field.isValid = false;
+                field.message = validate.message;
+              } else {
+                field.isValid = true;
+                field.message = null;
+              }
+
+              switch (entity) {
+                case 'cycle':
+                  field.cycle = assign;
+                  break;
+                case 'grade':
+                  field.grade = assign;
+                  break;
+                case 'section':
+                  field.section = assign;
+                  break;
+              }
+            }
+            break;
         }
       }
     });
@@ -175,7 +255,8 @@ export class CsvToJsonService {
   validateUpdatedRow(group, headers, row, data): any {
     const availableHeaders = CsvHeaders.headers[group];
     headers.forEach((h) => {
-      this.validateField(availableHeaders[h], row[h]);
+      // TODO: Use the real data
+      this.validateField(availableHeaders[h], row[h], null);
     });
 
     // console.log(row);
@@ -194,13 +275,15 @@ export class CsvToJsonService {
     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(field);
   }
 
-  exist(field, entity): boolean {
+  exists(field, entity): any {
+    let found;
     switch (entity) {
       case 'cycle':
         break;
       case 'grades':
-        break;
       case 'grade':
+        found = this.availableGrades.find((element) => element.name.toLowerCase() === field.toLowerCase());
+        return found;
         break;
       case 'section':
         break;

@@ -30,7 +30,7 @@
 </div>
 
 <ng-container *ngIf="_listOfColumns">
-    <nz-table #editRowTable [nzData]="listOfData" nzTableLayout="fixed">
+    <nz-table #editRowTable [nzData]="listOfData" nzTableLayout="fixed"  nzSize="small">
         <thead>
             <tr>
                 <th *ngFor="let header of listOfColumns">{{ header }}</th>
@@ -50,15 +50,16 @@
                             <ng-container *ngSwitchCase="'email'">{{ data[header]['value'] }}</ng-container>
                             <ng-container *ngSwitchCase="'cycle'">{{ data[header]['value'] }}</ng-container>
                             <ng-container *ngSwitchCase="'grades'">
-                                <ng-container *ngFor="let grade of data.grades.value | keyvalue">
-                                    {{ grade['value']['value'] }}<br>
+                                <ng-container *ngFor="let grade of data.grades.value | keyvalue; last as isLast">
+                                    {{ grade['value']['value'] }}
+                                    <nz-divider nzType="vertical" *ngIf="!isLast"></nz-divider>
                                 </ng-container>
                             </ng-container>
                             <ng-container *ngSwitchCase="'section'">{{ data[header]['value'] }}</ng-container>
                             <ng-container *ngSwitchDefault></ng-container>
                         </ng-container>
                     </td>
-                    <td>
+                    <td [nzAlign]="center">
                         <a (click)="startEdit(data.id)">
                             <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
                         </a>
@@ -109,7 +110,7 @@
                             <ng-container *ngSwitchDefault></ng-container>
                         </ng-container>
                     </td>
-                    <td>
+                    <td [nzAlign]="center">
                         <a (click)="saveEdit(data.id)" class="save"> Guardar </a>
                         <nz-divider nzType="vertical"></nz-divider>
                         <a nz-popconfirm nzTitle="¿Cancelar edición?" (nzOnConfirm)="cancelEdit(data.id)">Cancelar</a>

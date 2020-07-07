@@ -62,7 +62,7 @@
                         "message": "El código es requerido"
                     }, {
                         "value": "unique",
-                        "message": "El códigos debe ser único"
+                        "message": "El código debe ser único"
                     }
                 ]
             }, "cycle": {
@@ -162,7 +162,7 @@
                         "message": "El código es requerido"
                     }, {
                         "value": "unique",
-                        "message": "El códigos debe ser único"
+                        "message": "El código debe ser único"
                     }
                 ]
             }, "grades": {
@@ -240,7 +240,7 @@
                         "message": "El código es requerido"
                     }, {
                         "value": "unique",
-                        "message": "El códigos debe ser único"
+                        "message": "El código debe ser único"
                     }
                 ]
             }, "cycle": {
@@ -318,7 +318,7 @@
                         "message": "El código es requerido"
                     }, {
                         "value": "unique",
-                        "message": "El códigos debe ser único"
+                        "message": "El código debe ser único"
                     }
                 ]
             }, "role": {

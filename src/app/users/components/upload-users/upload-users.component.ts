@@ -175,7 +175,7 @@ export class UploadUsersComponent implements OnInit {
       this.userGroup,
       this._listOfColumns,
       this.editCache[index].data,
-      null
+      null // TODO: Use real data: send the catalogs
     );
     Object.assign(this.listOfData[index], this.editCache[id].data);
     this.editCache[id].edit = false;
