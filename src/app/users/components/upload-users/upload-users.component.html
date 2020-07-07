@@ -29,7 +29,7 @@
     </div>
 </div>
 
-<ng-container *ngIf="listOfColumns.length > 0">
+<ng-container *ngIf="_listOfColumns">
     <nz-table #editRowTable [nzData]="listOfData" nzTableLayout="fixed">
         <thead>
             <tr>
@@ -41,7 +41,7 @@
             <tr *ngFor="let data of editRowTable.data">
                 <!-- Non-editable row -->
                 <ng-container *ngIf="!editCache[data.id].edit; else editTemplate">
-                    <td *ngFor="let header of _listOfColumns">
+                    <td *ngFor="let header of _listOfColumns" [ngClass]="{ 'fieldError': !data[header]['isValid'] }" nz-tooltip [nzTooltipTitle]="data[header]['message']">
                         <ng-container [ngSwitch]="header">
                             <ng-container *ngSwitchCase="'code'">{{ data[header]['value'] }}</ng-container>
                             <ng-container *ngSwitchCase="'firstname'">{{ data[header]['value'] }}</ng-container>
@@ -59,56 +59,60 @@
                         </ng-container>
                     </td>
                     <td>
-                        <a (click)="startEdit(data.id)"><i nz-icon nzType="edit" nzTheme="outline"></i></a> |
-                        <a><i nz-icon nzType="delete" nzTheme="outline"></i></a>
+                        <a (click)="startEdit(data.id)">
+                            <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
+                        </a>
+                        <nz-divider nzType="vertical"></nz-divider>
+                        <a>
+                            <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
+                        </a>
                     </td>
                 </ng-container>
 
                 <!-- Editable row -->
                 <ng-template #editTemplate>
-                    <td *ngFor="let header of _listOfColumns">
+                    <td *ngFor="let header of _listOfColumns" nz-tooltip [nzTooltipTitle]="data[header]['message']">
                         <ng-container [ngSwitch]="header">
                             <ng-container *ngSwitchCase="'code'">
                                 <input type="text" nz-input
-                                    [(ngModel)]="editCache[data.id].data['item'][header]['value']">
+                                    [(ngModel)]="editCache[data.id].data[header]['value']">
                             </ng-container>
                             <ng-container *ngSwitchCase="'firstname'">
                                 <input type="text" nz-input
-                                    [(ngModel)]="editCache[data.id].data['item'][header]['value']">
+                                    [(ngModel)]="editCache[data.id].data[header]['value']">
                             </ng-container>
                             <ng-container *ngSwitchCase="'lastname'">
                                 <input type="text" nz-input
-                                    [(ngModel)]="editCache[data.id].data['item'][header]['value']">
+                                    [(ngModel)]="editCache[data.id].data[header]['value']">
                             </ng-container>
                             <ng-container *ngSwitchCase="'username'">
                                 <input type="text" nz-input
-                                    [(ngModel)]="editCache[data.id].data['item'][header]['value']">
+                                    [(ngModel)]="editCache[data.id].data[header]['value']">
                             </ng-container>
                             <ng-container *ngSwitchCase="'email'">
                                 <input type="text" nz-input
-                                    [(ngModel)]="editCache[data.id].data['item'][header]['value']">
+                                    [(ngModel)]="editCache[data.id].data[header]['value']">
                             </ng-container>
                             <ng-container *ngSwitchCase="'cycle'">
                                 <input type="text" nz-input
-                                    [(ngModel)]="editCache[data.id].data['item'][header]['value']">
+                                    [(ngModel)]="editCache[data.id].data[header]['value']">
                             </ng-container>
                             <ng-container *ngSwitchCase="'grades'">
                                 <ng-container
-                                    *ngFor="let grade of editCache[data.id].data['item'][header]['value'] | keyvalue">
+                                    *ngFor="let grade of editCache[data.id].data[header]['value'] | keyvalue">
                                     <input type="text" nz-input [(ngModel)]="grade['value']['value']"><br>
                                 </ng-container>
                             </ng-container>
                             <ng-container *ngSwitchCase="'section'">
-                                [(ngModel)]="editCache[data.id].data['item'][header]['value']">
+                                [(ngModel)]="editCache[data.id].data[header]['value']">
                             </ng-container>
                             <ng-container *ngSwitchDefault></ng-container>
                         </ng-container>
                     </td>
                     <td>
-                        <a (click)="saveEdit(data.id)" class="save"><i nz-icon nzType="save" nzTheme="outline"></i></a>
-                        <a nz-popconfirm nzTitle="¿Cancelar la edición?" (nzOnConfirm)="cancelEdit(data.id)">
-                            <i nz-icon nzType="close" nzTheme="outline"></i>
-                        </a>
+                        <a (click)="saveEdit(data.id)" class="save"> Guardar </a>
+                        <nz-divider nzType="vertical"></nz-divider>
+                        <a nz-popconfirm nzTitle="¿Cancelar edición?" (nzOnConfirm)="cancelEdit(data.id)">Cancelar</a>
                     </td>
                 </ng-template>
             </tr>

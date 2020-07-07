@@ -35,7 +35,7 @@ export class UploadUsersComponent implements OnInit {
 
   // Table structure
   listOfColumns = {};
-  _listOfColumns = {};
+  _listOfColumns: any;
   listOfData: [];
   editCache: { [key: string]: { edit: boolean; data: unknown } } = {};
 
@@ -108,7 +108,6 @@ export class UploadUsersComponent implements OnInit {
       if (allowed) {
         this.csvToJsonService.csvJSON(this.csv, this.userGroup).subscribe(
           (r) => {
-            console.log(r);
             this._listOfColumns = JSON.parse(JSON.stringify(r['headers']));
             this.generateTable(r);
           },
@@ -159,20 +158,25 @@ export class UploadUsersComponent implements OnInit {
 
   startEdit(id: string): void {
     this.editCache[id].edit = true;
-    console.log(this.editCache[id].data);
   }
 
   cancelEdit(id: string): void {
     const index = this.listOfData.findIndex((item) => item['id'] === id);
+    const lastValue = this.listOfData[index];
     this.editCache[id] = {
-      data: { ...this.listOfData[index] },
+      data: { lastValue },
       edit: false
     };
-    console.log(this.editCache);
   }
 
   saveEdit(id: string): void {
     const index = this.listOfData.findIndex((item) => item['id'] === id);
+    this.editCache[id].data = this.csvToJsonService.validateUpdatedRow(
+      this.userGroup,
+      this._listOfColumns,
+      this.editCache[index].data,
+      null
+    );
     Object.assign(this.listOfData[index], this.editCache[id].data);
     this.editCache[id].edit = false;
   }
@@ -181,7 +185,7 @@ export class UploadUsersComponent implements OnInit {
     this.listOfData.forEach((item) => {
       this.editCache[item['id']] = {
         edit: false,
-        data: { item }
+        data: JSON.parse(JSON.stringify(item))
       };
     });
   }

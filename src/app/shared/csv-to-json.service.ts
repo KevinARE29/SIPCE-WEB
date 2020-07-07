@@ -96,58 +96,90 @@ export class CsvToJsonService {
 
   /*--------------- Validate fields and rows ---------------*/
   validateField(header, field): void {
+    const initState = field.isValid;
+
     header['validations'].forEach((validate) => {
-      switch (validate.value) {
-        case 'empty':
-          if (typeof field.value === 'object') {
-            Object.keys(field.value).forEach((value) => {
-              if (this.empty(value)) {
+      if (field.isValid === initState) {
+        switch (validate.value) {
+          case 'empty':
+            if (typeof field.value === 'object') {
+              Object.keys(field.value).forEach((value) => {
+                if (this.empty(value)) {
+                  field.isValid = false;
+                  field.message = validate.message;
+                } else {
+                  field.isValid = true;
+                  field.message = null;
+                }
+              });
+            } else if (typeof field.value === 'string') {
+              if (this.empty(field.value)) {
                 field.isValid = false;
                 field.message = validate.message;
+              } else {
+                field.isValid = true;
+                field.message = null;
               }
-            });
-          } else if (typeof field.value === 'string') {
-            if (this.empty(field.value)) {
-              field.isValid = false;
-              field.message = validate.message;
             }
-          }
-          break;
-        case 'text':
-          if (typeof field.value === 'object') {
-            Object.keys(field.value).forEach((value) => {
-              if (!this.text(value)) {
+            break;
+          case 'text':
+            if (typeof field.value === 'object') {
+              Object.keys(field.value).forEach((value) => {
+                if (!this.text(value)) {
+                  field.isValid = false;
+                  field.message = validate.message;
+                } else {
+                  field.isValid = true;
+                  field.message = null;
+                }
+              });
+            } else if (typeof field.value === 'string') {
+              if (!this.text(field.value)) {
                 field.isValid = false;
                 field.message = validate.message;
+              } else {
+                field.isValid = true;
+                field.message = null;
               }
-            });
-          } else if (typeof field.value === 'string') {
-            if (!this.text(field.value)) {
-              field.isValid = false;
-              field.message = validate.message;
             }
-          }
-          break;
-        case 'email':
-          if (typeof field.value === 'object') {
-            Object.keys(field.value).forEach((value) => {
-              if (!this.email(value)) {
+            break;
+          case 'email':
+            if (typeof field.value === 'object') {
+              Object.keys(field.value).forEach((value) => {
+                if (!this.email(value)) {
+                  field.isValid = false;
+                  field.message = validate.message;
+                } else {
+                  field.isValid = true;
+                  field.message = null;
+                }
+              });
+            } else if (typeof field.value === 'string') {
+              if (!this.email(field.value)) {
                 field.isValid = false;
                 field.message = validate.message;
+              } else {
+                field.isValid = true;
+                field.message = null;
               }
-            });
-          } else if (typeof field.value === 'string') {
-            if (!this.email(field.value)) {
-              field.isValid = false;
-              field.message = validate.message;
             }
-          }
-          break;
-        // case 'exist':
-        //   break;
+            break;
+          // case 'exist':
+          //   break;
+        }
       }
     });
     return;
+  }
+
+  validateUpdatedRow(group, headers, row, data): any {
+    const availableHeaders = CsvHeaders.headers[group];
+    headers.forEach((h) => {
+      this.validateField(availableHeaders[h], row[h]);
+    });
+
+    // console.log(row);
+    return row;
   }
 
   text(field): boolean {

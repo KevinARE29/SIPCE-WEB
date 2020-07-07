@@ -5,3 +5,8 @@ nz-select {
 .error {
     color: #ff4d4f;
 }
+
+.fieldError {
+    color: #ff4d4f;
+    background-color: rgba(255, 77, 79, 0.10);
+}
