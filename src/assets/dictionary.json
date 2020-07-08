@@ -25,7 +25,8 @@
             "grade": "Grado",
             "section": "Sección",
             "email": "Correo electrónico",
-            "code": "Código"
+            "code": "Código",
+            "role": "Rol"
         }
     }
 }

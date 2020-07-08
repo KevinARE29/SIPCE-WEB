@@ -38,6 +38,7 @@ export class CsvToJsonService {
       // TODO: Throw error
       console.log('Error: Verifique que la cantidad de columnas coincidan con las del archivo esperado.');
     }
+
     headers.forEach((header) => {
       Object.keys(availableHeaders).forEach((key) => {
         if (dictionary[key].toLowerCase() == header.toLowerCase().trim()) {
@@ -103,13 +104,6 @@ export class CsvToJsonService {
                 isValid: true,
                 message: null,
                 section: null
-              };
-            } else if (realHeaders[j] === 'role') {
-              obj[realHeaders[j]] = {
-                value: currentline[j].trim(),
-                isValid: true,
-                message: null,
-                role: null
               };
             } else {
               obj[realHeaders[j]] = {
@@ -259,7 +253,6 @@ export class CsvToJsonService {
       this.validateField(availableHeaders[h], row[h], null);
     });
 
-    // console.log(row);
     return row;
   }
 

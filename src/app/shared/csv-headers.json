@@ -178,7 +178,7 @@
                 ]
             }
         }, 
-        "cycleCoordinators": {
+        "coordinators": {
             "firstname": {
                 "check": false,
                 "validations": [
@@ -256,7 +256,7 @@
                 ]
             }
         }, 
-        "administrativeStaff": {
+        "administratives": {
             "firstname": {
                 "check": false,
                 "validations": [
@@ -330,9 +330,6 @@
                     }, {
                         "value": "text",
                         "message": "El nombre de usuario debe ser texto"
-                    }, {
-                        "value": "exists",
-                        "message": "El rol no existe en el sistema"
                     }
                 ]
             }

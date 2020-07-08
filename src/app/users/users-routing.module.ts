@@ -10,7 +10,7 @@ const routes: Routes = [
     path: 'carga-masiva',
     component: UploadUsersComponent,
     canActivate: [AuthGuard],
-    data: { permission: 2 }
+    data: { permission: 3 }
   },
   {
     path: '**',

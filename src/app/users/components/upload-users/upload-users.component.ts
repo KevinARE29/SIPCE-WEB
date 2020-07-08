@@ -6,6 +6,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 
 import DictionaryJson from './../../../../assets/dictionary.json';
 import { CsvToJsonService } from './../../../shared/csv-to-json.service';
+import { UserService } from '../../shared/user.service';
 
 interface ItemData {
   id: string;
@@ -25,6 +26,8 @@ export class UploadUsersComponent implements OnInit {
   userGroup: string;
   userGroups: unknown;
   shift: number;
+  nextYear = false;
+  loading = false;
   // TODO: Get data from service
   shifts: unknown;
 
@@ -39,7 +42,11 @@ export class UploadUsersComponent implements OnInit {
   listOfData: [];
   editCache: { [key: string]: { edit: boolean; data: unknown } } = {};
 
-  constructor(private csvToJsonService: CsvToJsonService, private message: NzMessageService) {}
+  constructor(
+    private csvToJsonService: CsvToJsonService,
+    private userService: UserService,
+    private message: NzMessageService
+  ) {}
 
   ngOnInit(): void {
     this.init();
@@ -51,7 +58,7 @@ export class UploadUsersComponent implements OnInit {
     this.shiftMsg = '';
 
     this.userGroups = [
-      { id: 'administrativeStaff', value: 'Administrativos' },
+      { id: 'administratives', value: 'Administrativos' },
       { id: 'cycleCoordinators', value: 'Coordinadores de ciclo' },
       { id: 'teachers', value: 'Docentes' },
       { id: 'counselors', value: 'Orientadores' }
@@ -90,18 +97,24 @@ export class UploadUsersComponent implements OnInit {
     });
   };
 
+  handleChange = (file: UploadFile): boolean => {
+    this.csv = null;
+    this.fileList = null;
+    return true;
+  };
+
   uploadCsv(): void {
     this.uploadMsg = '';
     this.groupMsg = '';
     this.shiftMsg = '';
 
-    if (this.csv === undefined) this.uploadMsg = 'El archivo es requerido';
+    if (this.csv === undefined || this.csv === null) this.uploadMsg = 'El archivo es requerido';
     if (this.userGroup === undefined) this.groupMsg = 'El grupo de usuario es requerido';
-    if (this.shift === undefined && this.userGroup !== 'administrativeStaff') this.shiftMsg = 'El turno es requerido';
+    if (this.shift === undefined && this.userGroup !== 'administratives') this.shiftMsg = 'El turno es requerido';
 
     if (this.csv && this.userGroup) {
       let allowed = true;
-      if (this.userGroup !== 'administrativeStaff') {
+      if (this.userGroup !== 'administratives') {
         if (this.shift === null || this.shift === undefined) allowed = false;
       }
 
@@ -134,8 +147,8 @@ export class UploadUsersComponent implements OnInit {
 
   toggleMessage(): void {
     this.userGroup !== null ? (this.groupMsg = '') : (this.groupMsg = 'El grupo de usuario es requerido');
-    if (this.userGroup === 'administrativeStaff' && this.shiftMsg.length > 0) this.shiftMsg = '';
-    else if (this.userGroup !== 'administrativeStaff') {
+    if (this.userGroup === 'administratives' && this.shiftMsg.length > 0) this.shiftMsg = '';
+    else if (this.userGroup !== 'administratives') {
       this.shift === null || this.shift === undefined
         ? (this.shiftMsg = 'El turno es requerido')
         : (this.shiftMsg = '');
@@ -153,6 +166,7 @@ export class UploadUsersComponent implements OnInit {
 
     this.listOfColumns = r.headers;
     this.listOfData = r.data;
+
     this.updateEditCache();
   }
 
@@ -188,5 +202,36 @@ export class UploadUsersComponent implements OnInit {
         data: JSON.parse(JSON.stringify(item))
       };
     });
+  }
+
+  removeRow(id: string): void {
+    this.listOfData = JSON.parse(JSON.stringify(this.listOfData.filter((d) => d['id'] !== id)));
+  }
+
+  createUsers(): void {
+    this.loading = true;
+    this.userService.createAdministratives(this.listOfData).subscribe(
+      () => {
+        this.message.success('Usuarios creados con éxito');
+        // Clear options and messages
+        this.csv = null;
+        this.fileList = null;
+        this.userGroup = null;
+        this.shift = null;
+        this.listOfColumns = {};
+        this._listOfColumns = null;
+        this.listOfData = [];
+        this.editCache = {};
+
+        this.uploadMsg = '';
+        this.groupMsg = '';
+        this.shiftMsg = '';
+
+        this.loading = false;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 }
