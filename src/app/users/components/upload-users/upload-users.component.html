@@ -34,7 +34,7 @@
             <thead>
                 <tr>
                     <th *ngFor="let header of listOfColumns">{{ header }}</th>
-                    <th>Acción</th>
+                    <th [nzAlign]="'center'">Acción</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,7 +42,7 @@
                     <!-- Non-editable row -->
                     <ng-container *ngIf="!editCache[data.id].edit; else editTemplate">
                         <td *ngFor="let header of _listOfColumns" [ngClass]="{ 'fieldError': !data[header]['isValid'] }"
-                            nz-tooltip [nzTooltipTitle]="data[header]['message']">
+                            nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data[header]['message']">
                             <ng-container [ngSwitch]="header">
                                 <ng-container *ngSwitchCase="'grades'">
                                     <ng-container *ngFor="let grade of data.grades.value | keyvalue; last as isLast">
@@ -66,7 +66,7 @@
     
                     <!-- Editable row -->
                     <ng-template #editTemplate>
-                        <td *ngFor="let header of _listOfColumns" nz-tooltip [nzTooltipTitle]="data[header]['message']">
+                        <td *ngFor="let header of _listOfColumns" nz-tooltip  nzTooltipPlacement="topLeft" [nzTooltipTitle]="data[header]['message']">
                             <ng-container [ngSwitch]="header">
                                 <ng-container *ngSwitchCase="'grades'">
                                     <ng-container *ngFor="let grade of editCache[data.id].data[header]['value'] | keyvalue">

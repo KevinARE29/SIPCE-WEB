@@ -18,18 +18,17 @@ export class UserService {
     this.baseUrl = environment.apiURL;
   }
 
-  // TODO: Create administratives
   createAdministratives(administratives: any): Observable<any> {
     const users = new Array<any>();
 
     administratives.forEach((element) => {
       users.push({
         code: element.code.value,
-        firstname: element['firstname'].value,
-        lastname: element['lastname'].value,
-        email: element['email'].value,
-        role: element['role'].value,
-        username: element['username'].value
+        firstname: element.firstname.value,
+        lastname: element.lastname.value,
+        email: element.email.value,
+        role: element.role.value,
+        username: element.username.value
       });
     });
 
@@ -40,33 +39,76 @@ export class UserService {
     return this.http.post<any>(`${this.baseUrl}users/administratives`, data).pipe(catchError(this.handleError()));
   }
 
-  // TODO: Create counselors
-  createCounselors(counselors: any, shiftId: number, currentYear: boolean): Observable<any>{
+  createCounselors(counselors: any, shiftId: number, currentYear: boolean): Observable<any> {
+    const users = new Array<any>();
+
+    counselors.forEach((element) => {
+      const grades = new Array<number>();
+      Object.keys(element.grades.value).forEach((grade) => {
+        grades.push(element['grades']['value'][grade]['grade']['id']);
+      });
+
+      users.push({
+        code: element.code.value,
+        firstname: element.firstname.value,
+        lastname: element.lastname.value,
+        email: element.email.value,
+        username: element.username.value,
+        grades: grades
+      });
+    });
+
     const data = JSON.stringify({
       shiftId: shiftId,
-      coordinators: counselors,
+      counselors: users,
       currentYear: currentYear
     });
 
     return this.http.post<any>(`${this.baseUrl}users/counselors`, data).pipe(catchError(this.handleError()));
   }
 
-  // TODO: Create teachers
   createTeachers(teachers: any, shiftId: number, currentYear: boolean): Observable<any>{
+    const users = new Array<any>();
+
+    teachers.forEach((element) => {
+      users.push({
+        cycleId: element.cycle.cycle.id,
+        gradeId: element.grade.grade.id,
+        sectionId: element.section.section.id,
+        firstname: element.firstname.value,
+        lastname: element.lastname.value,
+        username: element.username.value,
+        email: element.email.value,
+        code: element.code.value
+      });
+    });
+
     const data = JSON.stringify({
       shiftId: shiftId,
-      teachers: teachers,
+      teachers: users,
       currentYear: currentYear
     });
 
     return this.http.post<any>(`${this.baseUrl}users/teachers`, data).pipe(catchError(this.handleError()));
   }
 
-  // TODO: Create coordinators
   createCoordinators(coordinators: any, shiftId: number, currentYear: boolean): Observable<any>{
+    const users = new Array<any>();
+
+    coordinators.forEach((element) => {
+      users.push({
+        cycleId: element.cycle.cycle.id,
+        firstname: element.firstname.value,
+        lastname: element.lastname.value,
+        username: element.username.value,
+        email: element.email.value,
+        code: element.code.value
+      });
+    });
+
     const data = JSON.stringify({
       shiftId: shiftId,
-      coordinators: coordinators,
+      coordinators: users,
       currentYear: currentYear
     });
 

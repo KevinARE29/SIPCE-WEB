@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UploadFile } from 'ng-zorro-antd/upload';
 import { Observable, Observer } from 'rxjs';
 
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 import DictionaryJson from './../../../../assets/dictionary.json';
@@ -45,7 +46,8 @@ export class UploadUsersComponent implements OnInit {
   constructor(
     private csvToJsonService: CsvToJsonService,
     private userService: UserService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private notification: NzNotificationService
   ) {}
 
   ngOnInit(): void {
@@ -59,7 +61,7 @@ export class UploadUsersComponent implements OnInit {
 
     this.userGroups = [
       { id: 'administratives', value: 'Administrativos' },
-      { id: 'cycleCoordinators', value: 'Coordinadores de ciclo' },
+      { id: 'coordinators', value: 'Coordinadores de ciclo' },
       { id: 'teachers', value: 'Docentes' },
       { id: 'counselors', value: 'Orientadores' }
     ];
@@ -125,8 +127,9 @@ export class UploadUsersComponent implements OnInit {
             this.generateTable(r);
           },
           (error) => {
-            console.log('Error');
-            console.log(error);
+            this.notification.create('error', 'Ocurrió un error al intentar cargar el archivo.', error, {
+              nzDuration: 0
+            });
           }
         );
       }
@@ -178,7 +181,7 @@ export class UploadUsersComponent implements OnInit {
     const index = this.listOfData.findIndex((item) => item['id'] === id);
     const lastValue = this.listOfData[index];
     this.editCache[id] = {
-      data: { lastValue },
+      data: JSON.parse(JSON.stringify(lastValue)),
       edit: false
     };
   }
@@ -210,6 +213,50 @@ export class UploadUsersComponent implements OnInit {
 
   createUsers(): void {
     this.loading = true;
+    let errors = false;
+
+    // // Check errors
+    this.listOfData.forEach((data) => {
+      this._listOfColumns.forEach((column) => {
+        if (column === 'grades') {
+          Object.keys(data[column]['value']).forEach((grade) => {
+            if (!data[column]['value'][grade]['isValid']) errors = true;
+          });
+        } else {
+          if (!data[column]['isValid']) errors = true;
+        }
+      });
+    });
+
+    if (errors) {
+      this.loading = false;
+      this.notification.create(
+        'error',
+        'No se puede proceder con la carga de datos',
+        'Se han detectado errores dentro del contenido de la tabla. Por favor corrigalos para continuar.',
+        {
+          nzDuration: 0
+        }
+      );
+    } else {
+      switch (this.userGroup) {
+        case 'administratives':
+          this.createAdministrativeUsers();
+          break;
+        case 'coordinators':
+          this.createCoordinators();
+          break;
+        case 'teachers':
+          this.createTeachers();
+          break;
+        case 'counselors':
+          this.createCounselors();
+          break;
+      }
+    }
+  }
+
+  createAdministrativeUsers(): void {
     this.userService.createAdministratives(this.listOfData).subscribe(
       () => {
         this.message.success('Usuarios creados con éxito');
@@ -233,5 +280,106 @@ export class UploadUsersComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+
+  createCoordinators(): void {
+    this.userService.createCoordinators(this.listOfData, this.shift, !this.nextYear).subscribe(
+      () => {
+        this.message.success('Usuarios creados con éxito');
+        // Clear options and messages
+        this.csv = null;
+        this.fileList = null;
+        this.userGroup = null;
+        this.shift = null;
+        this.listOfColumns = {};
+        this._listOfColumns = null;
+        this.listOfData = [];
+        this.editCache = {};
+
+        this.uploadMsg = '';
+        this.groupMsg = '';
+        this.shiftMsg = '';
+
+        this.loading = false;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  createTeachers(): void {
+    this.userService.createTeachers(this.listOfData, this.shift, !this.nextYear).subscribe(
+      () => {
+        this.message.success('Usuarios creados con éxito');
+        // Clear options and messages
+        this.csv = null;
+        this.fileList = null;
+        this.userGroup = null;
+        this.shift = null;
+        this.listOfColumns = {};
+        this._listOfColumns = null;
+        this.listOfData = [];
+        this.editCache = {};
+
+        this.uploadMsg = '';
+        this.groupMsg = '';
+        this.shiftMsg = '';
+
+        this.loading = false;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  createCounselors(): void {
+    this.userService.createCounselors(this.listOfData, this.shift, !this.nextYear).subscribe(
+      () => {
+        this.message.success('Usuarios creados con éxito');
+        // Clear options and messages
+        this.csv = null;
+        this.fileList = null;
+        this.userGroup = null;
+        this.shift = null;
+        this.listOfColumns = {};
+        this._listOfColumns = null;
+        this.listOfData = [];
+        this.editCache = {};
+
+        this.uploadMsg = '';
+        this.groupMsg = '';
+        this.shiftMsg = '';
+
+        this.loading = false;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  isEqual(obj1, obj2): boolean {
+    const obj1Keys = Object.keys(obj1);
+    const obj2Keys = Object.keys(obj2);
+
+    if (obj1Keys.length !== obj2Keys.length) {
+      return false;
+    }
+
+    for (let objKey of obj1Keys) {
+      if (obj1[objKey] !== obj2[objKey]) {
+        if (typeof obj1[objKey] == 'object' && typeof obj2[objKey] == 'object') {
+          if (!this.isEqual(obj1[objKey], obj2[objKey])) {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 }

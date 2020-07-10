@@ -17,7 +17,15 @@ export class CsvToJsonService {
 
     return new Observable<unknown>((observer) => {
       reader.onload = () => {
-        observer.next(this.transform(reader.result as string, group));
+        const customJson = this.transform(reader.result as string, group);
+
+        if (customJson === 'quantityError') {
+          observer.error('Verifique que la cantidad de columnas coincidan con las del archivo esperado.');
+        } else if (customJson === 'wrongColumns') {
+          observer.error('Verifique que las columnas ingresadas correspondan a las esperadas.');
+        } else {
+          observer.next(customJson);
+        }
       };
     });
   }
@@ -35,8 +43,7 @@ export class CsvToJsonService {
 
     /*---------------    Validate headers     ---------------*/
     if (Object.keys(availableHeaders).length !== headers.length) {
-      // TODO: Throw error
-      console.log('Error: Verifique que la cantidad de columnas coincidan con las del archivo esperado.');
+      return 'quantityError';
     }
 
     headers.forEach((header) => {
@@ -48,11 +55,12 @@ export class CsvToJsonService {
       });
     });
 
-    // TODO: Throw error if the required columns don't exists in the file
-    Object.keys(availableHeaders).forEach((header) => {
-      if (!availableHeaders[header].check)
-        console.log('Error: Verifique que las columnas ingresadas correspondan a las esperadas.');
-    });
+    for (const header of Object.keys(availableHeaders)) {
+      if (!availableHeaders[header].check) {
+        return 'wrongColumns';
+        break;
+      }
+    }
 
     /*--------------- Transform csv to json ---------------*/
     for (let i = 1; i < lines.length; i++) {
@@ -117,6 +125,8 @@ export class CsvToJsonService {
             this.validateField(availableHeaders[realHeaders[j]], obj[realHeaders[j]], realHeaders[j]);
           }
         }
+
+        obj['inlineError'] = null;
 
         result.push(obj);
       }
@@ -211,15 +221,29 @@ export class CsvToJsonService {
 
                 switch (entity) {
                   case 'grades':
-                    field.grade = assign;
+                    field['value'][value]['grade'] = assign;
                     break;
                 }
               });
             } else if (typeof field.value === 'string') {
               const temporalField = field.value;
-              const assign = this.exists(temporalField, entity);
 
-              if (!this.exists(field.value, entity)) {
+              if (!entity) {
+                if (field.cycle) entity = 'cycle';
+                else if (field.grade) entity = 'grade';
+                else if (field.section) entity = 'section';
+              }
+
+              if (field.hasOwnProperty('cycle')) {
+                entity = 'cycle';
+              } else if (field.hasOwnProperty('grade')) {
+                entity = 'grade';
+              } else if (field.hasOwnProperty('section')) {
+                entity = 'section';
+              }
+
+              const assign = this.exists(temporalField, entity);
+              if (assign === undefined || assign === null) {
                 field.isValid = false;
                 field.message = validate.message;
               } else {
@@ -229,13 +253,13 @@ export class CsvToJsonService {
 
               switch (entity) {
                 case 'cycle':
-                  field.cycle = assign;
+                  field.cycle = assign ? assign : null;
                   break;
                 case 'grade':
-                  field.grade = assign;
+                  field.grade = assign ? assign : null;
                   break;
                 case 'section':
-                  field.section = assign;
+                  field.section = assign ? assign : null;
                   break;
               }
             }
@@ -268,45 +292,80 @@ export class CsvToJsonService {
     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(field);
   }
 
-  exists(field, entity): any {
-    let found;
+  exists(field: string, entity: string): any {
+    let found = null;
     switch (entity) {
       case 'cycle':
+        found = this.availableCycles.find((element) => element.name.toLowerCase() === field.toLowerCase());
         break;
       case 'grades':
       case 'grade':
         found = this.availableGrades.find((element) => element.name.toLowerCase() === field.toLowerCase());
-        return found;
         break;
       case 'section':
+        found = this.availableSections.find((element) => element.name.toLowerCase() === field.toLowerCase());
         break;
     }
-    return true;
+    return found;
+  }
+
+  replaceAccents(text: string): string {
+    const chars = {
+      á: 'a',
+      é: 'e',
+      í: 'i',
+      ó: 'o',
+      ú: 'u',
+      à: 'a',
+      è: 'e',
+      ì: 'i',
+      ò: 'o',
+      ù: 'u',
+      ñ: 'n',
+      Á: 'A',
+      É: 'E',
+      Í: 'I',
+      Ó: 'O',
+      Ú: 'U',
+      À: 'A',
+      È: 'E',
+      Ì: 'I',
+      Ò: 'O',
+      Ù: 'U',
+      Ñ: 'N'
+    };
+
+    const expr = /[áàéèíìóòúùñ]/gi;
+    const res = text.replace(expr, function (e) {
+      return chars[e];
+    });
+
+    return res;
   }
 
   // Change with the api response when its available
   availableGrades = [
-    { id: 1, name: 'Kínder 4' },
-    { id: 2, name: 'Kínder 5' },
-    { id: 3, name: 'Parvularia' },
-    { id: 4, name: 'Primero' },
-    { id: 5, name: 'Segundo' },
-    { id: 6, name: 'Tercero' },
-    { id: 7, name: 'Cuarto' },
-    { id: 8, name: 'Quinto' },
-    { id: 9, name: 'Sexto' },
-    { id: 10, name: 'Séptimo' },
-    { id: 11, name: 'Octavo' },
-    { id: 12, name: 'Noveno' },
-    { id: 13, name: 'Primero Bachillerato' },
-    { id: 14, name: 'Segundo Bachillerato' },
-    { id: 15, name: 'Tercero Bachillerato' }
+    { id: 13, name: 'Kínder 4' },
+    { id: 14, name: 'Kínder 5' },
+    { id: 15, name: 'Parvularia' },
+    { id: 1, name: 'Primero' },
+    { id: 2, name: 'Segundo' },
+    { id: 3, name: 'Tercero' },
+    { id: 4, name: 'Cuarto' },
+    { id: 5, name: 'Quinto' },
+    { id: 6, name: 'Sexto' },
+    { id: 7, name: 'Séptimo' },
+    { id: 8, name: 'Octavo' },
+    { id: 9, name: 'Noveno' },
+    { id: 10, name: 'Primero Bachillerato' },
+    { id: 11, name: 'Segundo Bachillerato' },
+    { id: 12, name: 'Tercero Bachillerato' }
   ];
 
   availableCycles = [
     { id: 1, name: 'Primer ciclo' },
     { id: 2, name: 'Segundo ciclo' },
-    { id: 3, name: 'Tercer Ciclo' },
+    { id: 3, name: 'Tercer ciclo' },
     { id: 4, name: 'Cuarto ciclo' }
   ];
 
@@ -321,7 +380,7 @@ export class CsvToJsonService {
     { id: 8, name: 'General' },
     { id: 9, name: 'Electrónica' },
     { id: 10, name: 'Electrotecnia' },
-    { id: 11, name: 'Mécanica' },
+    { id: 11, name: 'Mecánica' },
     { id: 12, name: 'Contable' },
     { id: 13, name: 'Computación' }
   ];
