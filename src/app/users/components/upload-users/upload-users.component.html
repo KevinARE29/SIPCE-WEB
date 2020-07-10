@@ -24,8 +24,13 @@
             </nz-select>
             <p class="error">{{shiftMsg}}</p>
         </div>
-        <div nz-col nzSm="24" nzMd="5">
-            <button nz-button nzType="primary" (click)="uploadCsv()">Iniciar carga de usuarios</button>
+        <div nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
+            <div nz-col>
+                <button nz-button nzType="primary" (click)="uploadCsv()">Iniciar carga de usuarios</button>
+            </div>
+            <div nz-col>
+                <a nz-button nz-popconfirm nzTitle="¿Desea limpiar la pantalla?" (nzOnConfirm)="clearScreen()">Limpiar pantalla</a>
+            </div>
         </div>
     </div>
     
@@ -61,6 +66,10 @@
                             <a nz-popconfirm nzTitle="¿Eliminar registro?" (nzOnConfirm)="removeRow(data.id)">
                                 <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
                             </a>
+                            <ng-container *ngIf="data.inlineError">
+                                <nz-divider nzType="vertical"></nz-divider>   
+                                <i nz-icon nzType="warning" nzTheme="outline" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ff4d4f'" nz-tooltip [nzTooltipTitle]="data.inlineError"></i>
+                            </ng-container>
                         </td>
                     </ng-container>
     

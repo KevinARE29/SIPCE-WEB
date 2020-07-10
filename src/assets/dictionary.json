@@ -26,7 +26,8 @@
             "section": "Sección",
             "email": "Correo electrónico",
             "code": "Código",
-            "role": "Rol"
+            "role": "Rol",
+            "all": "Registro"
         }
     }
 }

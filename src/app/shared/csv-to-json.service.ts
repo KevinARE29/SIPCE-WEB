@@ -138,133 +138,156 @@ export class CsvToJsonService {
   /*--------------- Validate fields and rows ---------------*/
   validateField(header, field, entity): void {
     const initState = field.isValid;
+    let flag = true;
 
     header['validations'].forEach((validate) => {
-      if (field.isValid === initState) {
-        switch (validate.value) {
-          case 'empty':
-            if (typeof field.value === 'object') {
-              Object.keys(field.value).forEach((value) => {
-                if (this.empty(value)) {
-                  field.isValid = false;
-                  field.message = validate.message;
-                } else {
+      switch (validate.value) {
+        case 'empty':
+          if (typeof field.value === 'object') {
+            Object.keys(field.value).forEach((value) => {
+              if (this.empty(value)) {
+                field.isValid = false;
+                field.message = validate.message;
+                flag = false;
+              } else {
+                if (flag) {
                   field.isValid = true;
                   field.message = null;
                 }
-              });
-            } else if (typeof field.value === 'string') {
-              if (this.empty(field.value)) {
-                field.isValid = false;
-                field.message = validate.message;
-              } else {
+              }
+            });
+          } else if (typeof field.value === 'string') {
+            if (this.empty(field.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
                 field.isValid = true;
                 field.message = null;
               }
             }
-            break;
-          case 'text':
-            if (typeof field.value === 'object') {
-              Object.keys(field.value).forEach((value) => {
-                if (!this.text(value)) {
-                  field.isValid = false;
-                  field.message = validate.message;
-                } else {
+          }
+          break;
+        case 'text':
+          if (typeof field.value === 'object') {
+            Object.keys(field.value).forEach((value) => {
+              if (!this.text(value)) {
+                field.isValid = false;
+                field.message = validate.message;
+                flag = false;
+              } else {
+                if (flag) {
                   field.isValid = true;
                   field.message = null;
                 }
-              });
-            } else if (typeof field.value === 'string') {
-              if (!this.text(field.value)) {
-                field.isValid = false;
-                field.message = validate.message;
-              } else {
+              }
+            });
+          } else if (typeof field.value === 'string') {
+            if (!this.text(field.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
                 field.isValid = true;
                 field.message = null;
               }
             }
-            break;
-          case 'email':
-            if (typeof field.value === 'object') {
-              Object.keys(field.value).forEach((value) => {
-                if (!this.email(value)) {
-                  field.isValid = false;
-                  field.message = validate.message;
-                } else {
+          }
+          break;
+        case 'email':
+          if (typeof field.value === 'object') {
+            Object.keys(field.value).forEach((value) => {
+              if (!this.email(value)) {
+                field.isValid = false;
+                field.message = validate.message;
+                flag = false;
+              } else {
+                if (flag) {
                   field.isValid = true;
                   field.message = null;
                 }
-              });
-            } else if (typeof field.value === 'string') {
-              if (!this.email(field.value)) {
-                field.isValid = false;
-                field.message = validate.message;
-              } else {
+              }
+            });
+          } else if (typeof field.value === 'string') {
+            if (!this.email(field.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
                 field.isValid = true;
                 field.message = null;
               }
             }
-            break;
-          case 'exists':
-            if (typeof field.value === 'object') {
-              Object.keys(field.value).forEach((value) => {
-                const temporalField = field['value'][value].value;
-                const assign = this.exists(temporalField, entity);
+          }
+          break;
+        case 'exists':
+          if (typeof field.value === 'object') {
+            Object.keys(field.value).forEach((value) => {
+              const temporalField = field['value'][value].value;
+              const assign = this.exists(temporalField, 'grade');
 
-                if (!assign) {
-                  field.isValid = false;
-                  field.message = validate.message;
-                } else {
-                  field.isValid = true;
-                  field.message = null;
-                }
-
-                switch (entity) {
-                  case 'grades':
-                    field['value'][value]['grade'] = assign;
-                    break;
-                }
-              });
-            } else if (typeof field.value === 'string') {
-              const temporalField = field.value;
-
-              if (!entity) {
-                if (field.cycle) entity = 'cycle';
-                else if (field.grade) entity = 'grade';
-                else if (field.section) entity = 'section';
-              }
-
-              if (field.hasOwnProperty('cycle')) {
-                entity = 'cycle';
-              } else if (field.hasOwnProperty('grade')) {
-                entity = 'grade';
-              } else if (field.hasOwnProperty('section')) {
-                entity = 'section';
-              }
-
-              const assign = this.exists(temporalField, entity);
               if (assign === undefined || assign === null) {
                 field.isValid = false;
                 field.message = validate.message;
+                flag = false;
               } else {
-                field.isValid = true;
-                field.message = null;
+                if (flag) {
+                  field.isValid = true;
+                  field.message = null;
+                }
               }
 
               switch (entity) {
-                case 'cycle':
-                  field.cycle = assign ? assign : null;
-                  break;
-                case 'grade':
-                  field.grade = assign ? assign : null;
-                  break;
-                case 'section':
-                  field.section = assign ? assign : null;
+                case 'grades':
+                  field['value'][value]['grade'] = assign;
                   break;
               }
+            });
+          } else if (typeof field.value === 'string') {
+            const temporalField = field.value;
+
+            if (!entity) {
+              if (field.cycle) entity = 'cycle';
+              else if (field.grade) entity = 'grade';
+              else if (field.section) entity = 'section';
             }
-            break;
-        }
+
+            if (field.hasOwnProperty('cycle')) {
+              entity = 'cycle';
+            } else if (field.hasOwnProperty('grade')) {
+              entity = 'grade';
+            } else if (field.hasOwnProperty('section')) {
+              entity = 'section';
+            }
+
+            const assign = this.exists(temporalField, entity);
+            if (assign === undefined || assign === null) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
+                field.isValid = true;
+                field.message = null;
+              }
+            }
+
+            switch (entity) {
+              case 'cycle':
+                field.cycle = assign ? assign : null;
+                break;
+              case 'grade':
+                field.grade = assign ? assign : null;
+                break;
+              case 'section':
+                field.section = assign ? assign : null;
+                break;
+            }
+          }
+          break;
       }
     });
     return;
@@ -273,8 +296,7 @@ export class CsvToJsonService {
   validateUpdatedRow(group, headers, row, data): any {
     const availableHeaders = CsvHeaders.headers[group];
     headers.forEach((h) => {
-      // TODO: Use the real data
-      this.validateField(availableHeaders[h], row[h], null);
+      this.validateField(availableHeaders[h], row[h], null); // TODO: Use the real data
     });
 
     return row;
@@ -294,6 +316,7 @@ export class CsvToJsonService {
 
   exists(field: string, entity: string): any {
     let found = null;
+
     switch (entity) {
       case 'cycle':
         found = this.availableCycles.find((element) => element.name.toLowerCase() === field.toLowerCase());

@@ -67,7 +67,7 @@ export class UserService {
     return this.http.post<any>(`${this.baseUrl}users/counselors`, data).pipe(catchError(this.handleError()));
   }
 
-  createTeachers(teachers: any, shiftId: number, currentYear: boolean): Observable<any>{
+  createTeachers(teachers: any, shiftId: number, currentYear: boolean): Observable<any> {
     const users = new Array<any>();
 
     teachers.forEach((element) => {
@@ -92,7 +92,7 @@ export class UserService {
     return this.http.post<any>(`${this.baseUrl}users/teachers`, data).pipe(catchError(this.handleError()));
   }
 
-  createCoordinators(coordinators: any, shiftId: number, currentYear: boolean): Observable<any>{
+  createCoordinators(coordinators: any, shiftId: number, currentYear: boolean): Observable<any> {
     const users = new Array<any>();
 
     coordinators.forEach((element) => {

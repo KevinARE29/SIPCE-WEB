@@ -232,8 +232,8 @@ export class UploadUsersComponent implements OnInit {
       this.loading = false;
       this.notification.create(
         'error',
-        'No se puede proceder con la carga de datos',
-        'Se han detectado errores dentro del contenido de la tabla. Por favor corrigalos para continuar.',
+        'No se puede proceder con la carga de datos.',
+        'Se han detectado errores dentro del contenido de la tabla. Por favor corríjalos para continuar.',
         {
           nzDuration: 0
         }
@@ -260,24 +260,16 @@ export class UploadUsersComponent implements OnInit {
     this.userService.createAdministratives(this.listOfData).subscribe(
       () => {
         this.message.success('Usuarios creados con éxito');
-        // Clear options and messages
-        this.csv = null;
-        this.fileList = null;
-        this.userGroup = null;
-        this.shift = null;
-        this.listOfColumns = {};
-        this._listOfColumns = null;
-        this.listOfData = [];
-        this.editCache = {};
-
-        this.uploadMsg = '';
-        this.groupMsg = '';
-        this.shiftMsg = '';
-
+        this.clearScreen();
         this.loading = false;
       },
       (error) => {
-        console.log(error);
+        this.loading = false;
+        this.message.warning(
+          'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
+          { nzDuration: 4500 }
+        );
+        this.clearListofData(error.message);
       }
     );
   }
@@ -286,24 +278,16 @@ export class UploadUsersComponent implements OnInit {
     this.userService.createCoordinators(this.listOfData, this.shift, !this.nextYear).subscribe(
       () => {
         this.message.success('Usuarios creados con éxito');
-        // Clear options and messages
-        this.csv = null;
-        this.fileList = null;
-        this.userGroup = null;
-        this.shift = null;
-        this.listOfColumns = {};
-        this._listOfColumns = null;
-        this.listOfData = [];
-        this.editCache = {};
-
-        this.uploadMsg = '';
-        this.groupMsg = '';
-        this.shiftMsg = '';
-
+        this.clearScreen();
         this.loading = false;
       },
       (error) => {
-        console.log(error);
+        this.loading = false;
+        this.message.warning(
+          'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
+          { nzDuration: 4500 }
+        );
+        this.clearListofData(error.message);
       }
     );
   }
@@ -312,24 +296,16 @@ export class UploadUsersComponent implements OnInit {
     this.userService.createTeachers(this.listOfData, this.shift, !this.nextYear).subscribe(
       () => {
         this.message.success('Usuarios creados con éxito');
-        // Clear options and messages
-        this.csv = null;
-        this.fileList = null;
-        this.userGroup = null;
-        this.shift = null;
-        this.listOfColumns = {};
-        this._listOfColumns = null;
-        this.listOfData = [];
-        this.editCache = {};
-
-        this.uploadMsg = '';
-        this.groupMsg = '';
-        this.shiftMsg = '';
-
+        this.clearScreen();
         this.loading = false;
       },
       (error) => {
-        console.log(error);
+        this.loading = false;
+        this.message.warning(
+          'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
+          { nzDuration: 4500 }
+        );
+        this.clearListofData(error.message);
       }
     );
   }
@@ -338,48 +314,52 @@ export class UploadUsersComponent implements OnInit {
     this.userService.createCounselors(this.listOfData, this.shift, !this.nextYear).subscribe(
       () => {
         this.message.success('Usuarios creados con éxito');
-        // Clear options and messages
-        this.csv = null;
-        this.fileList = null;
-        this.userGroup = null;
-        this.shift = null;
-        this.listOfColumns = {};
-        this._listOfColumns = null;
-        this.listOfData = [];
-        this.editCache = {};
-
-        this.uploadMsg = '';
-        this.groupMsg = '';
-        this.shiftMsg = '';
-
+        this.clearScreen();
         this.loading = false;
       },
       (error) => {
-        console.log(error);
+        this.loading = false;
+        this.message.warning(
+          'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
+          { nzDuration: 4500 }
+        );
+        this.clearListofData(error.message);
       }
     );
   }
 
-  isEqual(obj1, obj2): boolean {
-    const obj1Keys = Object.keys(obj1);
-    const obj2Keys = Object.keys(obj2);
+  clearListofData(error): void {
+    const listToDelete = new Array<number>();
 
-    if (obj1Keys.length !== obj2Keys.length) {
-      return false;
-    }
+    for (let i = this.listOfData.length - 1; i >= 0; i--) {
+      const dat = Object.keys(this.listOfData)[i];
 
-    for (let objKey of obj1Keys) {
-      if (obj1[objKey] !== obj2[objKey]) {
-        if (typeof obj1[objKey] == 'object' && typeof obj2[objKey] == 'object') {
-          if (!this.isEqual(obj1[objKey], obj2[objKey])) {
-            return false;
-          }
-        } else {
-          return false;
-        }
+      if (error.hasOwnProperty(i)) {
+        this.listOfData[dat]['inlineError'] = error[i].message;
+      } else {
+        listToDelete.push(this.listOfData[dat].id);
+        this.listOfData[dat]['inlineError'] = null;
       }
     }
 
-    return true;
+    listToDelete.forEach((id) => {
+      this.listOfData = JSON.parse(JSON.stringify(this.listOfData.filter((d) => d['id'] !== id)));
+    });
+  }
+
+  clearScreen(): void {
+    // Clear options and messages
+    this.csv = null;
+    this.fileList = null;
+    this.userGroup = null;
+    this.shift = null;
+    this.listOfColumns = {};
+    this._listOfColumns = null;
+    this.listOfData = [];
+    this.editCache = {};
+
+    this.uploadMsg = '';
+    this.groupMsg = '';
+    this.shiftMsg = '';
   }
 }
