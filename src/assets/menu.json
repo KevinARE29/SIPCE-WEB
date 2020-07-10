@@ -39,7 +39,7 @@
         }, {
             "title": "Usuarios",
             "icon": "user",
-            "permission": 10,
+            "permission": 3,
             "allow": null,
             "children": [
                 {
