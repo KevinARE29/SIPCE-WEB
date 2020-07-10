@@ -36,6 +36,17 @@
                     "name": "Bitácora de acciones"
                 }
             ]
+        }, {
+            "title": "Usuarios",
+            "icon": "user",
+            "permission": 3,
+            "allow": null,
+            "children": [
+                {
+                    "route": "/usuarios/carga-masiva",
+                    "name": "Cargar usuarios"
+                }
+            ]
         }
     ]  
 }

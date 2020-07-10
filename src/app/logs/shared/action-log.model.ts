@@ -1,4 +1,4 @@
-import { User } from './../../shared/user.model';
+import { User } from './user-log.model';
 
 export class ActionLog {
   id: number;
