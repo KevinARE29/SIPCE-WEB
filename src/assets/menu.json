@@ -43,6 +43,9 @@
             "allow": null,
             "children": [
                 {
+                    "route": "/usuarios",
+                    "name": "Usuarios"
+                }, {
                     "route": "/usuarios/carga-masiva",
                     "name": "Cargar usuarios"
                 }

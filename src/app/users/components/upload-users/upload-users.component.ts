@@ -79,7 +79,7 @@ export class UploadUsersComponent implements OnInit {
   beforeUpload = (file: UploadFile) => {
     this.uploadMsg = '';
     return new Observable((observer: Observer<boolean>) => {
-      const isCsv = file.type === 'application/vnd.ms-excel';
+      const isCsv = file.type === 'application/vnd.ms-excel' || 'text/csv';
       if (!isCsv) {
         // Only CSV allowed
         this.message.error('Solo se permiten archivos en formato csv');

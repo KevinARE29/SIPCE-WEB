@@ -14,4 +14,5 @@ export class User {
   cycle: Cycle;
   grades: Grade[];
   section: Section;
+  active: boolean;
 }
