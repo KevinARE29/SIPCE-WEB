@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from './../../shared/user.model.ts';
+import { User } from '../../shared/user.model';
 import { Role } from 'src/app/roles/shared/role.model';
 import { Pagination } from 'src/app/shared/pagination.model';
 import { UserService } from '../../shared/user.service';
@@ -66,7 +66,7 @@ export class UsersComponent implements OnInit {
         const notIn = [401, 403];
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al recargar la bitácora de accesos.', error.message, {
+          this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
             nzDuration: 0
           });
         }
@@ -82,6 +82,20 @@ export class UsersComponent implements OnInit {
       (data) => {
         this.pagination = data['pagination'];
         this.listOfDisplayData = data['data'];
+
+        // Create array of roles
+        this.roles = new Array<Role>();
+        this.listOfDisplayData.forEach((data) => {
+          data.roles.forEach((rol) => {
+            this.roles.push(rol);
+          });
+        });
+
+        // Delete duplicates
+        this.roles = this.roles.filter(
+          (role, index, self) => index === self.findIndex((t) => t.id === role.id && t.name === role.name)
+        );
+
         this.loading = false;
       },
       (error) => {
@@ -90,7 +104,7 @@ export class UsersComponent implements OnInit {
         const notIn = [401, 403];
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al recargar la bitácora de accesos.', error.message, {
+          this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
             nzDuration: 0
           });
         }

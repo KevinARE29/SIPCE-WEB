@@ -6,9 +6,10 @@ import { AntDesignModule } from '../ant-design/ant-design.module';
 import { UsersRoutingModule } from './users-routing.module';
 import { UploadUsersComponent } from './components/upload-users/upload-users.component';
 import { UsersComponent } from './components/users/users.component';
+import { UnauthenticatedUsersComponent } from './components/unauthenticated-users/unauthenticated-users.component';
 
 @NgModule({
-  declarations: [UploadUsersComponent, UsersComponent],
+  declarations: [UploadUsersComponent, UsersComponent, UnauthenticatedUsersComponent],
   imports: [CommonModule, AntDesignModule, UsersRoutingModule]
 })
 export class UsersModule {}

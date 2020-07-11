@@ -389,7 +389,7 @@ export class CsvToJsonService {
     { id: 1, name: 'Primer ciclo' },
     { id: 2, name: 'Segundo ciclo' },
     { id: 3, name: 'Tercer ciclo' },
-    { id: 4, name: 'Cuarto ciclo' }
+    { id: 4, name: 'Parvularia' }
   ];
 
   availableSections = [
