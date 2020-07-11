@@ -95,7 +95,7 @@ export class ActionsLogComponent implements OnInit {
   }
 
   disabledDate = (current: Date): boolean => {
-    // Can not select days before today
+    // Can not select days after today
     return differenceInCalendarDays(current, new Date()) > 0;
   };
 }

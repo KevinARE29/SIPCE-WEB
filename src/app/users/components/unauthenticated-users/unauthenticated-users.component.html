@@ -1,0 +1,107 @@
+<h1>Usuarios sin credenciales</h1>
+
+<div class="search" nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
+    <!-- Name -->
+    <div class="name" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="7" class="gutter-row">
+        <nz-input-group [nzSuffix]="inputClearName">
+            <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Buscar nombre" />
+        </nz-input-group>
+        <ng-template #inputClearName>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.firstname" (click)="searchParams.firstname = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Lastname -->
+    <div class="lastname" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="7" nzXl="5" class="gutter-row">
+        <nz-input-group [nzSuffix]="inputClearLastname">
+            <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Buscar apellido" />
+        </nz-input-group>
+        <ng-template #inputClearLastname>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.lastname" (click)="searchParams.lastname = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Email -->
+    <div class="email" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5" class="gutter-row">
+        <nz-input-group [nzSuffix]="inputClearEmail">
+            <input nz-input [(ngModel)]="searchParams.email" placeholder="Buscar correo electrónico" />
+        </nz-input-group>
+        <ng-template #inputClearEmail>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.email" (click)="searchParams.email = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Roles -->
+    <div class="role" nz-col nzXs="24" nzSm="10" nzMd="12" nzLg="8" nzXl="6" class="gutter-row">
+        <label>Rol: </label>
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="roleSearch" (ngModelChange)="search()">
+            <nz-option *ngFor="let rol of roles" [nzLabel]="rol.name" [nzValue]="rol.id"></nz-option>
+        </nz-select>
+    </div>
+
+    <!-- Date range -->
+    <div class="date" nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="16" nzXl="12">
+        <label>Fecha de creación: </label>
+        <nz-range-picker 
+            nzFormat="dd/MM/yyyy" 
+            [ngModel]="searchParams.createdAt"
+            [nzDisabledDate]="disabledDate"
+            (ngModelChange)="onChangeDatePicker($event)"
+        ></nz-range-picker>
+    </div>
+
+    <!-- Status & search button-->
+    <div class="status" nz-col class="gutter-row">
+        <button nz-button nzType="primary" (click)="search()">Buscar</button>
+    </div>
+</div>
+
+<div class="unauthorized-users" nz-row>
+    <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 24 }" [nzXl]="{ span: 20, offset: 2 }">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <nz-table #filterTable 
+                [nzData]="listOfDisplayData" 
+                nzTableLayout="fixed"
+                [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems"
+                [nzPageSize]="pagination.perPage"
+                [nzPageIndex]="pagination.page"
+                nzSize="small"
+                (nzQueryParams)="getUsers($event)"
+            >
+                <thead>
+                    <tr>
+                        <th nzColumnKey="firstname" [nzSortFn]="true" [nzSortPriority]="1">Nombre</th>
+                        <th nzColumnKey="lastname" [nzSortFn]="true" [nzSortPriority]="2">Apellido</th>
+                        <th nzColumnKey="email" [nzSortFn]="true" [nzSortPriority]="3">Correo electrónico</th>
+                        <th nzColumnKey="role">Roles</th>
+                        <th nzColumnKey="createdAt" [nzSortFn]="true" [nzSortPriority]="4">Fecha de creación</th>
+                        <th [nzAlign]="'center'">Acción</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <tr *ngFor="let data of filterTable.data">
+                        <td>{{ data.firstname }}</td>
+                        <td>{{ data.lastname }}</td>
+                        <td>{{ data.email }}</td>
+                        <td>
+                            <ng-container *ngFor="let rol of data.roles; last as isLast">
+                                {{ rol.name }}
+                                <ng-container *ngIf="!isLast">
+                                    <nz-divider nzType="vertical"></nz-divider>
+                                </ng-container>
+                            </ng-container>
+                        </td>
+                        <td>{{ data.createdAt | date:"dd/MM/yyyy hh:mm aa" }}</td>
+                        <td [nzAlign]="'center'">
+                            <a>
+                                <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>
