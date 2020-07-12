@@ -104,7 +104,7 @@
                         </td>
                         <td>{{ data.user.createdAt | date:"dd/MM/yyyy hh:mm aa" }}</td>
                         <td [nzAlign]="'center'">
-                            <a>
+                            <a (click)="showConfirm(data.user.id)">
                                 <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
                             </a>
                         </td>

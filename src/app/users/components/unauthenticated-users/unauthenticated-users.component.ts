@@ -9,6 +9,7 @@ import { subMonths, differenceInCalendarDays } from 'date-fns';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Permission } from 'src/app/shared/permission.model';
 import { AuthService } from 'src/app/login/shared/auth.service';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 
 export interface Data {
   user: User;
@@ -40,11 +41,13 @@ export class UnauthenticatedUsersComponent implements OnInit {
   // Modal
   isVisible = false;
   isConfirmLoading = false;
+  confirmModal?: NzModalRef;
 
   constructor(
     private userService: UserService,
     private authService: AuthService,
     private message: NzMessageService,
+    private modal: NzModalService,
     private notification: NzNotificationService
   ) {}
 
@@ -254,5 +257,35 @@ export class UnauthenticatedUsersComponent implements OnInit {
 
   handleCancel(): void {
     this.isVisible = false;
+  }
+
+  showConfirm(id: number): void {
+    const element = this.listOfData.find((x) => x.user.id === id);
+
+    this.confirmModal = this.modal.confirm({
+      nzTitle: `¿Desea eliminar el usuario "${element.user.username}"?`,
+      nzContent: `Eliminará el usuario de "${element.user.firstname} ${element.user.lastname}". La acción no puede deshacerse. ¿Desea continuar con la acción?`,
+      nzOnOk: () =>
+        this.userService
+          .deleteUser(id)
+          .toPromise()
+          .then(() => {
+            this.message.success(`El usuario ${element.user.username} ha sido eliminado`);
+            this.search();
+            this.setOfCheckedId.clear();
+            this.refreshCheckedStatus();
+          })
+          .catch((err) => {
+            const statusCode = err.statusCode;
+            const notIn = [401, 403];
+            this.setOfCheckedId.clear();
+            this.refreshCheckedStatus();
+            if (!notIn.includes(statusCode) && statusCode < 500) {
+              this.notification.create('error', 'Ocurrió un error al eliminar el usuario.', err.message, {
+                nzDuration: 0
+              });
+            }
+          })
+    });
   }
 }

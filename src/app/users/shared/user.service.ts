@@ -153,6 +153,10 @@ export class UserService {
     return this.http.post<any>(`${this.baseUrl}users/credentials`, data).pipe(catchError(this.handleError()));
   }
 
+  deleteUser(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}users/${id}`).pipe(catchError(this.handleError()));
+  }
+
   createAdministratives(administratives: any): Observable<any> {
     const users = new Array<any>();
 
