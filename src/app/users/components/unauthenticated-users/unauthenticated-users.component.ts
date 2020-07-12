@@ -6,6 +6,12 @@ import { Pagination } from 'src/app/shared/pagination.model';
 import { Role } from 'src/app/roles/shared/role.model';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { subMonths, differenceInCalendarDays } from 'date-fns';
+import { NzMessageService } from 'ng-zorro-antd/message';
+
+export interface Data {
+  user: User;
+  disabled: boolean;
+}
 
 @Component({
   selector: 'app-unauthenticated-users',
@@ -17,11 +23,26 @@ export class UnauthenticatedUsersComponent implements OnInit {
   roleSearch: number;
   roles: Role[];
   loading = false;
-  listOfDisplayData: User[];
-  pagination: Pagination;
   dateFormat = 'dd/MM/yyyy';
 
-  constructor(private userService: UserService, private notification: NzNotificationService) {}
+  // Table variables
+  checked = false;
+  indeterminate = false;
+  setOfCheckedId = new Set<number>();
+  listOfData: Data[] = [];
+  listOfCurrentPageData: Data[] = [];
+  filteredList: Data[] = [];
+  pagination: Pagination;
+
+  // Modal
+  isVisible = false;
+  isConfirmLoading = false;
+
+  constructor(
+    private userService: UserService,
+    private message: NzMessageService,
+    private notification: NzNotificationService
+  ) {}
 
   ngOnInit(): void {
     this.init();
@@ -43,6 +64,7 @@ export class UnauthenticatedUsersComponent implements OnInit {
     this.pagination.page = 1;
   }
 
+  /***************      Get data       ***************/
   getUsers(params: NzTableQueryParams): void {
     this.loading = true;
     this.searchParams.roles['0'].id = this.roleSearch;
@@ -52,12 +74,12 @@ export class UnauthenticatedUsersComponent implements OnInit {
       .subscribe(
         (data) => {
           this.pagination = data['pagination'];
-          this.listOfDisplayData = data['data'];
+          this.listOfData = data['data'];
 
           // Create array of roles
           this.roles = new Array<Role>();
-          this.listOfDisplayData.forEach((data) => {
-            data.roles.forEach((rol) => {
+          this.listOfData.forEach((data) => {
+            data.user.roles.forEach((rol) => {
               this.roles.push(rol);
             });
           });
@@ -90,12 +112,12 @@ export class UnauthenticatedUsersComponent implements OnInit {
     this.userService.getUnauthorizedUsers(null, this.searchParams, false).subscribe(
       (data) => {
         this.pagination = data['pagination'];
-        this.listOfDisplayData = data['data'];
+        this.listOfData = data['data'];
 
         // Create array of roles
         this.roles = new Array<Role>();
-        this.listOfDisplayData.forEach((data) => {
-          data.roles.forEach((rol) => {
+        this.listOfData.forEach((data) => {
+          data.user.roles.forEach((rol) => {
             this.roles.push(rol);
           });
         });
@@ -130,4 +152,82 @@ export class UnauthenticatedUsersComponent implements OnInit {
     // Can not select days after today
     return differenceInCalendarDays(current, new Date()) > 0;
   };
+
+  /***************      Manage checked column       ***************/
+  updateCheckedSet(id: number, checked: boolean): void {
+    if (checked) {
+      this.setOfCheckedId.add(id);
+    } else {
+      this.setOfCheckedId.delete(id);
+    }
+  }
+
+  onCurrentPageDataChange(listOfCurrentPageData: Data[]): void {
+    this.listOfCurrentPageData = listOfCurrentPageData;
+    this.refreshCheckedStatus();
+  }
+
+  refreshCheckedStatus(): void {
+    const listOfEnabledData = this.listOfCurrentPageData.filter(({ disabled }) => !disabled);
+    this.checked = listOfEnabledData.every(({ user }) => this.setOfCheckedId.has(user.id));
+    this.indeterminate = listOfEnabledData.some(({ user }) => this.setOfCheckedId.has(user.id)) && !this.checked;
+  }
+
+  onItemChecked(id: number, checked: boolean): void {
+    this.updateCheckedSet(id, checked);
+    this.refreshCheckedStatus();
+  }
+
+  onAllChecked(checked: boolean): void {
+    this.listOfCurrentPageData
+      .filter(({ disabled }) => !disabled)
+      .forEach(({ user }) => this.updateCheckedSet(user.id, checked));
+    this.refreshCheckedStatus();
+  }
+
+  sendRequest(): void {
+    this.loading = true;
+    this.isConfirmLoading = true;
+
+    this.userService.generateCredentials(Array.from(this.setOfCheckedId)).subscribe(
+      () => {
+        this.search();
+        this.isVisible = false;
+        this.isConfirmLoading = false;
+        this.loading = false;
+        this.setOfCheckedId.clear();
+        this.refreshCheckedStatus();
+        this.message.success('Credenciales generadas con éxito');
+      },
+      (error) => {
+        this.isVisible = false;
+        this.isConfirmLoading = false;
+        this.loading = false;
+
+        const statusCode = error.statusCode;
+        const notIn = [401, 403];
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create('error', 'Ocurrió un error al crear las credenciales.', error.message, {
+            nzDuration: 0
+          });
+        }
+      }
+    );
+  }
+
+  /**********      Custom modal       **********/
+  showModal(): void {
+    this.filteredList = this.listOfData.filter((x) => Array.from(this.setOfCheckedId).includes(x.user.id));
+    this.isVisible = true;
+  }
+
+  handleOk(): void {
+    this.sendRequest();
+  }
+
+  handleCancel(): void {
+    this.isVisible = false;
+  }
+
 }

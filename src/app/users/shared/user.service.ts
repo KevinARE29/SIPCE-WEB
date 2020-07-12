@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { User } from './user.model';
 import { subMonths } from 'date-fns';
@@ -73,7 +73,7 @@ export class UserService {
     return this.http.get<User[]>(url).pipe(catchError(this.handleError()));
   }
 
-  getUnauthorizedUsers(params: NzTableQueryParams, search: User, paginate: boolean): Observable<User[]> {
+  getUnauthorizedUsers(params: NzTableQueryParams, search: User, paginate: boolean): Observable<any> {
     let url = this.baseUrl + 'users';
     let queryParams = '';
 
@@ -102,7 +102,9 @@ export class UserService {
 
         queryParams += sort;
       }
-    }
+
+      queryParams += '&perPage=' + params.pageSize;
+    } else queryParams += '&perPage=' + '10';
 
     if (search) {
       if (search.firstname) queryParams += '&firstname=' + search.firstname;
@@ -127,11 +129,28 @@ export class UserService {
     }
 
     queryParams += '&credentials=false';
+
     if (queryParams.charAt(0) === '&') queryParams = queryParams.replace('&', '?');
 
     url += queryParams;
 
-    return this.http.get<User[]>(url).pipe(catchError(this.handleError()));
+    return this.http.get<User[]>(url).pipe(
+      map((response) => {
+        const usersResponse = new Array<any>();
+
+        for (let i = 0; i < response['data'].length; i++) {
+          usersResponse[i] = { user: response['data'][i], disabled: false };
+        }
+
+        return { data: usersResponse, pagination: response['pagination'] };
+      }),
+      catchError(this.handleError())
+    );
+  }
+
+  generateCredentials(users: number[]): Observable<any> {
+    const data = JSON.stringify({ ids: users });
+    return this.http.post<any>(`${this.baseUrl}users/credentials`, data).pipe(catchError(this.handleError()));
   }
 
   createAdministratives(administratives: any): Observable<any> {
