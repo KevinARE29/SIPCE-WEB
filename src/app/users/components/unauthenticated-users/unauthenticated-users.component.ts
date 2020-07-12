@@ -7,6 +7,8 @@ import { Role } from 'src/app/roles/shared/role.model';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { subMonths, differenceInCalendarDays } from 'date-fns';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { Permission } from 'src/app/shared/permission.model';
+import { AuthService } from 'src/app/login/shared/auth.service';
 
 export interface Data {
   user: User;
@@ -19,6 +21,7 @@ export interface Data {
   styleUrls: ['./unauthenticated-users.component.css']
 })
 export class UnauthenticatedUsersComponent implements OnInit {
+  permissions: Array<Permission> = [];
   searchParams: User;
   roleSearch: number;
   roles: Role[];
@@ -40,12 +43,14 @@ export class UnauthenticatedUsersComponent implements OnInit {
 
   constructor(
     private userService: UserService,
+    private authService: AuthService,
     private message: NzMessageService,
     private notification: NzNotificationService
   ) {}
 
   ngOnInit(): void {
     this.init();
+    this.setPermissions();
   }
 
   init(): void {
@@ -62,6 +67,27 @@ export class UnauthenticatedUsersComponent implements OnInit {
     this.pagination = new Pagination();
     this.pagination.perPage = 10;
     this.pagination.page = 1;
+  }
+
+  /* ---      Control page permissions      --- */
+  setPermissions(): void {
+    const token = this.authService.getToken();
+    const content = this.authService.jwtDecoder(token);
+
+    const permissions = content.permissions;
+
+    this.permissions.push(new Permission(12, 'Generate credentials'));
+
+    this.permissions.forEach((p) => {
+      const index = permissions.indexOf(p.id);
+
+      p.allow = index == -1 ? false : true;
+    });
+  }
+
+  checkPermission(id: number): boolean {
+    const index = this.permissions.find((p) => p.id === id);
+    return index.allow;
   }
 
   /***************      Get data       ***************/
@@ -229,5 +255,4 @@ export class UnauthenticatedUsersComponent implements OnInit {
   handleCancel(): void {
     this.isVisible = false;
   }
-
 }

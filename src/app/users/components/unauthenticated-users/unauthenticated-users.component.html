@@ -115,7 +115,7 @@
     </div>
 </div>
 
-<div class="send-request">
+<div class="send-request" *ngIf="checkPermission(12)">
     <button nz-button nzType="primary" [disabled]="setOfCheckedId.size === 0" [nzLoading]="loading" (click)="showModal()">
       Generar credenciales
     </button>
