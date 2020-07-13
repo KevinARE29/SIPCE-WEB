@@ -24,18 +24,10 @@ interface ItemData {
 export class UploadUsersComponent implements OnInit {
   csv: Blob;
   fileList: UploadFile[];
-  userGroup: string;
-  userGroups: unknown;
-  shift: number;
-  nextYear = false;
   loading = false;
-  // TODO: Get data from service
-  shifts: unknown;
 
   // Pre upload users errors
   uploadMsg: string;
-  groupMsg: string;
-  shiftMsg: string;
 
   // Table structure
   listOfColumns = {};
@@ -51,28 +43,7 @@ export class UploadUsersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.init();
-  }
-
-  init(): void {
     this.uploadMsg = '';
-    this.groupMsg = '';
-    this.shiftMsg = '';
-
-    this.userGroups = [
-      { id: 'administratives', value: 'Administrativos' },
-      { id: 'coordinators', value: 'Coordinadores de ciclo' },
-      { id: 'teachers', value: 'Docentes' },
-      { id: 'counselors', value: 'Orientadores' }
-    ];
-    // TODO: Get data from service
-    this.shifts = [
-      { id: 1, value: 'Mañana' },
-      { id: 2, value: 'Tarde' },
-      { id: 3, value: 'Nocturno' },
-      { id: 4, value: 'Mixto' },
-      { id: 5, value: 'Tiempo completo' }
-    ];
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -99,7 +70,7 @@ export class UploadUsersComponent implements OnInit {
     });
   };
 
-  handleChange = (file: UploadFile): boolean => {
+  handleChange = (): boolean => {
     this.csv = null;
     this.fileList = null;
     return true;
@@ -107,32 +78,21 @@ export class UploadUsersComponent implements OnInit {
 
   uploadCsv(): void {
     this.uploadMsg = '';
-    this.groupMsg = '';
-    this.shiftMsg = '';
 
     if (this.csv === undefined || this.csv === null) this.uploadMsg = 'El archivo es requerido';
-    if (this.userGroup === undefined) this.groupMsg = 'El grupo de usuario es requerido';
-    if (this.shift === undefined && this.userGroup !== 'administratives') this.shiftMsg = 'El turno es requerido';
 
-    if (this.csv && this.userGroup) {
-      let allowed = true;
-      if (this.userGroup !== 'administratives') {
-        if (this.shift === null || this.shift === undefined) allowed = false;
-      }
-
-      if (allowed) {
-        this.csvToJsonService.csvJSON(this.csv, this.userGroup).subscribe(
-          (r) => {
-            this._listOfColumns = JSON.parse(JSON.stringify(r['headers']));
-            this.generateTable(r);
-          },
-          (error) => {
-            this.notification.create('error', 'Ocurrió un error al intentar cargar el archivo.', error, {
-              nzDuration: 0
-            });
-          }
-        );
-      }
+    if (this.csv) {
+      this.csvToJsonService.csvJSON(this.csv, 'users').subscribe(
+        (r) => {
+          this._listOfColumns = JSON.parse(JSON.stringify(r['headers']));
+          this.generateTable(r);
+        },
+        (error) => {
+          this.notification.create('error', 'Ocurrió un error al intentar cargar el archivo.', error, {
+            nzDuration: 0
+          });
+        }
+      );
     }
   }
 
@@ -147,16 +107,6 @@ export class UploadUsersComponent implements OnInit {
       }
     ];
   };
-
-  toggleMessage(): void {
-    this.userGroup !== null ? (this.groupMsg = '') : (this.groupMsg = 'El grupo de usuario es requerido');
-    if (this.userGroup === 'administratives' && this.shiftMsg.length > 0) this.shiftMsg = '';
-    else if (this.userGroup !== 'administratives') {
-      this.shift === null || this.shift === undefined
-        ? (this.shiftMsg = 'El turno es requerido')
-        : (this.shiftMsg = '');
-    }
-  }
 
   generateTable(r): void {
     const dictionary = DictionaryJson.dictionary['users'];
@@ -189,10 +139,9 @@ export class UploadUsersComponent implements OnInit {
   saveEdit(id: string): void {
     const index = this.listOfData.findIndex((item) => item['id'] === id);
     this.editCache[id].data = this.csvToJsonService.validateUpdatedRow(
-      this.userGroup,
+      'users',
       this._listOfColumns,
-      this.editCache[index].data,
-      null // TODO: Use real data: send the catalogs
+      this.editCache[index].data
     );
     Object.assign(this.listOfData[index], this.editCache[id].data);
     this.editCache[id].edit = false;
@@ -239,79 +188,12 @@ export class UploadUsersComponent implements OnInit {
         }
       );
     } else {
-      switch (this.userGroup) {
-        case 'administratives':
-          this.createAdministrativeUsers();
-          break;
-        case 'coordinators':
-          this.createCoordinators();
-          break;
-        case 'teachers':
-          this.createTeachers();
-          break;
-        case 'counselors':
-          this.createCounselors();
-          break;
-      }
+      this.createAdministrativeUsers();
     }
   }
 
   createAdministrativeUsers(): void {
-    this.userService.createAdministratives(this.listOfData).subscribe(
-      () => {
-        this.message.success('Usuarios creados con éxito');
-        this.clearScreen();
-        this.loading = false;
-      },
-      (error) => {
-        this.loading = false;
-        this.message.warning(
-          'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
-          { nzDuration: 4500 }
-        );
-        this.clearListofData(error.message);
-      }
-    );
-  }
-
-  createCoordinators(): void {
-    this.userService.createCoordinators(this.listOfData, this.shift, !this.nextYear).subscribe(
-      () => {
-        this.message.success('Usuarios creados con éxito');
-        this.clearScreen();
-        this.loading = false;
-      },
-      (error) => {
-        this.loading = false;
-        this.message.warning(
-          'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
-          { nzDuration: 4500 }
-        );
-        this.clearListofData(error.message);
-      }
-    );
-  }
-
-  createTeachers(): void {
-    this.userService.createTeachers(this.listOfData, this.shift, !this.nextYear).subscribe(
-      () => {
-        this.message.success('Usuarios creados con éxito');
-        this.clearScreen();
-        this.loading = false;
-      },
-      (error) => {
-        this.loading = false;
-        this.message.warning(
-          'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
-          { nzDuration: 4500 }
-        );
-        this.clearListofData(error.message);
-      }
-    );
-  }
-
-  createCounselors(): void {
-    this.userService.createCounselors(this.listOfData, this.shift, !this.nextYear).subscribe(
+    this.userService.createUsers(this.listOfData).subscribe(
       () => {
         this.message.success('Usuarios creados con éxito');
         this.clearScreen();
@@ -351,15 +233,11 @@ export class UploadUsersComponent implements OnInit {
     // Clear options and messages
     this.csv = null;
     this.fileList = null;
-    this.userGroup = null;
-    this.shift = null;
     this.listOfColumns = {};
     this._listOfColumns = null;
     this.listOfData = [];
     this.editCache = {};
 
     this.uploadMsg = '';
-    this.groupMsg = '';
-    this.shiftMsg = '';
   }
 }

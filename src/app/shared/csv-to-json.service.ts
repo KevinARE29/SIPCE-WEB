@@ -293,10 +293,10 @@ export class CsvToJsonService {
     return;
   }
 
-  validateUpdatedRow(group, headers, row, data): any {
+  validateUpdatedRow(group, headers, row): any {
     const availableHeaders = CsvHeaders.headers[group];
     headers.forEach((h) => {
-      this.validateField(availableHeaders[h], row[h], null); // TODO: Use the real data
+      this.validateField(availableHeaders[h], row[h], null);
     });
 
     return row;

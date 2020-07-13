@@ -7,23 +7,7 @@
             </nz-upload>
             <span class="error">{{uploadMsg}}</span>
         </div>
-    
-        <div nz-col nzSm="24" nzMd="14" nzLg="10" nzXl="8" class="gutter-row">
-            <span>Grupo de usuarios: </span>
-            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="userGroup"
-                (ngModelChange)="toggleMessage()">
-                <nz-option *ngFor="let option of userGroups" [nzLabel]="option.value" [nzValue]="option.id"></nz-option>
-            </nz-select>
-            <p class="error">{{groupMsg}}</p>
-        </div>
-        <div nz-col nzSm="24" nzMd="10" nzLg="7" nzXl="6" class="gutter-row">
-            <span>Turno: </span>
-            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="shift"
-                (ngModelChange)="toggleMessage()">
-                <nz-option *ngFor="let option of shifts" [nzLabel]="option.value" [nzValue]="option.id"></nz-option>
-            </nz-select>
-            <p class="error">{{shiftMsg}}</p>
-        </div>
+
         <div nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
             <div nz-col>
                 <button nz-button nzType="primary" (click)="uploadCsv()">Iniciar carga de usuarios</button>
@@ -48,15 +32,7 @@
                     <ng-container *ngIf="!editCache[data.id].edit; else editTemplate">
                         <td *ngFor="let header of _listOfColumns" [ngClass]="{ 'fieldError': !data[header]['isValid'] }"
                             nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data[header]['message']">
-                            <ng-container [ngSwitch]="header">
-                                <ng-container *ngSwitchCase="'grades'">
-                                    <ng-container *ngFor="let grade of data.grades.value | keyvalue; last as isLast">
-                                        {{ grade['value']['value'] }}
-                                        <nz-divider nzType="vertical" *ngIf="!isLast"></nz-divider>
-                                    </ng-container>
-                                </ng-container>
-                                <ng-container *ngSwitchDefault>{{ data[header]['value'] }}</ng-container>
-                            </ng-container>
+                            {{ data[header]['value'] }}
                         </td>
                         <td [nzAlign]="'center'">
                             <a (click)="startEdit(data.id)">
@@ -76,16 +52,7 @@
                     <!-- Editable row -->
                     <ng-template #editTemplate>
                         <td *ngFor="let header of _listOfColumns" nz-tooltip  nzTooltipPlacement="topLeft" [nzTooltipTitle]="data[header]['message']">
-                            <ng-container [ngSwitch]="header">
-                                <ng-container *ngSwitchCase="'grades'">
-                                    <ng-container *ngFor="let grade of editCache[data.id].data[header]['value'] | keyvalue">
-                                        <input type="text" nz-input [(ngModel)]="grade['value']['value']"><br>
-                                    </ng-container>
-                                </ng-container>
-                                <ng-container *ngSwitchDefault>
-                                    <input type="text" nz-input [(ngModel)]="editCache[data.id].data[header]['value']">
-                                </ng-container>
-                            </ng-container>
+                            <input type="text" nz-input [(ngModel)]="editCache[data.id].data[header]['value']">
                         </td>
                         <td [nzAlign]="'center'">
                             <a (click)="saveEdit(data.id)" class="save"> Guardar </a>
@@ -96,10 +63,6 @@
                 </tr>
             </tbody>
         </nz-table>
-    
-        <div nz-row nzJustify="space-around" *ngIf="userGroup!=='administratives'">
-            <label nz-checkbox [(ngModel)]="nextYear">Crear usuarios para el año siguiente</label>
-        </div>
     
         <div nz-row nzJustify="space-around">
             <button nz-button nzType="primary" (click)="createUsers()">Crear usuarios</button>
