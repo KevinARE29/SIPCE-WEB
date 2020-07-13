@@ -80,7 +80,7 @@
                         <th nzColumnKey="email" [nzSortFn]="true" [nzSortPriority]="3">Correo electrónico</th>
                         <th nzColumnKey="role">Roles</th>
                         <th nzColumnKey="createdAt" [nzSortFn]="true" [nzSortPriority]="4">Fecha de creación</th>
-                        <th [nzAlign]="'center'">Acción</th>
+                        <th [nzAlign]="'center'" *ngIf="checkPermission(14)">Acción</th>
                     </tr>
                 </thead>
                 
@@ -103,7 +103,7 @@
                             </ng-container>
                         </td>
                         <td>{{ data.user.createdAt | date:"dd/MM/yyyy hh:mm aa" }}</td>
-                        <td [nzAlign]="'center'">
+                        <td [nzAlign]="'center'" *ngIf="checkPermission(14)">
                             <a (click)="showConfirm(data.user.id)">
                                 <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
                             </a>

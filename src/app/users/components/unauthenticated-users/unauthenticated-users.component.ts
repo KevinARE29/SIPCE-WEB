@@ -80,6 +80,7 @@ export class UnauthenticatedUsersComponent implements OnInit {
     const permissions = content.permissions;
 
     this.permissions.push(new Permission(12, 'Generate credentials'));
+    this.permissions.push(new Permission(14, 'Delete user'));
 
     this.permissions.forEach((p) => {
       const index = permissions.indexOf(p.id);

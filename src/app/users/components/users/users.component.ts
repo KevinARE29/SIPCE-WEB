@@ -7,6 +7,8 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzModalService, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { AuthService } from 'src/app/login/shared/auth.service';
+import { Permission } from 'src/app/shared/permission.model';
 
 @Component({
   selector: 'app-users',
@@ -14,6 +16,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
+  permissions: Array<Permission> = [];
   searchParams: User;
   roleSearch: number;
   roles: Role[];
@@ -24,6 +27,7 @@ export class UsersComponent implements OnInit {
 
   constructor(
     private userService: UserService,
+    private authService: AuthService,
     private message: NzMessageService,
     private modal: NzModalService,
     private notification: NzNotificationService
@@ -31,6 +35,7 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.init();
+    this.setPermissions();
   }
 
   init(): void {
@@ -42,6 +47,27 @@ export class UsersComponent implements OnInit {
     this.pagination = new Pagination();
     this.pagination.perPage = 10;
     this.pagination.page = 1;
+  }
+
+  /* ------      Control page permissions      ------ */
+  setPermissions(): void {
+    const token = this.authService.getToken();
+    const content = this.authService.jwtDecoder(token);
+
+    const permissions = content.permissions;
+
+    this.permissions.push(new Permission(14, 'Delete user'));
+
+    this.permissions.forEach((p) => {
+      const index = permissions.indexOf(p.id);
+
+      p.allow = index == -1 ? false : true;
+    });
+  }
+
+  checkPermission(id: number): boolean {
+    const index = this.permissions.find((p) => p.id === id);
+    return index.allow;
   }
 
   getUsers(params: NzTableQueryParams): void {

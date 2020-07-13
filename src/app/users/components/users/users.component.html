@@ -104,10 +104,12 @@
                             <a>
                                 <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
                             </a>
-                            <nz-divider nzType="vertical"></nz-divider>
-                            <a (click)="showConfirm(data.id)">
-                                <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
-                            </a>
+                            <ng-container *ngIf="checkPermission(14)">
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <a (click)="showConfirm(data.id)">
+                                    <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
+                                </a>
+                            </ng-container>
                         </td>
                     </tr>
                 </tbody>
