@@ -1,4 +1,11 @@
-<h1>Usuarios</h1>
+<div class="search" nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
+    <div nz-col nzXs="24" nzMd="18" nzXl="21">
+        <h1>Usuarios</h1>
+    </div>
+    <div nz-col nzXs="24" nzMd="6" nzXl="3">
+        <a nz-button nzType="primary" routerLink="/usuarios/0">Crear usuario</a>
+    </div>
+</div>
 
 <div class="search" nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
     <!-- Username -->
@@ -101,7 +108,7 @@
                             </ng-container>
                         </td>
                         <td [nzAlign]="'center'">
-                            <a>
+                            <a routerLink="/usuarios/{{data.id}}">
                                 <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
                             </a>
                             <ng-container *ngIf="checkPermission(14)">

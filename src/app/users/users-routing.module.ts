@@ -6,6 +6,7 @@ import { UploadUsersComponent } from './components/upload-users/upload-users.com
 import { UnauthenticatedUsersComponent } from './components/unauthenticated-users/unauthenticated-users.component';
 
 import { AuthGuard } from './../login/guards/auth.guard';
+import { UserComponent } from './components/user/user.component';
 
 const routes: Routes = [
   {
@@ -27,9 +28,10 @@ const routes: Routes = [
     data: { permission: 3 }
   },
   {
-    path: '**',
-    redirectTo: '/error404',
-    pathMatch: 'full'
+    path: ':user',
+    component: UserComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 16 }
   }
 ];
 

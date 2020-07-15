@@ -43,6 +43,10 @@ export class RoleService {
     );
   }
 
+  getAllRoles(): Observable<Role[]> {
+    return this.http.get<Role[]>(`${this.baseUrl}auth/roles?paginate=false`).pipe(catchError(this.handleError()));
+  }
+
   searchRoles(params: NzTableQueryParams, search: string, paginate: boolean): Observable<Role[]> {
     let url = this.baseUrl + 'auth/roles';
     let queryParams = '';

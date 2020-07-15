@@ -1,0 +1,127 @@
+<h1>Usuario</h1>
+
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+    <ng-template #view>
+        <button nz-button nzType="primary" [nzLoading]="btnLoading" *ngIf="id > 0" (click)="edit = true; this.allowEdition()">Editar</button>
+    </ng-template>
+
+    <form nz-form [formGroup]="userForm" (ngSubmit)="submitForm()" *ngIf="id === 0 || edit; else view">
+        <div nz-row [nzGutter]="24">
+            <!-- Code -->
+            <div nz-col nzXs="24" nzLg="11" *ngIf="id === 0">
+                <nz-form-item nzJustify="space-around">
+                    <nz-form-label>Código</nz-form-label>
+                    <nz-form-control [nzErrorTip]="codeErrors">
+                        <input nz-input formControlName="code" placeholder="Código"/>
+                        <ng-template #codeErrors let-control>
+                            <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 32 caracteres</ng-container>
+                            <ng-container *ngIf="control.hasError('required')">El código es requerido</ng-container>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <!-- Username -->
+            <div nz-col nzXs="24" nzLg="11">
+                <nz-form-item nzJustify="space-around">
+                    <nz-form-label>Nombre de usuario</nz-form-label>
+                    <nz-form-control [nzErrorTip]="usernameErrors">
+                        <input nz-input formControlName="username" placeholder="Nombre de usuario"/>
+                        <ng-template #usernameErrors let-control>
+                            <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 64 caracteres</ng-container>
+                            <ng-container *ngIf="control.hasError('required')">El nombre de usuario es requerido</ng-container>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <!-- Firstname -->
+            <div nz-col nzXs="24" nzLg="11">
+                <nz-form-item nzJustify="space-around">
+                    <nz-form-label>Nombre</nz-form-label>
+                    <nz-form-control [nzErrorTip]="firstnameErrors">
+                        <input nz-input formControlName="firstname" placeholder="Nombre"/>
+                        <ng-template #firstnameErrors let-control>
+                            <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres</ng-container>
+                            <ng-container *ngIf="control.hasError('required')">El nombre es requerido</ng-container>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <!-- Lastname -->
+            <div nz-col nzXs="24" nzLg="11">
+                <nz-form-item nzJustify="space-around">
+                    <nz-form-label>Apellido</nz-form-label>
+                    <nz-form-control [nzErrorTip]="lastnameErrors">
+                        <input nz-input formControlName="lastname" placeholder="Apellido"/>
+                        <ng-template #lastnameErrors let-control>
+                            <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres</ng-container>
+                            <ng-container *ngIf="control.hasError('required')">El apellido es requerido</ng-container>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <!-- Email -->
+            <div nz-col nzXs="24" nzLg="11">
+                <nz-form-item nzJustify="space-around">
+                    <nz-form-label>Correo electrónico</nz-form-label>
+                    <nz-form-control [nzErrorTip]="emailErrors">
+                        <input nz-input formControlName="email" placeholder="Correo electrónico" type="email" />
+                        <ng-template #emailErrors let-control>
+                            <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres</ng-container>
+                            <ng-container *ngIf="control.hasError('required')">El correo electrónico es requerido</ng-container>
+                            <ng-container *ngIf="control.hasError('email')">Ingrese un correo electrónico valido</ng-container>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+
+        <!-- Roles -->
+        <nz-form-item nzJustify="space-around">
+            <div nz-row id="roles" nzJustify="space-around">
+                <nz-transfer
+                    [nzDataSource]="rolesList"
+                    [nzTitles]="['Roles disponibles', 'Roles asignados']"
+                    nzShowSearch
+                    [nzListStyle]="{ 'width.px': 300, 'height.px': 300 }"
+                    [nzRender]="render"
+                    [nzFilterOption]="filterOption"
+                >
+                    <ng-template #render let-item> {{ item.title }} </ng-template>
+                </nz-transfer>
+            </div>
+        </nz-form-item>
+
+        <!-- Permissions -->
+        <nz-form-item nzJustify="space-around">
+            <div nz-row id="permissions" nzJustify="space-around">
+                <nz-transfer
+                    [nzDataSource]="permissionsList"
+                    [nzTitles]="['Permisos disponibles', 'Permisos asignados']"
+                    nzShowSearch
+                    [nzListStyle]="{ 'width.px': 300, 'height.px': 300 }"
+                    [nzRender]="render"
+                    [nzFilterOption]="filterOption"
+                >
+                    <ng-template #render let-item> {{ item.title }} </ng-template>
+                </nz-transfer>
+            </div>
+        </nz-form-item>
+
+        <!-- Actions -->
+        <nz-form-item nzJustify="space-around" id="btn-permission">
+            <nz-form-control [nzSpan]="2">
+                <div id="new-user">
+                    <button nz-button nzType="primary" [nzLoading]="btnLoading" *ngIf="id===0">Crear usuario</button>
+                </div>
+                
+                <div id="update-user">
+                    <button nz-button nzType="primary" [nzLoading]="btnLoading" *ngIf="id > 0">Actualizar usuario</button>
+                </div>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-spin>
