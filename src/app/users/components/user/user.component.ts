@@ -218,10 +218,11 @@ export class UserComponent implements OnInit {
     this.userService.updateUser(this.user).subscribe(
       (data) => {
         this.user.id = data['data'].id;
+        this.user.roles = data['data'].roles;
+        this.user.permissions = data['data'].permissions;
         this.message.success('Usuario ' + data['data'].username + ' actualizado con éxito');
         this.btnLoading = false;
-
-        this.router.navigateByUrl('/usuarios/' + this.user.id);
+        this.edit = false;
       },
       (err) => {
         const statusCode = err.statusCode;

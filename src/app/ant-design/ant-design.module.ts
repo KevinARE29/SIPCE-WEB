@@ -35,6 +35,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzTagModule } from 'ng-zorro-antd/tag';
 
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { es_ES } from 'ng-zorro-antd/i18n';
@@ -73,7 +74,8 @@ const ngZorro = [
   NzDatePickerModule,
   NzUploadModule,
   NzPopconfirmModule,
-  NzSwitchModule
+  NzSwitchModule,
+  NzTagModule
 ];
 
 @NgModule({

@@ -197,6 +197,7 @@ export class UserService {
   updateUser(user: User): Observable<User> {
     const data = JSON.stringify({
       code: user.code,
+      active: user.active,
       firstname: user.firstname,
       lastname: user.lastname,
       email: user.email,
