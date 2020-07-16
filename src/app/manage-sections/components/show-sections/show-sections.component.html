@@ -45,7 +45,7 @@
 <div nz-row>
     <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 20, offset: 2 }" [nzXl]="{ span: 16, offset: 4 }">
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-<nz-table #editRowTable [nzData]="listOfData" nzTableLayout="fixed" [nzSize]="tableSize">
+<nz-table #editRowTable [nzData]="listOfData" nzTableLayout="fixed" [nzSize]="tableSize" (nzQueryParams)="recharge($event)">
     <thead>
         <tr>
             <th nzColumnKey="name" [nzSortFn]="true">Sección</th>

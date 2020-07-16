@@ -5,6 +5,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { SectionsService } from './../../shared/sections.service';
 import { Section } from './../../shared/section.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 interface ItemData {
   id: number;
@@ -41,7 +42,6 @@ export class ShowSectionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSections();
-    // create section form builder
     this.createSection = this.fb.group({
       name: ['', [Validators.required, Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ.-]+')]]
     });
@@ -89,17 +89,29 @@ export class ShowSectionsComponent implements OnInit {
     this.resetForm();
   }
 
-  /* Get sections method   this.roles = data['data']; */
+  /* Get sections method */
   getSections(): void {
     this.loading = true;
-    this.sectionService.getSections().subscribe((data) => {
-      this.sections = data['data'];
-      console.log(this.sections);
-      this.listOfData = [...this.sections];
-      console.log(this.listOfData);
-      this.loading = false;
-      this.UpdateEditCache();
-    });
+    this.sectionService.getSections().subscribe(
+      (data) => {
+        this.sections = data['data'];
+        console.log(this.sections);
+        this.listOfData = [...this.sections];
+        console.log(this.listOfData);
+        this.loading = false;
+        this.UpdateEditCache();
+      },
+      (err) => {
+        this.loading = false;
+        const statusCode = err.statusCode;
+        const notIn = [401, 403];
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create('error', 'Ocurrió un error al obtener las secciones.', err.message, {
+            nzDuration: 0
+          });
+        }
+      }
+    );
   }
 
   UpdateEditCache(): void {
@@ -180,5 +192,31 @@ export class ShowSectionsComponent implements OnInit {
             }
           })
     });
+  }
+
+  /* ---     filter method      --- */
+  recharge(params: NzTableQueryParams): void {
+    this.loading = true;
+    this.sectionService.searchSection(params).subscribe(
+      (data) => {
+        this.sections = data['data'];
+        console.log(this.sections);
+        this.listOfData = [...this.sections];
+        console.log(this.listOfData);
+        this.loading = false;
+        this.UpdateEditCache();
+      },
+      (err) => {
+        this.loading = false;
+        const statusCode = err.statusCode;
+        const notIn = [401, 403];
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create('error', 'Ocurrió un error al obtener las secciones.', err.message, {
+            nzDuration: 0
+          });
+        }
+      }
+    );
   }
 }

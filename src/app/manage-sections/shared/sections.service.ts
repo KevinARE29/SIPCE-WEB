@@ -33,7 +33,7 @@ export class SectionsService {
     return this.http.post<any>(`${this.baseUrl}academics/sections`, name).pipe(catchError(this.handleError()));
   }
 
-  searchRoles(params: NzTableQueryParams): Observable<any[]> {
+  searchSection(params: NzTableQueryParams): Observable<any[]> {
     let url = this.baseUrl + 'auth/roles';
     let queryParams = '';
     if (params) {
