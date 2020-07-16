@@ -10,6 +10,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { Permission } from 'src/app/shared/permission.model';
 import { AuthService } from 'src/app/login/shared/auth.service';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { RoleService } from 'src/app/roles/shared/role.service';
 
 export interface Data {
   user: User;
@@ -46,6 +47,7 @@ export class UnauthenticatedUsersComponent implements OnInit {
   constructor(
     private userService: UserService,
     private authService: AuthService,
+    private roleService: RoleService,
     private message: NzMessageService,
     private modal: NzModalService,
     private notification: NzNotificationService
@@ -54,6 +56,7 @@ export class UnauthenticatedUsersComponent implements OnInit {
   ngOnInit(): void {
     this.init();
     this.setPermissions();
+    this.getRoles();
   }
 
   init(): void {
@@ -95,6 +98,12 @@ export class UnauthenticatedUsersComponent implements OnInit {
   }
 
   /***************      Get data       ***************/
+  getRoles(): void {
+    this.roleService.getAllRoles().subscribe((data) => {
+      this.roles = data['data'];
+    });
+  }
+
   getUsers(params: NzTableQueryParams): void {
     this.loading = true;
     this.searchParams.roles['0'].id = this.roleSearch;
@@ -105,19 +114,6 @@ export class UnauthenticatedUsersComponent implements OnInit {
         (data) => {
           this.pagination = data['pagination'];
           this.listOfData = data['data'];
-
-          // Create array of roles
-          this.roles = new Array<Role>();
-          this.listOfData.forEach((data) => {
-            data.user.roles.forEach((rol) => {
-              this.roles.push(rol);
-            });
-          });
-
-          // Delete duplicates
-          this.roles = this.roles.filter(
-            (role, index, self) => index === self.findIndex((t) => t.id === role.id && t.name === role.name)
-          );
 
           this.loading = false;
         },
@@ -143,19 +139,6 @@ export class UnauthenticatedUsersComponent implements OnInit {
       (data) => {
         this.pagination = data['pagination'];
         this.listOfData = data['data'];
-
-        // Create array of roles
-        this.roles = new Array<Role>();
-        this.listOfData.forEach((data) => {
-          data.user.roles.forEach((rol) => {
-            this.roles.push(rol);
-          });
-        });
-
-        // Delete duplicates
-        this.roles = this.roles.filter(
-          (role, index, self) => index === self.findIndex((t) => t.id === role.id && t.name === role.name)
-        );
 
         this.loading = false;
       },

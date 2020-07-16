@@ -9,6 +9,7 @@ import { NzModalService, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { AuthService } from 'src/app/login/shared/auth.service';
 import { Permission } from 'src/app/shared/permission.model';
+import { RoleService } from 'src/app/roles/shared/role.service';
 
 @Component({
   selector: 'app-users',
@@ -28,6 +29,7 @@ export class UsersComponent implements OnInit {
   constructor(
     private userService: UserService,
     private authService: AuthService,
+    private roleService: RoleService,
     private message: NzMessageService,
     private modal: NzModalService,
     private notification: NzNotificationService
@@ -47,6 +49,7 @@ export class UsersComponent implements OnInit {
     this.pagination = new Pagination();
     this.pagination.perPage = 10;
     this.pagination.page = 1;
+    this.getRoles();
   }
 
   /* ------      Control page permissions      ------ */
@@ -70,6 +73,12 @@ export class UsersComponent implements OnInit {
     return index.allow;
   }
 
+  getRoles(): void {
+    this.roleService.getAllRoles().subscribe((data) => {
+      this.roles = data['data'];
+    });
+  }
+
   getUsers(params: NzTableQueryParams): void {
     this.loading = true;
     this.searchParams.roles['0'].id = this.roleSearch;
@@ -78,19 +87,6 @@ export class UsersComponent implements OnInit {
       (data) => {
         this.pagination = data['pagination'];
         this.listOfDisplayData = data['data'];
-
-        // Create array of roles
-        this.roles = new Array<Role>();
-        this.listOfDisplayData.forEach((data) => {
-          data.roles.forEach((rol) => {
-            this.roles.push(rol);
-          });
-        });
-
-        // Delete duplicates
-        this.roles = this.roles.filter(
-          (role, index, self) => index === self.findIndex((t) => t.id === role.id && t.name === role.name)
-        );
 
         this.loading = false;
       },
@@ -116,19 +112,6 @@ export class UsersComponent implements OnInit {
       (data) => {
         this.pagination = data['pagination'];
         this.listOfDisplayData = data['data'];
-
-        // Create array of roles
-        this.roles = new Array<Role>();
-        this.listOfDisplayData.forEach((data) => {
-          data.roles.forEach((rol) => {
-            this.roles.push(rol);
-          });
-        });
-
-        // Delete duplicates
-        this.roles = this.roles.filter(
-          (role, index, self) => index === self.findIndex((t) => t.id === role.id && t.name === role.name)
-        );
 
         this.loading = false;
       },
