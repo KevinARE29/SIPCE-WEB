@@ -8,6 +8,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import DictionaryJson from './../../../../assets/dictionary.json';
 import { CsvToJsonService } from './../../../shared/csv-to-json.service';
 import { UserService } from '../../shared/user.service';
+import { Role } from 'src/app/roles/shared/role.model';
+import { RoleService } from 'src/app/roles/shared/role.service';
 
 interface ItemData {
   id: string;
@@ -24,18 +26,10 @@ interface ItemData {
 export class UploadUsersComponent implements OnInit {
   csv: Blob;
   fileList: UploadFile[];
-  userGroup: string;
-  userGroups: unknown;
-  shift: number;
-  nextYear = false;
   loading = false;
-  // TODO: Get data from service
-  shifts: unknown;
-
+  appRoles: Role[];
   // Pre upload users errors
   uploadMsg: string;
-  groupMsg: string;
-  shiftMsg: string;
 
   // Table structure
   listOfColumns = {};
@@ -46,33 +40,14 @@ export class UploadUsersComponent implements OnInit {
   constructor(
     private csvToJsonService: CsvToJsonService,
     private userService: UserService,
+    private roleService: RoleService,
     private message: NzMessageService,
     private notification: NzNotificationService
   ) {}
 
   ngOnInit(): void {
-    this.init();
-  }
-
-  init(): void {
     this.uploadMsg = '';
-    this.groupMsg = '';
-    this.shiftMsg = '';
-
-    this.userGroups = [
-      { id: 'administratives', value: 'Administrativos' },
-      { id: 'coordinators', value: 'Coordinadores de ciclo' },
-      { id: 'teachers', value: 'Docentes' },
-      { id: 'counselors', value: 'Orientadores' }
-    ];
-    // TODO: Get data from service
-    this.shifts = [
-      { id: 1, value: 'Mañana' },
-      { id: 2, value: 'Tarde' },
-      { id: 3, value: 'Nocturno' },
-      { id: 4, value: 'Mixto' },
-      { id: 5, value: 'Tiempo completo' }
-    ];
+    this.getRoles();
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -99,7 +74,7 @@ export class UploadUsersComponent implements OnInit {
     });
   };
 
-  handleChange = (file: UploadFile): boolean => {
+  handleChange = (): boolean => {
     this.csv = null;
     this.fileList = null;
     return true;
@@ -107,32 +82,21 @@ export class UploadUsersComponent implements OnInit {
 
   uploadCsv(): void {
     this.uploadMsg = '';
-    this.groupMsg = '';
-    this.shiftMsg = '';
 
     if (this.csv === undefined || this.csv === null) this.uploadMsg = 'El archivo es requerido';
-    if (this.userGroup === undefined) this.groupMsg = 'El grupo de usuario es requerido';
-    if (this.shift === undefined && this.userGroup !== 'administratives') this.shiftMsg = 'El turno es requerido';
 
-    if (this.csv && this.userGroup) {
-      let allowed = true;
-      if (this.userGroup !== 'administratives') {
-        if (this.shift === null || this.shift === undefined) allowed = false;
-      }
-
-      if (allowed) {
-        this.csvToJsonService.csvJSON(this.csv, this.userGroup).subscribe(
-          (r) => {
-            this._listOfColumns = JSON.parse(JSON.stringify(r['headers']));
-            this.generateTable(r);
-          },
-          (error) => {
-            this.notification.create('error', 'Ocurrió un error al intentar cargar el archivo.', error, {
-              nzDuration: 0
-            });
-          }
-        );
-      }
+    if (this.csv) {
+      this.csvToJsonService.csvJSON(this.csv, 'users').subscribe(
+        (r) => {
+          this._listOfColumns = JSON.parse(JSON.stringify(r['headers']));
+          this.generateTable(r);
+        },
+        (error) => {
+          this.notification.create('error', 'Ocurrió un error al intentar cargar el archivo.', error, {
+            nzDuration: 0
+          });
+        }
+      );
     }
   }
 
@@ -148,16 +112,6 @@ export class UploadUsersComponent implements OnInit {
     ];
   };
 
-  toggleMessage(): void {
-    this.userGroup !== null ? (this.groupMsg = '') : (this.groupMsg = 'El grupo de usuario es requerido');
-    if (this.userGroup === 'administratives' && this.shiftMsg.length > 0) this.shiftMsg = '';
-    else if (this.userGroup !== 'administratives') {
-      this.shift === null || this.shift === undefined
-        ? (this.shiftMsg = 'El turno es requerido')
-        : (this.shiftMsg = '');
-    }
-  }
-
   generateTable(r): void {
     const dictionary = DictionaryJson.dictionary['users'];
 
@@ -170,7 +124,41 @@ export class UploadUsersComponent implements OnInit {
     this.listOfColumns = r.headers;
     this.listOfData = r.data;
 
+    this.validateRole();
     this.updateEditCache();
+  }
+
+  getRoles(): void {
+    this.roleService.getAllRoles().subscribe((data) => {
+      this.appRoles = data['data'];
+    });
+  }
+
+  validateRole(): void {
+    this.listOfData.forEach((data) => {
+      Object.keys(data['role']['value']).forEach((role) => {
+        const item: any[] = data['role']['value'][role];
+
+        if (item['value']) {
+          const itemName = item['value'] + '';
+          const found = this.appRoles.find((element) => element.name.toLowerCase() === itemName.toLowerCase());
+
+          if (found) {
+            item['role'] = found;
+            item['isValid'] = true;
+            item['message'] = null;
+          } else {
+            item['role'] = null;
+            item['isValid'] = false;
+            item['message'] = `El rol ${itemName} no existe en el sistema.`;
+          }
+        } else {
+          item['role'] = null;
+          item['isValid'] = true;
+          item['message'] = null;
+        }
+      });
+    });
   }
 
   startEdit(id: string): void {
@@ -189,12 +177,12 @@ export class UploadUsersComponent implements OnInit {
   saveEdit(id: string): void {
     const index = this.listOfData.findIndex((item) => item['id'] === id);
     this.editCache[id].data = this.csvToJsonService.validateUpdatedRow(
-      this.userGroup,
+      'users',
       this._listOfColumns,
-      this.editCache[index].data,
-      null // TODO: Use real data: send the catalogs
+      this.editCache[index].data
     );
     Object.assign(this.listOfData[index], this.editCache[id].data);
+    this.validateRole();
     this.editCache[id].edit = false;
   }
 
@@ -214,11 +202,10 @@ export class UploadUsersComponent implements OnInit {
   createUsers(): void {
     this.loading = true;
     let errors = false;
-
-    // // Check errors
+    // Check errors
     this.listOfData.forEach((data) => {
       this._listOfColumns.forEach((column) => {
-        if (column === 'grades') {
+        if (column === 'role') {
           Object.keys(data[column]['value']).forEach((grade) => {
             if (!data[column]['value'][grade]['isValid']) errors = true;
           });
@@ -227,7 +214,6 @@ export class UploadUsersComponent implements OnInit {
         }
       });
     });
-
     if (errors) {
       this.loading = false;
       this.notification.create(
@@ -239,25 +225,13 @@ export class UploadUsersComponent implements OnInit {
         }
       );
     } else {
-      switch (this.userGroup) {
-        case 'administratives':
-          this.createAdministrativeUsers();
-          break;
-        case 'coordinators':
-          this.createCoordinators();
-          break;
-        case 'teachers':
-          this.createTeachers();
-          break;
-        case 'counselors':
-          this.createCounselors();
-          break;
-      }
+      this.bulkUsers();
     }
   }
 
-  createAdministrativeUsers(): void {
-    this.userService.createAdministratives(this.listOfData).subscribe(
+  bulkUsers(): void {
+    this.userService.bulkUsers(this.listOfData);
+    this.userService.bulkUsers(this.listOfData).subscribe(
       () => {
         this.message.success('Usuarios creados con éxito');
         this.clearScreen();
@@ -265,60 +239,7 @@ export class UploadUsersComponent implements OnInit {
       },
       (error) => {
         this.loading = false;
-        this.message.warning(
-          'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
-          { nzDuration: 4500 }
-        );
-        this.clearListofData(error.message);
-      }
-    );
-  }
 
-  createCoordinators(): void {
-    this.userService.createCoordinators(this.listOfData, this.shift, !this.nextYear).subscribe(
-      () => {
-        this.message.success('Usuarios creados con éxito');
-        this.clearScreen();
-        this.loading = false;
-      },
-      (error) => {
-        this.loading = false;
-        this.message.warning(
-          'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
-          { nzDuration: 4500 }
-        );
-        this.clearListofData(error.message);
-      }
-    );
-  }
-
-  createTeachers(): void {
-    this.userService.createTeachers(this.listOfData, this.shift, !this.nextYear).subscribe(
-      () => {
-        this.message.success('Usuarios creados con éxito');
-        this.clearScreen();
-        this.loading = false;
-      },
-      (error) => {
-        this.loading = false;
-        this.message.warning(
-          'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
-          { nzDuration: 4500 }
-        );
-        this.clearListofData(error.message);
-      }
-    );
-  }
-
-  createCounselors(): void {
-    this.userService.createCounselors(this.listOfData, this.shift, !this.nextYear).subscribe(
-      () => {
-        this.message.success('Usuarios creados con éxito');
-        this.clearScreen();
-        this.loading = false;
-      },
-      (error) => {
-        this.loading = false;
         this.message.warning(
           'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
           { nzDuration: 4500 }
@@ -351,15 +272,11 @@ export class UploadUsersComponent implements OnInit {
     // Clear options and messages
     this.csv = null;
     this.fileList = null;
-    this.userGroup = null;
-    this.shift = null;
     this.listOfColumns = {};
     this._listOfColumns = null;
     this.listOfData = [];
     this.editCache = {};
 
     this.uploadMsg = '';
-    this.groupMsg = '';
-    this.shiftMsg = '';
   }
 }

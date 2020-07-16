@@ -5,11 +5,13 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from 'src/environments/environment';
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable, throwError, forkJoin } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { User } from './user.model';
 import { subMonths } from 'date-fns';
+import { RoleService } from 'src/app/roles/shared/role.service';
+import { PermissionService } from 'src/app/roles/shared/permission.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +19,17 @@ import { subMonths } from 'date-fns';
 export class UserService {
   baseUrl: string;
 
-  constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
+  constructor(
+    private http: HttpClient,
+    private roleService: RoleService,
+    private permissionService: PermissionService,
+    private errorMessageService: ErrorMessageService
+  ) {
     this.baseUrl = environment.apiURL;
+  }
+
+  getUser(id: number): Observable<User> {
+    return this.http.get<User>(`${this.baseUrl}users/${id}`).pipe(catchError(this.handleError()));
   }
 
   getUsers(params: NzTableQueryParams, search: User, paginate: boolean): Observable<User[]> {
@@ -73,7 +84,7 @@ export class UserService {
     return this.http.get<User[]>(url).pipe(catchError(this.handleError()));
   }
 
-  getUnauthorizedUsers(params: NzTableQueryParams, search: User, paginate: boolean): Observable<User[]> {
+  getUnauthorizedUsers(params: NzTableQueryParams, search: User, paginate: boolean): Observable<any> {
     let url = this.baseUrl + 'users';
     let queryParams = '';
 
@@ -102,7 +113,9 @@ export class UserService {
 
         queryParams += sort;
       }
-    }
+
+      queryParams += '&perPage=' + params.pageSize;
+    } else queryParams += '&perPage=' + '10';
 
     if (search) {
       if (search.firstname) queryParams += '&firstname=' + search.firstname;
@@ -127,108 +140,98 @@ export class UserService {
     }
 
     queryParams += '&credentials=false';
+
     if (queryParams.charAt(0) === '&') queryParams = queryParams.replace('&', '?');
 
     url += queryParams;
 
-    return this.http.get<User[]>(url).pipe(catchError(this.handleError()));
+    return this.http.get<User[]>(url).pipe(
+      map((response) => {
+        const usersResponse = new Array<any>();
+
+        for (let i = 0; i < response['data'].length; i++) {
+          usersResponse[i] = { user: response['data'][i], disabled: false };
+        }
+
+        return { data: usersResponse, pagination: response['pagination'] };
+      }),
+      catchError(this.handleError())
+    );
   }
 
-  createAdministratives(administratives: any): Observable<any> {
-    const users = new Array<any>();
+  bulkUsers(users: any): Observable<any> {
+    const newUsers = new Array<any>();
 
-    administratives.forEach((element) => {
-      users.push({
+    users.forEach((element) => {
+      const ids = new Array<number>();
+      Object.keys(element['role']['value']).forEach((role) => {
+        if (element['role']['value'][role]['role']){
+          const id = element['role']['value'][role]['role']['id'];
+          if (id) ids.push(element['role']['value'][role]['role']['id']);
+        }
+      });
+
+      newUsers.push({
         code: element.code.value,
         firstname: element.firstname.value,
         lastname: element.lastname.value,
         email: element.email.value,
-        role: element.role.value,
+        roleIds: ids,
         username: element.username.value
       });
     });
 
     const data = JSON.stringify({
-      administratives: users
+      users: newUsers
     });
 
-    return this.http.post<any>(`${this.baseUrl}users/administratives`, data).pipe(catchError(this.handleError()));
+    return this.http.post<any>(`${this.baseUrl}users/bulk`, data).pipe(catchError(this.handleError()));
   }
 
-  createCounselors(counselors: any, shiftId: number, currentYear: boolean): Observable<any> {
-    const users = new Array<any>();
-
-    counselors.forEach((element) => {
-      const grades = new Array<number>();
-      Object.keys(element.grades.value).forEach((grade) => {
-        grades.push(element['grades']['value'][grade]['grade']['id']);
-      });
-
-      users.push({
-        code: element.code.value,
-        firstname: element.firstname.value,
-        lastname: element.lastname.value,
-        email: element.email.value,
-        username: element.username.value,
-        grades: grades
-      });
-    });
-
+  createUser(user: User): Observable<User> {
     const data = JSON.stringify({
-      shiftId: shiftId,
-      counselors: users,
-      currentYear: currentYear
+      code: user.code,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      username: user.username,
+      roleIds: user.roles,
+      permissionIds: user.permissions
     });
 
-    return this.http.post<any>(`${this.baseUrl}users/counselors`, data).pipe(catchError(this.handleError()));
+    return this.http.post<User>(`${this.baseUrl}users`, data).pipe(catchError(this.handleError()));
   }
 
-  createTeachers(teachers: any, shiftId: number, currentYear: boolean): Observable<any> {
-    const users = new Array<any>();
-
-    teachers.forEach((element) => {
-      users.push({
-        cycleId: element.cycle.cycle.id,
-        gradeId: element.grade.grade.id,
-        sectionId: element.section.section.id,
-        firstname: element.firstname.value,
-        lastname: element.lastname.value,
-        username: element.username.value,
-        email: element.email.value,
-        code: element.code.value
-      });
-    });
-
+  updateUser(user: User): Observable<User> {
     const data = JSON.stringify({
-      shiftId: shiftId,
-      teachers: users,
-      currentYear: currentYear
+      code: user.code,
+      active: user.active,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      username: user.username,
+      roleIds: user.roles,
+      permissionIds: user.permissions
     });
 
-    return this.http.post<any>(`${this.baseUrl}users/teachers`, data).pipe(catchError(this.handleError()));
+    return this.http.put<User>(`${this.baseUrl}users/${user.id}`, data).pipe(catchError(this.handleError()));
   }
 
-  createCoordinators(coordinators: any, shiftId: number, currentYear: boolean): Observable<any> {
-    const users = new Array<any>();
+  generateCredentials(users: number[]): Observable<any> {
+    const data = JSON.stringify({ ids: users });
+    return this.http.post<any>(`${this.baseUrl}users/credentials`, data).pipe(catchError(this.handleError()));
+  }
 
-    coordinators.forEach((element) => {
-      users.push({
-        cycleId: element.cycle.cycle.id,
-        firstname: element.firstname.value,
-        lastname: element.lastname.value,
-        username: element.username.value,
-        email: element.email.value,
-        code: element.code.value
-      });
+  deleteUser(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}users/${id}`).pipe(catchError(this.handleError()));
+  }
+
+  mergeUserData(id: number): Observable<any> {
+    return forkJoin({
+      roles: this.roleService.getAllRoles(),
+      permissions: this.permissionService.getPermissions(),
+      user: this.getUser(id)
     });
-
-    const data = JSON.stringify({
-      shiftId: shiftId,
-      coordinators: users,
-      currentYear: currentYear
-    });
-
-    return this.http.post<any>(`${this.baseUrl}users/coordinators`, data).pipe(catchError(this.handleError()));
   }
 
   /**
