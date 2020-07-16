@@ -5,32 +5,34 @@
 
 <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
     <ng-template #view>
-        <span class="principal"> {{ user.code }} </span> 
-        <span [ngClass]="user.active? 'principal-bg' : 'inactive-bg'"> {{ user.active? 'Activo' : 'Inactivo' }} </span>
-
-        <div class="info">
-            <div>
-                <strong>Nombre de usuario: </strong> <span> {{ user.username }} </span>
+        <ng-container *ngIf="checkPermission(16)">
+            <span class="principal"> {{ user.code }} </span> 
+            <span [ngClass]="user.active? 'principal-bg' : 'inactive-bg'"> {{ user.active? 'Activo' : 'Inactivo' }} </span>
+    
+            <div class="info">
+                <div>
+                    <strong>Nombre de usuario: </strong> <span> {{ user.username }} </span>
+                </div>
+                <div>
+                    <strong>Nombre: </strong> <span> {{ user.firstname }} {{ user.lastname }} </span>
+                </div>
+                <div>
+                    <strong>Correo electrónico: </strong> <span> {{ user.email }} </span>
+                </div>
             </div>
+    
             <div>
-                <strong>Nombre: </strong> <span> {{ user.firstname }} {{ user.lastname }} </span>
+                <h2>Roles</h2>
+                <nz-tag *ngFor="let rol of user.roles" [nzColor]="'geekblue'"> {{ rol.name }} </nz-tag>
             </div>
+    
             <div>
-                <strong>Correo electrónico: </strong> <span> {{ user.email }} </span>
+                <h2>Permisos</h2>
+                <nz-tag *ngFor="let permission of user.permissions" [nzColor]="'purple'"> {{ permission.name }} </nz-tag>
             </div>
-        </div>
-
-        <div>
-            <h2>Roles</h2>
-            <nz-tag *ngFor="let rol of user.roles" [nzColor]="'geekblue'"> {{ rol.name }} </nz-tag>
-        </div>
-
-        <div>
-            <h2>Permisos</h2>
-            <nz-tag *ngFor="let permission of user.permissions" [nzColor]="'purple'"> {{ permission.name }} </nz-tag>
-        </div>
-
-        <button class="edit" nz-button nzType="primary" [nzLoading]="btnLoading" *ngIf="id > 0" (click)="edit = true; this.allowEdition()">Editar</button>
+    
+            <button class="edit" nz-button nzType="primary" [nzLoading]="btnLoading" *ngIf="id > 0" (click)="edit = true; this.allowEdition()">Editar</button>    
+        </ng-container>
     </ng-template>
 
     <form nz-form [formGroup]="userForm" (ngSubmit)="submitForm()" *ngIf="id === 0 || edit; else view">
@@ -143,11 +145,11 @@
         <nz-form-item nzJustify="space-around" id="btn-permission">
             <nz-form-control [nzSpan]="2">
                 <div id="new-user">
-                    <button nz-button nzType="primary" [nzLoading]="btnLoading" *ngIf="id===0">Crear usuario</button>
+                    <button nz-button nzType="primary" [nzLoading]="btnLoading" *ngIf="id===0 && checkPermission(3)">Crear usuario</button>
                 </div>
                 
                 <div id="update-user">
-                    <button nz-button nzType="primary" [nzLoading]="btnLoading" *ngIf="id > 0">Actualizar usuario</button>
+                    <button nz-button nzType="primary" [nzLoading]="btnLoading" *ngIf="id > 0 && checkPermission(15)">Actualizar usuario</button>
                 </div>
             </nz-form-control>
         </nz-form-item>

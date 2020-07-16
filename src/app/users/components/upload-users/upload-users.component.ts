@@ -142,7 +142,7 @@ export class UploadUsersComponent implements OnInit {
         if (item['value']) {
           const itemName = item['value'] + '';
           const found = this.appRoles.find((element) => element.name.toLowerCase() === itemName.toLowerCase());
-          console.log(item);
+
           if (found) {
             item['role'] = found;
             item['isValid'] = true;
