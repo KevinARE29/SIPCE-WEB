@@ -4,11 +4,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AntDesignModule } from '../ant-design/ant-design.module';
 import { HttpClientModule } from '@angular/common/http';
 
-import { ShowSectionsComponent } from '../manage-sections/components/show-sections/show-sections.component';
+import { ShowSectionsComponent } from '../manage-academic-catalogs/components/show-sections/show-sections.component';
 import { SectionsRoutingModule } from './sections-routing.module';
+import { ShowCyclesComponent } from './components/show-cycles/show-cycles.component';
 
 @NgModule({
-  declarations: [ShowSectionsComponent],
+  declarations: [ShowSectionsComponent, ShowCyclesComponent],
   imports: [CommonModule, SectionsRoutingModule, HttpClientModule, FormsModule, ReactiveFormsModule, AntDesignModule]
 })
 export class SectionsModule {}

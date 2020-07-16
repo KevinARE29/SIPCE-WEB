@@ -7,6 +7,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ShowSectionsComponent } from './components/show-sections/show-sections.component';
+import { ShowCyclesComponent } from './components/show-cycles/show-cycles.component';
 import { AuthGuard } from '../login/guards/auth.guard';
 
 const routes: Routes = [
@@ -16,11 +17,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { permission: 13 }
   },
-  // {
-  //   path: 'recuperar',
-  //   component: ResetPasswordComponent,
-  //   canActivate: [AuthGuard]
-  // },
+  {
+    path: 'ciclos',
+    component: ShowCyclesComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 13 }
+  },
   // {
   //   path: 'cambiar',
   //   component: UpdatePasswordComponent,
