@@ -36,6 +36,18 @@
                     "name": "Bitácora de acciones"
                 }
             ]
+        },
+        {
+            "title": "Catálogos Académicos",
+            "icon": "ordered-list",
+            "permission": 13,
+            "allow": null,
+            "children": [
+                {
+                    "route": "/catalogos/secciones",
+                    "name": "Secciones"
+                }
+            ]
         }
     ]  
 }

@@ -15,6 +15,9 @@
           "oldPassword": "Contraseña actual",
           "newPassword": "Nueva contraseña",
           "resetPasswordToken": "Enlace para actualizar contraseña"
+        },
+        "secciones": {
+            "name": "Nombre"
         }
     }
 }
