@@ -137,25 +137,25 @@ export class UploadUsersComponent implements OnInit {
   validateRole(): void {
     this.listOfData.forEach((data) => {
       Object.keys(data['role']['value']).forEach((role) => {
-        const item = data['role']['value'][role];
+        const item: any[] = data['role']['value'][role];
 
         if (item['value']) {
           const itemName = item['value'] + '';
           const found = this.appRoles.find((element) => element.name.toLowerCase() === itemName.toLowerCase());
-
+          console.log(item);
           if (found) {
-            item.role = found;
-            item.isValid = true;
-            item.message = null;
+            item['role'] = found;
+            item['isValid'] = true;
+            item['message'] = null;
           } else {
-            item.role = null;
-            item.isValid = false;
-            item.message = `El rol ${itemName} no existe en el sistema.`;
+            item['role'] = null;
+            item['isValid'] = false;
+            item['message'] = `El rol ${itemName} no existe en el sistema.`;
           }
         } else {
-          item.role = null;
-          item.isValid = true;
-          item.message = null;
+          item['role'] = null;
+          item['isValid'] = true;
+          item['message'] = null;
         }
       });
     });

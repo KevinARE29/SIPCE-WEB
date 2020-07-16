@@ -223,7 +223,7 @@ export class CsvToJsonService {
   validateUpdatedRow(group, headers, row): any {
     const availableHeaders = CsvHeaders.headers[group];
     headers.forEach((h) => {
-      this.validateField(availableHeaders[h], row[h], null);
+      this.validateField(availableHeaders[h], row[h]);
     });
 
     return row;
