@@ -1,6 +1,6 @@
 <div nz-row [nzGutter]="[10, 10]">
     <h1>Usuario</h1> 
-    <nz-switch [(ngModel)]="user.active" nzCheckedChildren="Activo" nzUnCheckedChildren="Inactivo" *ngIf="id > 0 && edit; else details"></nz-switch>
+    <nz-switch [(ngModel)]="user.active" nzCheckedChildren="Activo" nzUnCheckedChildren="Inactivo" *ngIf="id > 0 && edit"></nz-switch>
 </div>
 
 <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">

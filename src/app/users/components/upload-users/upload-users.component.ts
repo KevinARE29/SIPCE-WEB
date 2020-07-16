@@ -8,6 +8,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import DictionaryJson from './../../../../assets/dictionary.json';
 import { CsvToJsonService } from './../../../shared/csv-to-json.service';
 import { UserService } from '../../shared/user.service';
+import { Role } from 'src/app/roles/shared/role.model';
+import { RoleService } from 'src/app/roles/shared/role.service';
 
 interface ItemData {
   id: string;
@@ -25,7 +27,7 @@ export class UploadUsersComponent implements OnInit {
   csv: Blob;
   fileList: UploadFile[];
   loading = false;
-
+  appRoles: Role[];
   // Pre upload users errors
   uploadMsg: string;
 
@@ -38,12 +40,14 @@ export class UploadUsersComponent implements OnInit {
   constructor(
     private csvToJsonService: CsvToJsonService,
     private userService: UserService,
+    private roleService: RoleService,
     private message: NzMessageService,
     private notification: NzNotificationService
   ) {}
 
   ngOnInit(): void {
     this.uploadMsg = '';
+    this.getRoles();
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -120,7 +124,41 @@ export class UploadUsersComponent implements OnInit {
     this.listOfColumns = r.headers;
     this.listOfData = r.data;
 
+    this.validateRole();
     this.updateEditCache();
+  }
+
+  getRoles(): void {
+    this.roleService.getAllRoles().subscribe((data) => {
+      this.appRoles = data['data'];
+    });
+  }
+
+  validateRole(): void {
+    this.listOfData.forEach((data) => {
+      Object.keys(data['role']['value']).forEach((role) => {
+        const item = data['role']['value'][role];
+
+        if (item['value']) {
+          const itemName = item['value'] + '';
+          const found = this.appRoles.find((element) => element.name.toLowerCase() === itemName.toLowerCase());
+
+          if (found) {
+            item.role = found;
+            item.isValid = true;
+            item.message = null;
+          } else {
+            item.role = null;
+            item.isValid = false;
+            item.message = `El rol ${itemName} no existe en el sistema.`;
+          }
+        } else {
+          item.role = null;
+          item.isValid = true;
+          item.message = null;
+        }
+      });
+    });
   }
 
   startEdit(id: string): void {
@@ -144,6 +182,7 @@ export class UploadUsersComponent implements OnInit {
       this.editCache[index].data
     );
     Object.assign(this.listOfData[index], this.editCache[id].data);
+    this.validateRole();
     this.editCache[id].edit = false;
   }
 
@@ -163,11 +202,10 @@ export class UploadUsersComponent implements OnInit {
   createUsers(): void {
     this.loading = true;
     let errors = false;
-
-    // // Check errors
+    // Check errors
     this.listOfData.forEach((data) => {
       this._listOfColumns.forEach((column) => {
-        if (column === 'grades') {
+        if (column === 'role') {
           Object.keys(data[column]['value']).forEach((grade) => {
             if (!data[column]['value'][grade]['isValid']) errors = true;
           });
@@ -176,7 +214,6 @@ export class UploadUsersComponent implements OnInit {
         }
       });
     });
-
     if (errors) {
       this.loading = false;
       this.notification.create(
@@ -188,12 +225,13 @@ export class UploadUsersComponent implements OnInit {
         }
       );
     } else {
-      this.createAdministrativeUsers();
+      this.bulkUsers();
     }
   }
 
-  createAdministrativeUsers(): void {
-    this.userService.createUsers(this.listOfData).subscribe(
+  bulkUsers(): void {
+    this.userService.bulkUsers(this.listOfData);
+    this.userService.bulkUsers(this.listOfData).subscribe(
       () => {
         this.message.success('Usuarios creados con éxito');
         this.clearScreen();
@@ -201,6 +239,7 @@ export class UploadUsersComponent implements OnInit {
       },
       (error) => {
         this.loading = false;
+
         this.message.warning(
           'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
           { nzDuration: 4500 }

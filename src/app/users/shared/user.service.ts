@@ -159,25 +159,33 @@ export class UserService {
     );
   }
 
-  createUsers(administratives: any): Observable<any> {
-    const users = new Array<any>();
+  bulkUsers(users: any): Observable<any> {
+    const newUsers = new Array<any>();
 
-    administratives.forEach((element) => {
-      users.push({
+    users.forEach((element) => {
+      const ids = new Array<number>();
+      Object.keys(element['role']['value']).forEach((role) => {
+        if (element['role']['value'][role]['role']){
+          const id = element['role']['value'][role]['role']['id'];
+          if (id) ids.push(element['role']['value'][role]['role']['id']);
+        }
+      });
+
+      newUsers.push({
         code: element.code.value,
         firstname: element.firstname.value,
         lastname: element.lastname.value,
         email: element.email.value,
-        role: element.role.value,
+        roleIds: ids,
         username: element.username.value
       });
     });
 
     const data = JSON.stringify({
-      administratives: users
+      users: newUsers
     });
 
-    return this.http.post<any>(`${this.baseUrl}users/administratives`, data).pipe(catchError(this.handleError()));
+    return this.http.post<any>(`${this.baseUrl}users/bulk`, data).pipe(catchError(this.handleError()));
   }
 
   createUser(user: User): Observable<User> {

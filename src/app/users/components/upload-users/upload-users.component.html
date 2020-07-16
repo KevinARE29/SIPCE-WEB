@@ -32,7 +32,18 @@
                     <ng-container *ngIf="!editCache[data.id].edit; else editTemplate">
                         <td *ngFor="let header of _listOfColumns" [ngClass]="{ 'fieldError': !data[header]['isValid'] }"
                             nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data[header]['message']">
-                            {{ data[header]['value'] }}
+                            <ng-container [ngSwitch]="header">
+                                <ng-container *ngSwitchCase="'role'">
+                                    <ng-container *ngFor="let role of data.role.value | keyvalue; last as isLast">
+                                        <span  [ngClass]="{ 'error': !role['value']['isValid'] }" 
+                                            nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="role['value']['message']">
+                                            {{ role['value']['value'] }}
+                                        </span>
+                                        <nz-divider nzType="vertical" *ngIf="!isLast"></nz-divider>
+                                    </ng-container>
+                                </ng-container>
+                                <ng-container *ngSwitchDefault>{{ data[header]['value'] }}</ng-container>
+                            </ng-container>
                         </td>
                         <td [nzAlign]="'center'">
                             <a (click)="startEdit(data.id)">
@@ -52,7 +63,16 @@
                     <!-- Editable row -->
                     <ng-template #editTemplate>
                         <td *ngFor="let header of _listOfColumns" nz-tooltip  nzTooltipPlacement="topLeft" [nzTooltipTitle]="data[header]['message']">
-                            <input type="text" nz-input [(ngModel)]="editCache[data.id].data[header]['value']">
+                            <ng-container [ngSwitch]="header">
+                                <ng-container *ngSwitchCase="'role'">
+                                    <ng-container *ngFor="let role of editCache[data.id].data[header]['value'] | keyvalue">
+                                        <input type="text" nz-input [(ngModel)]="role['value']['value']">
+                                    </ng-container>
+                                </ng-container>
+                                <ng-container *ngSwitchDefault>
+                                    <input type="text" nz-input [(ngModel)]="editCache[data.id].data[header]['value']">
+                                </ng-container>
+                            </ng-container>
                         </td>
                         <td [nzAlign]="'center'">
                             <a (click)="saveEdit(data.id)" class="save"> Guardar </a>
