@@ -1,6 +1,6 @@
 /*
-  Path: app/reset-password/password-routing.module.ts
-  Objetive: Contain reset password routes
+  Path: app/manage-academic-catalogs/sections-routing.module.ts
+  Objetive: Contain the manage academics catalogs routes
   Author: Veronica Reyes
 */
 
