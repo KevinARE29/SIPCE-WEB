@@ -16,6 +16,9 @@
           "newPassword": "Nueva contraseña",
           "resetPasswordToken": "Enlace para actualizar contraseña"
         },
+        "catalogs": {
+            "name": "Nombre"
+        },
         "users": {
             "firstname": "Nombres",
             "lastname": "Apellidos",

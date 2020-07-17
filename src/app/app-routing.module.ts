@@ -51,6 +51,11 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'catalogos',
+    loadChildren: () => import('./manage-academic-catalogs/sections.module').then((m) => m.SectionsModule),
+    canLoad: [AuthGuard]
+  },
+  {
     path: '**',
     redirectTo: '/error404',
     pathMatch: 'full'
