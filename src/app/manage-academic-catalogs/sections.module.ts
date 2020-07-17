@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AntDesignModule } from '../ant-design/ant-design.module';
 import { HttpClientModule } from '@angular/common/http';
 
-import { ShowSectionsComponent } from '../manage-academic-catalogs/components/show-sections/show-sections.component';
+import { ShowSectionsComponent } from './components/show-sections/show-sections.component';
 import { SectionsRoutingModule } from './sections-routing.module';
 import { ShowCyclesComponent } from './components/show-cycles/show-cycles.component';
 

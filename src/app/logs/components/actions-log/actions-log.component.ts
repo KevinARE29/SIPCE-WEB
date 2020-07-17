@@ -6,7 +6,7 @@ import { subMonths, differenceInCalendarDays } from 'date-fns';
 
 import { ActionsLogService } from './../../shared/actions-log.service';
 import { ActionLog } from './../../shared/action-log.model';
-import { User } from './../../../shared/user.model';
+import { User } from '../../shared/user-log.model';
 import { Pagination } from './../../../shared/pagination.model';
 
 @Component({
@@ -95,7 +95,7 @@ export class ActionsLogComponent implements OnInit {
   }
 
   disabledDate = (current: Date): boolean => {
-    // Can not select days before today
+    // Can not select days after today
     return differenceInCalendarDays(current, new Date()) > 0;
   };
 }

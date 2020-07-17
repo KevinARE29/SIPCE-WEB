@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { SectionsService } from './../../shared/sections.service';
-import { Section } from './../../shared/section.model';
+import { SectionsService } from '../../shared/sections.service';
+import { Catalogue } from '../../shared/catalogue.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
@@ -20,15 +20,15 @@ interface ItemData {
 export class ShowSectionsComponent implements OnInit {
   isVisible = false;
   sectionJson;
-  sections: Section[];
+  sections: Catalogue[];
   isLoading = false;
   isConfirmLoading = false;
   editCache: { [key: string]: { edit: boolean; data: ItemData } } = {};
-
+  paramsTwo: NzTableQueryParams;
   loading = false;
   tableSize = 'small';
   confirmModal?: NzModalRef;
-  listOfData: Section[];
+  listOfData: Catalogue[];
   data = [];
   createSection: FormGroup;
 
@@ -41,7 +41,6 @@ export class ShowSectionsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getSections();
     this.createSection = this.fb.group({
       name: ['', [Validators.required, Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ.-]+')]]
     });
@@ -60,7 +59,7 @@ export class ShowSectionsComponent implements OnInit {
     }
   }
 
-  // create section function
+  /* create section function */
   handleOk(): void {
     if (this.createSection.valid) {
       this.isConfirmLoading = true;
@@ -69,7 +68,7 @@ export class ShowSectionsComponent implements OnInit {
           this.isConfirmLoading = false;
           this.isVisible = false;
           this.message.success('Sección creada con éxito');
-          this.getSections();
+          this.recharge(this.paramsTwo);
         },
         (error) => {
           this.isConfirmLoading = false;
@@ -87,31 +86,6 @@ export class ShowSectionsComponent implements OnInit {
   handleCancel(): void {
     this.isVisible = false;
     this.resetForm();
-  }
-
-  /* Get sections method */
-  getSections(): void {
-    this.loading = true;
-    this.sectionService.getSections().subscribe(
-      (data) => {
-        this.sections = data['data'];
-        console.log(this.sections);
-        this.listOfData = [...this.sections];
-        console.log(this.listOfData);
-        this.loading = false;
-        this.UpdateEditCache();
-      },
-      (err) => {
-        this.loading = false;
-        const statusCode = err.statusCode;
-        const notIn = [401, 403];
-        if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al obtener las secciones.', err.message, {
-            nzDuration: 0
-          });
-        }
-      }
-    );
   }
 
   UpdateEditCache(): void {
@@ -135,12 +109,12 @@ export class ShowSectionsComponent implements OnInit {
     };
   }
 
+  /* update section function */
   saveEdit(id: number, name: string): void {
     const index = this.listOfData.findIndex((item) => item.id === id);
     this.sectionJson = {
       name: this.editCache[id].data.name
     };
-    console.log(this.editCache[id].data.name);
     // confirm modal
     this.confirmModal = this.modal.confirm({
       nzTitle: `¿Desea actualizar la sección "${name}"?`,
@@ -165,7 +139,6 @@ export class ShowSectionsComponent implements OnInit {
             );
           })
     });
-    console.log(this.editCache[id].data.name);
   }
 
   /* Delete section confirm modal */
@@ -179,7 +152,7 @@ export class ShowSectionsComponent implements OnInit {
           .toPromise()
           .then(() => {
             this.message.success(`La sección ${name} ha sido eliminada`);
-            this.getSections();
+            this.recharge(this.paramsTwo);
           })
           .catch((err) => {
             const statusCode = err.statusCode;
@@ -194,15 +167,13 @@ export class ShowSectionsComponent implements OnInit {
     });
   }
 
-  /* ---     filter method      --- */
+  /* ---     sort method      --- */
   recharge(params: NzTableQueryParams): void {
     this.loading = true;
     this.sectionService.searchSection(params).subscribe(
       (data) => {
         this.sections = data['data'];
-        console.log(this.sections);
         this.listOfData = [...this.sections];
-        console.log(this.listOfData);
         this.loading = false;
         this.UpdateEditCache();
       },

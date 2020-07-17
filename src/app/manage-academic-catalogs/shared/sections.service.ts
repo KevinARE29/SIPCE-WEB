@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { environment } from './../../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { ErrorMessageService } from '../../shared/error-message.service';
-import { Section } from './section.model';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Injectable({
@@ -15,10 +14,6 @@ export class SectionsService {
 
   constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
     this.baseUrl = environment.apiURL;
-  }
-
-  getSections(): Observable<Section[]> {
-    return this.http.get<Section[]>(`${this.baseUrl}academics/sections`).pipe(catchError(this.handleError()));
   }
 
   updateSection(name: any, id: number): Observable<any> {
@@ -39,7 +34,6 @@ export class SectionsService {
     if (params) {
       if (params.sort[0].value) {
         queryParams += '&sort=' + params.sort[0].key;
-
         switch (params.sort[0].value) {
           case 'ascend':
             queryParams += '-' + params.sort[0].value.substring(0, 3);
@@ -54,6 +48,7 @@ export class SectionsService {
     url += queryParams;
     return this.http.get<any[]>(url).pipe(catchError(this.handleError()));
   }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.

@@ -41,6 +41,7 @@
         <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">Guardar</button>
       </ng-template>
       </nz-modal>
+
 <!-- Table -->
 <div nz-row>
     <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 20, offset: 2 }" [nzXl]="{ span: 16, offset: 4 }">
@@ -65,11 +66,9 @@
               </span>
               <span>
                    <nz-divider nzType="vertical"></nz-divider>
-                <!-- (click)="showConfirm(data.id)" -->
                 <a nz-tooltip nzTooltipTitle="Eliminar" (click)="showConfirm(data.id, data.name)">
                   <i nz-icon nzType="delete" nzTheme="outline"></i>
                 </a>
-                <!-- <nz-switch [ngModel]="false" nzCheckedChildren="Desactivar" nzUnCheckedChildren="Activar"></nz-switch> -->
               </span>
             </td>  
           </ng-container>

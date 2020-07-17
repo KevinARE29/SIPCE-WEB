@@ -1,0 +1,74 @@
+{
+    "headers":{
+        "users": {
+            "firstname": {
+                "check": false,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "Los nombres son requeridos"
+                    }, {
+                        "value": "text",
+                        "message": "Los nombres deben ser texto"
+                    }
+                ]
+            },
+            "lastname": {
+                "check": false,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "Los apellidos son requeridos"
+                    }, {
+                        "value": "text",
+                        "message": "Los apellidos deben ser texto"
+                    }
+                ]
+            },
+            "username": {
+                "check": false,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El nombre de usuario es requerido"
+                    }, {
+                        "value": "text",
+                        "message": "El nombre de usuario debe ser texto"
+                    }, {
+                        "value": "unique",
+                        "message": "El nombre de usuario debe ser único"
+                    }
+                ]
+            },
+            "email": {
+                "check": false,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El correo electrónico es requerido"
+                    }, {
+                        "value": "email",
+                        "message": "Formato incorrecto (ej. usuario@ejemplo.com)"
+                    }, {
+                        "value": "unique",
+                        "message": "El correo electrónico debe ser único"
+                    }
+                ]
+            }, "code": {
+                "check": false,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El código es requerido"
+                    }, {
+                        "value": "unique",
+                        "message": "El código debe ser único"
+                    }
+                ]
+            }, "role": {
+                "check": false,
+                "validations": []
+            }
+        }
+    }
+}
