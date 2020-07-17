@@ -1,4 +1,4 @@
-export class Section {
+export class Catalogue {
   public id: number;
   public name: string;
 }
