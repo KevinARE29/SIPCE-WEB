@@ -30,6 +30,9 @@
                  <ng-container *ngIf="control.hasError('pattern')">
                   El nombre de la sección debe contener solo caracteres
                  </ng-container>
+                 <ng-container *ngIf="control.hasError('maxlength')">
+                  El nombre de la sección debe contener máximo 15 caracteres
+                 </ng-container>
              </ng-template>
            </nz-form-control>
          </nz-form-item>

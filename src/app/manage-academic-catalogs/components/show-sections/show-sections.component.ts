@@ -42,7 +42,10 @@ export class ShowSectionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.createSection = this.fb.group({
-      name: ['', [Validators.required, Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ.-]+')]]
+      name: [
+        '',
+        [Validators.required, Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ ]+$'), Validators.maxLength(15)]
+      ]
     });
   }
 
