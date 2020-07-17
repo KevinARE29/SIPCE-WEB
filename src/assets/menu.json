@@ -46,7 +46,10 @@
                 {
                     "route": "/catalogos/secciones",
                     "name": "Secciones"
-                }
+                },  {
+                    "route": "/catalogos/ciclos",
+                    "name": "Ciclos"
+                } 
             ]
         },
         {

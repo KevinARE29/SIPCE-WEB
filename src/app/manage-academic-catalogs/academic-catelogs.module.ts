@@ -5,10 +5,18 @@ import { AntDesignModule } from '../ant-design/ant-design.module';
 import { HttpClientModule } from '@angular/common/http';
 
 import { ShowSectionsComponent } from './components/show-sections/show-sections.component';
-import { SectionsRoutingModule } from './sections-routing.module';
+import { AcademicCatalogsRoutingModule } from './academic-catalogs-routing.module';
+import { ShowCyclesComponent } from './components/show-cycles/show-cycles.component';
 
 @NgModule({
-  declarations: [ShowSectionsComponent],
-  imports: [CommonModule, SectionsRoutingModule, HttpClientModule, FormsModule, ReactiveFormsModule, AntDesignModule]
+  declarations: [ShowSectionsComponent, ShowCyclesComponent],
+  imports: [
+    CommonModule,
+    AcademicCatalogsRoutingModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AntDesignModule
+  ]
 })
 export class SectionsModule {}
