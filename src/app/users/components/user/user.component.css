@@ -1,0 +1,41 @@
+nz-switch {
+    margin: 10px 0 0 15px;
+}
+
+nz-tag {
+    font-size: 1em;
+    padding: 1px;
+}
+
+strong, span {
+    font-size: 1.1em;
+}
+
+.principal-bg { 
+    font-size: 1em;
+    color: #ffffff;
+    background-color: #ef6c00;
+    padding: 5px;
+    border-radius: 5px;
+}
+  
+.inactive-bg {
+    font-size: 1em;
+    color: #7a7a7a;
+    background-color: #d9d9d9;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.info { margin-top: 25px; margin-bottom: 25px; }
+
+.info div {
+    padding: 5px;
+    color: #232323
+}
+
+.edit { margin-top: 10px; }
+
+h2 {
+    margin-top: 10px;
+}

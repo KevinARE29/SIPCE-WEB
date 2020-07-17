@@ -18,6 +18,19 @@
         },
         "secciones": {
             "name": "Nombre"
+        },
+        "users": {
+            "firstname": "Nombres",
+            "lastname": "Apellidos",
+            "username": "Nombre de usuario",
+            "cycle": "Ciclo",
+            "grades": "Grados",
+            "grade": "Grado",
+            "section": "Sección",
+            "email": "Correo electrónico",
+            "code": "Código",
+            "role": "Rol",
+            "all": "Registro"
         }
     }
 }

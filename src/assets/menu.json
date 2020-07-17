@@ -48,6 +48,24 @@
                     "name": "Secciones"
                 }
             ]
+        },
+        {
+            "title": "Usuarios",
+            "icon": "user",
+            "permission": 3,
+            "allow": null,
+            "children": [
+                {
+                    "route": "/usuarios/consultar",
+                    "name": "Usuarios"
+                }, {
+                    "route": "/usuarios/sin-credenciales",
+                    "name": "Usuarios sin credenciales"
+                }, {
+                    "route": "/usuarios/carga-masiva",
+                    "name": "Cargar usuarios"
+                }
+            ]
         }
     ]  
 }

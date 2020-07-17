@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import DictionaryJson from '../../assets/dictionary.json';
+import { typeofExpr } from '@angular/compiler/src/output/output_ast';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import DictionaryJson from '../../assets/dictionary.json';
 export class ErrorMessageService {
   transformMessage(module: string, error: any): any {
     let dictionary: any;
-    let response: any = error;
+    let response = error;
 
     if (module) dictionary = DictionaryJson.dictionary[module];
 
@@ -28,12 +29,24 @@ export class ErrorMessageService {
       response = newMessage;
     } else if (typeof error === 'string') {
       const field = error.split(':');
-
       if (dictionary.hasOwnProperty(field[0])) {
         error = error.replace(field[0], dictionary[field[0]]);
       }
 
       response = error;
+    } else if (typeof error === 'object') {
+      const newMessage: { [key: string]: { message: unknown } } = {};
+
+      Object.keys(error).forEach((e) => {
+        const field = error[e].split(':');
+
+        if (dictionary.hasOwnProperty(field[0])) {
+          error[e] = error[e].replace(field[0], dictionary[field[0]]);
+          newMessage[e] = { message: error[e] };
+        }
+      });
+
+      response = newMessage;
     }
 
     return response;
