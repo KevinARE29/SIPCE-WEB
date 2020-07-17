@@ -16,16 +16,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { permission: 13 }
   },
-  // {
-  //   path: 'recuperar',
-  //   component: ResetPasswordComponent,
-  //   canActivate: [AuthGuard]
-  // },
-  // {
-  //   path: 'cambiar',
-  //   component: UpdatePasswordComponent,
-  //   canActivate: [AuthGuard]
-  // },
   {
     path: '**',
     redirectTo: '/error404',

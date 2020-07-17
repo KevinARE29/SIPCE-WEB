@@ -16,7 +16,7 @@
           "newPassword": "Nueva contraseña",
           "resetPasswordToken": "Enlace para actualizar contraseña"
         },
-        "secciones": {
+        "catalogs": {
             "name": "Nombre"
         },
         "users": {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { SectionsService } from '../../shared/sections.service';
+import { SectionService } from '../../shared/section.service';
 import { Catalogue } from '../../shared/catalogue.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
@@ -36,7 +36,7 @@ export class ShowSectionsComponent implements OnInit {
     private message: NzMessageService,
     private notification: NzNotificationService,
     private modal: NzModalService,
-    private sectionService: SectionsService,
+    private sectionService: SectionService,
     private fb: FormBuilder
   ) {}
 
