@@ -1,0 +1,9 @@
+.search-bar {
+    margin-bottom: 25px;
+  }
+  
+  @media only screen and (max-width: 991px) {
+    #new-role {
+      margin-top: 15px;
+    }
+  }  

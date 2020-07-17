@@ -46,6 +46,18 @@
                 {
                     "route": "/catalogos/secciones",
                     "name": "Secciones"
+                },
+                {
+                    "route": "/catalogos/grados",
+                    "name": "Grados"
+                },
+                {
+                    "route": "/catalogos/periodos",
+                    "name": "Periodos"
+                },
+                {
+                    "route": "/catalogos/turnos",
+                    "name": "Turnos"
                 }
             ]
         },
