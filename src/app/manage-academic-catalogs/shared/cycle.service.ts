@@ -9,7 +9,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 @Injectable({
   providedIn: 'root'
 })
-export class CyclesService {
+export class CycleService {
   baseUrl: string;
 
   constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
@@ -31,6 +31,7 @@ export class CyclesService {
   searchCycle(params: NzTableQueryParams): Observable<any[]> {
     let url = this.baseUrl + 'academics/cycles';
     let queryParams = '';
+
     if (params) {
       if (params.sort[0].value) {
         queryParams += '&sort=' + params.sort[0].key;
@@ -44,8 +45,10 @@ export class CyclesService {
         }
       }
     }
+
     if (queryParams.charAt(0) === '&') queryParams = queryParams.replace('&', '?');
     url += queryParams;
+
     return this.http.get<any[]>(url).pipe(catchError(this.handleError()));
   }
 
@@ -55,7 +58,7 @@ export class CyclesService {
    */
   private handleError() {
     return (error: any) => {
-      error.error.message = this.errorMessageService.transformMessage('secciones', error.error.message);
+      error.error.message = this.errorMessageService.transformMessage('catalogs', error.error.message);
       return throwError(error.error);
     };
   }
