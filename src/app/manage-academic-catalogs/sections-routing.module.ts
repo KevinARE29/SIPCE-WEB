@@ -23,11 +23,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { permission: 13 }
   },
-  // {
-  //   path: 'cambiar',
-  //   component: UpdatePasswordComponent,
-  //   canActivate: [AuthGuard]
-  // },
   {
     path: '**',
     redirectTo: '/error404',
