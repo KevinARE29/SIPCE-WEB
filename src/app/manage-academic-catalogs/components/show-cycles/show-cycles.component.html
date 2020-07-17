@@ -72,7 +72,7 @@
                             <td><input type="text" nz-input [(ngModel)]="editCache[data.id].data.name" /></td>
                             <td>
                                 <a (click)="saveEdit(data.id, data.name)" class="save">Guardar</a>
-                                <a nz-popconfirm nzTitle="Esta seguro que desea cancelar?"
+                                <a nz-popconfirm nzTitle="¿Está seguro que desea cancelar?"
                                     (nzOnConfirm)="cancelEdit(data.id)">Cancelar</a>
                             </td>
                         </ng-template>

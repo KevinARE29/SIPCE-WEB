@@ -52,7 +52,7 @@ const routes: Routes = [
   },
   {
     path: 'catalogos',
-    loadChildren: () => import('./manage-academic-catalogs/sections.module').then((m) => m.SectionsModule),
+    loadChildren: () => import('./manage-academic-catalogs/academic-catelogs.module').then((m) => m.SectionsModule),
     canLoad: [AuthGuard]
   },
   {
