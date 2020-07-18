@@ -6,7 +6,7 @@ import { GradeService } from '../../shared/grade.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 import { Pagination } from './../../../shared/pagination.model';
-import { Catalogue } from '../../shared/catalogue.model';
+import { Grade } from '../../shared/grade.model';
 
 @Component({
   selector: 'app-show-grades',
@@ -14,14 +14,16 @@ import { Catalogue } from '../../shared/catalogue.model';
   styleUrls: ['./show-grades.component.css']
 })
 export class ShowGradesComponent implements OnInit {
-  grades: Catalogue[];
+  grades: Grade[];
   pagination: Pagination;
   loading = false;
   loadingSwitch = false;
   switchValue = false;
   searchValue = '';
+  estado: string;
+  mensajeExito: string;
   // paramsTwo: NzTableQueryParams;
-  listOfDisplayData: Catalogue[];
+  listOfDisplayData: Grade[];
   tableSize = 'small';
   icon = 'search';
   color = 'primary';
@@ -44,16 +46,22 @@ export class ShowGradesComponent implements OnInit {
   showConfirm(id: number): void {
     this.loadingSwitch = true;
     const element = this.grades.find((x) => x.id === id);
-
+    if (element.active === true) {
+      this.estado = 'Desactivar';
+      this.mensajeExito = 'desactivado';
+    } else {
+      this.estado = 'Activar';
+      this.mensajeExito = 'activado';
+    }
     this.confirmModal = this.modal.confirm({
-      nzTitle: `¿Desea eliminar el grado "${element.name}"?`,
-      nzContent: `Eliminará el grado "${element.name}". La acción no puede deshacerse.`,
+      nzTitle: `¿Desea ${this.estado} el grado "${element.name}"?`,
+      nzContent: `${this.estado} el grado "${element.name}". La acción no puede deshacerse.`,
       nzOnOk: () =>
         this.gradeService
           .deleteGrade(id)
           .toPromise()
           .then(() => {
-            this.message.success(`El grado ${element.name} ha sido eliminado`);
+            this.message.success(`El grado ${element.name} ha sido ${this.mensajeExito}`);
             this.search();
             this.loadingSwitch = false;
             this.switchValue = !this.switchValue;
@@ -63,7 +71,7 @@ export class ShowGradesComponent implements OnInit {
             const notIn = [401, 403];
             this.loadingSwitch = false;
             if (!notIn.includes(statusCode) && statusCode < 500) {
-              this.notification.create('error', 'Ocurrió un error al eliminar el grado.', err.message, {
+              this.notification.create('error', 'Ocurrió un error al ' + this.estado + ' el grado.', err.message, {
                 nzDuration: 0
               });
             }
@@ -108,7 +116,7 @@ export class ShowGradesComponent implements OnInit {
         const notIn = [401, 403];
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al obtener las secciones.', err.message, {
+          this.notification.create('error', 'Ocurrió un error al obtener los grados.', err.message, {
             nzDuration: 0
           });
         }

@@ -25,7 +25,8 @@
                         <td>{{ data.name }}</td>
                         <td>
                                  <span>  
-                                    <nz-switch [(ngModel)]="switchValue" [nzCheckedChildren]="checkedTemplate" [nzControl]="true" [nzLoading]="loadingSwitch" (click)="showConfirm(data.id)" [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
+                                     <!--[(ngModel)]="switchValue"   -->
+                                    <nz-switch [ngModel]="data.active" [nzCheckedChildren]="checkedTemplate" [nzControl]="true" [nzLoading]="loadingSwitch" (click)="showConfirm(data.id)" [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
                                     <ng-template #checkedTemplate>Activar</ng-template>
                                     <ng-template #unCheckedTemplate>Desactivar</ng-template>                                             
                                     <!-- <a nz-tooltip nzTooltipTitle="Eliminar" (click)="showConfirm(data.id)">
