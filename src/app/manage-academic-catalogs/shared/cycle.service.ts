@@ -9,30 +9,28 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 @Injectable({
   providedIn: 'root'
 })
-export class SectionService {
+export class CycleService {
   baseUrl: string;
 
   constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
     this.baseUrl = environment.apiURL;
   }
 
-  updateSection(name: any, id: number): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}academics/sections/${id}`, name).pipe(catchError(this.handleError()));
+  updateCycle(name: any, id: number): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}academics/cycles/${id}`, name).pipe(catchError(this.handleError()));
   }
 
-  deleteSection(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}academics/sections/${id}`).pipe(catchError(this.handleError()));
+  deleteCycle(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}academics/cycles/${id}`).pipe(catchError(this.handleError()));
   }
 
-  createSection(name: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}academics/sections`, name).pipe(catchError(this.handleError()));
+  createCycle(name: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}academics/cycles`, name).pipe(catchError(this.handleError()));
   }
 
-  searchSection(params: NzTableQueryParams, paginate: boolean): Observable<any[]> {
-    let url = this.baseUrl + 'academics/sections';
+  searchCycle(params: NzTableQueryParams): Observable<any[]> {
+    let url = this.baseUrl + 'academics/cycles';
     let queryParams = '';
-
-    if (paginate) queryParams += '&page=' + params.pageIndex;
 
     if (params) {
       if (params.sort[0].value) {

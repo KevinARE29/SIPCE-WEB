@@ -58,7 +58,11 @@
                 {
                     "route": "/catalogos/turnos",
                     "name": "Turnos"
-                }
+                },  
+                {
+                    "route": "/catalogos/ciclos",
+                    "name": "Ciclos"
+                } 
             ]
         },
         {

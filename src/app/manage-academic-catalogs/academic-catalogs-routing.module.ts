@@ -10,6 +10,7 @@ import { ShowSectionsComponent } from './components/show-sections/show-sections.
 import { ShowGradesComponent } from './components/show-grades/show-grades.component';
 import { ShowShiftComponent } from './components/show-shift/show-shift.component';
 import { ShowPeriodsComponent } from './components/show-periods/show-periods.component';
+import { ShowCyclesComponent } from './components/show-cycles/show-cycles.component';
 import { AuthGuard } from '../login/guards/auth.guard';
 
 const routes: Routes = [
@@ -35,6 +36,12 @@ const routes: Routes = [
     path: 'periodos',
     component: ShowPeriodsComponent,
     canActivate: [AuthGuard],
+    data: { permission: 1 }
+  },
+  {
+    path: 'ciclos',
+    component: ShowCyclesComponent,
+    canActivate: [AuthGuard],
     data: { permission: 13 }
   },
   {
@@ -48,4 +55,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class SectionsRoutingModule {}
+export class AcademicCatalogsRoutingModule {}
