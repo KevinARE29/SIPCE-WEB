@@ -1,38 +1,30 @@
 <h1>Grados</h1>
 
 <div class="grados" nz-row>
-    <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 20, offset: 2 }" [nzXl]="{ span: 16, offset: 4 }">
+    <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }" [nzMd]="{ span: 24 }" [nzLg]="{ span: 20, offset: 2 }"
+        [nzXl]="{ span: 16, offset: 4 }">
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-            <nz-table #filterTable 
-                [nzData]="listOfDisplayData" 
-                nzTableLayout="fixed"
-                [nzFrontPagination]="false"
-                [nzTotal]="pagination.totalItems"
-                [nzPageSize]="pagination.perPage"
-                [nzPageIndex]="pagination.page"
-                [nzSize]="tableSize"
-                (nzQueryParams)="recharge($event)"
-            >
+            <nz-table #filterTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems" [nzPageSize]="pagination.perPage" [nzPageIndex]="pagination.page"
+                [nzSize]="tableSize" (nzQueryParams)="recharge($event)">
                 <thead>
                     <tr>
                         <th nzColumnKey="name" [nzSortFn]="true">Grado</th>
                         <th>Acción</th>
                     </tr>
                 </thead>
-                
+
                 <tbody>
                     <tr *ngFor="let data of filterTable.data">
                         <td>{{ data.name }}</td>
                         <td>
-                                 <span>  
-                                     <!--[(ngModel)]="switchValue"   -->
-                                    <nz-switch [ngModel]="data.active" [nzCheckedChildren]="checkedTemplate" [nzControl]="true" [nzLoading]="loadingSwitch" (click)="showConfirm(data.id)" [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
-                                    <ng-template #checkedTemplate>Activar</ng-template>
-                                    <ng-template #unCheckedTemplate>Desactivar</ng-template>                                             
-                                    <!-- <a nz-tooltip nzTooltipTitle="Eliminar" (click)="showConfirm(data.id)">
-                                        <i nz-icon nzType="delete" nzTheme="outline"></i>
-                                    </a> -->
-                                </span>
+                            <span>
+                                <nz-switch [ngModel]="data.active" [nzCheckedChildren]="checkedTemplate"
+                                    [nzControl]="true" (click)="showConfirm(data.id)"
+                                    [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
+                                <ng-template #checkedTemplate>Desactivar</ng-template>
+                                <ng-template #unCheckedTemplate>Activar</ng-template>
+                            </span>
                         </td>
                     </tr>
                 </tbody>

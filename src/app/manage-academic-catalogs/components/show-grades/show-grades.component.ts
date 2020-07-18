@@ -17,15 +17,11 @@ export class ShowGradesComponent implements OnInit {
   grades: Grade[];
   pagination: Pagination;
   loading = false;
-  loadingSwitch = false;
   switchValue = false;
-  searchValue = '';
   estado: string;
   mensajeExito: string;
-  // paramsTwo: NzTableQueryParams;
   listOfDisplayData: Grade[];
   tableSize = 'small';
-  icon = 'search';
   color = 'primary';
   confirmModal?: NzModalRef;
 
@@ -42,9 +38,8 @@ export class ShowGradesComponent implements OnInit {
     this.pagination.page = 1;
   }
 
-  /* Delete grade confirm modal */
+  /* Deactivate/activate grade confirm modal */
   showConfirm(id: number): void {
-    this.loadingSwitch = true;
     const element = this.grades.find((x) => x.id === id);
     if (element.active === true) {
       this.estado = 'Desactivar';
@@ -53,36 +48,30 @@ export class ShowGradesComponent implements OnInit {
       this.estado = 'Activar';
       this.mensajeExito = 'activado';
     }
-    this.confirmModal = this.modal.confirm({
-      nzTitle: `¿Desea ${this.estado} el grado "${element.name}"?`,
-      nzContent: `${this.estado} el grado "${element.name}". La acción no puede deshacerse.`,
-      nzOnOk: () =>
-        this.gradeService
-          .deleteGrade(id)
-          .toPromise()
-          .then(() => {
-            this.message.success(`El grado ${element.name} ha sido ${this.mensajeExito}`);
-            this.search();
-            this.loadingSwitch = false;
-            this.switchValue = !this.switchValue;
-          })
-          .catch((err) => {
-            const statusCode = err.statusCode;
-            const notIn = [401, 403];
-            this.loadingSwitch = false;
-            if (!notIn.includes(statusCode) && statusCode < 500) {
-              this.notification.create('error', 'Ocurrió un error al ' + this.estado + ' el grado.', err.message, {
-                nzDuration: 0
-              });
-            }
-          })
-    });
+
+    this.gradeService.deleteGrade(id).subscribe(
+      () => {
+        this.message.success(`El grado ${element.name} ha sido ${this.mensajeExito}`);
+        this.refreshTableData();
+      },
+      (err) => {
+        const statusCode = err.statusCode;
+        const notIn = [401, 403];
+        this.refreshTableData();
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create('error', 'Ocurrió un error al ' + this.estado + ' el grado.', err.message, {
+            nzDuration: 0
+          });
+        }
+      }
+    );
   }
 
-  search(): void {
+  /* methos to refresh grades data on table */
+  refreshTableData(): void {
     this.loading = true;
 
-    this.gradeService.getGrade().subscribe(
+    this.gradeService.searchGrade(null, false).subscribe(
       (data) => {
         this.grades = data['data'];
         this.pagination = data['pagination'];
@@ -90,11 +79,12 @@ export class ShowGradesComponent implements OnInit {
         this.loading = false;
       },
       (err) => {
+        this.loading = false;
         const statusCode = err.statusCode;
         const notIn = [401, 403];
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al filtrar los grados.', err.message, { nzDuration: 0 });
+          this.notification.create('error', 'Ocurrió un error al filtrar secciones.', err.message, { nzDuration: 0 });
         }
       }
     );
