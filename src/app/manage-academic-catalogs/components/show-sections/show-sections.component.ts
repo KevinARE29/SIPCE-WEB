@@ -6,6 +6,7 @@ import { SectionService } from '../../shared/section.service';
 import { Catalogue } from '../../shared/catalogue.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { Pagination } from './../../../shared/pagination.model';
 
 interface ItemData {
   id: number;
@@ -28,6 +29,8 @@ export class ShowSectionsComponent implements OnInit {
   loading = false;
   tableSize = 'small';
   confirmModal?: NzModalRef;
+  // table objects
+  pagination: Pagination;
   listOfData: Catalogue[];
   data = [];
   createSection: FormGroup;
@@ -41,6 +44,11 @@ export class ShowSectionsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // pagination variables
+    this.pagination = new Pagination();
+    this.pagination.perPage = 10;
+    this.pagination.page = 1;
+    // create section form group
     this.createSection = this.fb.group({
       name: [
         '',
@@ -71,7 +79,7 @@ export class ShowSectionsComponent implements OnInit {
           this.isConfirmLoading = false;
           this.isVisible = false;
           this.message.success('Sección creada con éxito');
-          this.recharge(this.paramsTwo);
+          this.search();
         },
         (error) => {
           this.isConfirmLoading = false;
@@ -155,7 +163,7 @@ export class ShowSectionsComponent implements OnInit {
           .toPromise()
           .then(() => {
             this.message.success(`La sección ${name} ha sido eliminada`);
-            this.recharge(this.paramsTwo);
+            this.search();
           })
           .catch((err) => {
             const statusCode = err.statusCode;
@@ -170,12 +178,36 @@ export class ShowSectionsComponent implements OnInit {
     });
   }
 
+  search(): void {
+    this.loading = true;
+
+    this.sectionService.searchSection(null, false).subscribe(
+      (data) => {
+        this.sections = data['data'];
+        this.pagination = data['pagination'];
+        this.listOfData = [...this.sections];
+        this.loading = false;
+        this.UpdateEditCache();
+      },
+      (err) => {
+        this.loading = false;
+        const statusCode = err.statusCode;
+        const notIn = [401, 403];
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create('error', 'Ocurrió un error al filtrar secciones.', err.message, { nzDuration: 0 });
+        }
+      }
+    );
+  }
+
   /* ---     sort method      --- */
   recharge(params: NzTableQueryParams): void {
     this.loading = true;
-    this.sectionService.searchSection(params).subscribe(
+    this.sectionService.searchSection(params, params.pageIndex !== this.pagination.page).subscribe(
       (data) => {
         this.sections = data['data'];
+        this.pagination = data['pagination'];
         this.listOfData = [...this.sections];
         this.loading = false;
         this.UpdateEditCache();

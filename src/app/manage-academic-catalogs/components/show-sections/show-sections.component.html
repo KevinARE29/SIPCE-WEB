@@ -49,7 +49,13 @@
       <div nz-row>
        <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 20, offset: 2 }" [nzXl]="{ span: 16, offset: 4 }">
          <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-         <nz-table #editRowTable [nzData]="listOfData" nzTableLayout="fixed" [nzSize]="tableSize" (nzQueryParams)="recharge($event)">
+         <nz-table #editRowTable [nzData]="listOfData" 
+         nzTableLayout="fixed" [nzSize]="tableSize" 
+         [nzFrontPagination]="false"
+         [nzTotal]="pagination.totalItems"
+         [nzPageSize]="pagination.perPage"
+         [nzPageIndex]="pagination.page" 
+         (nzQueryParams)="recharge($event)">
          <thead>
            <tr>
              <th nzColumnKey="name" [nzSortFn]="true">Sección</th>
