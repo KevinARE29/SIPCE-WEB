@@ -29,4 +29,4 @@ import { AcademicCatalogsRoutingModule } from './academic-catalogs-routing.modul
     AntDesignModule
   ]
 })
-export class AcademicCatelogsModule {}
+export class AcademicCatalogsModule {}

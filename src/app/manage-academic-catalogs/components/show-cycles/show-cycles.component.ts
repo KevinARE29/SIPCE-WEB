@@ -44,7 +44,7 @@ export class ShowCyclesComponent implements OnInit {
     this.createCycle = this.fb.group({
       name: [
         '',
-        [Validators.required, Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ ]+$'), Validators.maxLength(15)]
+        [Validators.required, Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ ]+$'), Validators.maxLength(32)]
       ]
     });
   }
