@@ -28,9 +28,11 @@ export class SectionService {
     return this.http.post<any>(`${this.baseUrl}academics/sections`, name).pipe(catchError(this.handleError()));
   }
 
-  searchSection(params: NzTableQueryParams): Observable<any[]> {
+  searchSection(params: NzTableQueryParams, paginate: boolean): Observable<any[]> {
     let url = this.baseUrl + 'academics/sections';
     let queryParams = '';
+
+    if (paginate) queryParams += '&page=' + params.pageIndex;
 
     if (params) {
       if (params.sort[0].value) {
