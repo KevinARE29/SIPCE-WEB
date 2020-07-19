@@ -1,6 +1,6 @@
 <h1>Grados</h1>
 
-<div class="grados" nz-row>
+<div nz-row>
     <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }" [nzMd]="{ span: 24 }" [nzLg]="{ span: 20, offset: 2 }"
         [nzXl]="{ span: 16, offset: 4 }">
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
@@ -22,8 +22,8 @@
                                 <nz-switch [ngModel]="data.active" [nzCheckedChildren]="checkedTemplate"
                                     [nzControl]="true" (click)="showConfirm(data.id)"
                                     [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
-                                <ng-template #checkedTemplate>Desactivar</ng-template>
-                                <ng-template #unCheckedTemplate>Activar</ng-template>
+                                <ng-template #checkedTemplate>Desactivado</ng-template>
+                                <ng-template #unCheckedTemplate>Activo</ng-template>
                             </span>
                         </td>
                     </tr>

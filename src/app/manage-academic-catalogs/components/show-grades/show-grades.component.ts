@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { GradeService } from '../../shared/grade.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 import { Pagination } from './../../../shared/pagination.model';
-import { Grade } from '../../shared/grade.model';
+import { ShiftPeriodGrade } from '../../shared/shiftPeriodGrade.model';
 
 @Component({
   selector: 'app-show-grades',
@@ -14,22 +14,19 @@ import { Grade } from '../../shared/grade.model';
   styleUrls: ['./show-grades.component.css']
 })
 export class ShowGradesComponent implements OnInit {
-  grades: Grade[];
+  grades: ShiftPeriodGrade[];
   pagination: Pagination;
   loading = false;
-  switchValue = false;
   estado: string;
   mensajeExito: string;
   listOfDisplayData: Grade[];
   tableSize = 'small';
-  color = 'primary';
   confirmModal?: NzModalRef;
 
   constructor(
     private gradeService: GradeService,
     private message: NzMessageService,
-    private notification: NzNotificationService,
-    private modal: NzModalService
+    private notification: NzNotificationService
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +49,7 @@ export class ShowGradesComponent implements OnInit {
     this.gradeService.deleteGrade(id).subscribe(
       () => {
         this.message.success(`El grado ${element.name} ha sido ${this.mensajeExito}`);
-        this.refreshTableData();
+        element.active = !element.active;
       },
       (err) => {
         const statusCode = err.statusCode;
@@ -84,7 +81,7 @@ export class ShowGradesComponent implements OnInit {
         const notIn = [401, 403];
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al filtrar secciones.', err.message, { nzDuration: 0 });
+          this.notification.create('error', 'Ocurrió un error al filtrar los grados.', err.message, { nzDuration: 0 });
         }
       }
     );

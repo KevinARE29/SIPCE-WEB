@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 import { environment } from './../../../environments/environment';
 import { ErrorMessageService } from '../../shared/error-message.service';
@@ -21,8 +20,8 @@ export class ShiftService {
     return this.http.delete<any>(`${this.baseUrl}academics/shifts/${id}`).pipe(catchError(this.handleError()));
   }
 
-  getShift(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}academics/shifts`).pipe(catchError(this.handleError()));
+  getShift(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}academics/shifts`).pipe(catchError(this.handleError()));
   }
 
   /**
@@ -31,8 +30,8 @@ export class ShiftService {
    */
   private handleError() {
     return (error: any) => {
-      error.error.message = this.errorMessageService.transformMessage('catalogs', error.error.message);
+      error.error.message = this.errorMessageService.transformMessage('ShiftPeriodGrades', error.error.message);
       return throwError(error.error);
     };
-  }  
+  }
 }

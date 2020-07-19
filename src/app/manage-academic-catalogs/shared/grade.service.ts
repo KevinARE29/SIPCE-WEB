@@ -21,7 +21,7 @@ export class GradeService {
     let url = this.baseUrl + 'academics/grades';
     let queryParams = '';
 
-    if (paginate) queryParams += '&page=' + params.pageIndex;
+    if (paginate) queryParams += '?page=' + params.pageIndex;
 
     if (params) {
       if (params.sort[0].value) {
@@ -55,7 +55,7 @@ export class GradeService {
    */
   private handleError() {
     return (error: any) => {
-      error.error.message = this.errorMessageService.transformMessage('catalogs', error.error.message);
+      error.error.message = this.errorMessageService.transformMessage('ShiftPeriodGrades', error.error.message);
       return throwError(error.error);
     };
   }
