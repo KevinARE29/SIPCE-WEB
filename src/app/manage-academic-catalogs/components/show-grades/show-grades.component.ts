@@ -19,7 +19,7 @@ export class ShowGradesComponent implements OnInit {
   loading = false;
   estado: string;
   mensajeExito: string;
-  listOfDisplayData: Grade[];
+  listOfDisplayData: ShiftPeriodGrade[];
   tableSize = 'small';
   confirmModal?: NzModalRef;
 
