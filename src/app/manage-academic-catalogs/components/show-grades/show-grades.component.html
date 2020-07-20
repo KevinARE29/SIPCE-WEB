@@ -22,8 +22,8 @@
                                 <nz-switch [ngModel]="data.active" [nzCheckedChildren]="checkedTemplate"
                                     [nzControl]="true" (click)="showConfirm(data.id)"
                                     [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
-                                <ng-template #checkedTemplate>Desactivado</ng-template>
-                                <ng-template #unCheckedTemplate>Activo</ng-template>
+                                    <ng-template #checkedTemplate>Activo</ng-template>
+                                    <ng-template #unCheckedTemplate>Inactivo</ng-template>
                             </span>
                         </td>
                     </tr>
