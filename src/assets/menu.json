@@ -69,6 +69,18 @@
                     "name": "Cargar usuarios"
                 }
             ]
+        },
+        {
+            "title": "Estudiantes",
+            "icon": "solution",
+            "permission": 3,
+            "allow": null,
+            "children": [
+                {
+                    "route": "/estudiantes/carga-masiva",
+                    "name": "Cargar estudiantes"
+                }
+            ]
         }
     ]  
 }

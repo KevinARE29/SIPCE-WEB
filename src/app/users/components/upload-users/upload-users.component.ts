@@ -11,13 +11,6 @@ import { UserService } from '../../shared/user.service';
 import { Role } from 'src/app/roles/shared/role.model';
 import { RoleService } from 'src/app/roles/shared/role.service';
 
-interface ItemData {
-  id: string;
-  name: string;
-  age: number;
-  address: string;
-}
-
 @Component({
   selector: 'app-upload-users',
   templateUrl: './upload-users.component.html',

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { isValid } from 'date-fns';
+
 import CsvHeaders from './../shared/csv-headers.json';
 import DictionaryJson from '../../assets/dictionary.json';
 
@@ -34,7 +36,7 @@ export class CsvToJsonService {
   transform(csv: string, group: string): unknown {
     /*---------------    Get headers     ---------------*/
     const availableHeaders = CsvHeaders.headers[group];
-    const dictionary = DictionaryJson.dictionary['users'];
+    const dictionary = DictionaryJson.dictionary[group];
 
     const lines = csv.split('\n');
     const result = [];
@@ -42,21 +44,32 @@ export class CsvToJsonService {
     const headers = lines[0].split(',');
 
     /*---------------    Validate headers     ---------------*/
-    if (Object.keys(availableHeaders).length !== headers.length) {
-      return 'quantityError';
+    if (group === 'students') {
+      if (
+        Object.keys(availableHeaders).length !== headers.length &&
+        Object.keys(availableHeaders).length - 2 !== headers.length
+      ) {
+        return 'quantityError';
+      }
+    } else {
+      if (Object.keys(availableHeaders).length !== headers.length) {
+        return 'quantityError';
+      }
     }
 
     headers.forEach((header) => {
       Object.keys(availableHeaders).forEach((key) => {
-        if (dictionary[key].toLowerCase() == header.toLowerCase().trim()) {
-          realHeaders.push(key);
-          availableHeaders[key].check = true;
+        if (dictionary.hasOwnProperty(key)) {
+          if (dictionary[key].toLowerCase() == header.toLowerCase().trim()) {
+            realHeaders.push(key);
+            availableHeaders[key].check = true;
+          }
         }
       });
     });
 
     for (const header of Object.keys(availableHeaders)) {
-      if (!availableHeaders[header].check) {
+      if (!availableHeaders[header].check && !availableHeaders[header].optional) {
         return 'wrongColumns';
         break;
       }
@@ -215,6 +228,114 @@ export class CsvToJsonService {
             }
           }
           break;
+        case 'phoneNumber':
+          if (typeof field.value === 'object') {
+            Object.keys(field.value).forEach((value) => {
+              if (!this.phoneNumber(value)) {
+                field.isValid = false;
+                field.message = validate.message;
+                flag = false;
+              } else {
+                if (flag) {
+                  field.isValid = true;
+                  field.message = null;
+                }
+              }
+            });
+          } else if (typeof field.value === 'string') {
+            if (!this.phoneNumber(field.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
+                field.isValid = true;
+                field.message = null;
+              }
+            }
+          }
+          break;
+        case 'date':
+          if (typeof field.value === 'object') {
+            Object.keys(field.value).forEach((value) => {
+              if (!this.date(value)) {
+                field.isValid = false;
+                field.message = validate.message;
+                flag = false;
+              } else {
+                if (flag) {
+                  field.isValid = true;
+                  field.message = null;
+                }
+              }
+            });
+          } else if (typeof field.value === 'string') {
+            if (!this.date(field.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
+                field.isValid = true;
+                field.message = null;
+              }
+            }
+          }
+          break;
+        case 'number':
+          if (typeof field.value === 'object') {
+            Object.keys(field.value).forEach((value) => {
+              if (!this.number(value)) {
+                field.isValid = false;
+                field.message = validate.message;
+                flag = false;
+              } else {
+                if (flag) {
+                  field.isValid = true;
+                  field.message = null;
+                }
+              }
+            });
+          } else if (typeof field.value === 'string') {
+            if (!this.number(field.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
+                field.isValid = true;
+                field.message = null;
+              }
+            }
+          }
+          break;
+        case 'year':
+          if (typeof field.value === 'object') {
+            Object.keys(field.value).forEach((value) => {
+              if (!this.year(value)) {
+                field.isValid = false;
+                field.message = validate.message;
+                flag = false;
+              } else {
+                if (flag) {
+                  field.isValid = true;
+                  field.message = null;
+                }
+              }
+            });
+          } else if (typeof field.value === 'string') {
+            if (!this.year(field.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
+                field.isValid = true;
+                field.message = null;
+              }
+            }
+          }
+          break;
       }
     });
     return;
@@ -239,6 +360,26 @@ export class CsvToJsonService {
 
   email(field): boolean {
     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(field);
+  }
+
+  phoneNumber(field): boolean {
+    return /^[0-9]{4}[-\s]{1}[0-9]{4}$/.test(field);
+  }
+
+  date(field): boolean {
+    return isValid(field);
+    // return /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|(([1][26]|[2468][048]|[3579][26])00))))$/.test(
+    //   field
+    // );
+  }
+
+  number(field): boolean {
+    return typeof field === 'number' || field instanceof Number;
+  }
+
+  year(field): boolean {
+    const year = new Date().getFullYear();
+    return !!(field >= year - 15 && field <= year + 1);
   }
 
   replaceAccents(text: string): string {

@@ -31,6 +31,25 @@
             "code": "Código",
             "role": "Rol",
             "all": "Registro"
+        },
+        "students": {
+            "code": "Código",
+            "firstname": "Nombres",
+            "lastname": "Apellidos",
+            "email": "Correo electrónico",
+            "cycle": "Ciclo",
+            "grade": "Grado",
+            "section": "Sección",
+            "dateOfBirth": "Fecha de nacimiento",
+            "startedGrade": "Grado de ingreso",
+            "registrationYear": "Año de ingreso",
+            "responsible": "Responsable",
+            "kinshipRelationship": "Parentesco",
+            "responsibleFirstname": "Nombre del responsable",
+            "responsibleLastname": "Apellido del responsable",
+            "contact": "Contacto",
+            "responsibleEmail": "Correo electrónico del responsable",
+            "responsiblePhoneNumber": "Número de celular del responsable"
         }
     }
 }
