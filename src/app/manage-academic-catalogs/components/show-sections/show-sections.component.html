@@ -11,10 +11,10 @@
   <!-- Modal content -->
   <form nz-form [formGroup]="createSection">
     <ng-template #modalContent>
-      <nz-form-item>
-        <nz-form-label nzRequired nzFor="name">Nombre seccción</nz-form-label>
-        <nz-form-control type="name" [nzSpan]="16" nzHasFeedback [nzErrorTip]="errorTpl">
-          <input nz-input formControlName="name" id="name" />
+      <nz-form-item nzJustify="space-around">
+        <nz-form-label nzRequired>Nombre</nz-form-label>
+        <nz-form-control [nzSpan]="16" [nzErrorTip]="errorTpl">
+          <input nz-input formControlName="name" placeholder="Nombre de la seccción" />
           <ng-template #errorTpl let-control>
             <ng-container *ngIf="control.hasError('required')">
               El nombre de la sección es requerido

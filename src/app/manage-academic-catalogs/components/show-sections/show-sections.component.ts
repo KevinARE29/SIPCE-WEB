@@ -25,7 +25,6 @@ export class ShowSectionsComponent implements OnInit {
   isLoading = false;
   isConfirmLoading = false;
   editCache: { [key: string]: { edit: boolean; data: ItemData } } = {};
-  paramsTwo: NzTableQueryParams;
   loading = false;
   tableSize = 'small';
   confirmModal?: NzModalRef;
