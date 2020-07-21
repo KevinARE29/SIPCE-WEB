@@ -1,0 +1,34 @@
+<h1>Grados</h1>
+
+<div nz-row>
+    <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }" [nzMd]="{ span: 24 }" [nzLg]="{ span: 20, offset: 2 }"
+        [nzXl]="{ span: 16, offset: 4 }">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <nz-table #filterTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems" [nzPageSize]="pagination.perPage" [nzPageIndex]="pagination.page"
+                [nzSize]="tableSize" (nzQueryParams)="recharge($event)">
+                <thead>
+                    <tr>
+                        <th nzColumnKey="name">Grado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let data of filterTable.data">
+                        <td>{{ data.name }}</td>
+                        <td>
+                            <span>
+                                <nz-switch [ngModel]="data.active" [nzCheckedChildren]="checkedTemplate"
+                                    [nzControl]="true" (click)="showConfirm(data.id)"
+                                    [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
+                                    <ng-template #checkedTemplate>Activo</ng-template>
+                                    <ng-template #unCheckedTemplate>Inactivo</ng-template>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>

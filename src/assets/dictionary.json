@@ -19,6 +19,10 @@
         "catalogs": {
             "name": "Nombre"
         },
+        "ShiftPeriodGrades": {
+            "name": "Nombre",
+            "active": "activo"
+        },
         "users": {
             "firstname": "Nombres",
             "lastname": "Apellidos",

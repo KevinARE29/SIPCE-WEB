@@ -11,19 +11,19 @@
     <!-- Modal content -->
     <form nz-form [formGroup]="createCycle">
         <ng-template #modalContent>
-            <nz-form-item>
-                <nz-form-label nzRequired nzFor="name">Nombre ciclo</nz-form-label>
-                <nz-form-control type="name" [nzSpan]="16" nzHasFeedback [nzErrorTip]="errorTpl">
-                    <input nz-input formControlName="name" id="name" />
+            <nz-form-item nzJustify="space-around">
+                <nz-form-label nzRequired>Nombre</nz-form-label>
+                <nz-form-control [nzSpan]="16" [nzErrorTip]="errorTpl">
+                    <input nz-input formControlName="name" placeholder="Nombre del ciclo" />
                     <ng-template #errorTpl let-control>
                         <ng-container *ngIf="control.hasError('required')">
-                            El ciclo es requerido
+                            El nombre del ciclo es requerido
                         </ng-container>
                         <ng-container *ngIf="control.hasError('pattern')">
-                            El ciclo debe contener solo caracteres
+                            El nombre del ciclo debe contener solo caracteres
                         </ng-container>
                         <ng-container *ngIf="control.hasError('maxlength')">
-                            El ciclo debe contener máximo 15 caracteres
+                            El nombre del ciclo debe contener máximo 32 caracteres
                         </ng-container>
                     </ng-template>
                 </nz-form-control>
@@ -43,7 +43,8 @@
         [nzXl]="{ span: 16, offset: 4 }">
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
             <nz-table #editRowTable [nzData]="listOfData" nzTableLayout="fixed" [nzSize]="tableSize"
-                (nzQueryParams)="recharge($event)">
+                (nzQueryParams)="recharge($event)" [nzFrontPagination]="false" [nzTotal]="pagination.totalItems"
+                [nzPageSize]="pagination.perPage" [nzPageIndex]="pagination.page">
                 <thead>
                     <tr>
                         <th nzColumnKey="name" [nzSortFn]="true">Ciclo</th>

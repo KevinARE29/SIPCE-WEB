@@ -44,12 +44,25 @@
             "allow": null,
             "children": [
                 {
+                    "route": "/catalogos/grados",
+                    "name": "Grados"
+                },   
+                {
                     "route": "/catalogos/secciones",
                     "name": "Secciones"
-                },  {
+                },
+                {
                     "route": "/catalogos/ciclos",
                     "name": "Ciclos"
-                } 
+                }, 
+                {
+                    "route": "/catalogos/turnos",
+                    "name": "Turnos"
+                },
+                {
+                    "route": "/catalogos/periodos",
+                    "name": "Periodos"
+                }             
             ]
         },
         {
