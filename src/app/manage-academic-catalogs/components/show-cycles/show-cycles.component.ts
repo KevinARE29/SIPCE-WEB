@@ -6,6 +6,7 @@ import { CycleService } from '../../shared/cycle.service';
 import { Catalogue } from '../../shared/catalogue.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { Pagination } from './../../../shared/pagination.model';
 
 interface ItemData {
   id: number;
@@ -24,13 +25,13 @@ export class ShowCyclesComponent implements OnInit {
   isLoading = false;
   isConfirmLoading = false;
   editCache: { [key: string]: { edit: boolean; data: ItemData } } = {};
-  paramsTwo: NzTableQueryParams;
   loading = false;
   tableSize = 'small';
   confirmModal?: NzModalRef;
   listOfData: Catalogue[];
   data = [];
   createCycle: FormGroup;
+  pagination: Pagination;
 
   constructor(
     private message: NzMessageService,
@@ -41,10 +42,13 @@ export class ShowCyclesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.pagination = new Pagination();
+    this.pagination.perPage = 10;
+    this.pagination.page = 1;
     this.createCycle = this.fb.group({
       name: [
         '',
-        [Validators.required, Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ ]+$'), Validators.maxLength(15)]
+        [Validators.required, Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ ]+$'), Validators.maxLength(32)]
       ]
     });
   }
@@ -71,7 +75,7 @@ export class ShowCyclesComponent implements OnInit {
           this.isConfirmLoading = false;
           this.isVisible = false;
           this.message.success('Ciclo creado con éxito');
-          this.recharge(this.paramsTwo);
+          this.search();
         },
         (error) => {
           this.isConfirmLoading = false;
@@ -155,7 +159,7 @@ export class ShowCyclesComponent implements OnInit {
           .toPromise()
           .then(() => {
             this.message.success(`El ciclo ${name} ha sido eliminado`);
-            this.recharge(this.paramsTwo);
+            this.search();
           })
           .catch((err) => {
             const statusCode = err.statusCode;
@@ -173,10 +177,11 @@ export class ShowCyclesComponent implements OnInit {
   /* ---     sort method      --- */
   recharge(params: NzTableQueryParams): void {
     this.loading = true;
-    this.cycleService.searchCycle(params).subscribe(
+    this.cycleService.searchCycle(params, params.pageIndex !== this.pagination.page).subscribe(
       (data) => {
         this.cycles = data['data'];
         this.listOfData = [...this.cycles];
+        this.pagination = data['pagination'];
         this.loading = false;
         this.UpdateEditCache();
       },
@@ -189,6 +194,29 @@ export class ShowCyclesComponent implements OnInit {
           this.notification.create('error', 'Ocurrió un error al obtener los ciclos.', err.message, {
             nzDuration: 0
           });
+        }
+      }
+    );
+  }
+
+  search(): void {
+    this.loading = true;
+
+    this.cycleService.searchCycle(null, false).subscribe(
+      (data) => {
+        this.cycles = data['data'];
+        this.pagination = data['pagination'];
+        this.listOfData = [...this.cycles];
+        this.loading = false;
+        this.UpdateEditCache();
+      },
+      (err) => {
+        this.loading = false;
+        const statusCode = err.statusCode;
+        const notIn = [401, 403];
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create('error', 'Ocurrió un error al filtrar ciclos.', err.message, { nzDuration: 0 });
         }
       }
     );

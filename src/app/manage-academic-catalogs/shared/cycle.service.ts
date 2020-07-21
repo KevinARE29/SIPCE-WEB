@@ -28,9 +28,11 @@ export class CycleService {
     return this.http.post<any>(`${this.baseUrl}academics/cycles`, name).pipe(catchError(this.handleError()));
   }
 
-  searchCycle(params: NzTableQueryParams): Observable<any[]> {
+  searchCycle(params: NzTableQueryParams, paginate: boolean): Observable<any[]> {
     let url = this.baseUrl + 'academics/cycles';
     let queryParams = '';
+
+    if (paginate) queryParams += '?page=' + params.pageIndex;
 
     if (params) {
       if (params.sort[0].value) {
