@@ -36,7 +36,7 @@ const routes: Routes = [
     path: 'periodos',
     component: ShowPeriodsComponent,
     canActivate: [AuthGuard],
-    data: { permission: 1 }
+    data: { permission: 13 }
   },
   {
     path: 'ciclos',

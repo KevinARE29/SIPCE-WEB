@@ -17,7 +17,7 @@ export class ShowGradesComponent implements OnInit {
   grades: ShiftPeriodGrade[];
   pagination: Pagination;
   loading = false;
-  estado: string;
+  status: string;
   mensajeExito: string;
   listOfDisplayData: ShiftPeriodGrade[];
   tableSize = 'small';
@@ -39,10 +39,10 @@ export class ShowGradesComponent implements OnInit {
   showConfirm(id: number): void {
     const element = this.grades.find((x) => x.id === id);
     if (element.active === true) {
-      this.estado = 'Desactivar';
+      this.status = 'Desactivar';
       this.mensajeExito = 'desactivado';
     } else {
-      this.estado = 'Activar';
+      this.status = 'Activar';
       this.mensajeExito = 'activado';
     }
 
@@ -56,7 +56,7 @@ export class ShowGradesComponent implements OnInit {
         const notIn = [401, 403];
         this.refreshTableData();
         if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al ' + this.estado + ' el grado.', err.message, {
+          this.notification.create('error', 'Ocurrió un error al ' + this.status + ' el grado.', err.message, {
             nzDuration: 0
           });
         }
@@ -64,7 +64,7 @@ export class ShowGradesComponent implements OnInit {
     );
   }
 
-  /* methos to refresh grades data on table */
+  /* methos to refresh grades on table */
   refreshTableData(): void {
     this.loading = true;
 

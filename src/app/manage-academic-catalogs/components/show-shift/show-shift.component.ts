@@ -13,7 +13,7 @@ import { ShiftPeriodGrade } from '../../shared/shiftPeriodGrade.model';
 export class ShowShiftComponent implements OnInit {
   shifts: ShiftPeriodGrade[];
   loading = false;
-  estado: string;
+  status: string;
   mensajeExito: string;
   confirmModal?: NzModalRef;
 
@@ -52,10 +52,10 @@ export class ShowShiftComponent implements OnInit {
   showConfirm(id: number): void {
     const element = this.shifts.find((x) => x.id === id);
     if (element.active === true) {
-      this.estado = 'desactivar';
+      this.status = 'desactivar';
       this.mensajeExito = 'desactivado';
     } else {
-      this.estado = 'activar';
+      this.status = 'activar';
       this.mensajeExito = 'activado';
     }
 
@@ -68,7 +68,7 @@ export class ShowShiftComponent implements OnInit {
         const statusCode = err.statusCode;
         const notIn = [401, 403];
         if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al ' + this.estado + ' el turno.', err.message, {
+          this.notification.create('error', 'Ocurrió un error al ' + this.status + ' el turno.', err.message, {
             nzDuration: 0
           });
         }

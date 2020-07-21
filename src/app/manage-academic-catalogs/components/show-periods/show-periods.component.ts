@@ -13,7 +13,7 @@ import { ShiftPeriodGrade } from '../../shared/shiftPeriodGrade.model';
 export class ShowPeriodsComponent implements OnInit {
   periods: ShiftPeriodGrade[];
   loading = false;
-  estado: string;
+  status: string;
   mensajeExito: string;
   confirmModal?: NzModalRef;
 
@@ -53,10 +53,10 @@ export class ShowPeriodsComponent implements OnInit {
     const element = this.periods.find((x) => x.id === id);
 
     if (element.active === true) {
-      this.estado = 'desactivar';
+      this.status = 'desactivar';
       this.mensajeExito = 'desactivado';
     } else {
-      this.estado = 'activar';
+      this.status = 'activar';
       this.mensajeExito = 'activado';
     }
 
@@ -69,7 +69,7 @@ export class ShowPeriodsComponent implements OnInit {
         const statusCode = err.statusCode;
         const notIn = [401, 403];
         if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al ' + this.estado + ' el periodo.', err.message, {
+          this.notification.create('error', 'Ocurrió un error al ' + this.status + ' el periodo.', err.message, {
             nzDuration: 0
           });
         }
