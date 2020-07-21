@@ -256,20 +256,12 @@ export class CsvToJsonService {
           }
           break;
         case 'date':
-          if (typeof field.value === 'object') {
-            Object.keys(field.value).forEach((value) => {
-              if (!this.date(value)) {
-                field.isValid = false;
-                field.message = validate.message;
-                flag = false;
-              } else {
-                if (flag) {
-                  field.isValid = true;
-                  field.message = null;
-                }
-              }
-            });
-          } else if (typeof field.value === 'string') {
+          if (typeof field.value === 'string') {
+            if (!field.transformed) {
+              const dateComponents = field.value.split('/');
+              field.value = new Date(dateComponents[2], dateComponents[1] - 1, dateComponents[0]);
+              field.transformed = true;
+            }
             if (!this.date(field.value)) {
               field.isValid = false;
               field.message = validate.message;
@@ -368,13 +360,10 @@ export class CsvToJsonService {
 
   date(field): boolean {
     return isValid(field);
-    // return /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|(([1][26]|[2468][048]|[3579][26])00))))$/.test(
-    //   field
-    // );
   }
 
   number(field): boolean {
-    return typeof field === 'number' || field instanceof Number;
+    return !!Number(field);
   }
 
   year(field): boolean {

@@ -16,9 +16,13 @@ export class UploadStudentsComponent implements OnInit {
   csv: Blob;
   fileList: UploadFile[];
   loading = false;
+  shift: number;
   // grades: Grade[]; //TODO: Get the grades from its module
+  shifts: unknown; // TODO: Get data from service
+
   // Pre upload users errors
   uploadMsg: string;
+  shiftMsg: string;
 
   // Table structure
   listOfColumns = {};
@@ -34,6 +38,16 @@ export class UploadStudentsComponent implements OnInit {
 
   ngOnInit(): void {
     this.uploadMsg = '';
+    this.shiftMsg = '';
+
+    // TODO: Get data from service
+    this.shifts = [
+      { id: 1, value: 'Mañana' },
+      { id: 2, value: 'Tarde' },
+      { id: 3, value: 'Nocturno' },
+      { id: 4, value: 'Mixto' },
+      { id: 5, value: 'Tiempo completo' }
+    ];
   }
 
   beforeUpload = (file: UploadFile) => {
@@ -69,8 +83,8 @@ export class UploadStudentsComponent implements OnInit {
     this.uploadMsg = '';
 
     if (this.csv === undefined || this.csv === null) this.uploadMsg = 'El archivo es requerido';
-
-    if (this.csv) {
+    if (this.shift === undefined) this.shiftMsg = 'El turno es requerido';
+    if (this.csv && this.shift) {
       this.csvToJsonService.csvJSON(this.csv, 'students').subscribe(
         (r) => {
           this._listOfColumns = JSON.parse(JSON.stringify(r['headers']));
@@ -130,7 +144,7 @@ export class UploadStudentsComponent implements OnInit {
   saveEdit(id: string): void {
     const index = this.listOfData.findIndex((item) => item['id'] === id);
     this.editCache[id].data = this.csvToJsonService.validateUpdatedRow(
-      'users',
+      'students',
       this._listOfColumns,
       this.editCache[index].data
     );
@@ -152,14 +166,20 @@ export class UploadStudentsComponent implements OnInit {
     this.listOfData = JSON.parse(JSON.stringify(this.listOfData.filter((d) => d['id'] !== id)));
   }
 
+  createStudents(): void {}
+
+  toggleMessage(): void {
+    this.shift === null || this.shift === undefined ? (this.shiftMsg = 'El turno es requerido') : (this.shiftMsg = '');
+  }
+
   clearScreen(): void {
     // Clear options and messages
     this.csv = null;
     this.fileList = null;
-    // this.listOfColumns = {};
-    // this._listOfColumns = null;
-    // this.listOfData = [];
-    // this.editCache = {};
+    this.listOfColumns = {};
+    this._listOfColumns = null;
+    this.listOfData = [];
+    this.editCache = {};
 
     this.uploadMsg = '';
   }

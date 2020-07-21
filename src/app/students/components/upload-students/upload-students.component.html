@@ -8,7 +8,14 @@
             </nz-upload>
             <span class="error">{{uploadMsg}}</span>
         </div>
-    
+        <div nz-col nzSm="24" nzMd="10" nzLg="7" nzXl="6" class="gutter-row">
+            <span>Turno: </span>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="shift"
+                (ngModelChange)="toggleMessage()">
+                <nz-option *ngFor="let option of shifts" [nzLabel]="option.value" [nzValue]="option.id"></nz-option>
+            </nz-select>
+            <p class="error">{{shiftMsg}}</p>
+        </div>
         <div nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
             <div nz-col>
                 <button nz-button nzType="primary" (click)="uploadCsv()">Iniciar carga de usuarios</button>
@@ -23,7 +30,7 @@
         <nz-table #editRowTable [nzData]="listOfData" nzTableLayout="fixed" nzSize="small">
             <thead>
                 <tr>
-                    <th>Código}</th>
+                    <th>Código</th>
                     <th>Estudiante</th>
                     <th>Correo</th>
                     <th>Grado</th>
@@ -77,9 +84,9 @@
                             {{ data['registrationYear']['value'] }}
                         </td>
                         <!-- Date of birth -->
-                        <td [ngClass]="{ 'fieldError': !data['dateOfBirth']['isValid'] }"
+                        <td [ngClass]="{ 'fieldError': !data['dateOfBirth']['isValid'] }" [nzLocale]="'es'"
                         nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data['dateOfBirth']['message']">
-                            {{ data['dateOfBirth']['value'] }}
+                            {{ data['dateOfBirth']['value'] | date:"dd/MM/yyyy" }}
                         </td>
                         <!-- Responsible -->
                         <td>
@@ -126,31 +133,88 @@
                     </ng-container>
     
                     <!-- Editable row -->
-                    <!-- <ng-template #editTemplate>
-                        <td *ngFor="let header of _listOfColumns" nz-tooltip  nzTooltipPlacement="topLeft" [nzTooltipTitle]="data[header]['message']">
-                            <ng-container [ngSwitch]="header">
-                                <ng-container *ngSwitchCase="'role'">
-                                    <ng-container *ngFor="let role of editCache[data.id].data[header]['value'] | keyvalue">
-                                        <input type="text" nz-input [(ngModel)]="role['value']['value']">
-                                    </ng-container>
-                                </ng-container>
-                                <ng-container *ngSwitchDefault>
-                                    <input type="text" nz-input [(ngModel)]="editCache[data.id].data[header]['value']">
-                                </ng-container>
-                            </ng-container>
+                    <ng-template #editTemplate>
+                        <!-- Code -->
+                        <td [ngClass]="{ 'fieldError': !data['code']['isValid'] }"
+                        nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data['code']['message']">
+                            {{ data['code']['value'] }}
+                        </td>
+                        <!-- Complete name -->
+                        <td>
+                            <span [ngClass]="{ 'fieldError': !data['firstname']['isValid'] }"
+                            nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data['firstname']['message']">
+                                <input type="text" nz-input [(ngModel)]="editCache[data.id].data['firstname']['value']">
+                            </span>
+                            <span [ngClass]="{ 'fieldError': !data['lastname']['isValid'] }"
+                            nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data['lastname']['message']">
+                                <input type="text" nz-input [(ngModel)]="editCache[data.id].data['lastname']['value']">
+                            </span>
+                        </td>
+                        <!-- Email -->
+                        <td [ngClass]="{ 'fieldError': !data['email']['isValid'] }"
+                        nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data['email']['message']">
+                            <input type="text" nz-input [(ngModel)]="editCache[data.id].data['email']['value']">
+                        </td>
+                        <!-- Grade -->
+                        <td [ngClass]="{ 'fieldError': !data['grade']['isValid'] }"
+                        nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data['grade']['message']">
+                            <input type="text" nz-input [(ngModel)]="editCache[data.id].data['grade']['value']">
+                        </td>
+                        <!-- Started grade -->
+                        <td *ngIf="_listOfColumns.includes('startedGrade')" [ngClass]="{ 'fieldError': !data['startedGrade']['isValid'] }"
+                        nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data['startedGrade']['message']">
+                            <input type="text" nz-input [(ngModel)]="editCache[data.id].data['startedGrade']['value']">
+                        </td>
+                        <!-- Registration year -->
+                        <td *ngIf="_listOfColumns.includes('registrationYear')" [ngClass]="{ 'fieldError': !data['registrationYear']['isValid'] }"
+                        nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data['registrationYear']['message']">
+                            <input type="text" nz-input [(ngModel)]="editCache[data.id].data['registrationYear']['value']">
+                        </td>
+                        <!-- Date of birth -->
+                        <td [ngClass]="{ 'fieldError': !data['dateOfBirth']['isValid'] }"
+                        nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data['dateOfBirth']['message']">
+                            <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [(ngModel)]="editCache[data.id].data['dateOfBirth']['value']"></nz-date-picker>
+                        </td>
+                        <!-- Responsible -->
+                        <td>
+                            <span [ngClass]="{ 'fieldError': !data['responsibleFirstname']['isValid'] }"
+                            nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data['responsibleFirstname']['message']">
+                                <input type="text" nz-input [(ngModel)]="editCache[data.id].data['responsibleFirstname']['value']">
+                            </span>
+                            <span [ngClass]="{ 'fieldError': !data['responsibleLastname']['isValid'] }"
+                            nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data['responsibleLastname']['message']">
+                                <input type="text" nz-input [(ngModel)]="editCache[data.id].data['responsibleLastname']['value']">
+                            </span>
+                        </td>
+                        <!-- KinshipRelationship -->
+                        <td [ngClass]="{ 'fieldError': !data['kinshipRelationship']['isValid'] }"
+                        nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data['kinshipRelationship']['message']">
+                            <input type="text" nz-input [(ngModel)]="editCache[data.id].data['kinshipRelationship']['value']">
+                        </td>
+                        <!-- Contact -->
+                        <td>
+                            <span [ngClass]="{ 'fieldError': !data['responsibleEmail']['isValid'] }"
+                            nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data['responsibleEmail']['message']">
+                                <input type="text" nz-input [(ngModel)]="editCache[data.id].data['responsibleEmail']['value']">
+                            </span>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <span [ngClass]="{ 'fieldError': !data['responsiblePhoneNumber']['isValid'] }"
+                            nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data['responsiblePhoneNumber']['message']">
+                                <input type="text" nz-input [(ngModel)]="editCache[data.id].data['responsiblePhoneNumber']['value']">
+                            </span>
                         </td>
                         <td [nzAlign]="'center'">
                             <a (click)="saveEdit(data.id)" class="save"> Guardar </a>
                             <nz-divider nzType="vertical"></nz-divider>
                             <a nz-popconfirm nzTitle="¿Cancelar edición?" (nzOnConfirm)="cancelEdit(data.id)">Cancelar</a>
                         </td>
-                    </ng-template> -->
+                    </ng-template>
                 </tr>
             </tbody>
         </nz-table>
     
         <div nz-row nzJustify="space-around">
-            <button nz-button nzType="primary" (click)="createUsers()">Crear usuarios</button>
+            <button nz-button nzType="primary" (click)="createStudents()">Crear usuarios</button>
         </div>
     </ng-container>    
 </nz-spin>

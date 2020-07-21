@@ -147,6 +147,7 @@
             "dateOfBirth": {
                 "check": false,
                 "optional": false,
+                "transformed": false,
                 "validations": [
                     {
                         "value": "empty",
