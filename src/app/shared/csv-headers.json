@@ -144,7 +144,7 @@
                     }
                 ]
             },
-            "dateOfBirth": {
+            "birthdate": {
                 "check": false,
                 "optional": false,
                 "transformed": false,
@@ -183,11 +183,11 @@
                         "message": "El año debe ser un número"
                     }, {
                         "value": "year",
-                        "message": "El año debe ser válido"
+                        "message": "El año debe estar en un rango válido."
                     }
                 ]
             },
-            "kinshipRelationship": {
+            "responsibleRelationship": {
                 "check": false,
                 "optional": false,
                 "validations": [
@@ -197,6 +197,9 @@
                     }, {
                         "value": "text",
                         "message": "El paretesco debe ser texto"
+                    }, {
+                        "value": "kinship",
+                        "message": "El parentesco ingresado no existe"
                     }
                 ]
             },
@@ -239,7 +242,7 @@
                     }
                 ]
             },
-            "responsiblePhoneNumber": {
+            "responsiblePhone": {
                 "check": false,
                 "optional": false,
                 "validations": [

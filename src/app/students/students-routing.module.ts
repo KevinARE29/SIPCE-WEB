@@ -8,7 +8,7 @@ const routes: Routes = [
     path: 'carga-masiva',
     component: UploadStudentsComponent,
     canActivate: [AuthGuard],
-    data: { permission: 11 }
+    data: { permission: 11 } // TODO: Change permission
   }
 ];
 

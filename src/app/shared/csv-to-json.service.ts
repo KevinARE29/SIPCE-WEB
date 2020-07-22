@@ -5,6 +5,7 @@ import { isValid } from 'date-fns';
 
 import CsvHeaders from './../shared/csv-headers.json';
 import DictionaryJson from '../../assets/dictionary.json';
+import { KinshipRelationship } from './kinship-relationship.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -117,6 +118,13 @@ export class CsvToJsonService {
                   value: role,
                   isValid: true,
                   message: null
+                };
+              } else if (realHeaders[j] === 'grade') {
+                obj[realHeaders[j]] = {
+                  value: currentline[j].trim(),
+                  isValid: true,
+                  message: null,
+                  grade: null
                 };
               } else {
                 obj[realHeaders[j]] = {
@@ -274,6 +282,20 @@ export class CsvToJsonService {
             }
           }
           break;
+        case 'kinship':
+          if (typeof field.value === 'string') {
+            if (!this.kinship(field.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
+                field.isValid = true;
+                field.message = null;
+              }
+            }
+          }
+          break;
         case 'number':
           if (typeof field.value === 'object') {
             Object.keys(field.value).forEach((value) => {
@@ -359,7 +381,7 @@ export class CsvToJsonService {
   }
 
   date(field): boolean {
-    return isValid(field);
+    return isValid(new Date(field));
   }
 
   number(field): boolean {
@@ -371,6 +393,9 @@ export class CsvToJsonService {
     return !!(field >= year - 15 && field <= year + 1);
   }
 
+  kinship(field): boolean {
+    return !!Object.values(KinshipRelationship).includes(field);
+  }
   replaceAccents(text: string): string {
     const chars = {
       á: 'a',

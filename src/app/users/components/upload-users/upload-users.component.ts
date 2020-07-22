@@ -223,7 +223,6 @@ export class UploadUsersComponent implements OnInit {
   }
 
   bulkUsers(): void {
-    this.userService.bulkUsers(this.listOfData);
     this.userService.bulkUsers(this.listOfData).subscribe(
       () => {
         this.message.success('Usuarios creados con éxito');

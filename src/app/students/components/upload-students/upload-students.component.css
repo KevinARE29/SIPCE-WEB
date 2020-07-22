@@ -3,6 +3,10 @@ nz-table {
     margin-bottom: 25px;
 }
 
+nz-select {
+    min-width: 175px;
+}
+
 .error {
     color: #ff4d4f;
 }

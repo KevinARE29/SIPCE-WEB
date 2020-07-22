@@ -6,6 +6,9 @@ import { CsvToJsonService } from 'src/app/shared/csv-to-json.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { UploadFile } from 'ng-zorro-antd/upload';
+import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
+import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
+import { StudentService } from '../../shared/student.service';
 
 @Component({
   selector: 'app-upload-students',
@@ -17,21 +20,24 @@ export class UploadStudentsComponent implements OnInit {
   fileList: UploadFile[];
   loading = false;
   shift: number;
-  // grades: Grade[]; //TODO: Get the grades from its module
-  shifts: unknown; // TODO: Get data from service
+  grades: any[];
+  shifts: any[];
 
   // Pre upload users errors
   uploadMsg: string;
   shiftMsg: string;
 
   // Table structure
-  listOfColumns = {};
+  listOfColumns: any;
   _listOfColumns: any;
   listOfData: [];
   editCache: { [key: string]: { edit: boolean; data: unknown } } = {};
 
   constructor(
     private csvToJsonService: CsvToJsonService,
+    private gradeService: GradeService,
+    private studentService: StudentService,
+    private shiftService: ShiftService,
     private message: NzMessageService,
     private notification: NzNotificationService
   ) {}
@@ -40,17 +46,20 @@ export class UploadStudentsComponent implements OnInit {
     this.uploadMsg = '';
     this.shiftMsg = '';
 
-    // TODO: Get data from service
-    this.shifts = [
-      { id: 1, value: 'Mañana' },
-      { id: 2, value: 'Tarde' },
-      { id: 3, value: 'Nocturno' },
-      { id: 4, value: 'Mixto' },
-      { id: 5, value: 'Tiempo completo' }
-    ];
+    this.getAcademicCatalogs();
   }
 
-  beforeUpload = (file: UploadFile) => {
+  getAcademicCatalogs(): void {
+    this.shiftService.getShift().subscribe((data) => {
+      this.shifts = data['data'].filter((x) => x.active === true);
+    });
+
+    this.gradeService.getAllGrades().subscribe((data) => {
+      this.grades = data['data'];
+    });
+  }
+
+  beforeUpload = (file: UploadFile): Observable<any> => {
     this.uploadMsg = '';
     return new Observable((observer: Observer<boolean>) => {
       const isCsv = file.type === 'application/vnd.ms-excel' || file.type === 'text/csv';
@@ -120,11 +129,87 @@ export class UploadStudentsComponent implements OnInit {
       }
     }
 
-    this.listOfColumns = r.headers;
+    this.listOfColumns = new Array<any>(r.headers);
     this.listOfData = r.data;
 
-    // this.validateGrade();
+    this.validateGrades();
     this.updateEditCache();
+  }
+
+  validateGrades(): void {
+    this.listOfData.forEach((data) => {
+      const item: any[] = data['grade'];
+      const prev: any[] = data['startedGrade'];
+
+      if (item) {
+        const found = this.grades.find((element) => element.name.toLowerCase() === item['value'].toLowerCase());
+        if (found) {
+          if (found.active) {
+            item['grade'] = found;
+            item['isValid'] = true;
+            item['message'] = null;
+          } else {
+            item['grade'] = null;
+            item['isValid'] = false;
+            item['message'] = `El grado ${item['value']} no se encuentra activo.`;
+          }
+        } else {
+          item['grade'] = null;
+          item['isValid'] = false;
+          item['message'] = `El grado ${item['value']} no existe en el sistema.`;
+        }
+      }
+
+      if (prev) {
+        const found = this.grades.find((element) => element.name.toLowerCase() === prev['value'].toLowerCase());
+        if (found) {
+          prev['grade'] = found;
+          prev['isValid'] = true;
+          prev['message'] = null;
+        } else {
+          prev['grade'] = null;
+          prev['isValid'] = false;
+          prev['message'] = `El grado ${prev['value']} no existe en el sistema.`;
+        }
+      }
+    });
+  }
+
+  validateGrade(data): void {
+    const item: any[] = data['grade'];
+    const prev: any[] = data['startedGrade'];
+
+    if (item) {
+      const found = this.grades.find((element) => element.name.toLowerCase() === item['value'].toLowerCase());
+      if (found) {
+        if (found.active) {
+          item['grade'] = found;
+          item['isValid'] = true;
+          item['message'] = null;
+        } else {
+          item['grade'] = null;
+          item['isValid'] = false;
+          item['message'] = `El grado ${item['value']} no se encuentra activo.`;
+        }
+      } else {
+        item['grade'] = null;
+        item['isValid'] = false;
+        item['message'] = `El grado ${item['value']} no existe en el sistema.`;
+      }
+    }
+
+    if (prev) {
+      const found = this.grades.find((element) => element.name.toLowerCase() === prev['value'].toLowerCase());
+      if (found) {
+        prev['grade'] = found;
+        prev['isValid'] = true;
+        prev['message'] = null;
+      } else {
+        prev['grade'] = null;
+        prev['isValid'] = false;
+        prev['message'] = `El grado ${prev['value']} no existe en el sistema.`;
+      }
+    }
   }
 
   /**********      Table methods     **********/
@@ -148,8 +233,8 @@ export class UploadStudentsComponent implements OnInit {
       this._listOfColumns,
       this.editCache[index].data
     );
+    this.validateGrade(this.editCache[index].data);
     Object.assign(this.listOfData[index], this.editCache[id].data);
-    // this.validateGrade();
     this.editCache[id].edit = false;
   }
 
@@ -166,7 +251,73 @@ export class UploadStudentsComponent implements OnInit {
     this.listOfData = JSON.parse(JSON.stringify(this.listOfData.filter((d) => d['id'] !== id)));
   }
 
-  createStudents(): void {}
+  createStudents(): void {
+    this.loading = true;
+    let errors = false;
+    // Check errors
+    this.listOfData.forEach((data) => {
+      this._listOfColumns.forEach((column) => {
+        if (column === 'role') {
+          Object.keys(data[column]['value']).forEach((grade) => {
+            if (!data[column]['value'][grade]['isValid']) errors = true;
+          });
+        } else {
+          if (!data[column]['isValid']) errors = true;
+        }
+      });
+    });
+    if (errors) {
+      this.loading = false;
+      this.notification.create(
+        'error',
+        'No se puede proceder con la carga de datos.',
+        'Se han detectado errores dentro del contenido de la tabla. Por favor corríjalos para continuar.',
+        {
+          nzDuration: 0
+        }
+      );
+    } else {
+      this.bulkStudents();
+    }
+  }
+
+  bulkStudents(): void {
+    this.studentService.bulkStudents(this.listOfData, this.shift).subscribe(
+      () => {
+        this.message.success('Estudiantes creados con éxito');
+        this.clearScreen();
+        this.loading = false;
+      },
+      (error) => {
+        this.loading = false;
+
+        this.message.warning(
+          'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
+          { nzDuration: 4500 }
+        );
+        this.clearListofData(error.message);
+      }
+    );
+  }
+
+  clearListofData(error): void {
+    const listToDelete = new Array<number>();
+
+    for (let i = this.listOfData.length - 1; i >= 0; i--) {
+      const dat = Object.keys(this.listOfData)[i];
+
+      if (error.hasOwnProperty(i)) {
+        this.listOfData[dat]['inlineError'] = error[i].message;
+      } else {
+        listToDelete.push(this.listOfData[dat].id);
+        this.listOfData[dat]['inlineError'] = null;
+      }
+    }
+
+    listToDelete.forEach((id) => {
+      this.listOfData = JSON.parse(JSON.stringify(this.listOfData.filter((d) => d['id'] !== id)));
+    });
+  }
 
   toggleMessage(): void {
     this.shift === null || this.shift === undefined ? (this.shiftMsg = 'El turno es requerido') : (this.shiftMsg = '');

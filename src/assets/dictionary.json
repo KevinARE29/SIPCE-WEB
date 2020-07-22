@@ -44,16 +44,16 @@
             "cycle": "Ciclo",
             "grade": "Grado",
             "section": "Sección",
-            "dateOfBirth": "Fecha de nacimiento",
+            "birthdate": "Fecha de nacimiento",
             "startedGrade": "Grado de ingreso",
             "registrationYear": "Año de ingreso",
             "responsible": "Responsable",
-            "kinshipRelationship": "Parentesco",
+            "responsibleRelationship": "Parentesco",
             "responsibleFirstname": "Nombre del responsable",
             "responsibleLastname": "Apellido del responsable",
             "contact": "Contacto",
             "responsibleEmail": "Correo electrónico del responsable",
-            "responsiblePhoneNumber": "Número de celular del responsable"
+            "responsiblePhone": "Número de celular del responsable"
         }
     }
 }
