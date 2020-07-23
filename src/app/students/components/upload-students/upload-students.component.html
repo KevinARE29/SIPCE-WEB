@@ -212,7 +212,11 @@
                 </tr>
             </tbody>
         </nz-table>
-    
+        
+        <div nz-row nzJustify="space-around" *ngIf="_listOfColumns.length === 11">
+            <label nz-checkbox [(ngModel)]="nextYear">Crear estudiantes para el año {{ year }}</label>
+        </div>
+
         <div nz-row nzJustify="space-around">
             <button nz-button nzType="primary" (click)="createStudents()">Crear usuarios</button>
         </div>

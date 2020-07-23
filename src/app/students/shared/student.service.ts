@@ -3,59 +3,46 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { ErrorMessageService } from 'src/app/shared/error-message.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudentService {
   baseUrl: string;
-  errorMessageService: any;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
     this.baseUrl = environment.apiURL;
   }
 
-  bulkStudents(students: any, shift: number): Observable<any> {
+  bulkStudents(students: any, shift: number, currentYear: boolean): Observable<any> {
     const newStudents = new Array<any>();
-
+    const data = {};
     students.forEach((element) => {
+      const newProperty = {};
+
+      newProperty['gradeId'] = element.grade.grade.id;
+      newProperty['code'] = element.code.value;
+      newProperty['firstname'] = element.firstname.value;
+      newProperty['lastname'] = element.lastname.value;
+      newProperty['email'] = element.email.value;
+      newProperty['birthdate'] = element.birthdate.value;
+      newProperty['responsibleFirstname'] = element.responsibleFirstname.value;
+      newProperty['responsibleLastname'] = element.responsibleLastname.value;
+      newProperty['responsibleRelationship'] = element.responsibleRelationship.value;
+      newProperty['responsibleEmail'] = element.responsibleEmail.value;
+      newProperty['responsiblePhone'] = element.responsiblePhone.value.replace('-', '');
+
       if (element.registrationYear && element.startedGrade) {
-        newStudents.push({
-          gradeId: element.grade.grade.id,
-          startedGradeId: element.startedGrade.grade.id,
-          registrationYear: element.registrationYear.value,
-          code: element.code.value,
-          firstname: element.firstname.value,
-          lastname: element.lastname.value,
-          email: element.email.value,
-          birthdate: element.birthdate.value,
-          responsibleFirstname: element.responsibleFirstname.value,
-          responsibleLastname: element.responsibleLastname.value,
-          responsibleRelationship: element.responsibleRelationship.value,
-          responsibleEmail: element.responsibleEmail.value,
-          responsiblePhone: element.responsiblePhone.value
-        });
-      } else {
-        newStudents.push({
-          gradeId: element.grade.grade.id,
-          code: element.code.value,
-          firstname: element.firstname.value,
-          lastname: element.lastname.value,
-          email: element.email.value,
-          birthdate: element.birthdate.value,
-          responsibleFirstname: element.responsibleFirstname.value,
-          responsibleLastname: element.responsibleLastname.value,
-          responsibleRelationship: element.responsibleRelationship.value,
-          responsibleEmail: element.responsibleEmail.value,
-          responsiblePhone: element.responsiblePhone.value
-        });
+        newProperty['startedGradeId'] = element.startedGrade.grade.id;
+        newProperty['registrationYear'] = Number(element.registrationYear.value);
       }
+      newStudents.push(newProperty);
     });
-    console.log(newStudents);
-    const data = JSON.stringify({
-      shiftId: shift,
-      students: newStudents
-    });
+
+    data['shiftId'] = shift;
+    data['students'] = newStudents;
+    if (Object.keys(newStudents[0]).length === 11) data['currentYear'] = currentYear;
 
     return this.http.post<any>(`${this.baseUrl}students/bulk`, data).pipe(catchError(this.handleError()));
   }

@@ -22,6 +22,8 @@ export class UploadStudentsComponent implements OnInit {
   shift: number;
   grades: any[];
   shifts: any[];
+  nextYear = false;
+  year: number;
 
   // Pre upload users errors
   uploadMsg: string;
@@ -45,7 +47,7 @@ export class UploadStudentsComponent implements OnInit {
   ngOnInit(): void {
     this.uploadMsg = '';
     this.shiftMsg = '';
-
+    this.year = new Date().getFullYear() + 1;
     this.getAcademicCatalogs();
   }
 
@@ -282,7 +284,7 @@ export class UploadStudentsComponent implements OnInit {
   }
 
   bulkStudents(): void {
-    this.studentService.bulkStudents(this.listOfData, this.shift).subscribe(
+    this.studentService.bulkStudents(this.listOfData, this.shift, !this.nextYear).subscribe(
       () => {
         this.message.success('Estudiantes creados con éxito');
         this.clearScreen();
