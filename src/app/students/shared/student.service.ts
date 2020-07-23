@@ -19,23 +19,39 @@ export class StudentService {
     const newStudents = new Array<any>();
 
     students.forEach((element) => {
-      newStudents.push({
-        gradeId: element.grade.grade.id,
-        startedGradeId: element.startedGrade.grade.id,
-        registrationYear: element.registrationYear.value,
-        code: element.code.value,
-        firstname: element.firstname.value,
-        lastname: element.lastname.value,
-        email: element.email.value,
-        birthdate: element.birthdate.value,
-        responsibleFirstname: element.responsibleFirstname.value,
-        responsibleLastname: element.responsibleLastname.value,
-        responsibleRelationship: element.registrationYear.value,
-        responsibleEmail: element.responsibleEmail.value,
-        responsiblePhone: element.responsiblePhone.value
-      });
+      if (element.registrationYear && element.startedGrade) {
+        newStudents.push({
+          gradeId: element.grade.grade.id,
+          startedGradeId: element.startedGrade.grade.id,
+          registrationYear: element.registrationYear.value,
+          code: element.code.value,
+          firstname: element.firstname.value,
+          lastname: element.lastname.value,
+          email: element.email.value,
+          birthdate: element.birthdate.value,
+          responsibleFirstname: element.responsibleFirstname.value,
+          responsibleLastname: element.responsibleLastname.value,
+          responsibleRelationship: element.responsibleRelationship.value,
+          responsibleEmail: element.responsibleEmail.value,
+          responsiblePhone: element.responsiblePhone.value
+        });
+      } else {
+        newStudents.push({
+          gradeId: element.grade.grade.id,
+          code: element.code.value,
+          firstname: element.firstname.value,
+          lastname: element.lastname.value,
+          email: element.email.value,
+          birthdate: element.birthdate.value,
+          responsibleFirstname: element.responsibleFirstname.value,
+          responsibleLastname: element.responsibleLastname.value,
+          responsibleRelationship: element.responsibleRelationship.value,
+          responsibleEmail: element.responsibleEmail.value,
+          responsiblePhone: element.responsiblePhone.value
+        });
+      }
     });
-
+    console.log(newStudents);
     const data = JSON.stringify({
       shiftId: shift,
       students: newStudents

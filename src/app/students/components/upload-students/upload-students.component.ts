@@ -289,12 +289,16 @@ export class UploadStudentsComponent implements OnInit {
         this.loading = false;
       },
       (error) => {
+        const notIn = [401, 403];
         this.loading = false;
 
-        this.message.warning(
-          'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
-          { nzDuration: 4500 }
-        );
+        if (!notIn.includes(error.statusCode) && error.statusCode < 500) {
+          this.message.warning(
+            'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
+            { nzDuration: 4500 }
+          );
+        }
+
         this.clearListofData(error.message);
       }
     );
