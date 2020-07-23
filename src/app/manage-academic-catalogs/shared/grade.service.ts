@@ -17,6 +17,10 @@ export class GradeService {
     this.baseUrl = environment.apiURL;
   }
 
+  getGrades(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}academics/grades?paginate=false`).pipe(catchError(this.handleError()));
+  }
+
   searchGrade(params: NzTableQueryParams, paginate: boolean): Observable<any[]> {
     let url = this.baseUrl + 'academics/grades';
     let queryParams = '';
