@@ -3,6 +3,7 @@
         "users": {
             "firstname": {
                 "check": false,
+                "optional": false,
                 "validations": [
                     {
                         "value": "empty",
@@ -15,6 +16,7 @@
             },
             "lastname": {
                 "check": false,
+                "optional": false,
                 "validations": [
                     {
                         "value": "empty",
@@ -27,6 +29,7 @@
             },
             "username": {
                 "check": false,
+                "optional": false,
                 "validations": [
                     {
                         "value": "empty",
@@ -42,6 +45,7 @@
             },
             "email": {
                 "check": false,
+                "optional": false,
                 "validations": [
                     {
                         "value": "empty",
@@ -54,8 +58,10 @@
                         "message": "El correo electrónico debe ser único"
                     }
                 ]
-            }, "code": {
+            }, 
+            "code": {
                 "check": false,
+                "optional": false,
                 "validations": [
                     {
                         "value": "empty",
@@ -65,9 +71,189 @@
                         "message": "El código debe ser único"
                     }
                 ]
-            }, "role": {
+            }, 
+            "role": {
                 "check": false,
+                "optional": false,
                 "validations": []
+            }
+        },
+        "students": {
+            "firstname": {
+                "check": false,
+                "optional": false,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "Los nombres son requeridos"
+                    }, {
+                        "value": "text",
+                        "message": "Los nombres deben ser texto"
+                    }
+                ]
+            },
+            "lastname": {
+                "check": false,
+                "optional": false,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "Los apellidos son requeridos"
+                    }, {
+                        "value": "text",
+                        "message": "Los apellidos deben ser texto"
+                    }
+                ]
+            },
+            "email": {
+                "check": false,
+                "optional": false,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El correo electrónico es requerido"
+                    }, {
+                        "value": "email",
+                        "message": "Formato incorrecto (ej. usuario@ejemplo.com)"
+                    }, {
+                        "value": "unique",
+                        "message": "El correo electrónico debe ser único"
+                    }
+                ]
+            }, 
+            "code": {
+                "check": false,
+                "optional": false,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El código es requerido"
+                    }
+                ]
+            },
+            "grade": {
+                "check": false,
+                "optional": false,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El grado es requerido"
+                    }, {
+                        "value": "text",
+                        "message": "El grado debe ser texto"
+                    }
+                ]
+            },
+            "birthdate": {
+                "check": false,
+                "optional": false,
+                "transformed": false,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "La fecha de nacimiento es requerida"
+                    }, {
+                        "value": "date",
+                        "message": "La fecha de nacimiento debe tener un formato de fecha valido (dd/mm/aaaa)"
+                    }
+                ]
+            },
+            "startedGrade": {
+                "check": false,
+                "optional": true,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El grado de inicio es requerido"
+                    }, {
+                        "value": "text",
+                        "message": "El grado de inicio debe ser texto"
+                    }
+                ]
+            },
+            "registrationYear": {
+                "check": false,
+                "optional": true,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El año de inicio es requerido"
+                    }, {
+                        "value": "number",
+                        "message": "El año debe ser un número"
+                    }, {
+                        "value": "year",
+                        "message": "El año debe estar en un rango válido."
+                    }
+                ]
+            },
+            "responsibleRelationship": {
+                "check": false,
+                "optional": false,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El parentesco es requerido"
+                    }, {
+                        "value": "text",
+                        "message": "El paretesco debe ser texto"
+                    }, {
+                        "value": "kinship",
+                        "message": "El parentesco ingresado no existe"
+                    }
+                ]
+            },
+            "responsibleFirstname": {
+                "check": false,
+                "optional": false,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "Los nombres son requeridos"
+                    }, {
+                        "value": "text",
+                        "message": "Los nombres deben ser texto"
+                    }
+                ]
+            },
+            "responsibleLastname": {
+                "check": false,
+                "optional": false,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "Los apellidos son requeridos"
+                    }, {
+                        "value": "text",
+                        "message": "Los apellidos deben ser texto"
+                    }
+                ]
+            },
+            "responsibleEmail": {
+                "check": false,
+                "optional": false,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El correo electrónico es requerido"
+                    }, {
+                        "value": "email",
+                        "message": "Formato incorrecto (ej. usuario@ejemplo.com)"
+                    }
+                ]
+            },
+            "responsiblePhone": {
+                "check": false,
+                "optional": false,
+                "validations": [
+                    {
+                        "value": "empty",
+                        "message": "El número de teléfono es requerido"
+                    }, {
+                        "value": "phoneNumber",
+                        "message": "Formato incorrecto (ej. 2222-2222)"
+                    }
+                ]
             }
         }
     }

@@ -1,50 +1,67 @@
 import { Component, OnInit } from '@angular/core';
-import { UploadFile } from 'ng-zorro-antd/upload';
-import { Observable, Observer } from 'rxjs';
-
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { NzMessageService } from 'ng-zorro-antd/message';
+import { Observer, Observable } from 'rxjs';
 
 import DictionaryJson from './../../../../assets/dictionary.json';
-import { CsvToJsonService } from './../../../shared/csv-to-json.service';
-import { UserService } from '../../shared/user.service';
-import { Role } from 'src/app/roles/shared/role.model';
-import { RoleService } from 'src/app/roles/shared/role.service';
+import { CsvToJsonService } from 'src/app/shared/csv-to-json.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { UploadFile } from 'ng-zorro-antd/upload';
+import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
+import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
+import { StudentService } from '../../shared/student.service';
 
 @Component({
-  selector: 'app-upload-users',
-  templateUrl: './upload-users.component.html',
-  styleUrls: ['./upload-users.component.css']
+  selector: 'app-upload-students',
+  templateUrl: './upload-students.component.html',
+  styleUrls: ['./upload-students.component.css']
 })
-export class UploadUsersComponent implements OnInit {
+export class UploadStudentsComponent implements OnInit {
   csv: Blob;
   fileList: UploadFile[];
   loading = false;
-  appRoles: Role[];
+  shift: number;
+  grades: any[];
+  shifts: any[];
+  nextYear = false;
+  year: number;
+
   // Pre upload users errors
   uploadMsg: string;
+  shiftMsg: string;
 
   // Table structure
-  listOfColumns = {};
+  listOfColumns: any;
   _listOfColumns: any;
   listOfData: [];
   editCache: { [key: string]: { edit: boolean; data: unknown } } = {};
 
   constructor(
     private csvToJsonService: CsvToJsonService,
-    private userService: UserService,
-    private roleService: RoleService,
+    private gradeService: GradeService,
+    private studentService: StudentService,
+    private shiftService: ShiftService,
     private message: NzMessageService,
     private notification: NzNotificationService
   ) {}
 
   ngOnInit(): void {
     this.uploadMsg = '';
-    this.getRoles();
+    this.shiftMsg = '';
+    this.year = new Date().getFullYear() + 1;
+    this.getAcademicCatalogs();
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  beforeUpload = (file: UploadFile) => {
+  getAcademicCatalogs(): void {
+    this.shiftService.getShift().subscribe((data) => {
+      this.shifts = data['data'].filter((x) => x.active === true);
+    });
+
+    this.gradeService.getAllGrades().subscribe((data) => {
+      this.grades = data['data'];
+    });
+  }
+
+  beforeUpload = (file: UploadFile): Observable<any> => {
     this.uploadMsg = '';
     return new Observable((observer: Observer<boolean>) => {
       const isCsv = file.type === 'application/vnd.ms-excel' || file.type === 'text/csv';
@@ -77,9 +94,9 @@ export class UploadUsersComponent implements OnInit {
     this.uploadMsg = '';
 
     if (this.csv === undefined || this.csv === null) this.uploadMsg = 'El archivo es requerido';
-
-    if (this.csv) {
-      this.csvToJsonService.csvJSON(this.csv, 'users').subscribe(
+    if (this.shift === undefined) this.shiftMsg = 'El turno es requerido';
+    if (this.csv && this.shift) {
+      this.csvToJsonService.csvJSON(this.csv, 'students').subscribe(
         (r) => {
           this._listOfColumns = JSON.parse(JSON.stringify(r['headers']));
           this.generateTable(r);
@@ -106,7 +123,7 @@ export class UploadUsersComponent implements OnInit {
   };
 
   generateTable(r): void {
-    const dictionary = DictionaryJson.dictionary['users'];
+    const dictionary = DictionaryJson.dictionary['students'];
 
     for (let i = 0; i < r.headers.length; i++) {
       if (dictionary.hasOwnProperty(r.headers[i])) {
@@ -114,46 +131,90 @@ export class UploadUsersComponent implements OnInit {
       }
     }
 
-    this.listOfColumns = r.headers;
+    this.listOfColumns = new Array<any>(r.headers);
     this.listOfData = r.data;
 
-    this.validateRole();
+    this.validateGrades();
     this.updateEditCache();
   }
 
-  getRoles(): void {
-    this.roleService.getAllRoles().subscribe((data) => {
-      this.appRoles = data['data'];
-    });
-  }
-
-  validateRole(): void {
+  validateGrades(): void {
     this.listOfData.forEach((data) => {
-      Object.keys(data['role']['value']).forEach((role) => {
-        const item: any[] = data['role']['value'][role];
+      const item: any[] = data['grade'];
+      const prev: any[] = data['startedGrade'];
 
-        if (item['value']) {
-          const itemName = item['value'] + '';
-          const found = this.appRoles.find((element) => element.name.toLowerCase() === itemName.toLowerCase());
-
-          if (found) {
-            item['role'] = found;
+      if (item) {
+        const found = this.grades.find((element) => element.name.toLowerCase() === item['value'].toLowerCase());
+        if (found) {
+          if (found.active) {
+            item['grade'] = found;
             item['isValid'] = true;
             item['message'] = null;
           } else {
-            item['role'] = null;
+            item['grade'] = null;
             item['isValid'] = false;
-            item['message'] = `El rol ${itemName} no existe en el sistema.`;
+            item['message'] = `El grado ${item['value']} no se encuentra activo.`;
           }
         } else {
-          item['role'] = null;
-          item['isValid'] = true;
-          item['message'] = null;
+          item['grade'] = null;
+          item['isValid'] = false;
+          item['message'] = `El grado ${item['value']} no existe en el sistema.`;
         }
-      });
+      }
+
+      if (prev) {
+        const found = this.grades.find((element) => element.name.toLowerCase() === prev['value'].toLowerCase());
+        if (found) {
+          prev['grade'] = found;
+          prev['isValid'] = true;
+          prev['message'] = null;
+        } else {
+          prev['grade'] = null;
+          prev['isValid'] = false;
+          prev['message'] = `El grado ${prev['value']} no existe en el sistema.`;
+        }
+      }
     });
   }
 
+  validateGrade(data): void {
+    const item: any[] = data['grade'];
+    const prev: any[] = data['startedGrade'];
+
+    if (item) {
+      const found = this.grades.find((element) => element.name.toLowerCase() === item['value'].toLowerCase());
+      if (found) {
+        if (found.active) {
+          item['grade'] = found;
+          item['isValid'] = true;
+          item['message'] = null;
+        } else {
+          item['grade'] = null;
+          item['isValid'] = false;
+          item['message'] = `El grado ${item['value']} no se encuentra activo.`;
+        }
+      } else {
+        item['grade'] = null;
+        item['isValid'] = false;
+        item['message'] = `El grado ${item['value']} no existe en el sistema.`;
+      }
+    }
+
+    if (prev) {
+      const found = this.grades.find((element) => element.name.toLowerCase() === prev['value'].toLowerCase());
+      if (found) {
+        prev['grade'] = found;
+        prev['isValid'] = true;
+        prev['message'] = null;
+      } else {
+        prev['grade'] = null;
+        prev['isValid'] = false;
+        prev['message'] = `El grado ${prev['value']} no existe en el sistema.`;
+      }
+    }
+  }
+
+  /**********      Table methods     **********/
   startEdit(id: string): void {
     this.editCache[id].edit = true;
   }
@@ -170,12 +231,12 @@ export class UploadUsersComponent implements OnInit {
   saveEdit(id: string): void {
     const index = this.listOfData.findIndex((item) => item['id'] === id);
     this.editCache[id].data = this.csvToJsonService.validateUpdatedRow(
-      'users',
+      'students',
       this._listOfColumns,
       this.editCache[index].data
     );
+    this.validateGrade(this.editCache[index].data);
     Object.assign(this.listOfData[index], this.editCache[id].data);
-    this.validateRole();
     this.editCache[id].edit = false;
   }
 
@@ -192,7 +253,7 @@ export class UploadUsersComponent implements OnInit {
     this.listOfData = JSON.parse(JSON.stringify(this.listOfData.filter((d) => d['id'] !== id)));
   }
 
-  createUsers(): void {
+  createStudents(): void {
     this.loading = true;
     let errors = false;
     // Check errors
@@ -218,14 +279,14 @@ export class UploadUsersComponent implements OnInit {
         }
       );
     } else {
-      this.bulkUsers();
+      this.bulkStudents();
     }
   }
 
-  bulkUsers(): void {
-    this.userService.bulkUsers(this.listOfData).subscribe(
+  bulkStudents(): void {
+    this.studentService.bulkStudents(this.listOfData, this.shift, !this.nextYear).subscribe(
       () => {
-        this.message.success('Usuarios creados con éxito');
+        this.message.success('Estudiantes creados con éxito');
         this.clearScreen();
         this.loading = false;
       },
@@ -262,6 +323,10 @@ export class UploadUsersComponent implements OnInit {
     listToDelete.forEach((id) => {
       this.listOfData = JSON.parse(JSON.stringify(this.listOfData.filter((d) => d['id'] !== id)));
     });
+  }
+
+  toggleMessage(): void {
+    this.shift === null || this.shift === undefined ? (this.shiftMsg = 'El turno es requerido') : (this.shiftMsg = '');
   }
 
   clearScreen(): void {
