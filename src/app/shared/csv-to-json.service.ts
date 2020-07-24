@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { isValid } from 'date-fns';
+
 import CsvHeaders from './../shared/csv-headers.json';
 import DictionaryJson from '../../assets/dictionary.json';
+import { KinshipRelationship } from './kinship-relationship.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +37,7 @@ export class CsvToJsonService {
   transform(csv: string, group: string): unknown {
     /*---------------    Get headers     ---------------*/
     const availableHeaders = CsvHeaders.headers[group];
-    const dictionary = DictionaryJson.dictionary['users'];
+    const dictionary = DictionaryJson.dictionary[group];
 
     const lines = csv.split('\n');
     const result = [];
@@ -42,21 +45,32 @@ export class CsvToJsonService {
     const headers = lines[0].split(',');
 
     /*---------------    Validate headers     ---------------*/
-    if (Object.keys(availableHeaders).length !== headers.length) {
-      return 'quantityError';
+    if (group === 'students') {
+      if (
+        Object.keys(availableHeaders).length !== headers.length &&
+        Object.keys(availableHeaders).length - 2 !== headers.length
+      ) {
+        return 'quantityError';
+      }
+    } else {
+      if (Object.keys(availableHeaders).length !== headers.length) {
+        return 'quantityError';
+      }
     }
 
     headers.forEach((header) => {
       Object.keys(availableHeaders).forEach((key) => {
-        if (dictionary[key].toLowerCase() == header.toLowerCase().trim()) {
-          realHeaders.push(key);
-          availableHeaders[key].check = true;
+        if (dictionary.hasOwnProperty(key)) {
+          if (dictionary[key].toLowerCase() == header.toLowerCase().trim()) {
+            realHeaders.push(key);
+            availableHeaders[key].check = true;
+          }
         }
       });
     });
 
     for (const header of Object.keys(availableHeaders)) {
-      if (!availableHeaders[header].check) {
+      if (!availableHeaders[header].check && !availableHeaders[header].optional) {
         return 'wrongColumns';
         break;
       }
@@ -104,6 +118,13 @@ export class CsvToJsonService {
                   value: role,
                   isValid: true,
                   message: null
+                };
+              } else if (realHeaders[j] === 'grade') {
+                obj[realHeaders[j]] = {
+                  value: currentline[j].trim(),
+                  isValid: true,
+                  message: null,
+                  grade: null
                 };
               } else {
                 obj[realHeaders[j]] = {
@@ -215,6 +236,120 @@ export class CsvToJsonService {
             }
           }
           break;
+        case 'phoneNumber':
+          if (typeof field.value === 'object') {
+            Object.keys(field.value).forEach((value) => {
+              if (!this.phoneNumber(value)) {
+                field.isValid = false;
+                field.message = validate.message;
+                flag = false;
+              } else {
+                if (flag) {
+                  field.isValid = true;
+                  field.message = null;
+                }
+              }
+            });
+          } else if (typeof field.value === 'string') {
+            if (!this.phoneNumber(field.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
+                field.isValid = true;
+                field.message = null;
+              }
+            }
+          }
+          break;
+        case 'date':
+          if (typeof field.value === 'string') {
+            if (!field.transformed) {
+              const dateComponents = field.value.split('/');
+              field.value = new Date(dateComponents[2], dateComponents[1] - 1, dateComponents[0]);
+              field.transformed = true;
+            }
+            if (!this.date(field.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
+                field.isValid = true;
+                field.message = null;
+              }
+            }
+          }
+          break;
+        case 'kinship':
+          if (typeof field.value === 'string') {
+            if (!this.kinship(field.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
+                field.isValid = true;
+                field.message = null;
+              }
+            }
+          }
+          break;
+        case 'number':
+          if (typeof field.value === 'object') {
+            Object.keys(field.value).forEach((value) => {
+              if (!this.number(value)) {
+                field.isValid = false;
+                field.message = validate.message;
+                flag = false;
+              } else {
+                if (flag) {
+                  field.isValid = true;
+                  field.message = null;
+                }
+              }
+            });
+          } else if (typeof field.value === 'string') {
+            if (!this.number(field.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
+                field.isValid = true;
+                field.message = null;
+              }
+            }
+          }
+          break;
+        case 'year':
+          if (typeof field.value === 'object') {
+            Object.keys(field.value).forEach((value) => {
+              if (!this.year(value)) {
+                field.isValid = false;
+                field.message = validate.message;
+                flag = false;
+              } else {
+                if (flag) {
+                  field.isValid = true;
+                  field.message = null;
+                }
+              }
+            });
+          } else if (typeof field.value === 'string') {
+            if (!this.year(field.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
+                field.isValid = true;
+                field.message = null;
+              }
+            }
+          }
+          break;
       }
     });
     return;
@@ -241,6 +376,26 @@ export class CsvToJsonService {
     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(field);
   }
 
+  phoneNumber(field): boolean {
+    return /^[0-9]{4}[-\s]{1}[0-9]{4}$/.test(field);
+  }
+
+  date(field): boolean {
+    return isValid(new Date(field));
+  }
+
+  number(field): boolean {
+    return !!Number(field);
+  }
+
+  year(field): boolean {
+    const year = new Date().getFullYear();
+    return !!(field >= year - 15 && field <= year + 1);
+  }
+
+  kinship(field): boolean {
+    return !!Object.values(KinshipRelationship).includes(field);
+  }
   replaceAccents(text: string): string {
     const chars = {
       á: 'a',
