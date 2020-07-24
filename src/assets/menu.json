@@ -90,6 +90,9 @@
             "allow": null,
             "children": [
                 {
+                    "route": "/estudiantes/consultar",
+                    "name": "Estudiantes"
+                }, {
                     "route": "/estudiantes/carga-masiva",
                     "name": "Cargar estudiantes"
                 }

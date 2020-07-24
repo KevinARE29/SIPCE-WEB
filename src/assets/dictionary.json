@@ -37,6 +37,7 @@
             "all": "Registro"
         },
         "students": {
+            "all": "Registro",
             "code": "Código",
             "firstname": "Nombres",
             "lastname": "Apellidos",

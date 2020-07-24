@@ -377,7 +377,7 @@ export class CsvToJsonService {
   }
 
   phoneNumber(field): boolean {
-    return /^[0-9]{4}[-\s]{1}[0-9]{4}$/.test(field);
+    return /^[0-9]{4}[-]{1}[0-9]{4}$/.test(field);
   }
 
   date(field): boolean {
