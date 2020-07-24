@@ -151,7 +151,7 @@ export class ShowGradesComponent implements OnInit {
   }
 
   getGrades(): void {
-    this.gradeService.getGrades().subscribe((data) => {
+    this.gradeService.getAllGrades().subscribe((data) => {
       this.allGrades = data['data'];
     });
   }
