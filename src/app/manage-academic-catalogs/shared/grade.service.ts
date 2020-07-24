@@ -17,7 +17,7 @@ export class GradeService {
     this.baseUrl = environment.apiURL;
   }
 
-  getAllGrades(): Observable<any[]> {
+  getGrades(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}academics/grades?paginate=false`).pipe(catchError(this.handleError()));
   }
 
