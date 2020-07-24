@@ -142,7 +142,7 @@ export class ShowGradesComponent implements OnInit {
       // message to show when the grade cannot be activated or deactivated
       this.notification.create(
         'error',
-        'Ocurrio un error al ' + this.status + ' el grado:',
+        'Ocurrió un error al ' + this.status + ' el grado:',
         'El grado actual no puede ser ' +
           this.successMessage +
           ' ya que los grados deben activarse o desactivarse secuencialmente'
