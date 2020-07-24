@@ -85,13 +85,6 @@ export class ShowGradesComponent implements OnInit {
             this.enabled = true;
           } else {
             this.enabled = false;
-            this.notification.create(
-              'error',
-              'Ocurrio un error al ' + this.status + ' el grado:',
-              'El grado actual no puede ser ' +
-                this.successMessage +
-                ' ya que los grados deben activarse o desactivarse secuencialmente'
-            );
           }
         }
       }
@@ -103,13 +96,6 @@ export class ShowGradesComponent implements OnInit {
           this.enabled = true;
         } else {
           this.enabled = false;
-          this.notification.create(
-            'error',
-            'Ocurrio un error al ' + this.status + ' el grado:',
-            'El grado actual no puede ser ' +
-              this.successMessage +
-              ' ya que los grados deben activarse o desactivarse secuencialmente'
-          );
         }
       }
     } else {
@@ -120,13 +106,6 @@ export class ShowGradesComponent implements OnInit {
         if (element.active === true) {
           if (this.previusGrade.active === true && this.nextGrade.active === true) {
             this.enabled = false;
-            this.notification.create(
-              'error',
-              'Ocurrio un error al ' + this.status + ' el grado:',
-              'El grado actual no puede ser ' +
-                this.successMessage +
-                ' ya que los grados deben activarse o desactivarse secuencialmente'
-            );
           } else {
             this.enabled = true;
           }
@@ -134,13 +113,6 @@ export class ShowGradesComponent implements OnInit {
           // when a grade in the middle wants to activate
           if (this.previusGrade.active === false && this.nextGrade.active === false) {
             this.enabled = false;
-            this.notification.create(
-              'error',
-              'Ocurrio un error al ' + this.status + ' el grado:',
-              'El grado actual no puede ser ' +
-                this.successMessage +
-                ' ya que los grados deben activarse o desactivarse secuencialmente'
-            );
           } else {
             this.enabled = true;
           }
@@ -166,35 +138,28 @@ export class ShowGradesComponent implements OnInit {
           }
         }
       );
+    } else {
+      // message to show when the grade cannot be activated or deactivated
+      this.notification.create(
+        'error',
+        'Ocurrio un error al ' + this.status + ' el grado:',
+        'El grado actual no puede ser ' +
+          this.successMessage +
+          ' ya que los grados deben activarse o desactivarse secuencialmente'
+      );
     }
   }
 
-  /* methos to refresh grades on table */
-  refreshTableData(): void {
-    this.loading = true;
-    this.gradeService.searchGrade(null, false).subscribe(
+  getGrades(): void {
+    this.gradeService.getGrades().subscribe(
       (data) => {
-        this.grades = data['data'];
-        this.pagination = data['pagination'];
-        this.listOfDisplayData = [...this.grades];
-        this.loading = false;
+        this.allGrades = data['data'];
       },
-      (err) => {
-        this.loading = false;
-        const statusCode = err.statusCode;
-        const notIn = [401, 403];
-
-        if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al filtrar los grados.', err.message, { nzDuration: 0 });
-        }
+      () => {
+        //if an error occurs when obtaining all the degrees, the degree validations will be carried out from the backend
+        this.enabled = true;
       }
     );
-  }
-
-  getGrades(): void {
-    this.gradeService.getGrades().subscribe((data) => {
-      this.allGrades = data['data'];
-    });
   }
 
   /* ---     sort method      --- */
