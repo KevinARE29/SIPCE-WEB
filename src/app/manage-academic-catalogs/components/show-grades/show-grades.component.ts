@@ -151,15 +151,9 @@ export class ShowGradesComponent implements OnInit {
   }
 
   getGrades(): void {
-    this.gradeService.getGrades().subscribe(
-      (data) => {
-        this.allGrades = data['data'];
-      },
-      () => {
-        //if an error occurs when obtaining all the degrees, the degree validations will be carried out from the backend
-        this.enabled = true;
-      }
-    );
+    this.gradeService.getGrades().subscribe((data) => {
+      this.allGrades = data['data'];
+    });
   }
 
   /* ---     sort method      --- */
