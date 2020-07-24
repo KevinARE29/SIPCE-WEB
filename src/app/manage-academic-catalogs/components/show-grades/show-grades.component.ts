@@ -156,7 +156,6 @@ export class ShowGradesComponent implements OnInit {
     });
   }
 
-  /* ---     sort method      --- */
   recharge(params: NzTableQueryParams): void {
     // getting all the grades
     this.loading = true;
