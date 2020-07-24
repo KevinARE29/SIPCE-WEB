@@ -44,7 +44,8 @@ export class StudentService {
     data['students'] = newStudents;
     if (Object.keys(newStudents[0]).length === 11) data['currentYear'] = currentYear;
 
-    return this.http.post<any>(`${this.baseUrl}students/bulk`, data).pipe(catchError(this.handleError()));
+    const jsonData = JSON.stringify(data);
+    return this.http.post<any>(`${this.baseUrl}students/bulk`, jsonData).pipe(catchError(this.handleError()));
   }
 
   /**
