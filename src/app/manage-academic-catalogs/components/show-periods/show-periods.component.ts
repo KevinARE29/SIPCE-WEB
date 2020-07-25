@@ -14,7 +14,7 @@ export class ShowPeriodsComponent implements OnInit {
   periods: ShiftPeriodGrade[];
   loading = false;
   status: string;
-  mensajeExito: string;
+  successMessage: string;
   confirmModal?: NzModalRef;
 
   constructor(
@@ -54,15 +54,15 @@ export class ShowPeriodsComponent implements OnInit {
 
     if (element.active === true) {
       this.status = 'desactivar';
-      this.mensajeExito = 'desactivado';
+      this.successMessage = 'desactivado';
     } else {
       this.status = 'activar';
-      this.mensajeExito = 'activado';
+      this.successMessage = 'activado';
     }
 
     this.periodService.deletePeriod(id).subscribe(
       () => {
-        this.message.success(`El periodo ${element.name} ha sido ${this.mensajeExito}`);
+        this.message.success(`El periodo ${element.name} ha sido ${this.successMessage}`);
         element.active = !element.active;
       },
       (err) => {

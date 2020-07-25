@@ -14,7 +14,7 @@ export class ShowShiftComponent implements OnInit {
   shifts: ShiftPeriodGrade[];
   loading = false;
   status: string;
-  mensajeExito: string;
+  successMessage: string;
   confirmModal?: NzModalRef;
 
   constructor(
@@ -53,15 +53,15 @@ export class ShowShiftComponent implements OnInit {
     const element = this.shifts.find((x) => x.id === id);
     if (element.active === true) {
       this.status = 'desactivar';
-      this.mensajeExito = 'desactivado';
+      this.successMessage = 'desactivado';
     } else {
       this.status = 'activar';
-      this.mensajeExito = 'activado';
+      this.successMessage = 'activado';
     }
 
     this.shiftService.deleteShift(id).subscribe(
       () => {
-        this.message.success(`El turno ${element.name} ha sido ${this.mensajeExito}`);
+        this.message.success(`El turno ${element.name} ha sido ${this.successMessage}`);
         element.active = !element.active;
       },
       (err) => {
