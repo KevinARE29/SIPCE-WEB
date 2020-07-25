@@ -1,1 +1,125 @@
-<p>students works!</p>
+<div nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
+    <div nz-col nzXs="24" nzMd="14" nzLg="16" nzXl="19">
+        <h1>Estudiantes</h1>
+    </div>
+    <div nz-col nzXs="24" nzMd="8" nzLg="6" nzXl="3">
+        <a nz-button nzType="primary" routerLink="/students/0">Crear estudiante</a>
+    </div>
+</div>
+
+<div class="search" nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
+    <!-- Code -->
+    <div class="code" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5" class="gutter-row">
+        <nz-input-group [nzSuffix]="inputClearCode">
+            <input nz-input [(ngModel)]="searchParams.code" placeholder="Buscar código" />
+        </nz-input-group>
+        <ng-template #inputClearCode>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.code" (click)="searchParams.code = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Name -->
+    <div class="name" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5" class="gutter-row">
+        <nz-input-group [nzSuffix]="inputClearName">
+            <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Buscar nombre" />
+        </nz-input-group>
+        <ng-template #inputClearName>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.firstname" (click)="searchParams.firstname = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Lastname -->
+    <div class="lastname" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5" class="gutter-row">
+        <nz-input-group [nzSuffix]="inputClearLastname">
+            <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Buscar apellido" />
+        </nz-input-group>
+        <ng-template #inputClearLastname>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.lastname" (click)="searchParams.lastname = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Email -->
+    <div class="email" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5" class="gutter-row">
+        <nz-input-group [nzSuffix]="inputClearEmail">
+            <input nz-input [(ngModel)]="searchParams.email" placeholder="Buscar correo electrónico" />
+        </nz-input-group>
+        <ng-template #inputClearEmail>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.email" (click)="searchParams.email = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Status -->
+    <div class="status" nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="11" nzXl="10" class="gutter-row">
+        <label>Estado: </label>
+        <nz-switch [(ngModel)]="statusSwitch" [nzCheckedChildren]="'Activos'" [nzUnCheckedChildren]="'Inactivos'" (ngModelChange)="statusToggle()"></nz-switch>
+        <nz-select class="status" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.status" (ngModelChange)="search()">
+            <nz-option *ngFor="let state of statuses" [nzLabel]="state" [nzValue]="state"></nz-option>
+        </nz-select>
+    </div>
+
+    <!-- Grade -->
+    <div class="grade" nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="9" nzXl="10" class="gutter-row">
+        <label>Grado: </label>
+        <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.currentGrade.id" (ngModelChange)="search()">
+            <nz-option *ngFor="let grade of grades" [nzLabel]="grade.name" [nzValue]="grade.id"></nz-option>
+        </nz-select>
+    </div>
+
+    <!-- Search button-->
+    <div class="status" nz-col nzXs="24" nzSm="4" nzMd="4" nzLg="2" nzXl="2" class="gutter-row">
+        <button nz-button nzType="primary" (click)="search()">Buscar</button>
+    </div>
+</div>
+
+<div class="students" nz-row>
+    <div nz-col [nzXs]="24" [nzXl]="{ span: 20, offset: 2 }">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <nz-table #filterTable 
+                [nzData]="listOfDisplayData" 
+                nzTableLayout="fixed"
+                [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems"
+                [nzPageSize]="pagination.perPage"
+                [nzPageIndex]="pagination.page"
+                nzSize="small"
+                (nzQueryParams)="getStudents($event)"
+            >
+                <thead>
+                    <tr>
+                        <th nzColumnKey="code" [nzSortFn]="true" [nzSortPriority]="1">Código</th>
+                        <th nzColumnKey="firstname" [nzSortFn]="true" [nzSortPriority]="2">Nombres</th>
+                        <th nzColumnKey="lastname" [nzSortFn]="true" [nzSortPriority]="3">Apellidos</th>
+                        <th nzColumnKey="email" [nzSortFn]="true" [nzSortPriority]="4">Correo electrónico</th>
+                        <th nzColumnKey="currentGrade" [nzSortFn]="true" [nzSortPriority]="5">Grado</th>
+                        <th nzColumnKey="status" [nzSortFn]="true" [nzSortPriority]="6">Estado</th>
+                        <th [nzAlign]="'center'">Acción</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <tr *ngFor="let data of filterTable.data">
+                        <td>{{ data.code }}</td>
+                        <td>{{ data.firstname }}</td>
+                        <td>{{ data.lastname }}</td>
+                        <td>{{ data.email }}</td>
+                        <td>{{ data.currentGrade.name }}</td>
+                        <td>{{ data.status }}</td>
+                        <td [nzAlign]="'center'">
+                            <a routerLink="/estudiantes/{{data.id}}">
+                                <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
+                            </a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a routerLink="/estudiantes/{{data.id}}/edit">
+                                <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
+                            </a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a (click)="showConfirm(data.id)">
+                                <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>
