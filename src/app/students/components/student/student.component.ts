@@ -30,6 +30,7 @@ export class StudentComponent implements OnInit {
         if (id === 0) {
           this.router.navigateByUrl('/estudiantes/nuevo');
         } else if (id > 0) {
+          this.student.id = id;
           this.getStudent();
         }
       } else {
@@ -40,7 +41,6 @@ export class StudentComponent implements OnInit {
     for (let i = 0; i < 10; i++) {
       this.images.push({ title: `Image ${i}`, image: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png' });
     }
-    console.log(this.images);
   }
 
   getStudent(): void {

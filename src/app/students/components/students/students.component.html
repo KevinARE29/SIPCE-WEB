@@ -109,7 +109,7 @@
                                 <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
                             </a>
                             <nz-divider nzType="vertical"></nz-divider>
-                            <a routerLink="/estudiantes/{{data.id}}/edit">
+                            <a [routerLink]="['/estudiantes', data.id, 'editar']">
                                 <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
                             </a>
                             <nz-divider nzType="vertical"></nz-divider>
