@@ -8,9 +8,10 @@ import { StudentsRoutingModule } from './students-routing.module';
 import { UploadStudentsComponent } from './components/upload-students/upload-students.component';
 import { StudentsComponent } from './components/students/students.component';
 import { NewStudentComponent } from './components/new-student/new-student.component';
+import { StudentComponent } from './components/student/student.component';
 
 @NgModule({
-  declarations: [UploadStudentsComponent, StudentsComponent, NewStudentComponent],
+  declarations: [UploadStudentsComponent, StudentsComponent, NewStudentComponent, StudentComponent],
   imports: [CommonModule, ReactiveFormsModule, AntDesignModule, StudentsRoutingModule]
 })
 export class StudentsModule { }

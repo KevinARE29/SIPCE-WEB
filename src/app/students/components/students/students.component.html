@@ -3,7 +3,7 @@
         <h1>Estudiantes</h1>
     </div>
     <div nz-col nzXs="24" nzMd="8" nzLg="6" nzXl="3">
-        <a nz-button nzType="primary" routerLink="/estudiantes/0/nuevo">Crear estudiante</a>
+        <a nz-button nzType="primary" routerLink="/estudiantes/nuevo">Crear estudiante</a>
     </div>
 </div>
 
@@ -105,7 +105,7 @@
                         <td>{{ data.currentGrade.name }}</td>
                         <td>{{ data.status }}</td>
                         <td [nzAlign]="'center'">
-                            <a routerLink="/estudiantes/{{data.id}}">
+                            <a [routerLink]="['/estudiantes', data.id, 'detalle']">
                                 <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
                             </a>
                             <nz-divider nzType="vertical"></nz-divider>
