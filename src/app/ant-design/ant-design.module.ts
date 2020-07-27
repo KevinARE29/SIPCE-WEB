@@ -40,6 +40,7 @@ import { NzListModule } from 'ng-zorro-antd/list';
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { es_ES } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
+import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import es from '@angular/common/locales/es';
 
 registerLocaleData(es);
@@ -76,7 +77,8 @@ const ngZorro = [
   NzPopconfirmModule,
   NzSwitchModule,
   NzTagModule,
-  NzListModule
+  NzListModule,
+  NzCollapseModule
 ];
 
 @NgModule({

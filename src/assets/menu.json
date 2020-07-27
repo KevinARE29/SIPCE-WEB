@@ -94,6 +94,18 @@
                     "name": "Cargar estudiantes"
                 }
             ]
+        },
+        {
+            "title": "Agenda",
+            "icon": "schedule",
+            "permission": 13,
+            "allow": null,
+            "children": [
+                {
+                    "route": "/agenda/horarios",
+                    "name": "Agenda"
+                }
+            ]
         }
     ]  
 }

@@ -62,6 +62,11 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'agenda',
+    loadChildren: () => import('./schedules/schedule.module').then((m) => m.ScheduleModule)
+    //  canLoad: [AuthGuard]
+  },
+  {
     path: '**',
     redirectTo: '/error404',
     pathMatch: 'full'

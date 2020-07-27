@@ -54,6 +54,9 @@
             "contact": "Contacto",
             "responsibleEmail": "Correo electrónico del responsable",
             "responsiblePhone": "Número de celular del responsable"
+        },
+        "schedule": {
+            "schedule": "Horario"
         }
     }
 }
