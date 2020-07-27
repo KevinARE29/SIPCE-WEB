@@ -52,7 +52,7 @@ export class UploadStudentsComponent implements OnInit {
   }
 
   getAcademicCatalogs(): void {
-    this.shiftService.getShift().subscribe((data) => {
+    this.shiftService.getShifts().subscribe((data) => {
       this.shifts = data['data'].filter((x) => x.active === true);
     });
 

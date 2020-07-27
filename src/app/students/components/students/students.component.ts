@@ -47,7 +47,7 @@ export class StudentsComponent implements OnInit {
   init(): void {
     this.statusSwitch = true;
     this.searchParams = new Student();
-    this.searchParams.currentGrade = new ShiftPeriodGrade();
+    this.searchParams.grade = new ShiftPeriodGrade();
 
     this.pagination = new Pagination();
     this.pagination.perPage = 10;

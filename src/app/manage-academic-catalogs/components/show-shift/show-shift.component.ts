@@ -24,12 +24,12 @@ export class ShowShiftComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getShift();
+    this.getShifts();
   }
 
-  getShift(): void {
+  getShifts(): void {
     this.loading = true;
-    this.shiftService.getShift().subscribe(
+    this.shiftService.getShifts().subscribe(
       (response) => {
         this.shifts = response['data'];
         this.loading = false;

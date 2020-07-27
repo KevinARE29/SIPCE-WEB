@@ -3,9 +3,12 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { getYear } from 'date-fns';
+
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { Student } from './student.model';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Injectable({
   providedIn: 'root'
@@ -62,7 +65,7 @@ export class StudentService {
 
       if (search.email) queryParams += '&email=' + search.email;
 
-      if (search.currentGrade.id) queryParams += '&currentGrade=' + search.currentGrade.id;
+      if (search.grade.id) queryParams += '&currentGrade=' + search.grade.id;
 
       if (search.status) queryParams += '&status=' + search.status;
 
@@ -106,6 +109,31 @@ export class StudentService {
     if (Object.keys(newStudents[0]).length === 11) data['currentYear'] = currentYear;
 
     return this.http.post<any>(`${this.baseUrl}students/bulk`, data).pipe(catchError(this.handleError()));
+  }
+
+  createStudent(student: Student): Observable<Student> {
+    const data = {};
+    data['responsible'] = {};
+
+    data['responsible'].relationship = student.responsibles[0].relationship;
+    data['responsible'].firstname = student.responsibles[0].firstname;
+    data['responsible'].lastname = student.responsibles[0].lastname;
+    data['responsible'].email = student.responsibles[0].email;
+    data['responsible'].phone = student.responsibles[0].phone.replace('-', '');
+    data['code'] = student.code;
+    data['firstname'] = student.firstname;
+    data['lastname'] = student.lastname;
+    data['email'] = student.email;
+    data['birthdate'] = student.birthdate;
+    data['shiftId'] = student.shift.id;
+    data['gradeId'] = student.grade.id;
+
+    if (student.startedGrade.id) data['startedGradeId'] = student.startedGrade.id;
+    if (student.registrationYear) data['registrationYear'] = getYear(student.registrationYear);
+
+    return this.http
+      .post<Student>(`${this.baseUrl}students`, JSON.stringify(data))
+      .pipe(catchError(this.handleError()));
   }
 
   /**

@@ -3,7 +3,7 @@
         <h1>Estudiantes</h1>
     </div>
     <div nz-col nzXs="24" nzMd="8" nzLg="6" nzXl="3">
-        <a nz-button nzType="primary" routerLink="/students/0">Crear estudiante</a>
+        <a nz-button nzType="primary" routerLink="/estudiantes/0/nuevo">Crear estudiante</a>
     </div>
 </div>
 
@@ -60,7 +60,7 @@
     <!-- Grade -->
     <div class="grade" nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="9" nzXl="10" class="gutter-row">
         <label>Grado: </label>
-        <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.currentGrade.id" (ngModelChange)="search()">
+        <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.grade.id" (ngModelChange)="search()">
             <nz-option *ngFor="let grade of grades" [nzLabel]="grade.name" [nzValue]="grade.id"></nz-option>
         </nz-select>
     </div>
@@ -113,7 +113,8 @@
                                 <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
                             </a>
                             <nz-divider nzType="vertical"></nz-divider>
-                            <a (click)="showConfirm(data.id)">
+                            <!-- <a (click)="showConfirm(data.id)"> -->
+                            <a>
                                 <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
                             </a>
                         </td>
