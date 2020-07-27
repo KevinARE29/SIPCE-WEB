@@ -37,9 +37,12 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzListModule } from 'ng-zorro-antd/list';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { es_ES } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
+
 import es from '@angular/common/locales/es';
 
 registerLocaleData(es);
@@ -76,7 +79,8 @@ const ngZorro = [
   NzPopconfirmModule,
   NzSwitchModule,
   NzTagModule,
-  NzListModule
+  NzListModule,
+  NzTabsModule
 ];
 
 @NgModule({

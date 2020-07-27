@@ -137,7 +137,7 @@
                         <!-- Code -->
                         <td [ngClass]="{ 'fieldError': !data['code']['isValid'] }"
                         nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data['code']['message']">
-                            {{ data['code']['value'] }}
+                            <input type="text" nz-input [(ngModel)]="editCache[data.id].data['code']['value']">
                         </td>
                         <!-- Complete name -->
                         <td>
@@ -218,7 +218,7 @@
         </div>
 
         <div nz-row nzJustify="space-around">
-            <button nz-button nzType="primary" (click)="createStudents()">Crear usuarios</button>
+            <button nz-button nzType="primary" (click)="createStudents()">Crear estudiantes</button>
         </div>
     </ng-container>    
 </nz-spin>

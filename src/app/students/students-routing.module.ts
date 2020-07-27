@@ -1,7 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { UploadStudentsComponent } from './components/upload-students/upload-students.component';
+
 import { AuthGuard } from '../login/guards/auth.guard';
+
+import { UploadStudentsComponent } from './components/upload-students/upload-students.component';
+import { StudentsComponent } from './components/students/students.component';
+import { NewStudentComponent } from './components/new-student/new-student.component';
+import { StudentComponent } from './components/student/student.component';
+import { UpdateStudentComponent } from './components/update-student/update-student.component';
 
 const routes: Routes = [
   {
@@ -9,6 +15,35 @@ const routes: Routes = [
     component: UploadStudentsComponent,
     canActivate: [AuthGuard],
     data: { permission: 11 } // TODO: Change permission
+  },
+  {
+    path: 'consultar',
+    component: StudentsComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 11 } // TODO: Change permission
+  },
+  {
+    path: 'nuevo',
+    component: NewStudentComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 11 } // TODO: Change permission
+  },
+  {
+    path: ':student',
+    children: [
+      {
+        path: 'detalle',
+        component: StudentComponent,
+        canActivate: [AuthGuard],
+        data: { permission: 11 } // TODO: Change permission
+      },
+      {
+        path: 'editar',
+        component: UpdateStudentComponent,
+        canActivate: [AuthGuard],
+        data: { permission: 11 } // TODO: Change permission
+      }
+    ]
   }
 ];
 
@@ -16,4 +51,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class StudentsRoutingModule { }
+export class StudentsRoutingModule {}

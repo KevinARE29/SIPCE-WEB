@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 
 import { environment } from './../../../environments/environment';
 import { ErrorMessageService } from '../../shared/error-message.service';
+import { ShiftPeriodGrade } from './shiftPeriodGrade.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +21,8 @@ export class ShiftService {
     return this.http.delete<any>(`${this.baseUrl}academics/shifts/${id}`).pipe(catchError(this.handleError()));
   }
 
-  getShift(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}academics/shifts`).pipe(catchError(this.handleError()));
+  getShifts(): Observable<ShiftPeriodGrade[]> {
+    return this.http.get<ShiftPeriodGrade[]>(`${this.baseUrl}academics/shifts`).pipe(catchError(this.handleError()));
   }
 
   /**
