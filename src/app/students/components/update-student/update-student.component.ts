@@ -13,6 +13,7 @@ import { Student } from '../../shared/student.model';
 import { UploadFile } from 'ng-zorro-antd/upload';
 import { Responsible } from '../../shared/responsible.model';
 import { ResponsibleService } from '../../shared/responsible.service';
+import { KinshipRelationship } from './../../../shared/kinship-relationship.enum';
 
 @Component({
   selector: 'app-update-student',
@@ -26,9 +27,11 @@ export class UpdateStudentComponent implements OnInit {
   student: Student;
   images: any[];
   studentForm!: FormGroup;
+  responsibleForm!: FormGroup;
 
   // Select lists
   shifts: ShiftPeriodGrade[];
+  kinshipRelationships: any;
 
   // Table
   editCache: { [key: number]: { edit: boolean; data: Responsible } } = {};
@@ -51,6 +54,8 @@ export class UpdateStudentComponent implements OnInit {
     this.init();
     this.student = new Student();
     this.images = new Array<any[]>();
+    this.kinshipRelationships = Object.keys(KinshipRelationship).filter((k) => isNaN(Number(k)));
+
     this.validateRouteParam();
     // this.getShifts();
   }
@@ -73,7 +78,6 @@ export class UpdateStudentComponent implements OnInit {
   }
 
   validateRouteParam(): void {
-    console.log('Validating route param');
     this.route.paramMap.subscribe((params) => {
       const param: string = params.get('student');
       let id;
@@ -116,7 +120,7 @@ export class UpdateStudentComponent implements OnInit {
     this.student.responsibles.forEach((item) => {
       this.editCache[item['id']] = {
         edit: false,
-        data: item
+        data: { ...item }
       };
     });
   }
@@ -168,7 +172,9 @@ export class UpdateStudentComponent implements OnInit {
               const notIn = [401, 403];
 
               if (!notIn.includes(statusCode) && statusCode < 500) {
-                this.notification.create('error', 'Ocurrió un error al eliminar al resposnsable.', err.message, { nzDuration: 0 });
+                this.notification.create('error', 'Ocurrió un error al eliminar al resposnsable.', err.message, {
+                  nzDuration: 0
+                });
               }
             })
       });
@@ -198,8 +204,43 @@ export class UpdateStudentComponent implements OnInit {
 
   saveEdit(id: number): void {
     const index = this.student.responsibles.findIndex((item) => item['id'] === id);
-    Object.assign(this.student.responsibles[index], this.editCache[id].data);
-    this.editCache[id].edit = false;
+
+    if (this.validateNotNulls(this.editCache[id].data)) {
+      if (/^[0-9]{8}$/.test(this.editCache[id].data.phone)) {
+        this.responsibleService.updateResponsible(this.student.id, this.editCache[id].data).subscribe(
+          () => {
+            Object.assign(this.student.responsibles[index], this.editCache[id].data);
+            this.editCache[id].edit = false;
+            this.message.success('Responsable actualizado con éxito');
+          },
+          (error) => {
+            if (error.status < 500 && error.status !== 404 && error.status !== 403) {
+              this.notification.create(
+                'error',
+                'Ocurrió un error al actualizar al responsable Por favor verifique lo siguiente:',
+                error.message,
+                { nzDuration: 0 }
+              );
+            }
+          }
+        );
+      } else {
+        this.notification.create('warning', 'Formato incorrecto.', 'El número de teléfono debe contener 8 dígitos.', { nzDuration: 0 });
+      }
+    } else {
+      this.notification.create('warning', 'Campos vacíos.', 'Todos los campos son obligatorios.', { nzDuration: 0 });
+    }
+  }
+
+  validateNotNulls(obj: any): boolean {
+    let valid = true;
+
+    Object.values(obj).forEach((o) => {
+      if (!o) valid = false;
+      else if (o.toString().length <= 0) valid = false;
+    });
+
+    return valid;
   }
 
   /***************************************************IMAGES */

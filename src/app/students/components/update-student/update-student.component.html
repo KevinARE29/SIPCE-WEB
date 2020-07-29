@@ -193,19 +193,21 @@
                 <!--        Editable row         -->
                 <ng-template #editTemplate>
                     <td>
-                        <input type="text" nz-input [(ngModel)]="editCache[data.id].firstname">
+                        <input type="text" nz-input [(ngModel)]="editCache[data.id].data.firstname">
                     </td>
                     <td>
-                        <input type="text" nz-input [(ngModel)]="editCache[data.id].lastname">
+                        <input type="text" nz-input [(ngModel)]="editCache[data.id].data.lastname">
                     </td>
                     <td>
-                        <input type="text" nz-input [(ngModel)]="editCache[data.id].relationship">
+                        <nz-select class="relation" nzShowSearch nzAllowClear [(ngModel)]="editCache[data.id].data.relationship">
+                            <nz-option *ngFor="let relation of kinshipRelationships" [nzValue]="relation" [nzLabel]="relation"></nz-option>
+                        </nz-select>
                     </td>
                     <td>
-                        <input type="text" nz-input [(ngModel)]="editCache[data.id].email">
+                        <input type="text" nz-input [(ngModel)]="editCache[data.id].data.email">
                     </td>
                     <td>
-                        <input type="text" nz-input [(ngModel)]="editCache[data.id].phone">
+                        <input type="text" nz-input [(ngModel)]="editCache[data.id].data.phone">
                     </td>
                     <td [nzAlign]="'center'">
                         <a (click)="saveEdit(data.id)" class="save"> Guardar </a>
