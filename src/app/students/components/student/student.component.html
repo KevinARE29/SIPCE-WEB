@@ -47,18 +47,18 @@
 <div nz-row>
     <div nz-col nzXs="24" nzMd="12">
         <nz-divider nzText="Responsable"></nz-divider>
-        <div>
+        <div *ngFor="let responsible of student.responsibles">
             <div>
-                <div class="kinshipRelationship">Parentesco</div>
+                <div class="kinshipRelationship">{{ responsible.relationship }}</div>
             </div>
             <div>
-                <strong>Nombre:</strong> <span>Nombre completo</span>
+                <strong>Nombre: </strong> <span>{{ responsible.firstname }} {{ responsible.lastname }}</span>
             </div>
             <div>
-                <strong>Correo electrónico:</strong> <span>correo@ejemplo.com</span>
+                <strong>Correo electrónico: </strong> <span>{{ responsible.email }}</span>
             </div>
             <div>
-                <strong>Número de celular:</strong> <span>####-####</span>
+                <strong>Número de celular: </strong> <span>{{ responsible.phone  | slice:0:4 }}-{{ responsible.phone | slice:4:8 }}</span>
             </div>
         </div>
     </div>

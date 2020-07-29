@@ -7,7 +7,8 @@
 </div>
 
 <nz-tabset>
-    <nz-tab nzTitle="Informacion personal">
+    <!-- General information -->
+    <nz-tab nzTitle="Información personal">
         <form nz-form [formGroup]="studentForm" (ngSubmit)="submitForm()">
             <!----------        Sudent data       ---------->
             <div nz-row [nzGutter]="24">
@@ -154,8 +155,9 @@
         </form>
     </nz-tab>
 
+    <!-- Responsibles -->
     <nz-tab nzTitle="Responsables">
-        <nz-table #filterTable nzSize="small">
+        <nz-table #editRowTable [nzData]="student.responsibles" nzTableLayout="fixed" nzSize="small">
         <thead>
             <tr>
                 <th nzColumnKey="firstname" [nzSortFn]="true" [nzSortPriority]="2">Nombres</th>
@@ -168,10 +170,55 @@
         </thead>
         
         <tbody>
+            <tr *ngFor="let data of editRowTable.data">
+                <!--        Non-editable row        -->
+                <ng-container *ngIf="!editCache[data.id].edit; else editTemplate">
+                    <td>{{ data.firstname }}</td>
+                    <td>{{ data.lastname }}</td>
+                    <td>{{ data.relationship }}</td>
+                    <td>{{ data.email }}</td>
+                    <td>{{ data.phone  | slice:0:4 }}-{{ data.phone | slice:4:8 }}</td>
+                    
+                    <td [nzAlign]="'center'">
+                        <a (click)="startEdit(data.id)">
+                            <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
+                        </a>
+                        <nz-divider nzType="vertical"></nz-divider>
+                        <a nz-tooltip nzTooltipTitle="Eliminar" (click)="showConfirm(data.id)">
+                            <i nz-icon nzType="delete" nzTheme="outline"></i>
+                        </a>
+                    </td>
+                </ng-container>    
+
+                <!--        Editable row         -->
+                <ng-template #editTemplate>
+                    <td>
+                        <input type="text" nz-input [(ngModel)]="editCache[data.id].firstname">
+                    </td>
+                    <td>
+                        <input type="text" nz-input [(ngModel)]="editCache[data.id].lastname">
+                    </td>
+                    <td>
+                        <input type="text" nz-input [(ngModel)]="editCache[data.id].relationship">
+                    </td>
+                    <td>
+                        <input type="text" nz-input [(ngModel)]="editCache[data.id].email">
+                    </td>
+                    <td>
+                        <input type="text" nz-input [(ngModel)]="editCache[data.id].phone">
+                    </td>
+                    <td [nzAlign]="'center'">
+                        <a (click)="saveEdit(data.id)" class="save"> Guardar </a>
+                        <nz-divider nzType="vertical"></nz-divider>
+                        <a nz-popconfirm nzTitle="¿Cancelar edición?" (nzOnConfirm)="cancelEdit(data.id)">Cancelar</a>
+                    </td>
+                </ng-template>
+            </tr>
         </tbody>
     </nz-table>
     </nz-tab>
 
+    <!-- Pictures -->
     <nz-tab nzTitle="Fotografías">
         <div class="clearfix">
             <nz-upload

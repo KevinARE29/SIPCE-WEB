@@ -54,8 +54,8 @@ export class StudentComponent implements OnInit {
   getStudentData(): void {
     this.student.responsibles = new Array<Responsible>();
     // TODO: Get student data
-    // this.responsibleService.getResponsibles(this.student.id).subscribe((data) => {
-    //   this.student.responsibles = data['data'];
-    // });
+    this.responsibleService.getResponsibles(this.student.id).subscribe((data) => {
+      this.student.responsibles = data['data'];
+    });
   }
 }

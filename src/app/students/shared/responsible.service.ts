@@ -30,6 +30,26 @@ export class ResponsibleService {
       .pipe(catchError(this.handleError()));
   }
 
+  updateResponsible(studentID: number, responsible: Responsible): Observable<Responsible> {
+    const data = JSON.stringify({
+      relationship: responsible.relationship,
+      firstname: responsible.firstname,
+      lastname: responsible.lastname,
+      email: responsible.email,
+      phone: responsible.phone
+    });
+
+    return this.http
+      .put<Responsible>(`${this.baseUrl}students/${studentID}/responsibles/${responsible.id}`, data)
+      .pipe(catchError(this.handleError()));
+  }
+
+  deleteResponsible(studentID: number, responsibleID: number): Observable<any> {
+    return this.http
+      .delete<any>(`${this.baseUrl}students/${studentID}/responsibles/${responsibleID}`)
+      .pipe(catchError(this.handleError()));
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.
