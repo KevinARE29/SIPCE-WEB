@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { Student } from '../../shared/student.model';
+import { ResponsibleService } from '../../shared/responsible.service';
+import { Responsible } from '../../shared/responsible.model';
 
 @Component({
   selector: 'app-student',
@@ -11,15 +13,21 @@ import { Student } from '../../shared/student.model';
 export class StudentComponent implements OnInit {
   student: Student;
   images: any[];
-  constructor(private router: Router, private route: ActivatedRoute) {}
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    // private studentService: StudentComponent,
+    private responsibleService: ResponsibleService
+  ) {}
 
   ngOnInit(): void {
     this.student = new Student();
     this.images = new Array<any[]>();
-    this.init();
+    this.validateRouteParam();
   }
 
-  init(): void {
+  validateRouteParam(): void {
     this.route.paramMap.subscribe((params) => {
       const param: string = params.get('student');
       let id;
@@ -31,10 +39,10 @@ export class StudentComponent implements OnInit {
           this.router.navigateByUrl('/estudiantes/nuevo');
         } else if (id > 0) {
           this.student.id = id;
-          this.getStudent();
+          this.getStudentData();
         }
       } else {
-        this.router.navigateByUrl('/usuario/' + param, { skipLocationChange: true });
+        this.router.navigateByUrl('/estudiantes/' + param + '/detalle', { skipLocationChange: true });
       }
     });
 
@@ -43,7 +51,11 @@ export class StudentComponent implements OnInit {
     }
   }
 
-  getStudent(): void {
-    // TODO: Get student
+  getStudentData(): void {
+    this.student.responsibles = new Array<Responsible>();
+    // TODO: Get student data
+    // this.responsibleService.getResponsibles(this.student.id).subscribe((data) => {
+    //   this.student.responsibles = data['data'];
+    // });
   }
 }

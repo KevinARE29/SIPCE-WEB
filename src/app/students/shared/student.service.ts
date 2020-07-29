@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, forkJoin } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { getYear } from 'date-fns';
 
-import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { Student } from './student.model';
+import { ErrorMessageService } from 'src/app/shared/error-message.service';
+import { ResponsibleService } from './responsible.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,11 @@ import { Student } from './student.model';
 export class StudentService {
   baseUrl: string;
 
-  constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
+  constructor(
+    private http: HttpClient,
+    private responsibleService: ResponsibleService,
+    private errorMessageService: ErrorMessageService
+  ) {
     this.baseUrl = environment.apiURL;
   }
 
@@ -135,6 +140,18 @@ export class StudentService {
       .post<Student>(`${this.baseUrl}students`, JSON.stringify(data))
       .pipe(catchError(this.handleError()));
   }
+
+  getStudent(id: number): Observable<Student> {
+    return this.http.get<Student>(`${this.baseUrl}students/${id}`).pipe(catchError(this.handleError()));
+  }
+
+  // Method to join the 3 request required to get the student data
+  // getStudentData(id: number): Observable<any> {
+  //   return forkJoin({
+  //     student: this.getStudent(id),
+  //     responsibles: this.responsibleService.getResponsibles(id)
+  //   });
+  // }
 
   /**
    * Handle Http operation that failed.

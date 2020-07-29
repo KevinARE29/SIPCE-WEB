@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { NzMessageService } from 'ng-zorro-antd/message';
+
 import { Student } from '../../shared/student.model';
 import { Permission } from 'src/app/shared/permission.model';
 import { Pagination } from 'src/app/shared/pagination.model';
 import { StudentService } from '../../shared/student.service';
 import { AuthService } from 'src/app/login/shared/auth.service';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
 import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
 import { StudentStatus } from 'src/app/shared/student-status.enum';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-students',
@@ -18,6 +21,8 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 })
 export class StudentsComponent implements OnInit {
   permissions: Array<Permission> = [];
+  confirmModal?: NzModalRef;
+
   // Search params
   searchParams: Student;
   statusSwitch: boolean;
@@ -35,6 +40,8 @@ export class StudentsComponent implements OnInit {
     private studentService: StudentService,
     private gradeService: GradeService,
     private authService: AuthService,
+    private message: NzMessageService,
+    private modal: NzModalService,
     private notification: NzNotificationService
   ) {}
 
@@ -126,6 +133,33 @@ export class StudentsComponent implements OnInit {
         }
       }
     );
+  }
+
+  showConfirm(id: number): void {
+    const element = this.listOfDisplayData.find((x) => x.id === id);
+
+    // this.confirmModal = this.modal.confirm({
+      // nzTitle: `¿Desea eliminar al estudiante "${element.code}"?`,
+      // nzContent: `Eliminará al estudiante "${element.firstname} ${element.lastname}". La acción no puede deshacerse. ¿Desea continuar con la acción?`,
+      // nzOnOk: () =>
+        // this.studentService
+        //   .deleteStudent(id)
+        //   .toPromise()
+        //   .then(() => {
+        //     this.message.success(`El estudiante "${element.firstname} ${element.lastname}" ha sido eliminado`);
+        //     this.search();
+        //   })
+        //   .catch((err) => {
+        //     const statusCode = err.statusCode;
+        //     const notIn = [401, 403];
+
+        //     if (!notIn.includes(statusCode) && statusCode < 500) {
+        //       this.notification.create('error', 'Ocurrió un error al eliminar al estudiante.', err.message, {
+        //         nzDuration: 0
+        //       });
+        //     }
+        //   })
+    // });
   }
 
   /* ------      Complementary methods      ------ */
