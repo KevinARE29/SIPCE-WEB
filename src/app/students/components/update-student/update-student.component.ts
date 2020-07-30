@@ -22,6 +22,7 @@ import { KinshipRelationship } from './../../../shared/kinship-relationship.enum
 })
 export class UpdateStudentComponent implements OnInit {
   loading = false;
+  creating = false; // Hide or show the create button if necesary
   // Form variables
   btnLoading = false;
   student: Student;
@@ -117,6 +118,7 @@ export class UpdateStudentComponent implements OnInit {
   }
 
   updateEditCache(): void {
+    this.editCache = {};
     this.student.responsibles.forEach((item) => {
       this.editCache[item['id']] = {
         edit: false,
@@ -151,7 +153,7 @@ export class UpdateStudentComponent implements OnInit {
   }
 
   /*****    Responsible methods   *****/
-  // Delete responsible
+  // Delete
   showConfirm(id: number): void {
     if (this.student.responsibles.length > 1) {
       const element = this.student.responsibles.find((x) => x.id === id);
@@ -165,6 +167,7 @@ export class UpdateStudentComponent implements OnInit {
             .deleteResponsible(this.student.id, element.id)
             .toPromise()
             .then(() => {
+              this.student.responsibles = this.student.responsibles.filter((d) => d['id'] !== id);
               this.message.success(`El responsable ${element.firstname} ${element.lastname} ha sido eliminado`);
             })
             .catch((err) => {
@@ -188,7 +191,7 @@ export class UpdateStudentComponent implements OnInit {
     }
   }
 
-  // Update responsible
+  // Update
   startEdit(id: string): void {
     this.editCache[id].edit = true;
   }
@@ -200,43 +203,117 @@ export class UpdateStudentComponent implements OnInit {
       data: JSON.parse(JSON.stringify(lastValue)),
       edit: false
     };
+
+    if (id === 0) {
+      this.student.responsibles = this.student.responsibles.filter((d) => d['id'] !== id);
+    }
+  }
+
+  updateResponsible(id: number): void {
+    const index = this.student.responsibles.findIndex((item) => item['id'] === id);
+
+    this.responsibleService.updateResponsible(this.student.id, this.editCache[id].data).subscribe(
+      () => {
+        Object.assign(this.student.responsibles[index], this.editCache[id].data);
+        this.editCache[id].edit = false;
+        this.message.success('Responsable actualizado con éxito');
+      },
+      (error) => {
+        if (error.statusCode < 500 && error.statusCode !== 404 && error.statusCode !== 403) {
+          this.notification.create(
+            'error',
+            'Ocurrió un error al actualizar al responsable Por favor verifique lo siguiente:',
+            error.message,
+            { nzDuration: 0 }
+          );
+        }
+      }
+    );
   }
 
   saveEdit(id: number): void {
-    const index = this.student.responsibles.findIndex((item) => item['id'] === id);
-
     if (this.validateNotNulls(this.editCache[id].data)) {
       if (/^[0-9]{8}$/.test(this.editCache[id].data.phone)) {
-        this.responsibleService.updateResponsible(this.student.id, this.editCache[id].data).subscribe(
-          () => {
-            Object.assign(this.student.responsibles[index], this.editCache[id].data);
-            this.editCache[id].edit = false;
-            this.message.success('Responsable actualizado con éxito');
-          },
-          (error) => {
-            if (error.status < 500 && error.status !== 404 && error.status !== 403) {
-              this.notification.create(
-                'error',
-                'Ocurrió un error al actualizar al responsable Por favor verifique lo siguiente:',
-                error.message,
-                { nzDuration: 0 }
-              );
-            }
-          }
-        );
+        if (id > 0) this.updateResponsible(id);
+        else this.createResponsible();
       } else {
-        this.notification.create('warning', 'Formato incorrecto.', 'El número de teléfono debe contener 8 dígitos.', { nzDuration: 0 });
+        this.notification.create('warning', 'Formato incorrecto.', 'El número de teléfono debe contener 8 dígitos.', {
+          nzDuration: 0
+        });
       }
     } else {
       this.notification.create('warning', 'Campos vacíos.', 'Todos los campos son obligatorios.', { nzDuration: 0 });
     }
   }
 
+  // Create
+  addResponsible(): void {
+    if (this.student.responsibles.length < 2) {
+      this.student.responsibles = [
+        ...this.student.responsibles,
+        {
+          id: 0,
+          firstname: '',
+          lastname: '',
+          email: '',
+          phone: '',
+          relationship: ''
+        }
+      ];
+      this.editCache[0] = {
+        edit: true,
+        data: {
+          id: 0,
+          firstname: '',
+          lastname: '',
+          email: '',
+          phone: '',
+          relationship: ''
+        }
+      };
+    } else {
+      this.notification.create(
+        'warning',
+        'Límite de responsables alcanzado',
+        'Solo se permiten dos responsables por estudiante.',
+        { nzDuration: 0 }
+      );
+    }
+  }
+
+  createResponsible(): void {
+    const index = this.student.responsibles.findIndex((item) => item['id'] === 0);
+    this.responsibleService.createResponsible(this.student.id, this.editCache[0].data).subscribe(
+      (data) => {
+        // Update register
+        this.student.responsibles[index].id = data['data'].id;
+        this.student.responsibles[index].firstname = data['data'].firstname;
+        this.student.responsibles[index].lastname = data['data'].lastname;
+        this.student.responsibles[index].email = data['data'].email;
+        this.student.responsibles[index].phone = data['data'].phone;
+        this.student.responsibles[index].relationship = this.editCache[0].data.relationship;
+
+        this.updateEditCache();
+        this.message.success('Responsable creado con éxito');
+      },
+      (error) => {
+        if (error.statusCode < 500 && error.statustatusCodes !== 404 && error.statusCode !== 403) {
+          this.notification.create(
+            'error',
+            'Ocurrió un error al actualizar al responsable Por favor verifique lo siguiente:',
+            error.message,
+            { nzDuration: 0 }
+          );
+        }
+      }
+    );
+  }
+
   validateNotNulls(obj: any): boolean {
     let valid = true;
 
     Object.values(obj).forEach((o) => {
-      if (!o) valid = false;
+      if (!o && o !== 0) valid = false;
       else if (o.toString().length <= 0) valid = false;
     });
 
