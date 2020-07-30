@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -22,7 +22,6 @@ import { KinshipRelationship } from './../../../shared/kinship-relationship.enum
 })
 export class UpdateStudentComponent implements OnInit {
   loading = false;
-  creating = false; // Hide or show the create button if necesary
   // Form variables
   btnLoading = false;
   student: Student;
@@ -43,6 +42,7 @@ export class UpdateStudentComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private location: Location,
     private fb: FormBuilder,
     private shiftService: ShiftService,
     private responsibleService: ResponsibleService,
@@ -61,6 +61,7 @@ export class UpdateStudentComponent implements OnInit {
     // this.getShifts();
   }
 
+  //#region Initialize component
   init(): void {
     // eslint-disable-next-line prettier/prettier
     const emailPattern = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
@@ -126,8 +127,9 @@ export class UpdateStudentComponent implements OnInit {
       };
     });
   }
+  //#endregion Initialize component
 
-  /*****    Update general information   *****/
+  //#region Update general information
   submitForm(): void {
     for (const i in this.studentForm.controls) {
       this.studentForm.controls[i].markAsDirty();
@@ -151,8 +153,9 @@ export class UpdateStudentComponent implements OnInit {
       // this.updateStudent(); // TODO: Create method
     }
   }
+  //#endregion Update general information
 
-  /*****    Responsible methods   *****/
+  //#region Responsibles
   // Delete
   showConfirm(id: number): void {
     if (this.student.responsibles.length > 1) {
@@ -319,7 +322,11 @@ export class UpdateStudentComponent implements OnInit {
 
     return valid;
   }
+  //#endregion Responsibles
 
+  back(): void {
+    this.location.back();
+  }
   /***************************************************IMAGES */
   fileList: UploadFile[] = [
     {
