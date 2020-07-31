@@ -10,10 +10,11 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
 import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
 import { Student } from '../../shared/student.model';
-import { UploadFile } from 'ng-zorro-antd/upload';
+import { UploadFile, UploadFileStatus } from 'ng-zorro-antd/upload';
 import { Responsible } from '../../shared/responsible.model';
 import { ResponsibleService } from '../../shared/responsible.service';
 import { KinshipRelationship } from './../../../shared/kinship-relationship.enum';
+import { Observable, Observer } from 'rxjs';
 
 @Component({
   selector: 'app-update-student',
@@ -21,6 +22,7 @@ import { KinshipRelationship } from './../../../shared/kinship-relationship.enum
   styleUrls: ['./update-student.component.css']
 })
 export class UpdateStudentComponent implements OnInit {
+  avatarUrl: any; // TODO: Delete
   loading = false;
   // Form variables
   btnLoading = false;
@@ -327,36 +329,54 @@ export class UpdateStudentComponent implements OnInit {
   back(): void {
     this.location.back();
   }
-  /***************************************************IMAGES */
-  fileList: UploadFile[] = [
-    {
-      uid: '-1',
-      name: 'image.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-    },
-    {
-      uid: '-2',
-      name: 'image.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-    },
-    {
-      uid: '-3',
-      name: 'image.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-    },
-    {
-      uid: '-4',
-      name: 'image.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-    },
-    {
-      uid: '-5',
-      name: 'image.png',
-      status: 'error'
+
+  //#region Student images
+  beforeUpload = (file: UploadFile, _fileList: UploadFile[]) => {
+    return new Observable((observer: Observer<boolean>) => {
+      const isJpgOrPng =
+        file.type === 'image/jpeg' ||
+        file.type === 'image/jpg' ||
+        file.type === 'image/png' ||
+        file.type === 'image/svg';
+
+      if (!isJpgOrPng) {
+        this.message.error('Solamente se permiten formatos de imagen jpg, jpeg, svg y png.');
+        observer.complete();
+        return;
+      }
+      const isLt5M = file.size! / 1024 / 1024 < 5;
+      if (!isLt5M) {
+        this.message.error('La imagen debe pesar menos de 5MB');
+        observer.complete();
+        return;
+      }
+      observer.next(isJpgOrPng && isLt5M);
+      observer.complete();
+    });
+  };
+
+  getBase64(img: File, callback: (img: string) => void): void {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result!.toString()));
+    reader.readAsDataURL(img);
+  }
+
+  handleChange(info: { file: UploadFile }): void {
+    this.uploadImage(info);
+  }
+
+  uploadImage = (info: { file: UploadFile }): void => {
+    const img: Blob = info.file.originFileObj;
+    let url;
+    if (img) {
+      const reader: FileReader = new FileReader();
+      reader.readAsDataURL(img);
+
+      reader.onload = () => {
+        url = reader.result;
+      };
+      console.log(url);
     }
-  ];
+  };
+  //#endregion Student images
 }
