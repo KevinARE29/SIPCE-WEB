@@ -10,6 +10,7 @@ import { getYear } from 'date-fns';
 import { Student } from './student.model';
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { ResponsibleService } from './responsible.service';
+import { Grade } from 'src/app/shared/grade.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,11 +18,7 @@ import { ResponsibleService } from './responsible.service';
 export class StudentService {
   baseUrl: string;
 
-  constructor(
-    private http: HttpClient,
-    private responsibleService: ResponsibleService,
-    private errorMessageService: ErrorMessageService
-  ) {
+  constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
     this.baseUrl = environment.apiURL;
   }
 
@@ -143,6 +140,13 @@ export class StudentService {
 
   getStudent(id: number): Observable<Student> {
     return this.http.get<Student>(`${this.baseUrl}students/${id}`).pipe(catchError(this.handleError()));
+  }
+
+  createOrUpdatePicture(studentId: number, grade: Grade, image: Blob): Observable<any> {
+    const fd = new FormData();
+    fd.append('image', image, image['name']);
+
+    return this.http.post<string>(`${this.baseUrl}students/${studentId}/images?gradeId=${grade.id}`, fd);
   }
 
   // Method to join the 3 request required to get the student data

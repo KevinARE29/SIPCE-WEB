@@ -19,14 +19,15 @@
                         <nz-form-control [nzErrorTip]="codeErrors">
                             <input nz-input formControlName="code" placeholder="Código" />
                             <ng-template #codeErrors let-control>
-                                <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 32 caracteres
+                                <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 32
+                                    caracteres
                                 </ng-container>
                                 <ng-container *ngIf="control.hasError('required')">El código es requerido</ng-container>
                             </ng-template>
                         </nz-form-control>
                     </nz-form-item>
                 </div>
-        
+
                 <!-- Firstname -->
                 <div nz-col nzXs="24" nzLg="11">
                     <nz-form-item nzJustify="space-around">
@@ -34,14 +35,15 @@
                         <nz-form-control [nzErrorTip]="firstnameErrors">
                             <input nz-input formControlName="firstname" placeholder="Nombre" />
                             <ng-template #firstnameErrors let-control>
-                                <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres
+                                <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128
+                                    caracteres
                                 </ng-container>
                                 <ng-container *ngIf="control.hasError('required')">El nombre es requerido</ng-container>
                             </ng-template>
                         </nz-form-control>
                     </nz-form-item>
                 </div>
-        
+
                 <!-- Lastname -->
                 <div nz-col nzXs="24" nzLg="11">
                     <nz-form-item nzJustify="space-around">
@@ -49,23 +51,25 @@
                         <nz-form-control [nzErrorTip]="lastnameErrors">
                             <input nz-input formControlName="lastname" placeholder="Apellido" />
                             <ng-template #lastnameErrors let-control>
-                                <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres
+                                <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128
+                                    caracteres
                                 </ng-container>
-                                <ng-container *ngIf="control.hasError('required')">El apellido es requerido</ng-container>
+                                <ng-container *ngIf="control.hasError('required')">El apellido es requerido
+                                </ng-container>
                             </ng-template>
                         </nz-form-control>
                     </nz-form-item>
                 </div>
-        
+
                 <!-- Email -->
                 <div nz-col nzXs="24" nzLg="11">
                     <nz-form-item nzJustify="space-around">
                         <nz-form-label>Correo electrónico</nz-form-label>
                         <nz-form-control [nzErrorTip]="emailErrors">
-                            <input nz-input formControlName="email" placeholder="Correo electrónico"
-                                type="email" />
+                            <input nz-input formControlName="email" placeholder="Correo electrónico" type="email" />
                             <ng-template #emailErrors let-control>
-                                <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres
+                                <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128
+                                    caracteres
                                 </ng-container>
                                 <ng-container *ngIf="control.hasError('required')">El correo electrónico es requerido
                                 </ng-container>
@@ -75,7 +79,7 @@
                         </nz-form-control>
                     </nz-form-item>
                 </div>
-        
+
                 <!-- Date of birth -->
                 <div nz-col nzXs="24" nzLg="11">
                     <nz-form-item nzJustify="space-around">
@@ -95,29 +99,33 @@
             <!----------        Shift & grade assignation       ---------->
             <div nz-row [nzGutter]="24">
                 <nz-divider nzText="Asignación" nzOrientation="left"></nz-divider>
-                <!-- Shift
+                <!-- Shift -->
                 <div nz-col nzXs="24" nzLg="11">
                     <nz-form-item nzJustify="space-around">
                         <nz-form-label [nzSpan]="5" nzFor="shift">Turno</nz-form-label>
                         <nz-form-control [nzSpan]="12" nzErrorTip="El turno es requerido">
-                            <nz-select id="shift" nzShowSearch nzAllowClear formControlName="shift" nzPlaceHolder="Seleccionar">
-                                <nz-option *ngFor="let shift of shifts" [nzValue]="shift.id" [nzLabel]="shift.name"></nz-option>
+                            <nz-select id="shift" nzShowSearch nzAllowClear formControlName="shift"
+                                nzPlaceHolder="Seleccionar">
+                                <nz-option *ngFor="let shift of shifts" [nzValue]="shift.id" [nzLabel]="shift.name">
+                                </nz-option>
                             </nz-select>
                         </nz-form-control>
                     </nz-form-item>
-                </div>  -->
+                </div>
 
-                <!-- Grade
+                <!-- Grade -->
                 <div nz-col nzXs="24" nzLg="11">
                     <nz-form-item nzJustify="space-around">
                         <nz-form-label [nzSpan]="5" nzFor="currentGrade">Grado</nz-form-label>
                         <nz-form-control [nzSpan]="12" nzErrorTip="El grado es requerido">
-                            <nz-select id="grade" nzShowSearch nzAllowClear formControlName="currentGrade" nzPlaceHolder="Seleccionar">
-                                <nz-option *ngFor="let grade of activeGrades" [nzValue]="grade.id" [nzLabel]="grade.name"></nz-option>
+                            <nz-select id="grade" nzShowSearch nzAllowClear formControlName="currentGrade"
+                                nzPlaceHolder="Seleccionar">
+                                <nz-option *ngFor="let grade of activeGrades" [nzValue]="grade.id"
+                                    [nzLabel]="grade.name"></nz-option>
                             </nz-select>
                         </nz-form-control>
                     </nz-form-item>
-                </div> -->
+                </div>
             </div>
 
             <!----------        Registration data        ---------->
@@ -128,28 +136,31 @@
                     <nz-form-item nzJustify="space-around">
                         <nz-form-label nzFor="registrationYear">Año de ingreso</nz-form-label>
                         <nz-form-control>
-                            <nz-year-picker id="registrationYear" formControlName="registrationYear" nzPlaceHolder="Seleccionar año"></nz-year-picker>
+                            <nz-year-picker id="registrationYear" formControlName="registrationYear"
+                                nzPlaceHolder="Seleccionar año"></nz-year-picker>
                         </nz-form-control>
                     </nz-form-item>
                 </div>
 
-                <!-- Registration Grade
+                <!-- Registration Grade -->
                 <div nz-col nzXs="24" nzLg="11">
                     <nz-form-item nzJustify="space-around">
-                        <nz-form-label  nzFor="registrationGrade">Grado</nz-form-label>
+                        <nz-form-label nzFor="registrationGrade">Grado</nz-form-label>
                         <nz-form-control>
-                            <nz-select id="registrationGrade" nzShowSearch nzAllowClear formControlName="registrationGrade" nzPlaceHolder="Seleccionar">
-                                <nz-option *ngFor="let grade of allGrades" [nzValue]="grade.id" [nzLabel]="grade.name"></nz-option>
+                            <nz-select id="registrationGrade" nzShowSearch nzAllowClear
+                                formControlName="registrationGrade" nzPlaceHolder="Seleccionar">
+                                <nz-option *ngFor="let grade of allGrades" [nzValue]="grade.id" [nzLabel]="grade.name">
+                                </nz-option>
                             </nz-select>
                         </nz-form-control>
                     </nz-form-item>
-                </div> -->
+                </div>
             </div>
 
-             <!----------       Hermanos        ---------->
-             <div nz-row [nzGutter]="24">
+            <!----------       Hermanos        ---------->
+            <div nz-row [nzGutter]="24">
                 <nz-divider nzText="Hermanos" nzOrientation="left"></nz-divider>
-                
+
             </div>
         </form>
     </nz-tab>
@@ -168,7 +179,7 @@
                     <th [nzAlign]="'center'">Acción</th>
                 </tr>
             </thead>
-            
+
             <tbody>
                 <tr *ngFor="let data of editRowTable.data">
                     <!--        Non-editable row        -->
@@ -178,7 +189,7 @@
                         <td>{{ data.relationship }}</td>
                         <td>{{ data.email }}</td>
                         <td>{{ data.phone  | slice:0:4 }}-{{ data.phone | slice:4:8 }}</td>
-                        
+
                         <td [nzAlign]="'center'">
                             <a (click)="startEdit(data.id)">
                                 <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
@@ -188,7 +199,7 @@
                                 <i nz-icon nzType="delete" nzTheme="outline"></i>
                             </a>
                         </td>
-                    </ng-container>    
+                    </ng-container>
 
                     <!--        Editable row         -->
                     <ng-template #editTemplate>
@@ -199,8 +210,10 @@
                             <input type="text" nz-input [(ngModel)]="editCache[data.id].data.lastname">
                         </td>
                         <td>
-                            <nz-select class="relation" nzShowSearch nzAllowClear [(ngModel)]="editCache[data.id].data.relationship">
-                                <nz-option *ngFor="let relation of kinshipRelationships" [nzValue]="relation" [nzLabel]="relation"></nz-option>
+                            <nz-select class="relation" nzShowSearch nzAllowClear
+                                [(ngModel)]="editCache[data.id].data.relationship">
+                                <nz-option *ngFor="let relation of kinshipRelationships" [nzValue]="relation"
+                                    [nzLabel]="relation"></nz-option>
                             </nz-select>
                         </td>
                         <td>
@@ -212,32 +225,33 @@
                         <td [nzAlign]="'center'">
                             <a (click)="saveEdit(data.id)" class="save"> Guardar </a>
                             <nz-divider nzType="vertical"></nz-divider>
-                            <a nz-popconfirm nzTitle="¿Cancelar edición?" (nzOnConfirm)="cancelEdit(data.id)">Cancelar</a>
+                            <a nz-popconfirm nzTitle="¿Cancelar edición?"
+                                (nzOnConfirm)="cancelEdit(data.id)">Cancelar</a>
                         </td>
                     </ng-template>
                 </tr>
             </tbody>
         </nz-table>
-        <button nz-button nzType="primary" *ngIf="student.responsibles.length < 2" (click)="addResponsible()">Agregar nuevo responsable</button>
+        <button nz-button nzType="primary" *ngIf="student.responsibles.length < 2" (click)="addResponsible()">Agregar
+            nuevo responsable</button>
     </nz-tab>
     <!-- #endregion Responsibles -->
 
     <!-- #region Photos -->
     <nz-tab nzTitle="Fotografías">
-        <nz-upload
-            class="avatar-uploader"
-            nzListType="picture-card"
-            [nzShowUploadList]="false"
-            [nzBeforeUpload]="beforeUpload"
-            [nzCustomRequest]="uploadImage"
-            (nzChange)="handleChange($event)"
-        >
-            <ng-container *ngIf="!avatarUrl">
-                <i class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></i>
-                <div class="ant-upload-text">Upload</div>
+        <ng-container *ngFor="let grade of allGrades">
+            <ng-container *ngIf="grade.id >= student.startedGrade.id && grade.id <= student.grade.id">
+                <nz-upload nz-col nzXs="24" nzMd="4" class="avatar-uploader" nzListType="picture-card" [nzShowUploadList]="false"
+                    [nzBeforeUpload]="beforeUpload" [nzCustomRequest]="uploadImage" (nzChange)="handleChange($event, grade)">
+                    <ng-container *ngIf="!avatarUrl">
+                        <i class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></i>
+                        <div class="ant-upload-text">Seleccionar</div>
+                    </ng-container>
+                    <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
+                    <span>{{ grade.name }}</span>
+                </nz-upload>
             </ng-container>
-            <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
-        </nz-upload>
+        </ng-container>
     </nz-tab>
     <!-- #endregion Photos -->
 </nz-tabset>

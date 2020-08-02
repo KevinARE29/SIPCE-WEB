@@ -15,6 +15,9 @@ import { Responsible } from '../../shared/responsible.model';
 import { ResponsibleService } from '../../shared/responsible.service';
 import { KinshipRelationship } from './../../../shared/kinship-relationship.enum';
 import { Observable, Observer } from 'rxjs';
+import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
+import { Grade } from 'src/app/shared/grade.model';
+import { StudentService } from '../../shared/student.service';
 
 @Component({
   selector: 'app-update-student',
@@ -22,18 +25,19 @@ import { Observable, Observer } from 'rxjs';
   styleUrls: ['./update-student.component.css']
 })
 export class UpdateStudentComponent implements OnInit {
-  avatarUrl: any; // TODO: Delete
+  avatarUrl = 'https://thedocspot.com/docspot_mobile/uploads/users/1556257231user.jpeg';
   loading = false;
   // Form variables
   btnLoading = false;
   student: Student;
-  images: any[];
   studentForm!: FormGroup;
   responsibleForm!: FormGroup;
 
   // Select lists
   shifts: ShiftPeriodGrade[];
   kinshipRelationships: any;
+  activeGrades: Grade[];
+  allGrades: Grade[];
 
   // Table
   editCache: { [key: number]: { edit: boolean; data: Responsible } } = {};
@@ -47,7 +51,9 @@ export class UpdateStudentComponent implements OnInit {
     private location: Location,
     private fb: FormBuilder,
     private shiftService: ShiftService,
+    private gradeService: GradeService,
     private responsibleService: ResponsibleService,
+    private studentService: StudentService,
     private message: NzMessageService,
     private notification: NzNotificationService,
     private modal: NzModalService
@@ -56,11 +62,12 @@ export class UpdateStudentComponent implements OnInit {
   ngOnInit(): void {
     this.init();
     this.student = new Student();
-    this.images = new Array<any[]>();
+    this.student.images = new Array<unknown>();
     this.kinshipRelationships = Object.keys(KinshipRelationship).filter((k) => isNaN(Number(k)));
 
     this.validateRouteParam();
-    // this.getShifts();
+    this.getShifts();
+    this.getAllGrades();
   }
 
   //#region Initialize component
@@ -99,10 +106,13 @@ export class UpdateStudentComponent implements OnInit {
         this.router.navigateByUrl('/estudiantes/' + param + '/editar', { skipLocationChange: true });
       }
     });
+  }
 
-    for (let i = 0; i < 10; i++) {
-      this.images.push({ title: `Image ${i}`, image: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png' });
-    }
+  getAllGrades(): void {
+    this.gradeService.getAllGrades().subscribe((data) => {
+      this.activeGrades = data['data'].filter((x) => x.active === true);
+      this.allGrades = data['data'];
+    });
   }
 
   getShifts(): void {
@@ -112,6 +122,19 @@ export class UpdateStudentComponent implements OnInit {
   }
 
   getStudentData(): void {
+    // TODO: Delete
+    this.student.startedGrade = new Grade();
+    this.student.grade = new Grade();
+
+    this.student.startedGrade.id = 1;
+    this.student.grade.id = 5;
+
+    for (let i = this.student.startedGrade.id; i <= this.student.grade.id; i++) {
+      this.student.images.push({ id: i, path: null, image: null }); // path: url, image: base64
+    }
+    console.log(this.student);
+    // TODO: end Delete
+
     this.student.responsibles = new Array<Responsible>();
     // TODO: Get student data
     this.responsibleService.getResponsibles(this.student.id).subscribe((data) => {
@@ -361,21 +384,16 @@ export class UpdateStudentComponent implements OnInit {
     reader.readAsDataURL(img);
   }
 
-  handleChange(info: { file: UploadFile }): void {
-    this.uploadImage(info);
+  handleChange(info: { file: UploadFile }, grade: Grade): void {
+    this.uploadImage(info, grade);
   }
 
-  uploadImage = (info: { file: UploadFile }): void => {
+  uploadImage = (info: { file: UploadFile }, grade: Grade): void => {
     const img: Blob = info.file.originFileObj;
-    let url;
     if (img) {
-      const reader: FileReader = new FileReader();
-      reader.readAsDataURL(img);
-
-      reader.onload = () => {
-        url = reader.result;
-      };
-      console.log(url);
+      this.studentService.createOrUpdatePicture(this.student.id, grade, img).subscribe((r) => {
+        console.log(r);
+      });
     }
   };
   //#endregion Student images
