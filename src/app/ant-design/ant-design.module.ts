@@ -32,15 +32,17 @@ import { NzTransferModule } from 'ng-zorro-antd/transfer';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
-
+import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzListModule } from 'ng-zorro-antd/list';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { es_ES } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
-<<<<<<< Updated upstream
-=======
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
->>>>>>> Stashed changes
 import es from '@angular/common/locales/es';
 
 registerLocaleData(es);
@@ -72,9 +74,7 @@ const ngZorro = [
   NzTransferModule,
   NzNotificationModule,
   NzSelectModule,
-<<<<<<< Updated upstream
-  NzDatePickerModule
-=======
+  NzDatePickerModule,
   NzDatePickerModule,
   NzUploadModule,
   NzPopconfirmModule,
@@ -82,8 +82,8 @@ const ngZorro = [
   NzTagModule,
   NzListModule,
   NzCollapseModule,
-  NzTimePickerModule
->>>>>>> Stashed changes
+  NzTimePickerModule,
+  NzTabsModule
 ];
 
 @NgModule({

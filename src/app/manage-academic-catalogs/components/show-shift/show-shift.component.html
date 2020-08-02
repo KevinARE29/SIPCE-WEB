@@ -1,0 +1,23 @@
+<h1>Turnos</h1>
+<div nz-row>
+  <div id="new-shift" nz-col [nzXs]="{ span: 20, offset: 2 }" [nzSm]="{ span: 20, offset: 2 }"
+    [nzMd]="{ span: 20, offset: 2 }" [nzLg]="{ span: 8, offset: 8 }">
+    <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+      <ul nz-list [nzDataSource]="shifts" nzBordered nzSize="small">
+
+        <li nz-list-item *ngFor="let item of shifts">
+          <nz-list-item-extra>
+            <span>
+              <nz-switch [ngModel]="item.active" [nzCheckedChildren]="checkedTemplate" [nzControl]="true"
+                (click)="showConfirm(item.id)" [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
+              <ng-template #checkedTemplate>Activo</ng-template>
+              <ng-template #unCheckedTemplate>Inactivo</ng-template>
+            </span>
+          </nz-list-item-extra>
+          {{ item.name }}
+        </li>
+
+      </ul>
+    </nz-spin>
+  </div>
+</div>

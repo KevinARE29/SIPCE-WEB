@@ -36,6 +36,67 @@
                     "name": "Bitácora de acciones"
                 }
             ]
+        },
+        {
+            "title": "Catálogos Académicos",
+            "icon": "ordered-list",
+            "permission": 13,
+            "allow": null,
+            "children": [
+                {
+                    "route": "/catalogos/grados",
+                    "name": "Grados"
+                },   
+                {
+                    "route": "/catalogos/secciones",
+                    "name": "Secciones"
+                },
+                {
+                    "route": "/catalogos/ciclos",
+                    "name": "Ciclos"
+                }, 
+                {
+                    "route": "/catalogos/turnos",
+                    "name": "Turnos"
+                },
+                {
+                    "route": "/catalogos/periodos",
+                    "name": "Periodos"
+                }             
+            ]
+        },
+        {
+            "title": "Usuarios",
+            "icon": "user",
+            "permission": 3,
+            "allow": null,
+            "children": [
+                {
+                    "route": "/usuarios/consultar",
+                    "name": "Usuarios"
+                }, {
+                    "route": "/usuarios/sin-credenciales",
+                    "name": "Usuarios sin credenciales"
+                }, {
+                    "route": "/usuarios/carga-masiva",
+                    "name": "Cargar usuarios"
+                }
+            ]
+        },
+        {
+            "title": "Estudiantes",
+            "icon": "solution",
+            "permission": 3,
+            "allow": null,
+            "children": [
+                {
+                    "route": "/estudiantes/consultar",
+                    "name": "Estudiantes"
+                }, {
+                    "route": "/estudiantes/carga-masiva",
+                    "name": "Cargar estudiantes"
+                }
+            ]
         }
     ]  
 }

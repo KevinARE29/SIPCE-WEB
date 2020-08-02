@@ -1,0 +1,81 @@
+<div nz-row class="title">
+    <h1>Estudiante</h1>
+    <a [routerLink]="['/estudiantes', student.id, 'editar']">
+        <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
+    </a>
+</div>
+
+<div nz-row>
+    <span class="principal">Código</span>
+    <span class="status">Estado</span>
+</div>
+
+<div nz-row>
+    <div nz-col nzXs="24" nzMd="12">
+        <nz-divider nzText="Datos personales"></nz-divider>
+        <div>
+            <strong>Nombre: </strong> <span>Nombre completo</span>
+        </div>
+        <div>
+            <strong>Edad: </strong> <span>##</span>
+        </div>
+        <div>
+            <strong>Correo electrónico: </strong> <span>correo@ejemplo.com</span>
+        </div>
+        <div>
+            <strong>Año de ingreso: </strong> <span>20##</span>
+        </div>
+        <div>
+            <strong>Turno: </strong> <span>Turno</span>
+        </div>
+    </div>
+    <div nz-col nzXs="24" nzMd="12">
+        <nz-divider nzText="Promoción"></nz-divider>
+        <strong>Curso actual</strong>
+        <div>
+            <strong>Ciclo: </strong> <span>Ciclo</span>
+        </div>
+        <div>
+            <strong>Grado: </strong> <span>Grado</span>
+        </div>
+        <div>
+            <strong>Sección: </strong> <span>Sección</span>
+        </div>
+    </div>
+</div>
+
+<div nz-row>
+    <div nz-col nzXs="24" nzMd="12">
+        <nz-divider nzText="Responsable"></nz-divider>
+        <div>
+            <div class="kinshipRelationship">Parentesco</div>
+        </div>
+        <div>
+            <strong>Nombre:</strong> <span>Nombre completo</span>
+        </div>
+        <div>
+            <strong>Correo electrónico:</strong> <span>correo@ejemplo.com</span>
+        </div>
+        <div>
+            <strong>Número de celular:</strong> <span>####-####</span>
+        </div>
+    </div>
+    <div nz-col nzXs="24" nzMd="12">
+        <nz-divider nzText="Hermanos"></nz-divider>
+        <ul type="square">
+            <li>Nombre completo (Grado sección)</li>
+        </ul>
+    </div>
+</div>
+
+<nz-divider nzText="Fotografías"></nz-divider>
+<div nz-row [nzGutter]="8">
+    <div nz-col nzSm="8" nzMd="6" nzLg="4" nzXl="3" *ngFor="let img of images">
+            <nz-card class="yearlyPicture" [nzCover]="coverTemplate">
+                <nz-card-meta [nzTitle]="img.title"></nz-card-meta>
+            </nz-card>
+            <ng-template #coverTemplate>
+                <img alt="example" [src]="img.image" />
+            </ng-template>
+    </div>
+</div>

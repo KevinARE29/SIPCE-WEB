@@ -1,0 +1,16 @@
+nz-switch {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.students {
+    margin-top: 25px;
+}
+
+nz-select.grade {
+    min-width: 180px;
+}
+
+nz-select.status {
+    min-width: 125px;
+}

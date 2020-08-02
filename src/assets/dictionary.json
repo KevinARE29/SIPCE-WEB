@@ -15,6 +15,46 @@
           "oldPassword": "Contraseña actual",
           "newPassword": "Nueva contraseña",
           "resetPasswordToken": "Enlace para actualizar contraseña"
+        },
+        "catalogs": {
+            "name": "Nombre"
+        },
+        "ShiftPeriodGrades": {
+            "name": "Nombre",
+            "active": "activo"
+        },
+        "users": {
+            "firstname": "Nombres",
+            "lastname": "Apellidos",
+            "username": "Nombre de usuario",
+            "cycle": "Ciclo",
+            "grades": "Grados",
+            "grade": "Grado",
+            "section": "Sección",
+            "email": "Correo electrónico",
+            "code": "Código",
+            "role": "Rol",
+            "all": "Registro"
+        },
+        "students": {
+            "all": "Registro",
+            "code": "Código",
+            "firstname": "Nombres",
+            "lastname": "Apellidos",
+            "email": "Correo electrónico",
+            "cycle": "Ciclo",
+            "grade": "Grado",
+            "section": "Sección",
+            "birthdate": "Fecha de nacimiento",
+            "startedGrade": "Grado de ingreso",
+            "registrationYear": "Año de ingreso",
+            "responsible": "Responsable",
+            "responsibleRelationship": "Parentesco",
+            "responsibleFirstname": "Nombre del responsable",
+            "responsibleLastname": "Apellido del responsable",
+            "contact": "Contacto",
+            "responsibleEmail": "Correo electrónico del responsable",
+            "responsiblePhone": "Número de celular del responsable"
         }
     }
 }

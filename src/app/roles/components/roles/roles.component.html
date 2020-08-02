@@ -31,14 +31,14 @@
                 <thead>
                     <tr>
                         <th nzColumnKey="name" [nzSortFn]="true">Rol</th>
-                        <th>Acción</th>
+                        <th *ngIf="checkPermission(7) || checkPermission(8) || checkPermission(9)">Acción</th>
                     </tr>
                 </thead>
                 
                 <tbody>
                     <tr *ngFor="let data of filterTable.data">
                         <td>{{ data.name }}</td>
-                        <td>
+                        <td *ngIf="checkPermission(7) || checkPermission(8) || checkPermission(9)">
                             <span *ngIf="data.id <= 5">
                                 <a *ngIf="checkPermission(7)" nz-tooltip nzTooltipTitle="Ver" (click)="getRole(data.id)">
                                     <i nz-icon nzType="eye" nzTheme="outline"></i>
@@ -49,14 +49,10 @@
                                 <a *ngIf="checkPermission(8)" nz-tooltip nzTooltipTitle="Actualizar" (click)="getRole(data.id)">
                                     <i nz-icon nzType="edit" nzTheme="outline"></i>
                                 </a>
-
-                                <span *ngIf="checkPermission(9)">
-                                    <nz-divider *ngIf="checkPermission(7) || checkPermission(8)" nzType="vertical"></nz-divider>
-                                                    
-                                    <a nz-tooltip nzTooltipTitle="Eliminar" (click)="showConfirm(data.id)">
-                                        <i nz-icon nzType="delete" nzTheme="outline"></i>
-                                    </a>
-                                </span>
+                                <nz-divider *ngIf="checkPermission(8) && checkPermission(9)" nzType="vertical"></nz-divider>
+                                <a *ngIf="checkPermission(9)" nz-tooltip nzTooltipTitle="Eliminar" (click)="showConfirm(data.id)">
+                                    <i nz-icon nzType="delete" nzTheme="outline"></i>
+                                </a>
                             </span>
                         </td>
                     </tr>

@@ -41,8 +41,24 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'usuarios',
+    loadChildren: () => import('./users/users.module').then((m) => m.UsersModule),
+    canLoad: [AuthGuard]
+  },
+  {
     path: 'reset-psw',
     loadChildren: () => import('./manage-password/reset-password.module').then((m) => m.ResetPasswordModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'catalogos',
+    loadChildren: () =>
+      import('./manage-academic-catalogs/academic-catalogs.module').then((m) => m.AcademicCatalogsModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'estudiantes',
+    loadChildren: () => import('./students/students.module').then((m) => m.StudentsModule),
     canLoad: [AuthGuard]
   },
   {
