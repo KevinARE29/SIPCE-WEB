@@ -1,0 +1,13 @@
+<ejs-schedule [eventSettings]="eventData"> </ejs-schedule>
+<!-- [eventSettings]="eventSettings"  -->
+<ejs-schedule #scheduleObj width='100%' height='650px' [selectedDate]="selectedDate" [eventSettings]="eventData"
+(dataBinding)="onDataBinding($event)">
+<e-views>
+    <e-view option="Day"></e-view>
+    <e-view option="Week"></e-view>
+    <e-view option="WorkWeek"></e-view>
+    <e-view option="Month"></e-view>
+    <e-view option="Angenda"></e-view>
+</e-views>
+</ejs-schedule>
+<link href="https://cdn.syncfusion.com/ej2/material.css" rel="stylesheet" />

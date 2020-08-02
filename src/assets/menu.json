@@ -97,6 +97,18 @@
                     "name": "Cargar estudiantes"
                 }
             ]
+        },
+        {
+            "title": "Agenda",
+            "icon": "solution",
+            "permission": 3,
+            "allow": null,
+            "children": [
+                {
+                    "route": "/calendario",
+                    "name": "Calendario"
+                }
+            ]
         }
     ]  
 }
