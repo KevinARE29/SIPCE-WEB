@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { Student } from '../../shared/student.model';
-import { ResponsibleService } from '../../shared/responsible.service';
 import { Responsible } from '../../shared/responsible.model';
+import { StudentService } from '../../shared/student.service';
+import { ShiftPeriodGrade } from '../../../manage-academic-catalogs/shared/shiftPeriodGrade.model';
 
 @Component({
   selector: 'app-student',
@@ -12,18 +13,12 @@ import { Responsible } from '../../shared/responsible.model';
 })
 export class StudentComponent implements OnInit {
   student: Student;
-  images: any[];
+  loading = false;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    // private studentService: StudentComponent,
-    private responsibleService: ResponsibleService
-  ) {}
+  constructor(private router: Router, private route: ActivatedRoute, private studentService: StudentService) {}
 
   ngOnInit(): void {
     this.student = new Student();
-    this.images = new Array<any[]>();
     this.validateRouteParam();
   }
 
@@ -45,17 +40,22 @@ export class StudentComponent implements OnInit {
         this.router.navigateByUrl('/estudiantes/' + param + '/detalle', { skipLocationChange: true });
       }
     });
-
-    for (let i = 0; i < 10; i++) {
-      this.images.push({ title: `Image ${i}`, image: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png' });
-    }
   }
 
   getStudentData(): void {
+    this.loading = true;
+    this.student.shift = new ShiftPeriodGrade();
+    this.student.startedGrade = new ShiftPeriodGrade();
+    this.student.cycle = new ShiftPeriodGrade();
+    this.student.grade = new ShiftPeriodGrade();
+    this.student.section = new ShiftPeriodGrade();
     this.student.responsibles = new Array<Responsible>();
-    // TODO: Get student data
-    this.responsibleService.getResponsibles(this.student.id).subscribe((data) => {
-      this.student.responsibles = data['data'];
+    this.student.siblings = new Array<Student>();
+    this.student.images = new Array<unknown>();
+
+    this.studentService.getStudent(this.student.id).subscribe((data) => {
+      this.student = data;
+      this.loading = false;
     });
   }
 }

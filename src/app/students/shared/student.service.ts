@@ -2,15 +2,16 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError, forkJoin } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
-import { getYear } from 'date-fns';
+import { getYear, differenceInYears, getDate } from 'date-fns';
 
 import { Student } from './student.model';
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { ResponsibleService } from './responsible.service';
 import { Grade } from 'src/app/shared/grade.model';
+import { Responsible } from './responsible.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,11 @@ import { Grade } from 'src/app/shared/grade.model';
 export class StudentService {
   baseUrl: string;
 
-  constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
+  constructor(
+    private http: HttpClient,
+    private errorMessageService: ErrorMessageService,
+    private responsibleService: ResponsibleService
+  ) {
     this.baseUrl = environment.apiURL;
   }
 
@@ -139,7 +144,60 @@ export class StudentService {
   }
 
   getStudent(id: number): Observable<Student> {
-    return this.http.get<Student>(`${this.baseUrl}students/${id}`).pipe(catchError(this.handleError()));
+    return this.http.get<Student>(`${this.baseUrl}students/${id}`).pipe(
+      map((result) => {
+        const student = new Student();
+        const today = new Date();
+        const detailsLast = result['data'].sectionDetails.length - 1;
+
+        student.id = result['data'].id;
+        student.code = result['data'].code;
+        student.firstname = result['data'].firstname;
+        student.lastname = result['data'].lastname;
+        student.email = result['data'].email;
+        student.birthdate = result['data'].birthdate;
+        student.age = differenceInYears(new Date(student.birthdate), today);
+        student.status = result['data'].status;
+        student.shift = result['data'].currentShift;
+        student.cycle = result['data'].sectionDetails[detailsLast]
+          ? result['data'].sectionDetails[detailsLast].gradeDetail.cycleDetail.cycle
+          : null;
+        student.grade = result['data'].currentGrade;
+        student.section = result['data'].sectionDetails[detailsLast]
+          ? result['data'].sectionDetails[detailsLast].section
+          : null;
+        student.startedGrade = result['data'].startedGrade;
+        student.sectionDetail = result['data'].sectionDetail;
+        student.siblings = result['data'].siblings;
+        student.registrationYear = result['data'].registrationYear;
+
+        student.responsibles = new Array<Responsible>();
+        student.images = new Array<unknown>();
+
+        result['data'].images.forEach((img) => {
+          const url = img['path'].split('/');
+          const grade = url[url.length - 1];
+          const gradeName = grade.split('.');
+
+          student.images.push({ id: img['id'], title: gradeName[0], image: img['path'] });
+        });
+
+        result['data'].responsibleStudents.forEach((responsible) => {
+          const studentResponsible = new Responsible();
+
+          studentResponsible.id = responsible['responsible'].id;
+          studentResponsible.email = responsible['responsible'].email;
+          studentResponsible.firstname = responsible['responsible'].firstname;
+          studentResponsible.lastname = responsible['responsible'].lastname;
+          studentResponsible.phone = responsible['responsible'].phone;
+          studentResponsible.relationship = responsible['relationship'];
+
+          student.responsibles.push(studentResponsible);
+        });
+
+        return student;
+      })
+    );
   }
 
   createOrUpdatePicture(studentId: number, grade: Grade, image: Blob): Observable<any> {
@@ -148,14 +206,6 @@ export class StudentService {
 
     return this.http.post<string>(`${this.baseUrl}students/${studentId}/images?gradeId=${grade.id}`, fd);
   }
-
-  // Method to join the 3 request required to get the student data
-  // getStudentData(id: number): Observable<any> {
-  //   return forkJoin({
-  //     student: this.getStudent(id),
-  //     responsibles: this.responsibleService.getResponsibles(id)
-  //   });
-  // }
 
   /**
    * Handle Http operation that failed.
