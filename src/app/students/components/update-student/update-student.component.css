@@ -12,3 +12,7 @@
 .relation {
   min-width: 150px;
 }
+
+.addSibling span{
+  margin: 5px;
+}

@@ -12,6 +12,8 @@ import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { ResponsibleService } from './responsible.service';
 import { Grade } from 'src/app/shared/grade.model';
 import { Responsible } from './responsible.model';
+import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
+import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +24,8 @@ export class StudentService {
   constructor(
     private http: HttpClient,
     private errorMessageService: ErrorMessageService,
-    private responsibleService: ResponsibleService
+    private gradeService: GradeService,
+    private shiftService: ShiftService
   ) {
     this.baseUrl = environment.apiURL;
   }
@@ -72,7 +75,7 @@ export class StudentService {
 
       if (search.email) queryParams += '&email=' + search.email;
 
-      if (search.grade.id) queryParams += '&currentGrade=' + search.grade.id;
+      if (search.grade && search.grade.id) queryParams += '&currentGrade=' + search.grade.id;
 
       if (search.status) queryParams += '&status=' + search.status;
 
@@ -167,7 +170,6 @@ export class StudentService {
           ? result['data'].sectionDetails[detailsLast].section
           : null;
         student.startedGrade = result['data'].startedGrade;
-        student.sectionDetail = result['data'].sectionDetail;
         student.siblings = result['data'].siblings;
         student.registrationYear = result['data'].registrationYear;
 
@@ -200,11 +202,19 @@ export class StudentService {
     );
   }
 
-  createOrUpdatePicture(studentId: number, grade: Grade, image: Blob): Observable<any> {
+  mergeStudentAndCatalogs(id: number): Observable<unknown> {
+    return forkJoin({
+      grades: this.gradeService.getAllGrades(),
+      shifts: this.shiftService.getShifts(),
+      student: this.getStudent(id)
+    });
+  }
+
+  createOrUpdatePicture(studentId: number, grade: number, image: Blob): Observable<any> {
     const fd = new FormData();
     fd.append('image', image, image['name']);
 
-    return this.http.post<string>(`${this.baseUrl}students/${studentId}/images?gradeId=${grade.id}`, fd);
+    return this.http.post<string>(`${this.baseUrl}students/${studentId}/images?gradeId=${grade}`, fd);
   }
 
   /**

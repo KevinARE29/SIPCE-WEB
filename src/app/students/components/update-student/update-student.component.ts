@@ -7,15 +7,13 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzModalService, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
-import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
 import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
 import { Student } from '../../shared/student.model';
-import { UploadFile, UploadFileStatus } from 'ng-zorro-antd/upload';
+import { UploadFile } from 'ng-zorro-antd/upload';
 import { Responsible } from '../../shared/responsible.model';
 import { ResponsibleService } from '../../shared/responsible.service';
 import { KinshipRelationship } from './../../../shared/kinship-relationship.enum';
 import { Observable, Observer } from 'rxjs';
-import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
 import { Grade } from 'src/app/shared/grade.model';
 import { StudentService } from '../../shared/student.service';
 
@@ -25,13 +23,17 @@ import { StudentService } from '../../shared/student.service';
   styleUrls: ['./update-student.component.css']
 })
 export class UpdateStudentComponent implements OnInit {
-  avatarUrl = 'https://thedocspot.com/docspot_mobile/uploads/users/1556257231user.jpeg';
   loading = false;
+  imgLoader = false;
+
   // Form variables
   btnLoading = false;
   student: Student;
   studentForm!: FormGroup;
   responsibleForm!: FormGroup;
+  results: Student[];
+  noResults: string;
+  searching = false;
 
   // Select lists
   shifts: ShiftPeriodGrade[];
@@ -50,8 +52,6 @@ export class UpdateStudentComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private fb: FormBuilder,
-    private shiftService: ShiftService,
-    private gradeService: GradeService,
     private responsibleService: ResponsibleService,
     private studentService: StudentService,
     private message: NzMessageService,
@@ -62,12 +62,10 @@ export class UpdateStudentComponent implements OnInit {
   ngOnInit(): void {
     this.init();
     this.student = new Student();
-    this.student.images = new Array<unknown>();
+    this.results = new Array<Student>();
     this.kinshipRelationships = Object.keys(KinshipRelationship).filter((k) => isNaN(Number(k)));
 
     this.validateRouteParam();
-    this.getShifts();
-    this.getAllGrades();
   }
 
   //#region Initialize component
@@ -84,7 +82,8 @@ export class UpdateStudentComponent implements OnInit {
       shift: ['', [Validators.required]],
       currentGrade: ['', [Validators.required]],
       registrationGrade: ['', [Validators.required]],
-      registrationYear: ['', [Validators.required]]
+      registrationYear: ['', [Validators.required]],
+      searchSibling: ['']
     });
   }
 
@@ -108,43 +107,64 @@ export class UpdateStudentComponent implements OnInit {
     });
   }
 
-  getAllGrades(): void {
-    this.gradeService.getAllGrades().subscribe((data) => {
-      this.activeGrades = data['data'].filter((x) => x.active === true);
-      this.allGrades = data['data'];
-    });
-  }
-
-  getShifts(): void {
-    this.shiftService.getShifts().subscribe((data) => {
-      this.shifts = data['data'].filter((x) => x.active === true);
-    });
-  }
-
   getStudentData(): void {
-    // TODO: Delete
-    this.student.startedGrade = new Grade();
-    this.student.grade = new Grade();
-
-    this.student.startedGrade.id = 1;
-    this.student.grade.id = 5;
-
-    for (let i = this.student.startedGrade.id; i <= this.student.grade.id; i++) {
-      this.student.images.push({ id: i, path: null, image: null }); // path: url, image: base64
-    }
-    console.log(this.student);
-    // TODO: end Delete
-
+    this.loading = true;
+    this.student.shift = new ShiftPeriodGrade();
+    this.student.startedGrade = new ShiftPeriodGrade();
+    this.student.cycle = new ShiftPeriodGrade();
+    this.student.grade = new ShiftPeriodGrade();
+    this.student.section = new ShiftPeriodGrade();
     this.student.responsibles = new Array<Responsible>();
-    // TODO: Get student data
-    this.responsibleService.getResponsibles(this.student.id).subscribe((data) => {
-      this.student.responsibles = data['data'];
+    this.student.siblings = new Array<Student>();
+    this.student.images = new Array<unknown>();
+
+    this.studentService.mergeStudentAndCatalogs(this.student.id).subscribe((data) => {
+      this.student = data['student'];
+      // Grades data
+      this.activeGrades = data['grades'].data.filter((x) => x.active === true);
+      this.allGrades = data['grades'].data;
+
+      // Shifts data
+      this.shifts = data['shifts'].data.filter((x) => x.active === true);
+
+      // Set student form data
+      this.studentForm.get('code')?.setValue(this.student.code);
+      this.studentForm.get('firstname')?.setValue(this.student.firstname);
+      this.studentForm.get('lastname')?.setValue(this.student.lastname);
+      this.studentForm.get('email')?.setValue(this.student.email);
+      this.studentForm.get('dateOfBirth')?.setValue(this.student.birthdate);
+      this.studentForm.get('shift')?.setValue(this.student.shift.id);
+      this.studentForm.get('currentGrade')?.setValue(this.student.grade.id);
+      this.studentForm.get('registrationYear')?.setValue(new Date(this.student.registrationYear, 0, 1));
+      this.studentForm.get('registrationGrade')?.setValue(this.student.startedGrade.id);
+
+      // Add cache elements to responsibles table
       this.updateEditCache();
+
+      // Transform images
+      const images = new Array<unknown>();
+      for (let i = this.student.startedGrade.id; i <= this.student.grade.id; i++) {
+        const img = this.student.images.find((x) => x['title'] === this.allGrades[i - 1].name);
+
+        img
+          ? images.push({
+              id: i,
+              path: img['path'] ? img['path'] : img['image'],
+              title: img['title'],
+              grade: this.allGrades[i - 1].id
+            })
+          : images.push({ id: i, path: null, title: this.allGrades[i].name, grade: this.allGrades[i - 1].id });
+      }
+
+      this.student.images = images;
+
+      this.loading = false;
     });
   }
 
   updateEditCache(): void {
     this.editCache = {};
+
     this.student.responsibles.forEach((item) => {
       this.editCache[item['id']] = {
         edit: false,
@@ -177,6 +197,30 @@ export class UpdateStudentComponent implements OnInit {
 */
       // this.updateStudent(); // TODO: Create method
     }
+  }
+
+  confirmDeleteSibling(id: number): void {
+    this.student.siblings = this.student.siblings.filter((d) => d['id'] !== id);
+  }
+
+  searchSibling(): void {
+    const search = new Student();
+    search.code = this.studentForm.controls['searchSibling'].value;
+    this.searching = !this.searching;
+
+    if (search.code !== this.student.code && this.searching) {
+      this.studentService.getStudents(null, search, true, null).subscribe((r) => {
+        this.results = r['data'];
+      });
+    } else if (!this.searching) {
+      this.results = new Array<Student>();
+      this.studentForm.get('searchSibling')?.setValue(null);
+    }
+  }
+
+  addSibling(sibling: Student): void {
+    this.student.siblings.push(sibling);
+    this.results = this.results.filter((d) => d['id'] !== sibling.id);
   }
   //#endregion Update general information
 
@@ -384,15 +428,18 @@ export class UpdateStudentComponent implements OnInit {
     reader.readAsDataURL(img);
   }
 
-  handleChange(info: { file: UploadFile }, grade: Grade): void {
+  handleChange(info: { file: UploadFile }, grade: number): void {
     this.uploadImage(info, grade);
   }
 
-  uploadImage = (info: { file: UploadFile }, grade: Grade): void => {
+  uploadImage = (info: { file: UploadFile }, grade: number): void => {
     const img: Blob = info.file.originFileObj;
     if (img) {
+      this.imgLoader = true;
       this.studentService.createOrUpdatePicture(this.student.id, grade, img).subscribe((r) => {
-        console.log(r);
+        const index = this.student.images.findIndex((item) => item['id'] === grade);
+        this.student.images[index]['path'] = r.path;
+        this.imgLoader = false;
       });
     }
   };

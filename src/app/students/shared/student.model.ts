@@ -16,8 +16,7 @@ export class Student {
   section: ShiftPeriodGrade;
   startedGrade: ShiftPeriodGrade;
   registrationYear: number;
-  sectionDetail: unknown;
   responsibles: Responsible[];
   images: unknown[];
-  siblings: unknown;
+  siblings: Student[];
 }
