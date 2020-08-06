@@ -15,3 +15,7 @@ nz-select {
 .addSibling span{
   margin: 5px;
 }
+
+.btnTabs, .siblings {
+  margin-top: 10px;
+}
