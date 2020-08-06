@@ -5,15 +5,14 @@ import { Observable, throwError, forkJoin } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
-import { getYear, differenceInYears, getDate } from 'date-fns';
+import { getYear, differenceInYears } from 'date-fns';
 
 import { Student } from './student.model';
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
-import { ResponsibleService } from './responsible.service';
-import { Grade } from 'src/app/shared/grade.model';
 import { Responsible } from './responsible.model';
 import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
 import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
+import { SchoolYearService } from 'src/app/school-year/shared/school-year.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +24,8 @@ export class StudentService {
     private http: HttpClient,
     private errorMessageService: ErrorMessageService,
     private gradeService: GradeService,
-    private shiftService: ShiftService
+    private shiftService: ShiftService,
+    private schoolYearService: SchoolYearService
   ) {
     this.baseUrl = environment.apiURL;
   }
@@ -159,7 +159,7 @@ export class StudentService {
         student.lastname = result['data'].lastname;
         student.email = result['data'].email;
         student.birthdate = result['data'].birthdate;
-        student.age = differenceInYears(new Date(student.birthdate), today);
+        student.age = differenceInYears(today, new Date(student.birthdate));
         student.status = result['data'].status;
         student.shift = result['data'].currentShift;
         student.cycle = result['data'].sectionDetails[detailsLast]
@@ -185,16 +185,18 @@ export class StudentService {
         });
 
         result['data'].responsibleStudents.forEach((responsible) => {
-          const studentResponsible = new Responsible();
+          if (responsible.responsible.id) {
+            const studentResponsible = new Responsible();
 
-          studentResponsible.id = responsible['responsible'].id;
-          studentResponsible.email = responsible['responsible'].email;
-          studentResponsible.firstname = responsible['responsible'].firstname;
-          studentResponsible.lastname = responsible['responsible'].lastname;
-          studentResponsible.phone = responsible['responsible'].phone;
-          studentResponsible.relationship = responsible['relationship'];
+            studentResponsible.id = responsible['responsible'].id;
+            studentResponsible.email = responsible['responsible'].email;
+            studentResponsible.firstname = responsible['responsible'].firstname;
+            studentResponsible.lastname = responsible['responsible'].lastname;
+            studentResponsible.phone = responsible['responsible'].phone;
+            studentResponsible.relationship = responsible['relationship'];
 
-          student.responsibles.push(studentResponsible);
+            student.responsibles.push(studentResponsible);
+          }
         });
 
         return student;
@@ -202,8 +204,33 @@ export class StudentService {
     );
   }
 
+  updateStudent(student: Student): Observable<Student> {
+    const siblingsIds = new Array<number>();
+
+    student.siblings.forEach((sibling) => {
+      siblingsIds.push(sibling.id);
+    });
+
+    const data = JSON.stringify({
+      status: student.status,
+      firstname: student.firstname,
+      lastname: student.lastname,
+      email: student.email,
+      birthdate: student.birthdate,
+      shiftId: student.shift.id,
+      gradeId: student.grade.id,
+      sectionId: student.section.id,
+      startedGradeId: student.startedGrade.id,
+      registrationYear: student.registrationYear,
+      siblings: siblingsIds
+    });
+
+    return this.http.put<Student>(`${this.baseUrl}students/${student.id}`, data).pipe(catchError(this.handleError()));
+  }
+
   mergeStudentAndCatalogs(id: number): Observable<unknown> {
     return forkJoin({
+      // sections: this.sectionService.getAllSections(),
       grades: this.gradeService.getAllGrades(),
       shifts: this.shiftService.getShifts(),
       student: this.getStudent(id)

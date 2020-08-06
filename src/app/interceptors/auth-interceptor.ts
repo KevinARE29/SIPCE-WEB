@@ -18,7 +18,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
     if (url.includes('images')) {
       const newRequest = this.appendformData(request);
-      console.log(newRequest);
       return next.handle(newRequest);
     } else if (
       !url.includes('auth') ||
@@ -27,7 +26,6 @@ export class AuthInterceptor implements HttpInterceptor {
       url.includes('roles') ||
       url.includes('permissions')
     ) {
-      if (url.includes('images')) console.log('OK');
       const newRequest = this.appendAccessToken(request);
       return next.handle(newRequest).pipe(
         catchError((error) => {
@@ -117,7 +115,8 @@ export class AuthInterceptor implements HttpInterceptor {
       }
     } else {
       localStorage.clear();
-      this.router.navigate(['/login']);
+      // this.router.navigate(['/login']);
+      this.router.navigate(['login/error401']);
       return next.handle(request);
     }
   }
