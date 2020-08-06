@@ -76,7 +76,7 @@
     </div>
     
     <nz-divider nzText="Fotografías"></nz-divider>
-    <div nz-row [nzGutter]="8">
+    <div nz-row nzJustify="space-around">
         <ng-container *ngIf="student.images.length; else empty">
             <div nz-col nzSm="8" nzMd="6" nzLg="4" nzXl="3" *ngFor="let img of student.images">
                 <nz-card class="yearlyPicture" [nzCover]="coverTemplate">
@@ -89,7 +89,7 @@
         </ng-container>
         
         <ng-template #empty>
-            <nz-empty></nz-empty>
+            <nz-empty nz-col nzSm="24"></nz-empty>
         </ng-template>
     </div>
 </nz-spin>

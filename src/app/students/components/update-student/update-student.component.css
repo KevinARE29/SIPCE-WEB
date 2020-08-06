@@ -4,10 +4,9 @@
   margin: 10px 10px 0px 0px;
 }
 
-/* .ant-upload-text {
-  margin-top: 8px;
-  color: #666;
-} */
+nz-select {
+  max-width: 175px;
+}
 
 .relation {
   min-width: 150px;

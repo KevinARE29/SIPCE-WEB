@@ -28,6 +28,27 @@
                             </nz-form-control>
                         </nz-form-item>
                     </div>
+
+                    <!-- Email -->
+                    <div nz-col nzXs="24" nzLg="11">
+                        <nz-form-item nzJustify="space-around">
+                            <nz-form-label>Correo electrónico</nz-form-label>
+                            <nz-form-control [nzErrorTip]="emailErrors">
+                                <input nz-input formControlName="email" placeholder="Correo electrónico" type="email" />
+                                <ng-template #emailErrors let-control>
+                                    <ng-container *ngIf="control.hasError('maxlength')">
+                                        La longitud máxima es de 128 caracteres
+                                    </ng-container>
+                                    <ng-container *ngIf="control.hasError('required')">
+                                        El correo electrónico es requerido
+                                    </ng-container>
+                                    <ng-container *ngIf="control.hasError('pattern')">
+                                        Ingrese un correo electrónico valido
+                                    </ng-container>
+                                </ng-template>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
     
                     <!-- Firstname -->
                     <div nz-col nzXs="24" nzLg="11">
@@ -62,36 +83,31 @@
                         </nz-form-item>
                     </div>
     
-                    <!-- Email -->
-                    <div nz-col nzXs="24" nzLg="11">
-                        <nz-form-item nzJustify="space-around">
-                            <nz-form-label>Correo electrónico</nz-form-label>
-                            <nz-form-control [nzErrorTip]="emailErrors">
-                                <input nz-input formControlName="email" placeholder="Correo electrónico" type="email" />
-                                <ng-template #emailErrors let-control>
-                                    <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128
-                                        caracteres
-                                    </ng-container>
-                                    <ng-container *ngIf="control.hasError('required')">El correo electrónico es requerido
-                                    </ng-container>
-                                    <ng-container *ngIf="control.hasError('pattern')">Ingrese un correo electrónico valido
-                                    </ng-container>
-                                </ng-template>
-                            </nz-form-control>
-                        </nz-form-item>
-                    </div>
-    
                     <!-- Date of birth -->
                     <div nz-col nzXs="24" nzLg="11">
                         <nz-form-item nzJustify="space-around">
                             <nz-form-label>Fecha de nacimiento</nz-form-label>
                             <nz-form-control [nzErrorTip]="dateOfBirthErrors">
-                                <nz-date-picker formControlName="dateOfBirth" nzFormat="dd/MM/yyyy">
+                                <nz-date-picker formControlName="dateOfBirth" nzFormat="dd/MM/yyyy" [nzDisabledDate]="disabledDate">
                                 </nz-date-picker>
                                 <ng-template #dateOfBirthErrors let-control>
-                                    <ng-container *ngIf="control.hasError('required')">La fecha de nacimiento es requerida
+                                    <ng-container *ngIf="control.hasError('required')">
+                                        La fecha de nacimiento es requerida
                                     </ng-container>
                                 </ng-template>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+
+                    <!-- Shift -->
+                    <div nz-col nzXs="24" nzLg="11">
+                        <nz-form-item nzJustify="space-around">
+                            <nz-form-label [nzSpan]="5" nzFor="shift">Estado</nz-form-label>
+                            <nz-form-control [nzSpan]="12" nzErrorTip="El estado es requerido">
+                                <nz-select id="shift" nzShowSearch nzAllowClear formControlName="status"
+                                    nzPlaceHolder="Seleccionar">
+                                    <nz-option *ngFor="let state of status" [nzValue]="state" [nzLabel]="state"></nz-option>
+                                </nz-select>
                             </nz-form-control>
                         </nz-form-item>
                     </div>
@@ -138,7 +154,7 @@
                             <nz-form-label nzFor="registrationYear">Año de ingreso</nz-form-label>
                             <nz-form-control>
                                 <nz-year-picker id="registrationYear" formControlName="registrationYear"
-                                    nzPlaceHolder="Seleccionar año"></nz-year-picker>
+                                    nzPlaceHolder="Seleccionar año" [nzDisabledDate]="disabledYear"></nz-year-picker>
                             </nz-form-control>
                         </nz-form-item>
                     </div>
@@ -196,6 +212,11 @@
                         <ng-template #noResults>
                             <ng-container *ngIf="searching">No se encontraron resultados.</ng-container> 
                         </ng-template>
+                    </div>
+                </div>
+                <div nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
+                    <div nz-col>
+                        <button nz-button nzType="primary">Actualizar</button>
                     </div>
                 </div>
             </form>

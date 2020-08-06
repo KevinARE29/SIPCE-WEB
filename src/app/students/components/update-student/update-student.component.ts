@@ -3,6 +3,7 @@ import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
+import { differenceInCalendarDays } from 'date-fns';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzModalService, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -12,6 +13,7 @@ import { Student } from '../../shared/student.model';
 import { UploadFile } from 'ng-zorro-antd/upload';
 import { Responsible } from '../../shared/responsible.model';
 import { ResponsibleService } from '../../shared/responsible.service';
+import { StudentStatus } from './../../../shared/student-status.enum';
 import { KinshipRelationship } from './../../../shared/kinship-relationship.enum';
 import { Observable, Observer } from 'rxjs';
 import { Grade } from 'src/app/shared/grade.model';
@@ -40,6 +42,7 @@ export class UpdateStudentComponent implements OnInit {
   kinshipRelationships: any;
   activeGrades: Grade[];
   allGrades: Grade[];
+  status: string[];
 
   // Table
   editCache: { [key: number]: { edit: boolean; data: Responsible } } = {};
@@ -64,6 +67,7 @@ export class UpdateStudentComponent implements OnInit {
     this.student = new Student();
     this.results = new Array<Student>();
     this.kinshipRelationships = Object.keys(KinshipRelationship).filter((k) => isNaN(Number(k)));
+    this.status = Object.keys(StudentStatus).filter((k) => isNaN(Number(k)));
 
     this.validateRouteParam();
   }
@@ -79,6 +83,7 @@ export class UpdateStudentComponent implements OnInit {
       lastname: ['', [Validators.required, Validators.maxLength(128)]],
       email: ['', [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]],
       dateOfBirth: ['', [Validators.required]],
+      status: ['', [Validators.required]],
       shift: ['', [Validators.required]],
       currentGrade: ['', [Validators.required]],
       registrationGrade: ['', [Validators.required]],
@@ -120,6 +125,7 @@ export class UpdateStudentComponent implements OnInit {
 
     this.studentService.mergeStudentAndCatalogs(this.student.id).subscribe((data) => {
       this.student = data['student'];
+      // console.log(data);
       // Grades data
       this.activeGrades = data['grades'].data.filter((x) => x.active === true);
       this.allGrades = data['grades'].data;
@@ -134,6 +140,7 @@ export class UpdateStudentComponent implements OnInit {
       this.studentForm.get('email')?.setValue(this.student.email);
       this.studentForm.get('dateOfBirth')?.setValue(this.student.birthdate);
       this.studentForm.get('shift')?.setValue(this.student.shift.id);
+      this.studentForm.get('status')?.setValue(this.student.status);
       this.studentForm.get('currentGrade')?.setValue(this.student.grade.id);
       this.studentForm.get('registrationYear')?.setValue(new Date(this.student.registrationYear, 0, 1));
       this.studentForm.get('registrationGrade')?.setValue(this.student.startedGrade.id);
@@ -172,6 +179,20 @@ export class UpdateStudentComponent implements OnInit {
       };
     });
   }
+
+  back(): void {
+    this.location.back();
+  }
+
+  disabledDate = (current: Date): boolean => {
+    // Can not select days after today
+    return differenceInCalendarDays(current, new Date()) > 0;
+  };
+
+  disabledYear = (current: Date): boolean => {
+    // Can not select days after today
+    return differenceInCalendarDays(current, new Date()) > 365;
+  };
   //#endregion Initialize component
 
   //#region Update general information
@@ -183,18 +204,16 @@ export class UpdateStudentComponent implements OnInit {
 
     if (this.studentForm.valid) {
       // Student
-      /*this.student.code = this.studentForm.controls['code'].value;
+      this.student.code = this.studentForm.controls['code'].value;
       this.student.firstname = this.studentForm.controls['firstname'].value;
       this.student.lastname = this.studentForm.controls['lastname'].value;
       this.student.email = this.studentForm.controls['email'].value;
       this.student.birthdate = this.studentForm.controls['dateOfBirth'].value;
       this.student.shift.id = this.studentForm.controls['shift'].value;
       this.student.grade.id = this.studentForm.controls['currentGrade'].value;
-*/
-      // Optional fields
-      /*this.student.startedGrade.id = this.studentForm.controls['registrationGrade'].value;
+      this.student.startedGrade.id = this.studentForm.controls['registrationGrade'].value;
       this.student.registrationYear = this.studentForm.controls['registrationYear'].value;
-*/
+
       // this.updateStudent(); // TODO: Create method
     }
   }
@@ -221,6 +240,27 @@ export class UpdateStudentComponent implements OnInit {
   addSibling(sibling: Student): void {
     this.student.siblings.push(sibling);
     this.results = this.results.filter((d) => d['id'] !== sibling.id);
+  }
+
+  updateStudent(): void {
+    this.studentService.updateStudent(this.student).subscribe(
+      () => {
+        this.message.success('Estudiante actualizado con éxito');
+      },
+      (error) => {
+        const statusCode = error.statusCode;
+        const notIn = [401, 403];
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create(
+            'error',
+            'Ocurrió un error al actualizar al estudiante. Por favor verifique lo siguiente:',
+            error.message,
+            { nzDuration: 0 }
+          );
+        }
+      }
+    );
   }
   //#endregion Update general information
 
@@ -392,10 +432,6 @@ export class UpdateStudentComponent implements OnInit {
     return valid;
   }
   //#endregion Responsibles
-
-  back(): void {
-    this.location.back();
-  }
 
   //#region Student images
   beforeUpload = (file: UploadFile, _fileList: UploadFile[]) => {
