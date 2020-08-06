@@ -70,7 +70,9 @@ export class StudentsComponent implements OnInit {
 
     const permissions = content.permissions;
 
-    // this.permissions.push(new Permission(14, ''));
+    this.permissions.push(new Permission(17, 'Create student'));
+    this.permissions.push(new Permission(20, 'Update student'));
+    this.permissions.push(new Permission(21, 'Get student'));
 
     this.permissions.forEach((p) => {
       const index = permissions.indexOf(p.id);

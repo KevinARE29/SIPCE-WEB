@@ -2,7 +2,7 @@
     <div nz-col nzXs="24" nzMd="14" nzLg="16" nzXl="19">
         <h1>Estudiantes</h1>
     </div>
-    <div nz-col nzXs="24" nzMd="8" nzLg="6" nzXl="3">
+    <div nz-col nzXs="24" nzMd="8" nzLg="6" nzXl="3" *ngIf="checkPermission(17)">
         <a nz-button nzType="primary" routerLink="/estudiantes/nuevo">Crear estudiante</a>
     </div>
 </div>
@@ -92,7 +92,7 @@
                         <th nzColumnKey="email" [nzSortFn]="true" [nzSortPriority]="4">Correo electrónico</th>
                         <th nzColumnKey="currentGrade" [nzSortFn]="true" [nzSortPriority]="5">Grado</th>
                         <th nzColumnKey="status" [nzSortFn]="true" [nzSortPriority]="6">Estado</th>
-                        <th [nzAlign]="'center'">Acción</th>
+                        <th [nzAlign]="'center'" *ngIf="checkPermission(20) || checkPermission(21)">Acción</th>
                     </tr>
                 </thead>
                 
@@ -104,18 +104,18 @@
                         <td>{{ data.email }}</td>
                         <td>{{ data.currentGrade.name }}</td>
                         <td>{{ data.status }}</td>
-                        <td [nzAlign]="'center'">
-                            <a [routerLink]="['/estudiantes', data.id, 'detalle']">
+                        <td [nzAlign]="'center'" *ngIf="checkPermission(20) || checkPermission(21)">
+                            <a [routerLink]="['/estudiantes', data.id, 'detalle']" *ngIf="checkPermission(21)">
                                 <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
                             </a>
-                            <nz-divider nzType="vertical"></nz-divider>
-                            <a [routerLink]="['/estudiantes', data.id, 'editar']">
+                            <nz-divider nzType="vertical" *ngIf="checkPermission(21)"></nz-divider>
+                            <a [routerLink]="['/estudiantes', data.id, 'editar']" *ngIf="checkPermission(20)">
                                 <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
                             </a>
-                            <nz-divider nzType="vertical"></nz-divider>
+                            <!-- <nz-divider nzType="vertical"></nz-divider>
                             <a (click)="showConfirm(data.id)">
                                 <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
-                            </a>
+                            </a> -->
                         </td>
                     </tr>
                 </tbody>

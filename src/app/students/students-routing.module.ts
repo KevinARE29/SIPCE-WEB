@@ -14,19 +14,19 @@ const routes: Routes = [
     path: 'carga-masiva',
     component: UploadStudentsComponent,
     canActivate: [AuthGuard],
-    data: { permission: 11 } // TODO: Change permission
+    data: { permission: 17 }
   },
   {
     path: 'consultar',
     component: StudentsComponent,
     canActivate: [AuthGuard],
-    data: { permission: 11 } // TODO: Change permission
+    data: { permission: 18 }
   },
   {
     path: 'nuevo',
     component: NewStudentComponent,
     canActivate: [AuthGuard],
-    data: { permission: 11 } // TODO: Change permission
+    data: { permission: 17 }
   },
   {
     path: ':student',
@@ -35,13 +35,13 @@ const routes: Routes = [
         path: 'detalle',
         component: StudentComponent,
         canActivate: [AuthGuard],
-        data: { permission: 11 } // TODO: Change permission
+        data: { permission: 21 }
       },
       {
         path: 'editar',
         component: UpdateStudentComponent,
         canActivate: [AuthGuard],
-        data: { permission: 11 } // TODO: Change permission
+        data: { permission: 21 }
       }
     ]
   }

@@ -8,6 +8,8 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzModalService, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
+import { AuthService } from '../../../login/shared/auth.service';
+import { Permission } from '../../../shared/permission.model';
 import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
 import { Student } from '../../shared/student.model';
 import { UploadFile } from 'ng-zorro-antd/upload';
@@ -25,8 +27,10 @@ import { StudentService } from '../../shared/student.service';
   styleUrls: ['./update-student.component.css']
 })
 export class UpdateStudentComponent implements OnInit {
+  permissions: Array<Permission> = [];
   loading = false;
   imgLoader = false;
+  searchLoader = false;
 
   // Form variables
   btnLoading = false;
@@ -53,6 +57,7 @@ export class UpdateStudentComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private authService: AuthService,
     private location: Location,
     private fb: FormBuilder,
     private responsibleService: ResponsibleService,
@@ -73,6 +78,27 @@ export class UpdateStudentComponent implements OnInit {
   }
 
   //#region Initialize component
+  /* ---      Control page permissions      --- */
+  setPermissions(): void {
+    const token = this.authService.getToken();
+    const content = this.authService.jwtDecoder(token);
+
+    const permissions = content.permissions;
+
+    this.permissions.push(new Permission(20, 'Update student'));
+
+    this.permissions.forEach((p) => {
+      const index = permissions.indexOf(p.id);
+
+      p.allow = index == -1 ? false : true;
+    });
+  }
+
+  checkPermission(id: number): boolean {
+    const index = this.permissions.find((p) => p.id === id);
+    return index.allow;
+  }
+
   init(): void {
     // eslint-disable-next-line prettier/prettier
     const emailPattern = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
@@ -105,9 +131,10 @@ export class UpdateStudentComponent implements OnInit {
         } else if (id > 0) {
           this.student.id = id;
           this.getStudentData();
+          this.setPermissions();
         }
       } else {
-        this.router.navigateByUrl('/estudiantes/' + param + '/editar', { skipLocationChange: true });
+        this.router.navigateByUrl('/estudiantes/' + param + '/edit', { skipLocationChange: true });
       }
     });
   }
@@ -123,50 +150,58 @@ export class UpdateStudentComponent implements OnInit {
     this.student.siblings = new Array<Student>();
     this.student.images = new Array<unknown>();
 
-    this.studentService.mergeStudentAndCatalogs(this.student.id).subscribe((data) => {
-      this.student = data['student'];
-      // console.log(data);
-      // Grades data
-      this.activeGrades = data['grades'].data.filter((x) => x.active === true);
-      this.allGrades = data['grades'].data;
+    this.studentService.mergeStudentAndCatalogs(this.student.id).subscribe(
+      (data) => {
+        this.student = data['student'];
+        // console.log(data);
+        // Grades data
+        this.activeGrades = data['grades'].data.filter((x) => x.active === true);
+        this.allGrades = data['grades'].data;
 
-      // Shifts data
-      this.shifts = data['shifts'].data.filter((x) => x.active === true);
+        // Shifts data
+        this.shifts = data['shifts'].data.filter((x) => x.active === true);
 
-      // Set student form data
-      this.studentForm.get('code')?.setValue(this.student.code);
-      this.studentForm.get('firstname')?.setValue(this.student.firstname);
-      this.studentForm.get('lastname')?.setValue(this.student.lastname);
-      this.studentForm.get('email')?.setValue(this.student.email);
-      this.studentForm.get('dateOfBirth')?.setValue(this.student.birthdate);
-      this.studentForm.get('shift')?.setValue(this.student.shift.id);
-      this.studentForm.get('status')?.setValue(this.student.status);
-      this.studentForm.get('currentGrade')?.setValue(this.student.grade.id);
-      this.studentForm.get('registrationYear')?.setValue(new Date(this.student.registrationYear, 0, 1));
-      this.studentForm.get('registrationGrade')?.setValue(this.student.startedGrade.id);
+        // Set student form data
+        this.studentForm.get('code')?.setValue(this.student.code);
+        this.studentForm.get('firstname')?.setValue(this.student.firstname);
+        this.studentForm.get('lastname')?.setValue(this.student.lastname);
+        this.studentForm.get('email')?.setValue(this.student.email);
+        this.studentForm.get('dateOfBirth')?.setValue(this.student.birthdate);
+        this.studentForm.get('shift')?.setValue(this.student.shift.id);
+        this.studentForm.get('status')?.setValue(this.student.status);
+        this.studentForm.get('currentGrade')?.setValue(this.student.grade.id);
+        this.studentForm.get('registrationYear')?.setValue(new Date(this.student.registrationYear, 0, 1));
+        this.studentForm.get('registrationGrade')?.setValue(this.student.startedGrade.id);
 
-      // Add cache elements to responsibles table
-      this.updateEditCache();
+        // Add cache elements to responsibles table
+        this.updateEditCache();
 
-      // Transform images
-      const images = new Array<unknown>();
-      for (let i = this.student.startedGrade.id; i <= this.student.grade.id; i++) {
-        const img = this.student.images.find((x) => x['title'] === this.allGrades[i - 1].name);
+        // Transform images
+        const images = new Array<unknown>();
+        for (let i = this.student.startedGrade.id; i <= this.student.grade.id; i++) {
+          const img = this.student.images.find((x) => x['title'] === this.allGrades[i - 1].name);
 
-        img
-          ? images.push({
-              id: i,
-              path: img['path'] ? img['path'] : img['image'],
-              title: img['title'],
-              grade: this.allGrades[i - 1].id
-            })
-          : images.push({ id: i, path: null, title: this.allGrades[i].name, grade: this.allGrades[i - 1].id });
+          img
+            ? images.push({
+                id: i,
+                path: img['path'] ? img['path'] : img['image'],
+                title: img['title'],
+                grade: this.allGrades[i - 1].id
+              })
+            : images.push({ id: i, path: null, title: this.allGrades[i].name, grade: this.allGrades[i - 1].id });
+        }
+
+        this.student.images = images;
+
+        this.loading = false;
+      },
+      (error) => {
+        this.loading = false;
+        if (error.error.statusCode === 404) {
+          this.router.navigateByUrl('/estudiantes/' + this.student.id + '/edit', { skipLocationChange: true });
+        }
       }
-
-      this.student.images = images;
-
-      this.loading = false;
-    });
+    );
   }
 
   updateEditCache(): void {
@@ -228,8 +263,10 @@ export class UpdateStudentComponent implements OnInit {
     this.searching = !this.searching;
 
     if (search.code !== this.student.code && this.searching) {
+      this.searchLoader = true;
       this.studentService.getStudents(null, search, true, null).subscribe((r) => {
         this.results = r['data'];
+        this.searchLoader = false;
       });
     } else if (!this.searching) {
       this.results = new Array<Student>();

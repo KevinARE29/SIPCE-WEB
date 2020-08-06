@@ -201,9 +201,10 @@
                     <div class="siblings" nz-row [nzGutter]="24">
                         <div nz-col *ngFor="let sibling of student.siblings">
                             {{ sibling.firstname }} {{ sibling.lastname }} 
-                            <a
+                            <a  nz-button nzType="link"
                                 nz-popconfirm
                                 nzPopconfirmTitle="¿Desea desvincular a ambos estudiantes?"
+                                [disabled]="!checkPermission(20)"
                                 (nzOnConfirm)="confirmDeleteSibling(sibling.id)"
                             >
                             <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ff4d4f'"></i>
@@ -212,36 +213,38 @@
                     </div>
                     
                     <div nz-row [nzGutter]="24">
-                        <!-- Search siblings -->
-                        <div nz-col nzXs="24" nzSm="24" nzMd="12">
-                            <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                                <input type="text" nz-input formControlName="searchSibling" placeholder="Buscar NIE"/>
-                            </nz-input-group>
-                            <ng-template #suffixIconButton>
-                                <button nz-button [nzType]="searching ? '' : 'primary'" nzSearch (click)="searchSibling()">
-                                    <i nz-icon [nzType]="searching ? 'close' : 'search'"></i>
-                                </button>
-                            </ng-template>
-                        </div>
-                        <!-- Search siblings results -->
-                        <div  nz-col nzXs="24" nzSm="24" nzMd="24">
-                            <ng-container *ngIf="results.length;else noResults">
-                                <div class="addSibling" *ngFor="let result of results">
-                                    <span>{{ result.firstname }} {{ result.lastname }}</span>
-                                    <a (click)="addSibling(result)">
-                                        <i nz-icon nzType="plus-circle"  [nzTheme]="'twotone'" [nzTwotoneColor]="'#ef6c00'"></i>
-                                    </a>
-                                </div>
-                            </ng-container>
-                            <ng-template #noResults>
-                                <ng-container *ngIf="searching">No se encontraron resultados.</ng-container> 
-                            </ng-template>
-                        </div>
+                        <nz-spin nzTip="Cargando ..." [nzSpinning]="searchLoader">
+                            <!-- Search siblings -->
+                            <div nz-col nzXs="24" nzSm="24" nzMd="12">
+                                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                    <input type="text" nz-input formControlName="searchSibling" placeholder="Buscar NIE" [disabled]="!checkPermission(20)"/>
+                                </nz-input-group>
+                                <ng-template #suffixIconButton>
+                                    <button [disabled]="!checkPermission(20)" nz-button [nzType]="searching ? '' : 'primary'" nzSearch (click)="searchSibling()">
+                                        <i nz-icon [nzType]="searching ? 'close' : 'search'"></i>
+                                    </button>
+                                </ng-template>
+                            </div>
+                            <!-- Search siblings results -->
+                            <div  nz-col nzXs="24" nzSm="24" nzMd="24">
+                                <ng-container *ngIf="results.length;else noResults">
+                                    <div class="addSibling" *ngFor="let result of results">
+                                        <span>{{ result.firstname }} {{ result.lastname }}</span>
+                                        <a (click)="addSibling(result)">
+                                            <i nz-icon nzType="plus-circle"  [nzTheme]="'twotone'" [nzTwotoneColor]="'#ef6c00'"></i>
+                                        </a>
+                                    </div>
+                                </ng-container>
+                                <ng-template #noResults>
+                                    <ng-container *ngIf="searching">No se encontraron resultados.</ng-container> 
+                                </ng-template>
+                            </div>
+                        </nz-spin>
                     </div>
                 </div>
                 <div nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
                     <div nz-col>
-                        <button class="btnTabs" nz-button nzType="primary">Actualizar</button>
+                        <button class="btnTabs" nz-button nzType="primary" [disabled]="!checkPermission(20)">Actualizar</button>
                     </div>
                 </div>
             </form>
@@ -258,7 +261,7 @@
                         <th>Parentesco</th>
                         <th>Correo electrónico</th>
                         <th>Número de teléfono</th>
-                        <th [nzAlign]="'center'">Acción</th>
+                        <th [nzAlign]="'center'" *ngIf="checkPermission(20)">Acción</th>
                     </tr>
                 </thead>
     
@@ -272,7 +275,7 @@
                             <td>{{ data.email }}</td>
                             <td>{{ data.phone  | slice:0:4 }}-{{ data.phone | slice:4:8 }}</td>
     
-                            <td [nzAlign]="'center'">
+                            <td [nzAlign]="'center'" *ngIf="checkPermission(20)">
                                 <a (click)="startEdit(data.id)">
                                     <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
                                 </a>
@@ -304,7 +307,7 @@
                             <td>
                                 <input type="text" nz-input [(ngModel)]="editCache[data.id].data.phone">
                             </td>
-                            <td [nzAlign]="'center'">
+                            <td [nzAlign]="'center'" *ngIf="checkPermission(20)">
                                 <a (click)="saveEdit(data.id)" class="save"> Guardar </a>
                                 <nz-divider nzType="vertical"></nz-divider>
                                 <a nz-popconfirm nzTitle="¿Cancelar edición?" (nzOnConfirm)="cancelEdit(data.id)">
@@ -315,7 +318,7 @@
                     </tr>
                 </tbody>
             </nz-table>
-            <button class="btnTabs" nz-button nzType="primary" *ngIf="student.responsibles.length < 2" (click)="addResponsible()">
+            <button class="btnTabs" nz-button nzType="primary" *ngIf="student.responsibles.length < 2" (click)="addResponsible()" [disabled]="!checkPermission(20)">
                 Agregar nuevo responsable
             </button>
         </nz-tab>
@@ -325,7 +328,7 @@
         <nz-tab nzTitle="Fotografías">
             <nz-spin nzTip="Cargando ..." [nzSpinning]="imgLoader">
                 <ng-container *ngFor="let img of student.images">
-                    <nz-upload nz-col nzSm="24" nzMd="4" class="avatar-uploader" nzListType="picture-card" [nzShowUploadList]="false"
+                    <nz-upload nz-col nzSm="24" nzMd="4" class="avatar-uploader" nzListType="picture-card" [nzShowUploadList]="false" [nzDisabled]="!checkPermission(20)"
                         [nzBeforeUpload]="beforeUpload" [nzCustomRequest]="uploadImage" (nzChange)="handleChange($event, img.grade)">
                         <ng-container *ngIf="!img.path">
                             <i class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></i>
