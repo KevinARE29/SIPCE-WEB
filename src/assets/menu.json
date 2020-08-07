@@ -3,98 +3,126 @@
         {
             "title": "Políticas de seguridad",
             "icon": "key",
-            "permission": 2,
-            "allow": null,
+            "permissions": [2],
+            "allowed": null,
             "children": [
                 {
                     "route": "/politicas-seguridad",
-                    "name": "Políticas de seguridad"
+                    "name": "Políticas de seguridad",
+                    "permission": 2,
+                    "allowed": false
                 }
             ]
         }, {
             "title": "Roles",
             "icon": "lock",
-            "permission": 4,
-            "allow": null,
+            "permissions": [4],
+            "allowed": null,
             "children": [
                 {
                     "route": "/roles",
-                    "name": "Roles"
+                    "name": "Roles",
+                    "permission": 4,
+                    "allowed": false
                 }
             ]
         }, {
             "title": "Bitácoras",
             "icon": "profile",
-            "permission": 10,
-            "allow": null,
+            "permissions": [10],
+            "allowed": null,
             "children": [
                 {
                     "route": "/bitacora/accesos",
-                    "name": "Bitácora de accesos"
+                    "name": "Bitácora de accesos",
+                    "permission": 10,
+                    "allowed": false
                 }, {
                     "route": "/bitacora/acciones",
-                    "name": "Bitácora de acciones"
+                    "name": "Bitácora de acciones",
+                    "permission": 10,
+                    "allowed": false
                 }
             ]
         },
         {
             "title": "Catálogos Académicos",
             "icon": "ordered-list",
-            "permission": 13,
-            "allow": null,
+            "permissions": [13],
+            "allowed": null,
             "children": [
                 {
                     "route": "/catalogos/grados",
-                    "name": "Grados"
+                    "name": "Grados",
+                    "permission": 13,
+                    "allowed": false
                 },   
                 {
                     "route": "/catalogos/secciones",
-                    "name": "Secciones"
+                    "name": "Secciones",
+                    "permission": 13,
+                    "allowed": false
                 },
                 {
                     "route": "/catalogos/ciclos",
-                    "name": "Ciclos"
+                    "name": "Ciclos",
+                    "permission": 13,
+                    "allowed": false
                 }, 
                 {
                     "route": "/catalogos/turnos",
-                    "name": "Turnos"
+                    "name": "Turnos",
+                    "permission": 13,
+                    "allowed": false
                 },
                 {
                     "route": "/catalogos/periodos",
-                    "name": "Periodos"
+                    "name": "Periodos",
+                    "permission": 13,
+                    "allowed": false
                 }             
             ]
         },
         {
             "title": "Usuarios",
             "icon": "user",
-            "permission": 3,
-            "allow": null,
+            "permissions": [11, 12, 3],
+            "allowed": null,
             "children": [
                 {
                     "route": "/usuarios/consultar",
-                    "name": "Usuarios"
+                    "name": "Usuarios",
+                    "permission": 13,
+                    "allowed": false
                 }, {
                     "route": "/usuarios/sin-credenciales",
-                    "name": "Usuarios sin credenciales"
+                    "name": "Usuarios sin credenciales",
+                    "permission": 12,
+                    "allowed": false
                 }, {
                     "route": "/usuarios/carga-masiva",
-                    "name": "Cargar usuarios"
+                    "name": "Cargar usuarios",
+                    "permission": 3,
+                    "allowed": false
                 }
             ]
         },
         {
             "title": "Estudiantes",
             "icon": "solution",
-            "permission": 3,
-            "allow": null,
+            "permissions": [18, 17],
+            "allowed": null,
             "children": [
                 {
                     "route": "/estudiantes/consultar",
-                    "name": "Estudiantes"
+                    "name": "Estudiantes",
+                    "permission": 18,
+                    "allowed": false
                 }, {
                     "route": "/estudiantes/carga-masiva",
-                    "name": "Cargar estudiantes"
+                    "name": "Cargar estudiantes",
+                    "permission": 17,
+                    "allowed": false
                 }
             ]
         }
