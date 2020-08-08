@@ -5,6 +5,7 @@ nz-switch {
 nz-tag {
     font-size: 1em;
     padding: 1px;
+    margin-bottom: 2px;
 }
 
 strong, span {

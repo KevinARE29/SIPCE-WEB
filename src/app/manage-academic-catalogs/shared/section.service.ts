@@ -54,6 +54,12 @@ export class SectionService {
     return this.http.get<any[]>(url).pipe(catchError(this.handleError()));
   }
 
+  getAllSections(): Observable<unknown[]> {
+    return this.http
+      .get<unknown[]>(`${this.baseUrl}academics/sections?paginate=false`)
+      .pipe(catchError(this.handleError()));
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.

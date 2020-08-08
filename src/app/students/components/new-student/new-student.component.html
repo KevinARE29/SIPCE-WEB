@@ -73,7 +73,7 @@
             <nz-form-item nzJustify="space-around">
                 <nz-form-label>Fecha de nacimiento</nz-form-label>
                 <nz-form-control [nzErrorTip]="dateOfBirthErrors">
-                    <nz-date-picker formControlName="dateOfBirth" nzFormat="dd/MM/yyyy">
+                    <nz-date-picker formControlName="dateOfBirth" nzFormat="dd/MM/yyyy" [nzDisabledDate]="disabledDate">
                     </nz-date-picker>
                     <ng-template #dateOfBirthErrors let-control>
                         <ng-container *ngIf="control.hasError('required')">La fecha de nacimiento es requerida
@@ -120,7 +120,7 @@
             <nz-form-item nzJustify="space-around">
                 <nz-form-label nzFor="registrationYear">Año de ingreso</nz-form-label>
                 <nz-form-control>
-                    <nz-year-picker id="registrationYear" formControlName="registrationYear" nzPlaceHolder="Seleccionar año"></nz-year-picker>
+                    <nz-year-picker id="registrationYear" formControlName="registrationYear" nzPlaceHolder="Seleccionar año" [nzDisabledDate]="disabledYear"></nz-year-picker>
                 </nz-form-control>
             </nz-form-item>
         </div>

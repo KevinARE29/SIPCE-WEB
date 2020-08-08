@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable, throwError, forkJoin } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
-import { getYear } from 'date-fns';
+import { getYear, differenceInYears } from 'date-fns';
 
-import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { Student } from './student.model';
+import { ErrorMessageService } from 'src/app/shared/error-message.service';
+import { Responsible } from './responsible.model';
+import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
+import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
+import { SectionService } from 'src/app/manage-academic-catalogs/shared/section.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +20,13 @@ import { Student } from './student.model';
 export class StudentService {
   baseUrl: string;
 
-  constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
+  constructor(
+    private http: HttpClient,
+    private errorMessageService: ErrorMessageService,
+    private gradeService: GradeService,
+    private shiftService: ShiftService,
+    private sectionService: SectionService
+  ) {
     this.baseUrl = environment.apiURL;
   }
 
@@ -65,7 +75,7 @@ export class StudentService {
 
       if (search.email) queryParams += '&email=' + search.email;
 
-      if (search.grade.id) queryParams += '&currentGrade=' + search.grade.id;
+      if (search.grade && search.grade.id) queryParams += '&currentGrade=' + search.grade.id;
 
       if (search.status) queryParams += '&status=' + search.status;
 
@@ -135,6 +145,105 @@ export class StudentService {
     return this.http
       .post<Student>(`${this.baseUrl}students`, JSON.stringify(data))
       .pipe(catchError(this.handleError()));
+  }
+
+  getStudent(id: number): Observable<Student> {
+    return this.http.get<Student>(`${this.baseUrl}students/${id}`).pipe(
+      map((result) => {
+        const student = new Student();
+        const today = new Date();
+        const detailsLast = result['data'].sectionDetails.length - 1;
+
+        student.id = result['data'].id;
+        student.code = result['data'].code;
+        student.firstname = result['data'].firstname;
+        student.lastname = result['data'].lastname;
+        student.email = result['data'].email;
+        student.birthdate = result['data'].birthdate;
+        student.age = differenceInYears(today, new Date(student.birthdate));
+        student.status = result['data'].status;
+        student.shift = result['data'].currentShift;
+        student.cycle = result['data'].sectionDetails[detailsLast]
+          ? result['data'].sectionDetails[detailsLast].gradeDetail.cycleDetail.cycle
+          : null;
+        student.grade = result['data'].currentGrade;
+        student.section = result['data'].sectionDetails[detailsLast]
+          ? result['data'].sectionDetails[detailsLast].section
+          : null;
+        student.startedGrade = result['data'].startedGrade;
+        student.siblings = result['data'].siblings;
+        student.registrationYear = result['data'].registrationYear;
+
+        student.responsibles = new Array<Responsible>();
+        student.images = new Array<unknown>();
+
+        result['data'].images.forEach((img) => {
+          const url = img['path'].split('/');
+          const grade = url[url.length - 1];
+          const gradeName = grade.split('.');
+
+          student.images.push({ id: img['id'], title: gradeName[0], image: img['path'] });
+        });
+
+        result['data'].responsibleStudents.forEach((responsible) => {
+          if (responsible.responsible.id) {
+            const studentResponsible = new Responsible();
+
+            studentResponsible.id = responsible['responsible'].id;
+            studentResponsible.email = responsible['responsible'].email;
+            studentResponsible.firstname = responsible['responsible'].firstname;
+            studentResponsible.lastname = responsible['responsible'].lastname;
+            studentResponsible.phone = responsible['responsible'].phone;
+            studentResponsible.relationship = responsible['relationship'];
+
+            student.responsibles.push(studentResponsible);
+          }
+        });
+
+        return student;
+      })
+    );
+  }
+
+  updateStudent(student: Student): Observable<Student> {
+    const data = {};
+    const siblingsIds = new Array<number>();
+
+    student.siblings.forEach((sibling) => {
+      siblingsIds.push(sibling.id);
+    });
+
+    data['status'] = student.status;
+    data['firstname'] = student.firstname;
+    data['lastname'] = student.lastname;
+    data['email'] = student.email;
+    data['birthdate'] = student.birthdate;
+    data['shiftId'] = student.shift.id;
+    data['gradeId'] = student.grade.id;
+    data['sectionId'] = student.section ? student.section.id : null;
+    data['startedGradeId'] = student.startedGrade.id;
+    data['registrationYear'] = getYear(student.registrationYear);
+    data['siblings'] = siblingsIds;
+
+    return this.http
+      .put<Student>(`${this.baseUrl}students/${student.id}`, JSON.stringify(data))
+      .pipe(catchError(this.handleError()));
+  }
+
+  mergeStudentAndCatalogs(id: number): Observable<unknown> {
+    return forkJoin({
+      sections: this.sectionService.getAllSections(),
+      grades: this.gradeService.getAllGrades(),
+      shifts: this.shiftService.getShifts(),
+      student: this.getStudent(id)
+    });
+  }
+
+  createOrUpdatePicture(studentId: number, grade: number, image: Blob): Observable<any> {
+    const fd = new FormData();
+    fd.append('image', image, image['name']);
+
+    return this.http.post<string>(`${this.baseUrl}students/${studentId}/images?gradeId=${grade}`, fd);
   }
 
   /**

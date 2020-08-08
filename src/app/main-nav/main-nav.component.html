@@ -23,11 +23,13 @@
       </li>
 
       <ng-container *ngFor="let option of menuOptions">
-        <li *ngIf="option.allow" nz-submenu [nzTitle]="option.title" [nzIcon]="option.icon">
+        <li *ngIf="option.allowed" nz-submenu [nzTitle]="option.title" [nzIcon]="option.icon">
           <ul>
-            <li *ngFor="let subOption of option.children" nz-menu-item nzMatchRouter>
-              <a [routerLink]="subOption.route">{{ subOption.name }}</a>
-            </li>
+            <ng-container *ngFor="let subOption of option.children">
+              <li nz-menu-item nzMatchRouter *ngIf="subOption.allowed">
+                <a [routerLink]="subOption.route">{{ subOption.name }}</a>
+              </li>
+            </ng-container>
           </ul>
         </li>
       </ng-container>

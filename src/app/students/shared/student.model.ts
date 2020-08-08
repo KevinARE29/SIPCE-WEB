@@ -8,10 +8,15 @@ export class Student {
   lastname: string;
   email: string;
   birthdate: Date;
+  age: number;
   status: string;
   shift: ShiftPeriodGrade;
+  cycle: ShiftPeriodGrade;
   grade: ShiftPeriodGrade;
+  section: ShiftPeriodGrade;
   startedGrade: ShiftPeriodGrade;
   registrationYear: number;
   responsibles: Responsible[];
+  images: unknown[];
+  siblings: Student[];
 }
