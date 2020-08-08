@@ -27,6 +27,7 @@
     "@angular/router": "~9.1.1",
     "@auth0/angular-jwt": "^4.1.2",
     "@syncfusion/ej2-angular-schedule": "^18.2.47",
+    "cldr-data": "^36.0.0",
     "express": "^4.17.1",
     "ng-zorro-antd": "^9.1.2",
     "path": "^0.12.7",
@@ -57,6 +58,7 @@
     "prettier": "^2.0.5",
     "prettier-eslint": "^11.0.0",
     "protractor": "~5.4.3",
+    "systemjs-plugin-json": "^0.3.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
     "typescript": "~3.8.3"
