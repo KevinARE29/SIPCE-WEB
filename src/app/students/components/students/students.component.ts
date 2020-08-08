@@ -137,33 +137,6 @@ export class StudentsComponent implements OnInit {
     );
   }
 
-  showConfirm(id: number): void {
-    const element = this.listOfDisplayData.find((x) => x.id === id);
-
-    // this.confirmModal = this.modal.confirm({
-      // nzTitle: `¿Desea eliminar al estudiante "${element.code}"?`,
-      // nzContent: `Eliminará al estudiante "${element.firstname} ${element.lastname}". La acción no puede deshacerse. ¿Desea continuar con la acción?`,
-      // nzOnOk: () =>
-        // this.studentService
-        //   .deleteStudent(id)
-        //   .toPromise()
-        //   .then(() => {
-        //     this.message.success(`El estudiante "${element.firstname} ${element.lastname}" ha sido eliminado`);
-        //     this.search();
-        //   })
-        //   .catch((err) => {
-        //     const statusCode = err.statusCode;
-        //     const notIn = [401, 403];
-
-        //     if (!notIn.includes(statusCode) && statusCode < 500) {
-        //       this.notification.create('error', 'Ocurrió un error al eliminar al estudiante.', err.message, {
-        //         nzDuration: 0
-        //       });
-        //     }
-        //   })
-    // });
-  }
-
   /* ------      Complementary methods      ------ */
   getGrades(): void {
     this.gradeService.getAllGrades().subscribe((data) => {

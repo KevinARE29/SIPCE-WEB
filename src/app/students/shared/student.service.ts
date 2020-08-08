@@ -12,7 +12,7 @@ import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { Responsible } from './responsible.model';
 import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
 import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
-import { SchoolYearService } from 'src/app/school-year/shared/school-year.service';
+import { SectionService } from 'src/app/manage-academic-catalogs/shared/section.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +25,7 @@ export class StudentService {
     private errorMessageService: ErrorMessageService,
     private gradeService: GradeService,
     private shiftService: ShiftService,
-    private schoolYearService: SchoolYearService
+    private sectionService: SectionService
   ) {
     this.baseUrl = environment.apiURL;
   }
@@ -205,32 +205,33 @@ export class StudentService {
   }
 
   updateStudent(student: Student): Observable<Student> {
+    const data = {};
     const siblingsIds = new Array<number>();
 
     student.siblings.forEach((sibling) => {
       siblingsIds.push(sibling.id);
     });
 
-    const data = JSON.stringify({
-      status: student.status,
-      firstname: student.firstname,
-      lastname: student.lastname,
-      email: student.email,
-      birthdate: student.birthdate,
-      shiftId: student.shift.id,
-      gradeId: student.grade.id,
-      sectionId: student.section.id,
-      startedGradeId: student.startedGrade.id,
-      registrationYear: student.registrationYear,
-      siblings: siblingsIds
-    });
+    data['status'] = student.status;
+    data['firstname'] = student.firstname;
+    data['lastname'] = student.lastname;
+    data['email'] = student.email;
+    data['birthdate'] = student.birthdate;
+    data['shiftId'] = student.shift.id;
+    data['gradeId'] = student.grade.id;
+    data['sectionId'] = student.section ? student.section.id : null;
+    data['startedGradeId'] = student.startedGrade.id;
+    data['registrationYear'] = getYear(student.registrationYear);
+    data['siblings'] = siblingsIds;
 
-    return this.http.put<Student>(`${this.baseUrl}students/${student.id}`, data).pipe(catchError(this.handleError()));
+    return this.http
+      .put<Student>(`${this.baseUrl}students/${student.id}`, JSON.stringify(data))
+      .pipe(catchError(this.handleError()));
   }
 
   mergeStudentAndCatalogs(id: number): Observable<unknown> {
     return forkJoin({
-      // sections: this.sectionService.getAllSections(),
+      sections: this.sectionService.getAllSections(),
       grades: this.gradeService.getAllGrades(),
       shifts: this.shiftService.getShifts(),
       student: this.getStudent(id)

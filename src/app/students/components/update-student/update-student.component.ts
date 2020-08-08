@@ -31,6 +31,7 @@ export class UpdateStudentComponent implements OnInit {
   loading = false;
   imgLoader = false;
   searchLoader = false;
+  save = null;
 
   // Form variables
   btnLoading = false;
@@ -46,6 +47,7 @@ export class UpdateStudentComponent implements OnInit {
   kinshipRelationships: any;
   activeGrades: Grade[];
   allGrades: Grade[];
+  sections: ShiftPeriodGrade[];
   status: string[];
 
   // Table
@@ -104,7 +106,6 @@ export class UpdateStudentComponent implements OnInit {
     const emailPattern = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 
     this.studentForm = this.fb.group({
-      code: ['', [Validators.required, Validators.maxLength(32)]],
       firstname: ['', [Validators.required, Validators.maxLength(128)]],
       lastname: ['', [Validators.required, Validators.maxLength(128)]],
       email: ['', [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]],
@@ -112,6 +113,7 @@ export class UpdateStudentComponent implements OnInit {
       status: ['', [Validators.required]],
       shift: ['', [Validators.required]],
       currentGrade: ['', [Validators.required]],
+      section: [''],
       registrationGrade: ['', [Validators.required]],
       registrationYear: ['', [Validators.required]],
       searchSibling: ['']
@@ -153,7 +155,10 @@ export class UpdateStudentComponent implements OnInit {
     this.studentService.mergeStudentAndCatalogs(this.student.id).subscribe(
       (data) => {
         this.student = data['student'];
-        // console.log(data);
+        if (!this.student.section) this.student.section = new ShiftPeriodGrade();
+        // Sections data
+        this.sections = data['sections'].data;
+
         // Grades data
         this.activeGrades = data['grades'].data.filter((x) => x.active === true);
         this.allGrades = data['grades'].data;
@@ -162,7 +167,6 @@ export class UpdateStudentComponent implements OnInit {
         this.shifts = data['shifts'].data.filter((x) => x.active === true);
 
         // Set student form data
-        this.studentForm.get('code')?.setValue(this.student.code);
         this.studentForm.get('firstname')?.setValue(this.student.firstname);
         this.studentForm.get('lastname')?.setValue(this.student.lastname);
         this.studentForm.get('email')?.setValue(this.student.email);
@@ -170,28 +174,14 @@ export class UpdateStudentComponent implements OnInit {
         this.studentForm.get('shift')?.setValue(this.student.shift.id);
         this.studentForm.get('status')?.setValue(this.student.status);
         this.studentForm.get('currentGrade')?.setValue(this.student.grade.id);
+        this.studentForm.get('section')?.setValue(this.student.section.id);
         this.studentForm.get('registrationYear')?.setValue(new Date(this.student.registrationYear, 0, 1));
         this.studentForm.get('registrationGrade')?.setValue(this.student.startedGrade.id);
 
         // Add cache elements to responsibles table
         this.updateEditCache();
 
-        // Transform images
-        const images = new Array<unknown>();
-        for (let i = this.student.startedGrade.id; i <= this.student.grade.id; i++) {
-          const img = this.student.images.find((x) => x['title'] === this.allGrades[i - 1].name);
-
-          img
-            ? images.push({
-                id: i,
-                path: img['path'] ? img['path'] : img['image'],
-                title: img['title'],
-                grade: this.allGrades[i - 1].id
-              })
-            : images.push({ id: i, path: null, title: this.allGrades[i].name, grade: this.allGrades[i - 1].id });
-        }
-
-        this.student.images = images;
+        this.organizeImages();
 
         this.loading = false;
       },
@@ -202,6 +192,25 @@ export class UpdateStudentComponent implements OnInit {
         }
       }
     );
+  }
+
+  organizeImages(): void {
+    // Transform images
+    const images = new Array<unknown>();
+    for (let i = this.student.startedGrade.id; i <= this.student.grade.id; i++) {
+      const img = this.student.images.find((x) => x['title'] === this.allGrades[i - 1].name);
+
+      img
+        ? images.push({
+            id: i,
+            path: img['path'] ? img['path'] : img['image'],
+            title: img['title'],
+            grade: this.allGrades[i - 1].id
+          })
+        : images.push({ id: i, path: null, title: this.allGrades[i - 1].name, grade: this.allGrades[i - 1].id });
+    }
+
+    this.student.images = images;
   }
 
   updateEditCache(): void {
@@ -237,19 +246,19 @@ export class UpdateStudentComponent implements OnInit {
       this.studentForm.controls[i].updateValueAndValidity();
     }
 
-    if (this.studentForm.valid) {
+    if (this.studentForm.valid && this.save) {
       // Student
-      this.student.code = this.studentForm.controls['code'].value;
       this.student.firstname = this.studentForm.controls['firstname'].value;
       this.student.lastname = this.studentForm.controls['lastname'].value;
       this.student.email = this.studentForm.controls['email'].value;
       this.student.birthdate = this.studentForm.controls['dateOfBirth'].value;
       this.student.shift.id = this.studentForm.controls['shift'].value;
       this.student.grade.id = this.studentForm.controls['currentGrade'].value;
+      this.student.section.id = this.studentForm.controls['section'].value;
       this.student.startedGrade.id = this.studentForm.controls['registrationGrade'].value;
       this.student.registrationYear = this.studentForm.controls['registrationYear'].value;
 
-      // this.updateStudent(); // TODO: Create method
+      this.updateStudent();
     }
   }
 
@@ -266,6 +275,7 @@ export class UpdateStudentComponent implements OnInit {
       this.searchLoader = true;
       this.studentService.getStudents(null, search, true, null).subscribe((r) => {
         this.results = r['data'];
+        this.results = this.results.filter((d) => d['id'] !== this.student.id);
         this.searchLoader = false;
       });
     } else if (!this.searching) {
@@ -280,13 +290,18 @@ export class UpdateStudentComponent implements OnInit {
   }
 
   updateStudent(): void {
+    this.btnLoading = true;
     this.studentService.updateStudent(this.student).subscribe(
       () => {
+        this.organizeImages();
         this.message.success('Estudiante actualizado con éxito');
+        this.btnLoading = false;
       },
       (error) => {
         const statusCode = error.statusCode;
         const notIn = [401, 403];
+
+        this.btnLoading = false;
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create(

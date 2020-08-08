@@ -74,7 +74,6 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
     this.menuOptions = MenuJson.menu;
 
     this.menuOptions.forEach((menu) => {
-      // TODO: Evaluate if at least one of the permissions is allowed
       let counter = 0;
       menu.permissions.forEach((permission) => {
         const index = permissions.indexOf(permission);
