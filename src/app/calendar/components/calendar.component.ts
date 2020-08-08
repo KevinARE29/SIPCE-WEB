@@ -10,10 +10,18 @@ import {
   AgendaService,
   View
 } from '@syncfusion/ej2-angular-schedule';
-import { L10n, loadCldr, setCulture } from '@syncfusion/ej2-base';
+// import { L10n, loadCldr, setCulture } from '@syncfusion/ej2-base';
+import { L10n, loadCldr } from '@syncfusion/ej2-base';
+
+import * as numberingSystems from '../../../../node_modules/cldr-data/supplemental/numberingSystems.json';
+import * as gregorian from '../../../../node_modules/cldr-data/main/es-SV/ca-gregorian.json';
+import * as numbers from 'cldr-data/main/es-SV/numbers.json';
+import * as timeZoneNames from 'cldr-data/main/es-SV/timeZoneNames.json';
+
+loadCldr(numberingSystems['default'], gregorian['default'], numbers['default'], timeZoneNames['default']);
 /*
 L10n.load({
-  es: {
+  es-SV: {
     schedule: {
       day: 'Dia',
       week: 'Semana',
@@ -136,7 +144,6 @@ L10n.load({
   }
 });
 */
-// setCulture('es');
 
 @Component({
   selector: 'app-calendar',
@@ -147,7 +154,8 @@ export class CalendarComponent implements OnInit {
   // @ViewChild('schedule')
   // public scheduleObj: ScheduleComponent;
 
-  public selectedDate: Date = new Date(2018, 1, 15);
+  public selectedDate: Date = new Date(2018, 10, 30);
+  public newViewMode: View = 'Month';
   // public currentView: View = 'Month';
 
   public eventData: EventSettingsModel = {
