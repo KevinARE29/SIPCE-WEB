@@ -125,6 +125,20 @@
                     "allowed": false
                 }
             ]
+        },
+        {
+            "title": "Año escolar",
+            "icon": "contacts",
+            "permissions": [19],
+            "allowed": null,
+            "children": [
+                {
+                    "route": "/asignaciones",
+                    "name": "Año escolar",
+                    "permission": 19,
+                    "allowed": false
+                }
+            ]
         }
     ]  
 }
