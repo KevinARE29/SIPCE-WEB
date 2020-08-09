@@ -39,6 +39,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzStepsModule } from 'ng-zorro-antd/steps';
 
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { es_ES } from 'ng-zorro-antd/i18n';
@@ -82,7 +83,8 @@ const ngZorro = [
   NzTagModule,
   NzListModule,
   NzTabsModule,
-  NzEmptyModule
+  NzEmptyModule,
+  NzStepsModule
 ];
 
 @NgModule({

@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+
+import { AntDesignModule } from '../ant-design/ant-design.module';
 
 import { SchoolYearRoutingModule } from './school-year-routing.module';
 import { SchoolYearComponent } from './components/school-year/school-year.component';
@@ -10,12 +13,16 @@ import { CounselorsComponent } from './components/counselors/counselors.componen
 import { NewSchoolYearSummaryComponent } from './components/new-school-year-summary/new-school-year-summary.component';
 import { SchoolYearEndSummaryComponent } from './components/school-year-end-summary/school-year-end-summary.component';
 
-
 @NgModule({
-  declarations: [SchoolYearComponent, AcademicAssignmentsComponent, CycleCoordinatorsComponent, HeadTeachersComponent, CounselorsComponent, NewSchoolYearSummaryComponent, SchoolYearEndSummaryComponent],
-  imports: [
-    CommonModule,
-    SchoolYearRoutingModule
-  ]
+  declarations: [
+    SchoolYearComponent,
+    AcademicAssignmentsComponent,
+    CycleCoordinatorsComponent,
+    HeadTeachersComponent,
+    CounselorsComponent,
+    NewSchoolYearSummaryComponent,
+    SchoolYearEndSummaryComponent
+  ],
+  imports: [CommonModule, ReactiveFormsModule, AntDesignModule, SchoolYearRoutingModule]
 })
 export class SchoolYearModule { }

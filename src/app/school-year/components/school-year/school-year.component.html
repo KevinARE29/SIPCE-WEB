@@ -1,1 +1,157 @@
-<p>school-year works!</p>
+<h1>Año escolar</h1>
+
+<ng-container [ngSwitch]="schoolYear.status">
+    <ng-container *ngSwitchCase="'Cerrado'">
+        <!-- #region No active or draft school year -->
+        <form nz-form [formGroup]="classPeriodForm" (ngSubmit)="submitClassPeriod()">
+            <div nz-col nzXs="24" nzSm="24" nzMd="20" nzLg="11">
+                <nz-form-item nzJustify="space-around">
+                    <nz-form-label>Periodo de clases</nz-form-label>
+                    <nz-form-control [nzErrorTip]="classPeriodErrors">
+                        <nz-range-picker formControlName="classPeriod" nzFormat="dd/MM/yyyy"></nz-range-picker>
+                        <ng-template #classPeriodErrors let-control>
+                            <ng-container *ngIf="control.hasError('required')">
+                                El periodo de clases es obligatorio
+                            </ng-container>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+                <button nz-button nzType="primary">Iniciar apertura del año escolar</button>
+            </div>
+        </form>
+        <!-- #endregion -->
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'En proceso de apertura'">
+        <!-- #region Draft school year -->
+        <!-- Steps -->
+        <nz-steps [nzCurrent]="currentStep" nzProgressDot>
+            <nz-step nzTitle="Ciclos, grados y secciones"></nz-step>
+            <nz-step nzTitle="Coordinadores de ciclo"></nz-step>
+            <nz-step nzTitle="Docentes titulares"></nz-step>
+            <nz-step nzTitle="Orientadores"></nz-step>
+            <nz-step nzTitle="Finalizar"></nz-step>
+        </nz-steps>
+
+        <!-- Steps content -->
+        <div class="steps-content">
+            <div class="shifts">
+                <nz-tabset nzTabPosition="left" [nzType]="'line'" *ngIf="tabs.length > 1;else noShiftTabs">
+                    <!-- <nz-tab *ngFor="let shift of shifts" [nzTitle]="shift.name"></nz-tab> -->
+                    <nz-tab *ngFor="let tab of tabs" [nzTitle]="'Tab ' + tab">
+                        <div class="step-content" [ngSwitch]="currentStep">
+                            <ng-container *ngSwitchCase="0">
+                                <app-academic-assignments></app-academic-assignments>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="1">
+                                <app-cycle-coordinators></app-cycle-coordinators>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="2">
+                                <app-head-teachers></app-head-teachers>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="3">
+                                <app-counselors></app-counselors>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="4">
+                                <app-new-school-year-summary></app-new-school-year-summary>
+                            </ng-container>
+                        </div>
+                    </nz-tab>
+                </nz-tabset>
+                <ng-template #noShiftTabs>
+                    <div class="step-content individual" [ngSwitch]="currentStep">
+                        <ng-container *ngSwitchCase="0">
+                            <app-academic-assignments></app-academic-assignments>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="1">
+                            <app-cycle-coordinators></app-cycle-coordinators>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="2">
+                            <app-head-teachers></app-head-teachers>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="3">
+                            <app-counselors></app-counselors>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="4">
+                            <app-new-school-year-summary></app-new-school-year-summary>
+                        </ng-container>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+
+        <!-- Steps actions -->
+        <div class="steps-action">
+            <button nz-button nzType="default" (click)="pre()" *ngIf="currentStep > 0">
+                <span>Previo</span>
+            </button>
+            <button nz-button nzType="default" (click)="next()" *ngIf="currentStep < 4">
+                <span>Siguiente</span>
+            </button>
+            <button nz-button nzType="primary" (click)="done()" *ngIf="currentStep === 4">
+                <span>Finalizar</span>
+            </button>
+        </div>
+        <!-- #endregion -->
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'En curso'">
+        <!-- #region Active school year -->
+        <nz-tabset>
+            <nz-tab nzTitle="Ciclos, grados y secciones">
+                <div class="shifts">
+                    <nz-tabset nzTabPosition="left" [nzType]="'line'" *ngIf="tabs.length > 1;else noShiftTabs">
+                        <nz-tab *ngFor="let tab of tabs" [nzTitle]="'Tab ' + tab">
+                            <app-academic-assignments></app-academic-assignments>
+                        </nz-tab>
+                    </nz-tabset>
+                    <ng-template #noShiftTabs>
+                        <app-academic-assignments></app-academic-assignments>
+                    </ng-template>
+                </div>
+            </nz-tab>
+            <nz-tab nzTitle="Coordinadores de ciclo">
+                <div class="shifts">
+                    <nz-tabset nzTabPosition="left" [nzType]="'line'" *ngIf="tabs.length > 1;else noShiftTabs">
+                        <!-- <nz-tab *ngFor="let shift of shifts" [nzTitle]="shift.name"></nz-tab> -->
+                        <nz-tab *ngFor="let tab of tabs" [nzTitle]="'Tab ' + tab">
+                            <app-cycle-coordinators></app-cycle-coordinators>
+                        </nz-tab>
+                    </nz-tabset>
+                    <ng-template #noShiftTabs>
+                        <app-cycle-coordinators></app-cycle-coordinators>
+                    </ng-template>
+                </div>
+            </nz-tab>
+            <nz-tab nzTitle="Docentes">
+                <div class="shifts">
+                    <nz-tabset nzTabPosition="left" [nzType]="'line'" *ngIf="tabs.length > 1;else noShiftTabs">
+                        <!-- <nz-tab *ngFor="let shift of shifts" [nzTitle]="shift.name"></nz-tab> -->
+                        <nz-tab *ngFor="let tab of tabs" [nzTitle]="'Tab ' + tab">
+                            <app-head-teachers></app-head-teachers>
+                        </nz-tab>
+                    </nz-tabset>
+                    <ng-template #noShiftTabs>
+                        <app-head-teachers></app-head-teachers>
+                    </ng-template>
+                </div>
+            </nz-tab>
+            <nz-tab nzTitle="Orientadores">
+                <div class="shifts">
+                    <nz-tabset nzTabPosition="left" [nzType]="'line'" *ngIf="tabs.length > 1;else noShiftTabs">
+                        <!-- <nz-tab *ngFor="let shift of shifts" [nzTitle]="shift.name"></nz-tab> -->
+                        <nz-tab *ngFor="let tab of tabs" [nzTitle]="'Tab ' + tab">
+                            <app-counselors></app-counselors>
+                        </nz-tab>
+                    </nz-tabset>
+                    <ng-template #noShiftTabs>
+                        <app-counselors></app-counselors>
+                    </ng-template>
+                </div>
+            </nz-tab>
+            <!-- <nz-tab nzTitle="Cerrar año escolar">
+            </nz-tab> -->
+        </nz-tabset>
+        <!-- #endregion -->
+    </ng-container>
+</ng-container>
