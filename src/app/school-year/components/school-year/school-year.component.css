@@ -1,14 +1,5 @@
-.shifts nz-tabset {
+.shifts nz-tabset, .step-content.individual, .steps-action {
     margin-top: 25px;
-    height: 210px;
-}
-
-.step-content.individual {
-    margin-top: 25px;
-}
-
-.steps-action {
-    margin-top: 24px;
 }
 
 .steps-action button {

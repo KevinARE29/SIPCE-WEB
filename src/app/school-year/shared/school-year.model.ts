@@ -5,4 +5,5 @@ export class SchoolYear {
   startDate: Date;
   endDate: Date;
   close: Date;
+  shifts: unknown[];
 }

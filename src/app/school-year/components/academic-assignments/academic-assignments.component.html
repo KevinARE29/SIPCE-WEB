@@ -1,1 +1,24 @@
 <p>academic-assignments works!</p>
+<nz-table #fixedTable nzSize="middle" [nzScroll]="{ x: '1000px' }" nzTableLayout="auto">
+    <thead>
+        <tr>
+            <th nzLeft nzWidth="150px" nzAlign="center">Ciclo</th>
+            <th nzLeft nzWidth="100px" nzAlign="center">Grado</th>
+            <!-- <th colspan="{{catalogs.sections.length}}" nzAlign="center">Secciones {{catalogs.sections.length}}</th> -->
+        <!-- </tr>
+        <tr> -->
+            <th nzAlign="center" *ngFor="let section of catalogs.sections">{{ section.name }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let grade of catalogs.grades">
+            <td nzLeft nzAlign="center">
+                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="content" (ngModelChange)="updateField($event)">
+                    <nz-option *ngFor="let cycle of catalogs.cycles" nzLabel="cycle.name" nzValue="cycle.name"></nz-option>
+                </nz-select>
+            </td>
+            <td nzLeft nzAlign="center">{{ grade.name }}</td>
+            <td nzAlign="center" *ngFor="let section of catalogs.sections"><label nz-checkbox></label></td>
+        </tr>
+    </tbody>
+</nz-table>
