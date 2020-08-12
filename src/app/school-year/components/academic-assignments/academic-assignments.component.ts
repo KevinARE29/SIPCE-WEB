@@ -1,10 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { Catalogs } from '../../shared/catalogs.model';
+import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
+
 interface ItemData {
-  name: string;
-  age: number;
-  address: string;
+  cycle: ShiftPeriodGrade;
+  grade: ShiftPeriodGrade;
+  sections: ShiftPeriodGrade[];
 }
 @Component({
   selector: 'app-academic-assignments',
@@ -14,9 +16,9 @@ interface ItemData {
 export class AcademicAssignmentsComponent implements OnInit {
   listOfData: ItemData[] = [];
 
-
   @Output() cycleEvent = new EventEmitter<string>();
-  @Input() catalogs: Catalogs;//Observable<Catalogs>;
+  @Input() catalogs: Catalogs;
+  @Input() assignation: unknown[];
 
   allCatalogs: Catalogs;
   content: string;
@@ -24,25 +26,50 @@ export class AcademicAssignmentsComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    console.log(this.catalogs);
-    for (let i = 0; i < 100; i++) {
-      this.listOfData.push({
-        name: `Edward King ${i}`,
-        age: 32,
-        address: `London`
-      });
-    }
-    // this.catalogs.subscribe((r) => console.log(r));
+    this.generateDataTable();
   }
 
-  // ngOnChanges(changes): void {
-  //   console.log(changes);
-  //   if (changes.catalogs) {
-  //     // deal with asynchronous Observable result
-  //     // this.allCatalogs = this.catalogs;
-  //     console.log(changes);
-  //   }
-  // }
+  // Transform the data
+  generateDataTable(): void {
+    this.catalogs.grades.forEach((grade) => {
+      let row: ItemData;
+      const emptySections = new Array<ShiftPeriodGrade>();
+
+      this.catalogs.sections.forEach((section) => {
+        emptySections.push({ id: section.id, name: section.name, active: false });
+      });
+
+      // Check if there's an available assignation
+      if (this.assignation[0]) {
+        Object.entries(this.assignation[0]['shift']['cycles']).forEach(([key, value]) => {
+          const findGrade = value['gradeDetails'].find((x) => x.id === grade.id);
+          if (findGrade) {
+            const sections = new Array<ShiftPeriodGrade>();
+
+            this.catalogs.sections.forEach((section) => {
+              const findSection = findGrade['sectionDetails'].find((x) => x['section'].id === section.id);
+              findSection
+                ? sections.push({
+                    id: findSection['section']['id'],
+                    name: findSection['section']['name'],
+                    active: true
+                  })
+                : sections.push({ id: section.id, name: section.name, active: false });
+            });
+
+            row = { cycle: value['cycle'], grade: grade, sections: sections };
+          } else {
+            row = { cycle: new ShiftPeriodGrade(), grade: grade, sections: emptySections };
+          }
+        });
+      } else {
+        // If no, add and empty row for the current grade
+        row = { cycle: new ShiftPeriodGrade(), grade: grade, sections: emptySections };
+      }
+      this.listOfData.push(row);
+    });
+    console.log('------------------', this.listOfData, '------------------', this.assignation, '------------------');
+  }
 
   updateField(value: string){
     console.log(value);

@@ -1,6 +1,6 @@
 <h1>Año escolar</h1>
 
-<!-- <nz-spin nzTip="Cargando ..." [nzSpinning]="loading"> -->
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
     <ng-container [ngSwitch]="schoolYear.status">
         <ng-container *ngSwitchCase="'Cerrado'">
             <!-- #region No active or draft school year -->
@@ -41,7 +41,7 @@
                         <nz-tab *ngFor="let shift of catalogs.shifts" [nzTitle]="shift.name">
                             <div class="step-content" [ngSwitch]="currentStep">
                                 <ng-container *ngSwitchCase="0">
-                                    <app-academic-assignments [catalogs]="catalogs" (cycleEvent)="updateItem($event)"></app-academic-assignments>
+                                    <app-academic-assignments [catalogs]="catalogs" [assignation]='getShift(shift.id)' (cycleEvent)="updateItem($event)"></app-academic-assignments>
                                 </ng-container>
                                 <ng-container *ngSwitchCase="1">
                                     <app-cycle-coordinators></app-cycle-coordinators>
@@ -155,4 +155,4 @@
             <!-- #endregion -->
         </ng-container>
     </ng-container>
-<!-- </nz-spin> -->
+</nz-spin>

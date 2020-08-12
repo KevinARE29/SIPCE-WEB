@@ -51,6 +51,9 @@ export class SchoolYearComponent implements OnInit {
     });
   }
 
+  getShift(id: number): unknown {
+    return this.schoolYear.shifts.filter((x) => x['shift']['id'] === id);
+  }
   //#region New school year
   initClassPeriod(): void {
     this.classPeriodForm = this.fb.group({

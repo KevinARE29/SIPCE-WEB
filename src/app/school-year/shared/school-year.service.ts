@@ -29,8 +29,9 @@ export class SchoolYearService {
 
   getSchoolYear(): Observable<SchoolYear> {
     return this.http.get<SchoolYear>(`${this.baseUrl}academics/school-year`).pipe(
-      map((response) => {
+      map((r) => {
         const schoolYear = new SchoolYear();
+        const response = r['currentAssignation'];
 
         schoolYear.id = response.id;
         schoolYear.year = response.year;
