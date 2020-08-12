@@ -14,14 +14,14 @@ import {
 import { L10n, loadCldr } from '@syncfusion/ej2-base';
 
 import * as numberingSystems from '../../../../node_modules/cldr-data/supplemental/numberingSystems.json';
-import * as gregorian from '../../../../node_modules/cldr-data/main/es-SV/ca-gregorian.json';
-import * as numbers from 'cldr-data/main/es-SV/numbers.json';
-import * as timeZoneNames from 'cldr-data/main/es-SV/timeZoneNames.json';
+import * as gregorian from '../../../../node_modules/cldr-data/main/es/ca-gregorian.json';
+import * as numbers from 'cldr-data/main/es/numbers.json';
+import * as timeZoneNames from 'cldr-data/main/es/timeZoneNames.json';
 
 loadCldr(numberingSystems['default'], gregorian['default'], numbers['default'], timeZoneNames['default']);
-/*
+
 L10n.load({
-  es-SV: {
+  es: {
     schedule: {
       day: 'Dia',
       week: 'Semana',
@@ -31,45 +31,45 @@ L10n.load({
       weekAgenda: 'Agenda semanal',
       workWeekAgenda: 'Semana de trabajo agenda',
       monthAgenda: 'Agenda mensual',
-      today: '',
-      noEvents: 'Keine Ereignisse',
-      emptyContainer: 'An diesem Tag sind keine Veranstaltungen geplant.',
-      allDay: 'Den ganzen Tag',
-      start: 'Start',
-      end: 'Ende',
-      more: 'Mehr',
-      close: 'Schließen',
-      cancel: 'Stornieren',
-      noTitle: '(Kein Titel)',
-      delete: 'Löschen',
-      deleteEvent: 'Diese Veranstaltung',
-      deleteMultipleEvent: 'Mehrere Ereignisse löschen',
-      selectedItems: 'Elemente ausgewählt',
-      deleteSeries: 'Ganze Serie',
-      edit: 'Bearbeiten',
-      editSeries: 'Ganze Serie',
-      editEvent: 'Diese Veranstaltung',
-      createEvent: 'Erstellen',
-      subject: 'Gegenstand',
-      addTitle: 'Titel hinzufügen',
-      moreDetails: 'Mehr Details',
-      save: 'speichern',
-      editContent: 'Wie möchten Sie den Termin in der Serie ändern?',
-      deleteContent: 'Möchten Sie diesen Termin wirklich löschen?',
-      deleteMultipleContent: 'Möchten Sie die ausgewählten Ereignisse wirklich löschen?',
-      newEvent: 'Neues Event',
-      title: 'Titel',
-      location: 'Ort',
-      description: 'Beschreibung',
-      timezone: 'Zeitzone',
-      startTimezone: 'Starten Sie die Zeitzone',
-      endTimezone: 'Zeitzone beenden',
-      repeat: 'Wiederholen',
-      saveButton: 'speichern',
-      cancelButton: 'Stornieren',
-      deleteButton: 'Löschen',
-      recurrence: 'Wiederholung',
-      wrongPattern: 'Das Wiederholungsmuster ist ungültig.',
+      today: 'Ahora',
+      noEvents: 'No posee eventos',
+      emptyContainer: 'No hay datos que presentar ',
+      allDay: 'Todo el dia',
+      start: 'Inicio',
+      end: 'Fin',
+      more: 'Mas',
+      close: 'Cerrar',
+      cancel: 'Cancelar',
+      noTitle: 'No posee titulo',
+      delete: 'Eliminar',
+      deleteEvent: 'Eliminar evento',
+      deleteMultipleEvent: 'Eliminar multiples eventos',
+      selectedItems: 'Seleccionar elementos',
+      deleteSeries: 'Eliminar series',
+      edit: 'Editar',
+      editSeries: 'Editar series',
+      editEvent: 'Editar eventos',
+      createEvent: 'Crear evento',
+      subject: 'Asunto',
+      addTitle: 'Agregar titulo',
+      moreDetails: 'Mas detalles',
+      save: 'Guardar',
+      editContent: 'Realmente desea editar el contenido?',
+      deleteContent: 'Realmente desea eliminar el contenido?',
+      deleteMultipleContent: 'Realmente desea eliminar todos los eventos?',
+      newEvent: 'Nuevo evento',
+      title: 'Titulo',
+      location: 'Localizacion',
+      description: 'Descripcion',
+      timezone: 'Zona horaria',
+      startTimezone: 'Zona horaria de inicio',
+      endTimezone: 'Zona horaria de fin',
+      repeat: 'Repetir',
+      saveButton: 'Guardar',
+      cancelButton: 'Cancelar',
+      deleteButton: 'Eliminar',
+      recurrence: 'Recurrente',
+      wrongPattern: 'Patron incorrecto.',
       seriesChangeAlert:
         'Möchten Sie die an bestimmten Instanzen dieser Serie vorgenommenen Änderungen verwerfen und erneut mit der gesamten Serie abgleichen?',
       createError:
@@ -81,48 +81,48 @@ L10n.load({
       startEndError: 'Das ausgewählte Enddatum liegt vor dem Startdatum.',
       invalidDateError: 'Der eingegebene Datumswert ist ungültig.',
       blockAlert: 'Ereignisse können nicht innerhalb des gesperrten Zeitbereichs geplant werden.',
-      ok: 'In Ordnung',
-      yes: 'Ja',
-      no: 'Nein',
-      occurrence: 'Auftreten',
+      ok: 'ok',
+      yes: 'si',
+      no: 'no',
+      occurrence: 'ocurrencia',
       series: 'Serie',
-      previous: 'Bisherige',
-      next: 'Nächster',
-      timelineDay: 'Timeline Day',
+      previous: 'previo',
+      next: 'Siguiente',
+      timelineDay: '',
       timelineWeek: 'Timeline-Woche',
       timelineWorkWeek: 'Timeline Work Week',
       timelineMonth: 'Timeline-Monat',
       timelineYear: 'Timeline-Jahr',
-      editFollowingEvent: 'Folge Veranstaltungen',
-      deleteTitle: 'Ereignis löschen',
-      editTitle: 'Ereignis bearbeiten',
-      beginFrom: 'Beginnen Sie von',
-      endAt: 'Ende um'
+      editFollowingEvent: 'Editar los siguientes eventos',
+      deleteTitle: 'Eliminar titulo',
+      editTitle: 'Titulo de inicio',
+      beginFrom: 'Iniciar en',
+      endAt: 'Terminar en'
     },
     recurrenceeditor: {
-      none: 'Keiner',
-      daily: 'Täglich',
-      weekly: 'Wöchentlich',
-      monthly: 'Monatlich',
-      month: 'Monat',
-      yearly: 'Jährlich',
-      never: 'noch nie',
-      until: 'Bis um',
-      count: 'Anzahl',
-      first: 'Zuerst',
-      second: 'Zweite',
-      third: 'Dritte',
-      fourth: 'Vierte',
-      last: 'Zuletzt',
-      repeat: 'Wiederholen',
-      repeatEvery: 'Wiederhole jeden',
-      on: 'Wiederholen Sie Ein',
-      end: 'Ende',
+      none: 'Ninguna',
+      daily: 'Diario',
+      weekly: 'Semanal',
+      monthly: 'Mensual',
+      month: 'Mes',
+      yearly: 'Anual',
+      never: 'Nunca',
+      until: 'Hasta',
+      count: 'Cuenta',
+      first: 'Primero',
+      second: 'Segundo',
+      third: 'Tercero',
+      fourth: 'Cuarto',
+      last: 'Ultimo',
+      repeat: 'Repetitivo',
+      repeatEvery: 'Repetir diario',
+      on: 'en',
+      end: 'fin',
       onDay: 'Tag',
-      days: 'Tage)',
-      weeks: 'Wochen)',
-      months: 'Monat (e)',
-      years: 'Jahre)',
+      days: 'Dias',
+      weeks: 'Semanas',
+      months: 'Meses',
+      years: 'Anipos',
       every: 'jeden',
       summaryTimes: 'mal)',
       summaryOn: 'auf',
@@ -139,11 +139,10 @@ L10n.load({
       repeatInterval: 'Wiederholungsintervall'
     },
     calendar: {
-      today: 'Heute'
+      today: 'Ahora'
     }
   }
 });
-*/
 
 @Component({
   selector: 'app-calendar',
@@ -177,6 +176,12 @@ export class CalendarComponent implements OnInit {
         Subject: 'Sprint Planning with Team members',
         StartTime: new Date(2018, 10, 30, 9, 30),
         EndTime: new Date(2018, 10, 30, 11, 0)
+      },
+      {
+        Id: 3,
+        Subject: 'Sprint Planning with Team members',
+        StartTime: new Date(2018, 10, 21, 9, 30),
+        EndTime: new Date(2018, 10, 22, 11, 0)
       }
     ]
   };
