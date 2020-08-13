@@ -15,63 +15,158 @@ interface ItemData {
 })
 export class AcademicAssignmentsComponent implements OnInit {
   listOfData: ItemData[] = [];
+  preConfig: ItemData[] = [];
 
   @Output() cycleEvent = new EventEmitter<string>();
   @Input() catalogs: Catalogs;
   @Input() assignation: unknown[];
+  @Input() isActive: boolean;
 
   allCatalogs: Catalogs;
+  sections: ShiftPeriodGrade[];
   content: string;
 
   constructor() {}
 
   ngOnInit(): void {
-    this.generateDataTable();
+    this.sections = new Array<ShiftPeriodGrade>();
+
+    this.catalogs.sections.forEach((section) => {
+      this.sections.push({ id: section.id, name: section.name, active: false });
+    });
+
+    this.isActive ? this.currentData() : this.generateDataTable();
   }
 
   // Transform the data
   generateDataTable(): void {
-    this.catalogs.grades.forEach((grade) => {
-      let row: ItemData;
-      const emptySections = new Array<ShiftPeriodGrade>();
+    const emptySections = new Array<ShiftPeriodGrade>();
 
-      this.catalogs.sections.forEach((section) => {
-        emptySections.push({ id: section.id, name: section.name, active: false });
-      });
-
-      // Check if there's an available assignation
-      if (this.assignation[0]) {
-        Object.entries(this.assignation[0]['shift']['cycles']).forEach(([key, value]) => {
-          const findGrade = value['gradeDetails'].find((x) => x.id === grade.id);
-          if (findGrade) {
-            const sections = new Array<ShiftPeriodGrade>();
-
-            this.catalogs.sections.forEach((section) => {
-              const findSection = findGrade['sectionDetails'].find((x) => x['section'].id === section.id);
-              findSection
-                ? sections.push({
-                    id: findSection['section']['id'],
-                    name: findSection['section']['name'],
-                    active: true
-                  })
-                : sections.push({ id: section.id, name: section.name, active: false });
-            });
-
-            row = { cycle: value['cycle'], grade: grade, sections: sections };
-          } else {
-            row = { cycle: new ShiftPeriodGrade(), grade: grade, sections: emptySections };
-          }
-        });
-      } else {
-        // If no, add and empty row for the current grade
-        row = { cycle: new ShiftPeriodGrade(), grade: grade, sections: emptySections };
-      }
-      this.listOfData.push(row);
+    this.sections.forEach((section) => {
+      section.active = true;
+      emptySections.push({ id: section.id, name: section.name, active: false });
     });
-    console.log('------------------', this.listOfData, '------------------', this.assignation, '------------------');
+
+    //#region Get current assaignation
+    if (this.assignation[0]) {
+      // Cycles
+      Object.entries(this.assignation[0]['shift']['cycles']).forEach(([key, value]) => {
+        const cycle = value['cycle'];
+        // Grades
+        Object.entries(value['gradeDetails']).forEach(([key, value]) => {
+          const sections = new Array<ShiftPeriodGrade>();
+          // Sections
+          Object.entries(value['sectionDetails']).forEach(([key, value]) => {
+            sections.push(value['section']);
+          });
+
+          this.preConfig.push({ cycle: cycle, grade: value['grade'], sections: sections });
+        });
+      });
+    }
+    //#endregion
+
+    //#region Merge data
+    this.catalogs.grades.forEach((grade) => {
+      const dataRow = this.preConfig.find((x) => x['grade'].id === grade.id);
+
+      if (dataRow) {
+        const sections = new Array<ShiftPeriodGrade>();
+
+        this.sections.forEach((section) => {
+          const findSection = dataRow['sections'].find((x) => x['id'] === section.id);
+          findSection
+            ? sections.push({
+                id: findSection['id'],
+                name: findSection['name'],
+                active: true
+              })
+            : sections.push({ id: section.id, name: section.name, active: false });
+        });
+
+        this.listOfData.push({ cycle: dataRow['cycle'], grade: grade, sections: sections });
+      } else {
+        this.listOfData.push({ cycle: new ShiftPeriodGrade(), grade: grade, sections: emptySections });
+      }
+    });
+    //#endregion
   }
 
-  updateField(value: string){
+  currentData(): void {
+    const emptySections = new Array<ShiftPeriodGrade>();
+
+    this.sections.forEach((section) => {
+      emptySections.push({ id: section.id, name: section.name, active: false });
+    });
+
+    //#region Get current assaignation
+    if (this.assignation[0]) {
+      // Cycles
+      Object.entries(this.assignation[0]['shift']['cycles']).forEach(([key, value]) => {
+        const cycle = value['cycle'];
+        // Grades
+        Object.entries(value['gradeDetails']).forEach(([key, value]) => {
+          const sections = new Array<ShiftPeriodGrade>();
+          // Sections
+          Object.entries(value['sectionDetails']).forEach(([key, value]) => {
+            sections.push(value['section']);
+          });
+
+          this.preConfig.push({ cycle: cycle, grade: value['grade'], sections: sections });
+        });
+      });
+    }
+    //#endregion
+
+    //#region Merge data
+    this.catalogs.grades.forEach((grade) => {
+      const dataRow = this.preConfig.find((x) => x['grade'].id === grade.id);
+
+      if (dataRow) {
+        const sections = new Array<ShiftPeriodGrade>();
+
+        this.sections.forEach((section) => {
+          const findSection = dataRow['sections'].find((x) => x['id'] === section.id);
+
+          if (findSection) {
+            if (!section.active || section.active === undefined) section.active = true;
+            sections.push({
+              id: findSection['id'],
+              name: findSection['name'],
+              active: true
+            });
+          }
+        });
+
+        this.listOfData.push({ cycle: dataRow['cycle'], grade: grade, sections: sections });
+      }
+    });
+    //#endregion
+    this.fillBlanks();
+  }
+
+  fillBlanks(): void {
+    this.sections
+      .filter((x) => x.active === true)
+      .forEach((section) => {
+        this.listOfData.forEach((data) => {
+          const findSection = data['sections'].find((x) => x.id === section.id);
+
+          if (!findSection) {
+            data['sections'].push({ id: section.id, name: section.name, active: false });
+          }
+        });
+      });
+
+    this.listOfData.forEach((data) => {
+      data['sections'] = data['sections'].sort((a, b) => a.id - b.id);
+      data['sections'] = data['sections']
+        .filter((x) => x.name.length === 1)
+        .concat(data['sections'].filter((x) => x.name.length > 1));
+    });
+  }
+
+  updateField(value: string) {
     console.log(value);
     this.cycleEvent.emit(value);
   }

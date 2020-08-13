@@ -27,8 +27,6 @@ export class SchoolYearComponent implements OnInit {
 
   // Draf school year
   currentStep = 0;
-  tabs = [1, 2, 3, 4, 5]; // TODO: Delete
-  // tabs = [1]; // TODO: Delete
 
   constructor(
     private fb: FormBuilder,
@@ -50,7 +48,7 @@ export class SchoolYearComponent implements OnInit {
     this.schoolYearService.mergeSchoolYearAndCatalogs().subscribe((data) => {
       // School Year
       this.schoolYear = data['schoolYear'];
-      this.schoolYear.status = 'Cerrado'; //TODO: Delete. En curso, En proceso de apertura, Cerrado
+      this.schoolYear.status = 'En curso'; //TODO: Delete. En curso, En proceso de apertura, Cerrado
 
       // Catalogs
       this.catalogs.shifts = data['shifts']['data'].filter((x) => x.active === true).sort((a, b) => a.id - b.id);
@@ -65,8 +63,9 @@ export class SchoolYearComponent implements OnInit {
   }
 
   getShift(id: number): unknown {
-    return this.schoolYear.shifts.filter((x) => x['shift']['id'] === id);
+    return id ? this.schoolYear.shifts.filter((x) => x['shift']['id'] === id) : this.schoolYear.shifts[0];
   }
+
   //#region New school year
   initClassPeriod(): void {
     this.classPeriodForm = this.fb.group({
