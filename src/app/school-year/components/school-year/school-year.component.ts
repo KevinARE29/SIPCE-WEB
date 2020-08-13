@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
+import { es } from 'date-fns/locale';
+import { format, formatDistanceStrict } from 'date-fns';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzMessageService } from 'ng-zorro-antd/message';
+
 import { SchoolYear } from './../../shared/school-year.model';
 import { SchoolYearService } from '../../shared/school-year.service';
 import { Catalogs } from '../../shared/catalogs.model';
@@ -17,13 +23,20 @@ export class SchoolYearComponent implements OnInit {
 
   // No active or draft school year
   classPeriodForm!: FormGroup;
+  confirmModal?: NzModalRef;
 
   // Draf school year
   currentStep = 0;
   tabs = [1, 2, 3, 4, 5]; // TODO: Delete
   // tabs = [1]; // TODO: Delete
 
-  constructor(private fb: FormBuilder, private schoolYearService: SchoolYearService) {}
+  constructor(
+    private fb: FormBuilder,
+    private schoolYearService: SchoolYearService,
+    private message: NzMessageService,
+    private modal: NzModalService,
+    private notification: NzNotificationService
+  ) {}
 
   ngOnInit(): void {
     this.schoolYear = new SchoolYear();
@@ -37,7 +50,7 @@ export class SchoolYearComponent implements OnInit {
     this.schoolYearService.mergeSchoolYearAndCatalogs().subscribe((data) => {
       // School Year
       this.schoolYear = data['schoolYear'];
-      this.schoolYear.status = 'En proceso de apertura'; //TODO: Delete. En curso, En proceso de apertura, Cerrado
+      this.schoolYear.status = 'Cerrado'; //TODO: Delete. En curso, En proceso de apertura, Cerrado
 
       // Catalogs
       this.catalogs.shifts = data['shifts']['data'].filter((x) => x.active === true).sort((a, b) => a.id - b.id);
@@ -68,9 +81,42 @@ export class SchoolYearComponent implements OnInit {
     }
 
     if (this.classPeriodForm.valid) {
-      // this.classPeriodForm.controls['classPeriod'].value;
-      // initializeSteps
+      const period = this.classPeriodForm.controls['classPeriod'].value;
+
+      const result = formatDistanceStrict(period[0], period[1], { locale: es });
+      this.showStartConfirm(period, result);
     }
+  }
+
+  showStartConfirm(period: Date[], distance: string): void {
+    const startFormat = format(period[0], 'd/MMMM/yyyy', { locale: es });
+    const endFormat = format(period[1], 'd/MMMM/yyyy', { locale: es });
+
+    this.confirmModal = this.modal.confirm({
+      nzTitle: `¿Desea aperturar el año escolar?`,
+      nzContent: `<p class="principal">DETALLES</p> 
+                  <p><b>Periodo:</b> ${startFormat} a ${endFormat}</p> 
+                  <p><b>Duración:</b> ${distance}</p><br>
+                  <p><i>Una vez iniciada la apartura del año escolar, el periodo dejará de ser accesible para mofidicaciones hasta que se completen todos los pasos.</i></p>`,
+      nzOnOk: () =>
+        this.schoolYearService
+          .initializeSchoolYear(period[0], period[1])
+          .toPromise()
+          .then((r) => {
+            this.message.success(`El año escolar ${r['year']} se ha aperturado con éxito`);
+            this.getSchoolYear();
+          })
+          .catch((err) => {
+            const statusCode = err.statusCode;
+            const notIn = [401, 403];
+
+            if (!notIn.includes(statusCode) && statusCode < 500) {
+              this.notification.create('error', 'Ocurrió un error al intentar aperturar el año escolar.', err.message, {
+                nzDuration: 0
+              });
+            }
+          })
+    });
   }
   //#endregion
 
