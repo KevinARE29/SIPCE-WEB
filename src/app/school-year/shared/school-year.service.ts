@@ -31,36 +31,70 @@ export class SchoolYearService {
     this.baseUrl = environment.apiURL;
   }
 
-  getSchoolYear(): Observable<SchoolYear> {
+  getSchoolYear(): Observable<SchoolYear[]> {
     return this.http.get<SchoolYear>(`${this.baseUrl}academics/school-year`).pipe(
       map((r) => {
         const schoolYear = new SchoolYear();
+        const previousSchoolYear = new SchoolYear();
+
         const response = r['currentAssignation'];
+        const previousResponse = r['previousAssignation'];
 
-        schoolYear.id = response.id;
-        schoolYear.year = response.year;
-        schoolYear.status = response.status;
-        schoolYear.startDate = response.startDate;
-        schoolYear.endDate = response.endDate;
-        schoolYear.close = response.close;
-        schoolYear.shifts = new Array<unknown>();
+        if (response) {
+          schoolYear.id = response.id;
+          schoolYear.year = response.year;
+          schoolYear.status = response.status;
+          schoolYear.startDate = response.startDate;
+          schoolYear.endDate = response.endDate;
+          schoolYear.close = response.close;
+          schoolYear.shifts = new Array<unknown>();
 
-        Object.entries(response['cycleDetails']).forEach(([key, value]) => {
-          // Get shift
-          const shift = {};
-          shift['shift'] = value[0]['shift'];
+          if (response['cycleDetails']) {
+            Object.entries(response['cycleDetails']).forEach(([key, value]) => {
+              // Get shift
+              const shift = {};
+              shift['shift'] = value[0]['shift'];
 
-          // Get cycles
-          shift['shift']['cycles'] = new Array<unknown>();
-          Object.entries(value).forEach(([key, value]) => {
-            shift['shift']['cycles'].push(value);
-          });
+              // Get cycles
+              shift['shift']['cycles'] = new Array<unknown>();
+              Object.entries(value).forEach(([key, value]) => {
+                shift['shift']['cycles'].push(value);
+              });
 
-          // Add new entry
-          schoolYear.shifts.push(shift);
-        });
+              // Add new entry
+              schoolYear.shifts.push(shift);
+            });
+          }
+        }
 
-        return schoolYear;
+        if (previousResponse) {
+          schoolYear.id = previousResponse.id;
+          schoolYear.year = previousResponse.year;
+          schoolYear.status = previousResponse.status;
+          schoolYear.startDate = previousResponse.startDate;
+          schoolYear.endDate = previousResponse.endDate;
+          schoolYear.close = previousResponse.close;
+          schoolYear.shifts = new Array<unknown>();
+
+          if (previousResponse['cycleDetails']) {
+            Object.entries(previousResponse['cycleDetails']).forEach(([key, value]) => {
+              // Get shift
+              const shift = {};
+              shift['shift'] = value[0]['shift'];
+
+              // Get cycles
+              shift['shift']['cycles'] = new Array<unknown>();
+              Object.entries(value).forEach(([key, value]) => {
+                shift['shift']['cycles'].push(value);
+              });
+
+              // Add new entry
+              schoolYear.shifts.push(shift);
+            });
+          }
+        }
+
+        return [schoolYear, previousSchoolYear];
       })
     );
   }

@@ -48,9 +48,24 @@ export class AcademicAssignmentsComponent implements OnInit {
     });
 
     //#region Get current assaignation
-    if (this.assignation[0]) {
+    if (this.assignation[0] && this.assignation[0][0]) {
       // Cycles
-      Object.entries(this.assignation[0]['shift']['cycles']).forEach(([key, value]) => {
+      Object.entries(this.assignation[0][0]['shift']['cycles']).forEach(([key, value]) => {
+        const cycle = value['cycle'];
+        // Grades
+        Object.entries(value['gradeDetails']).forEach(([key, value]) => {
+          const sections = new Array<ShiftPeriodGrade>();
+          // Sections
+          Object.entries(value['sectionDetails']).forEach(([key, value]) => {
+            sections.push(value['section']);
+          });
+
+          this.preConfig.push({ cycle: cycle, grade: value['grade'], sections: sections });
+        });
+      });
+    } else if (this.assignation[1] && this.assignation[1][0]) {
+      // Cycles
+      Object.entries(this.assignation[1][0]['shift']['cycles']).forEach(([key, value]) => {
         const cycle = value['cycle'];
         // Grades
         Object.entries(value['gradeDetails']).forEach(([key, value]) => {
@@ -100,9 +115,9 @@ export class AcademicAssignmentsComponent implements OnInit {
     });
 
     //#region Get current assaignation
-    if (this.assignation[0]) {
+    if (this.assignation[0][0]) {
       // Cycles
-      Object.entries(this.assignation[0]['shift']['cycles']).forEach(([key, value]) => {
+      Object.entries(this.assignation[0][0]['shift']['cycles']).forEach(([key, value]) => {
         const cycle = value['cycle'];
         // Grades
         Object.entries(value['gradeDetails']).forEach(([key, value]) => {

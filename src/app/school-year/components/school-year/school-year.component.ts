@@ -18,6 +18,7 @@ import { Catalogs } from '../../shared/catalogs.model';
 })
 export class SchoolYearComponent implements OnInit {
   loading = false;
+  previousSchoolYear: SchoolYear;
   schoolYear: SchoolYear;
   catalogs: Catalogs;
 
@@ -46,9 +47,12 @@ export class SchoolYearComponent implements OnInit {
   getSchoolYear(): void {
     this.loading = true;
     this.schoolYearService.mergeSchoolYearAndCatalogs().subscribe((data) => {
+      // Previous School Year
+      this.previousSchoolYear = data['schoolYear'][1];
+
       // School Year
-      this.schoolYear = data['schoolYear'];
-      this.schoolYear.status = 'En curso'; //TODO: Delete. En curso, En proceso de apertura, Cerrado
+      this.schoolYear = data['schoolYear'][0]; // The zero index always will be the current school year
+      this.schoolYear.status = 'En proceso de apertura'; //TODO: Delete. En curso, En proceso de apertura, Cerrado
 
       // Catalogs
       this.catalogs.shifts = data['shifts']['data'].filter((x) => x.active === true).sort((a, b) => a.id - b.id);
@@ -62,8 +66,21 @@ export class SchoolYearComponent implements OnInit {
     });
   }
 
-  getShift(id: number): unknown {
-    return id ? this.schoolYear.shifts.filter((x) => x['shift']['id'] === id) : this.schoolYear.shifts[0];
+  getShifts(id: number): unknown[] {
+    let currentShift: unknown;
+    let previousShift: unknown;
+
+    if (this.schoolYear.shifts) {
+      currentShift = id ? this.schoolYear.shifts.filter((x) => x['shift']['id'] === id) : this.schoolYear.shifts[0];
+    }
+
+    if (this.previousSchoolYear.shifts) {
+      previousShift = id
+        ? this.previousSchoolYear.shifts.filter((x) => x['shift']['id'] === id)
+        : this.previousSchoolYear.shifts[0];
+    }
+
+    return [currentShift, previousShift];
   }
 
   //#region New school year
