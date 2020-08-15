@@ -46,24 +46,30 @@ export class SchoolYearComponent implements OnInit {
 
   getSchoolYear(): void {
     this.loading = true;
-    this.schoolYearService.mergeSchoolYearAndCatalogs().subscribe((data) => {
-      // Previous School Year
-      this.previousSchoolYear = data['schoolYear'][1];
+    this.schoolYearService.mergeSchoolYearAndCatalogs().subscribe(
+      (data) => {
+        // Previous School Year
+        this.previousSchoolYear = data['schoolYear'][1];
 
-      // School Year
-      this.schoolYear = data['schoolYear'][0]; // The zero index always will be the current school year
-      this.schoolYear.status = 'En proceso de apertura'; //TODO: Delete. En curso, En proceso de apertura, Cerrado
+        // School Year
+        this.schoolYear = data['schoolYear'][0]; // The zero index always will be the current school year
+        // this.schoolYear.status = 'En curso';
 
-      // Catalogs
-      this.catalogs.shifts = data['shifts']['data'].filter((x) => x.active === true).sort((a, b) => a.id - b.id);
-      this.catalogs.cycles = data['cycles']['data'].sort((a, b) => a.id - b.id);
-      this.catalogs.grades = data['grades']['data'].filter((x) => x.active === true);
-      this.catalogs.sections = data['sections']['data']
-        .filter((x) => x.name.length === 1)
-        .concat(data['sections']['data'].filter((x) => x.name.length > 1));
+        // Catalogs
+        this.catalogs.shifts = data['shifts']['data'].filter((x) => x.active === true).sort((a, b) => a.id - b.id);
+        this.catalogs.cycles = data['cycles']['data'].sort((a, b) => a.id - b.id);
+        this.catalogs.grades = data['grades']['data'].filter((x) => x.active === true);
+        this.catalogs.sections = data['sections']['data']
+          .filter((x) => x.name.length === 1)
+          .concat(data['sections']['data'].filter((x) => x.name.length > 1));
 
-      this.loading = false;
-    });
+        this.loading = false;
+      },
+      (error) => {
+        if (error.status === 404) this.schoolYear.status = 'Nuevo';
+        this.loading = false;
+      }
+    );
   }
 
   getShifts(id: number): unknown[] {
@@ -150,7 +156,7 @@ export class SchoolYearComponent implements OnInit {
   }
   //#endregion
 
-  updateItem(cycle: string): void {
-    console.log('Parent ', cycle);
+  updateItem(content: unknown): void {
+    console.log('Parent ', content);
   }
 }

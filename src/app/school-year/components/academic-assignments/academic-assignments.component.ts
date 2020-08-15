@@ -17,14 +17,13 @@ export class AcademicAssignmentsComponent implements OnInit {
   listOfData: ItemData[] = [];
   preConfig: ItemData[] = [];
 
-  @Output() cycleEvent = new EventEmitter<string>();
+  @Output() academicEvent = new EventEmitter<unknown>();
   @Input() catalogs: Catalogs;
   @Input() assignation: unknown[];
   @Input() isActive: boolean;
 
   allCatalogs: Catalogs;
   sections: ShiftPeriodGrade[];
-  content: string;
 
   constructor() {}
 
@@ -38,7 +37,7 @@ export class AcademicAssignmentsComponent implements OnInit {
     this.isActive ? this.currentData() : this.generateDataTable();
   }
 
-  // Transform the data
+  //#region Transform the data
   generateDataTable(): void {
     const emptySections = new Array<ShiftPeriodGrade>();
 
@@ -47,7 +46,7 @@ export class AcademicAssignmentsComponent implements OnInit {
       emptySections.push({ id: section.id, name: section.name, active: false });
     });
 
-    //#region Get current assaignation
+    // Get current assignation
     if (this.assignation[0] && this.assignation[0][0]) {
       // Cycles
       Object.entries(this.assignation[0][0]['shift']['cycles']).forEach(([key, value]) => {
@@ -79,9 +78,8 @@ export class AcademicAssignmentsComponent implements OnInit {
         });
       });
     }
-    //#endregion
 
-    //#region Merge data
+    // Merge data
     this.catalogs.grades.forEach((grade) => {
       const dataRow = this.preConfig.find((x) => x['grade'].id === grade.id);
 
@@ -104,9 +102,14 @@ export class AcademicAssignmentsComponent implements OnInit {
         this.listOfData.push({ cycle: new ShiftPeriodGrade(), grade: grade, sections: emptySections });
       }
     });
-    //#endregion
   }
 
+  updateField(field: ShiftPeriodGrade, type: string, data: unknown): void {
+    this.academicEvent.emit({ field, type, data });
+  }
+  //#endregion
+
+  //#region Get assignation
   currentData(): void {
     const emptySections = new Array<ShiftPeriodGrade>();
 
@@ -180,9 +183,5 @@ export class AcademicAssignmentsComponent implements OnInit {
         .concat(data['sections'].filter((x) => x.name.length > 1));
     });
   }
-
-  updateField(value: string) {
-    console.log(value);
-    this.cycleEvent.emit(value);
-  }
+  //#endregion
 }

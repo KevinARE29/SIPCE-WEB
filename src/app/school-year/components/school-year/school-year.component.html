@@ -2,7 +2,7 @@
 
 <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
     <ng-container [ngSwitch]="schoolYear.status">
-        <ng-container *ngSwitchCase="'Cerrado'">
+        <ng-container *ngSwitchCase="'Nuevo'">
             <!-- #region No active or draft school year -->
             <form nz-form [formGroup]="classPeriodForm" (ngSubmit)="submitClassPeriod()">
                 <div nz-col nzXs="24" nzSm="24" nzMd="20" nzLg="11">
@@ -22,7 +22,7 @@
             </form>
             <!-- #endregion -->
         </ng-container>
-    
+
         <ng-container *ngSwitchCase="'En proceso de apertura'">
             <!-- #region Draft school year -->
             <!-- Steps -->
@@ -33,15 +33,18 @@
                 <nz-step nzTitle="Orientadores"></nz-step>
                 <nz-step nzTitle="Finalizar"></nz-step>
             </nz-steps>
-    
+
             <!-- Steps content -->
             <div class="steps-content">
                 <div class="shifts">
-                    <nz-tabset nzTabPosition="left" [nzType]="'line'" *ngIf="catalogs.shifts.length > 1;else noShiftTabs">
+                    <nz-tabset nzTabPosition="left" [nzType]="'line'"
+                        *ngIf="catalogs.shifts.length > 1;else noShiftTabs">
                         <nz-tab *ngFor="let shift of catalogs.shifts" [nzTitle]="shift.name">
                             <div class="step-content" [ngSwitch]="currentStep">
                                 <ng-container *ngSwitchCase="0">
-                                    <app-academic-assignments [catalogs]="catalogs" [assignation]="getShifts(shift.id)" [isActive]="false" (cycleEvent)="updateItem($event)"></app-academic-assignments>
+                                    <app-academic-assignments [catalogs]="catalogs" [assignation]="getShifts(shift.id)"
+                                        [isActive]="false" (academicEvent)="updateItem($event)">
+                                    </app-academic-assignments>
                                 </ng-container>
                                 <ng-container *ngSwitchCase="1">
                                     <app-cycle-coordinators></app-cycle-coordinators>
@@ -61,7 +64,8 @@
                     <ng-template #noShiftTabs>
                         <div class="step-content individual" [ngSwitch]="currentStep">
                             <ng-container *ngSwitchCase="0">
-                                <app-academic-assignments [catalogs]="catalogs" [assignation]="getShifts(null)" [isActive]="false" (cycleEvent)="updateItem($event)"></app-academic-assignments>
+                                <app-academic-assignments [catalogs]="catalogs" [assignation]="getShifts(null)"
+                                    [isActive]="false" (academicEvent)="updateItem($event)"></app-academic-assignments>
                             </ng-container>
                             <ng-container *ngSwitchCase="1">
                                 <app-cycle-coordinators></app-cycle-coordinators>
@@ -79,7 +83,7 @@
                     </ng-template>
                 </div>
             </div>
-    
+
             <!-- Steps actions -->
             <div class="steps-action">
                 <button nz-button nzType="default" (click)="pre()" *ngIf="currentStep > 0">
@@ -94,25 +98,29 @@
             </div>
             <!-- #endregion -->
         </ng-container>
-    
+
         <ng-container *ngSwitchCase="'En curso'">
             <!-- #region Active school year -->
             <nz-tabset>
                 <nz-tab nzTitle="Ciclos, grados y secciones">
                     <div class="shifts">
-                        <nz-tabset nzTabPosition="left" [nzType]="'line'" *ngIf="catalogs.shifts.length > 1;else noShiftTabs">
+                        <nz-tabset nzTabPosition="left" [nzType]="'line'"
+                            *ngIf="catalogs.shifts.length > 1;else noShiftTabs">
                             <nz-tab *ngFor="let shift of catalogs.shifts" [nzTitle]="shift.name">
-                                <app-academic-assignments [catalogs]="catalogs" [assignation]="getShifts(shift.id)" [isActive]="true"></app-academic-assignments>
+                                <app-academic-assignments [catalogs]="catalogs" [assignation]="getShifts(shift.id)"
+                                    [isActive]="true"></app-academic-assignments>
                             </nz-tab>
                         </nz-tabset>
                         <ng-template #noShiftTabs>
-                            <app-academic-assignments [catalogs]="catalogs" [assignation]="getShifts(null)" [isActive]="true"></app-academic-assignments>
+                            <app-academic-assignments [catalogs]="catalogs" [assignation]="getShifts(null)"
+                                [isActive]="true"></app-academic-assignments>
                         </ng-template>
                     </div>
                 </nz-tab>
                 <nz-tab nzTitle="Coordinadores de ciclo">
                     <div class="shifts">
-                        <nz-tabset nzTabPosition="left" [nzType]="'line'" *ngIf="catalogs.shifts.length > 1;else noShiftTabs">
+                        <nz-tabset nzTabPosition="left" [nzType]="'line'"
+                            *ngIf="catalogs.shifts.length > 1;else noShiftTabs">
                             <nz-tab *ngFor="let shift of catalogs.shifts" [nzTitle]="shift.name">
                                 <app-cycle-coordinators></app-cycle-coordinators>
                             </nz-tab>
@@ -124,7 +132,8 @@
                 </nz-tab>
                 <nz-tab nzTitle="Docentes">
                     <div class="shifts">
-                        <nz-tabset nzTabPosition="left" [nzType]="'line'" *ngIf="catalogs.shifts.length > 1;else noShiftTabs">
+                        <nz-tabset nzTabPosition="left" [nzType]="'line'"
+                            *ngIf="catalogs.shifts.length > 1;else noShiftTabs">
                             <nz-tab *ngFor="let shift of catalogs.shifts" [nzTitle]="shift.name">
                                 <app-head-teachers></app-head-teachers>
                             </nz-tab>
@@ -136,7 +145,8 @@
                 </nz-tab>
                 <nz-tab nzTitle="Orientadores">
                     <div class="shifts">
-                        <nz-tabset nzTabPosition="left" [nzType]="'line'" *ngIf="catalogs.shifts.length > 1;else noShiftTabs">
+                        <nz-tabset nzTabPosition="left" [nzType]="'line'"
+                            *ngIf="catalogs.shifts.length > 1;else noShiftTabs">
                             <nz-tab *ngFor="let shift of catalogs.shifts" [nzTitle]="shift.name">
                                 <app-counselors></app-counselors>
                             </nz-tab>

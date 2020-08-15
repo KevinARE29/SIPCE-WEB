@@ -40,6 +40,8 @@ export class SchoolYearService {
         const response = r['currentAssignation'];
         const previousResponse = r['previousAssignation'];
 
+        const schoolYears = new Array<SchoolYear>();
+
         if (response) {
           schoolYear.id = response.id;
           schoolYear.year = response.year;
@@ -65,16 +67,18 @@ export class SchoolYearService {
               schoolYear.shifts.push(shift);
             });
           }
+        } else {
+          schoolYear.status = 'En proceso de apertura';
         }
 
         if (previousResponse) {
-          schoolYear.id = previousResponse.id;
-          schoolYear.year = previousResponse.year;
-          schoolYear.status = previousResponse.status;
-          schoolYear.startDate = previousResponse.startDate;
-          schoolYear.endDate = previousResponse.endDate;
-          schoolYear.close = previousResponse.close;
-          schoolYear.shifts = new Array<unknown>();
+          previousSchoolYear.id = previousResponse.id;
+          previousSchoolYear.year = previousResponse.year;
+          previousSchoolYear.status = previousResponse.status;
+          previousSchoolYear.startDate = previousResponse.startDate;
+          previousSchoolYear.endDate = previousResponse.endDate;
+          previousSchoolYear.close = previousResponse.close;
+          previousSchoolYear.shifts = new Array<unknown>();
 
           if (previousResponse['cycleDetails']) {
             Object.entries(previousResponse['cycleDetails']).forEach(([key, value]) => {
@@ -89,12 +93,15 @@ export class SchoolYearService {
               });
 
               // Add new entry
-              schoolYear.shifts.push(shift);
+              previousSchoolYear.shifts.push(shift);
             });
           }
         }
 
-        return [schoolYear, previousSchoolYear];
+        schoolYears[0] = schoolYear;
+        schoolYears[1] = previousSchoolYear;
+
+        return schoolYears;
       })
     );
   }

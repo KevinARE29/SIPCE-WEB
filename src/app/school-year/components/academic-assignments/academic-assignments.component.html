@@ -19,8 +19,8 @@
                         {{ data.cycle.name }}
                     </ng-container>
                     <ng-template #editableCell>
-                        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="data.cycle.name" (ngModelChange)="updateField($event)">
-                            <nz-option *ngFor="let cycle of catalogs.cycles" [nzLabel]="cycle.name" [nzValue]="cycle.name"></nz-option>
+                        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="data.cycle.name" (ngModelChange)="updateField($event, 'cycle', data)">
+                            <nz-option *ngFor="let cycle of catalogs.cycles" [nzLabel]="data.cycle.name" [nzValue]="data.cycle.name"></nz-option>
                         </nz-select>
                     </ng-template>
                 </td>
