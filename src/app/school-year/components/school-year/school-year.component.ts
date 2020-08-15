@@ -53,7 +53,7 @@ export class SchoolYearComponent implements OnInit {
 
         // School Year
         this.schoolYear = data['schoolYear'][0];
-        // this.schoolYear.status = 'En curso';
+        this.schoolYear.status = 'En curso'; // En curso, Nuevo
 
         // Catalogs
         this.catalogs.shifts = data['shifts']['data'].filter((x) => x.active === true).sort((a, b) => a.id - b.id);
@@ -72,9 +72,9 @@ export class SchoolYearComponent implements OnInit {
     );
   }
 
-  getShifts(id: number): unknown[] {
-    let currentShift = {};
-    let previousShift = {};
+  getShifts(id: number): unknown {
+    let currentShift: unknown;
+    let previousShift: unknown;
 
     if (this.schoolYear.shifts) {
       currentShift = id ? this.schoolYear.shifts.filter((x) => x['shift']['id'] === id) : this.schoolYear.shifts[0];
@@ -87,15 +87,19 @@ export class SchoolYearComponent implements OnInit {
     }
 
     if (Object.keys(currentShift).length === 0 && Object.keys(previousShift).length === 0) {
-      currentShift = {
-        shift: {
-          id: id,
-          cycles: {}
+      currentShift = [
+        {
+          shift: {
+            id: id,
+            cycles: {}
+          }
         }
-      };
+      ];
+    } else if (Object.keys(currentShift).length === 0 && Object.keys(previousShift).length >= 0) {
+      currentShift = previousShift;
     }
 
-    return [currentShift, previousShift];
+    return currentShift;
   }
 
   //#region New school year

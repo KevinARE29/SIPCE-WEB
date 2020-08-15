@@ -19,7 +19,7 @@ export class AcademicAssignmentsComponent implements OnInit {
 
   @Output() academicEvent = new EventEmitter<unknown>();
   @Input() catalogs: Catalogs;
-  @Input() assignation: unknown[];
+  @Input() assignation: unknown;
   @Input() isActive: boolean;
 
   allCatalogs: Catalogs;
@@ -45,31 +45,15 @@ export class AcademicAssignmentsComponent implements OnInit {
       section.active = true;
       emptySections.push({ id: section.id, name: section.name, active: false });
     });
-    console.log(this.assignation);
-    // Get current assignation
-    if (this.assignation[0] && this.assignation[0][0]) {
-      // Cycles
-      Object.entries(this.assignation[0][0]['shift']['cycles']).forEach(([key, value]) => {
-        const cycle = value['cycle'];
-        // Grades
-        Object.entries(value['gradeDetails']).forEach(([key, value]) => {
-          const sections = new Array<ShiftPeriodGrade>();
-          // Sections
-          Object.entries(value['sectionDetails']).forEach(([key, value]) => {
-            sections.push(value['section']);
-          });
 
-          this.preConfig.push({ cycle: { ...cycle }, grade: value['grade'], sections: sections });
-        });
-      });
-    } else if (this.assignation[1] && this.assignation[1][0]) {
-      // Cycles
-      Object.entries(this.assignation[1][0]['shift']['cycles']).forEach(([key, value]) => {
+    // Get current assignation
+    if (this.assignation[0]) {
+      Object.entries(this.assignation[0]['shift']['cycles']).forEach(([key, value]) => {
         const cycle = value['cycle'];
-        // Grades
+
         Object.entries(value['gradeDetails']).forEach(([key, value]) => {
           const sections = new Array<ShiftPeriodGrade>();
-          // Sections
+
           Object.entries(value['sectionDetails']).forEach(([key, value]) => {
             sections.push(value['section']);
           });
@@ -105,7 +89,7 @@ export class AcademicAssignmentsComponent implements OnInit {
   }
 
   updateField(field: ShiftPeriodGrade, type: string, data: unknown): void {
-    this.academicEvent.emit({ field, type, data });
+    this.academicEvent.emit({ shift: this.assignation[0].shift.id, field, type, data });
   }
   //#endregion
 
@@ -117,10 +101,10 @@ export class AcademicAssignmentsComponent implements OnInit {
       emptySections.push({ id: section.id, name: section.name, active: false });
     });
 
-    //#region Get current assaignation
-    if (this.assignation[0][0]) {
+    //#region Get current assignation
+    if (this.assignation[0]) {
       // Cycles
-      Object.entries(this.assignation[0][0]['shift']['cycles']).forEach(([key, value]) => {
+      Object.entries(this.assignation[0]['shift']['cycles']).forEach(([key, value]) => {
         const cycle = value['cycle'];
         // Grades
         Object.entries(value['gradeDetails']).forEach(([key, value]) => {
