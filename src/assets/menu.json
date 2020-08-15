@@ -100,7 +100,7 @@
         },
         {
             "title": "Agenda",
-            "icon": "solution",
+            "icon": "calendar",
             "permission": 3,
             "allow": null,
             "children": [

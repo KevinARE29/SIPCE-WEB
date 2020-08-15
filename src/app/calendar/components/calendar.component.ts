@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Schedule, Day, Week, WorkWeek, Month } from '@syncfusion/ej2-schedule';
 import {
   EventSettingsModel,
   ScheduleComponent,
@@ -114,7 +113,7 @@ L10n.load({
       third: 'Tercero',
       fourth: 'Cuarto',
       last: 'Ultimo',
-      repeat: 'Repetitivo',
+      repeat: 'Frecuencia',
       repeatEvery: 'Repetir diario',
       on: 'en',
       end: 'fin',
