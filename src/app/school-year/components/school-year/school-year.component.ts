@@ -52,7 +52,7 @@ export class SchoolYearComponent implements OnInit {
         this.previousSchoolYear = data['schoolYear'][1];
 
         // School Year
-        this.schoolYear = data['schoolYear'][0]; // The zero index always will be the current school year
+        this.schoolYear = data['schoolYear'][0];
         // this.schoolYear.status = 'En curso';
 
         // Catalogs
@@ -73,8 +73,8 @@ export class SchoolYearComponent implements OnInit {
   }
 
   getShifts(id: number): unknown[] {
-    let currentShift: unknown;
-    let previousShift: unknown;
+    let currentShift = {};
+    let previousShift = {};
 
     if (this.schoolYear.shifts) {
       currentShift = id ? this.schoolYear.shifts.filter((x) => x['shift']['id'] === id) : this.schoolYear.shifts[0];
@@ -84,6 +84,15 @@ export class SchoolYearComponent implements OnInit {
       previousShift = id
         ? this.previousSchoolYear.shifts.filter((x) => x['shift']['id'] === id)
         : this.previousSchoolYear.shifts[0];
+    }
+
+    if (Object.keys(currentShift).length === 0 && Object.keys(previousShift).length === 0) {
+      currentShift = {
+        shift: {
+          id: id,
+          cycles: {}
+        }
+      };
     }
 
     return [currentShift, previousShift];
@@ -143,6 +152,16 @@ export class SchoolYearComponent implements OnInit {
   //#endregion
 
   //#region Draf school year
+  updateItem(content: unknown): void {
+    console.log('Parent ', content);
+    switch (content['type']) {
+      case 'cycle':
+        const findCycle = this.catalogs.cycles.find((x) => x.id == content['field']);
+
+        break;
+    }
+  }
+
   pre(): void {
     this.currentStep -= 1;
   }
@@ -155,8 +174,4 @@ export class SchoolYearComponent implements OnInit {
     console.log('done');
   }
   //#endregion
-
-  updateItem(content: unknown): void {
-    console.log('Parent ', content);
-  }
 }

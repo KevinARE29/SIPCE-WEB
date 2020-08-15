@@ -45,7 +45,7 @@ export class AcademicAssignmentsComponent implements OnInit {
       section.active = true;
       emptySections.push({ id: section.id, name: section.name, active: false });
     });
-
+    console.log(this.assignation);
     // Get current assignation
     if (this.assignation[0] && this.assignation[0][0]) {
       // Cycles
@@ -59,7 +59,7 @@ export class AcademicAssignmentsComponent implements OnInit {
             sections.push(value['section']);
           });
 
-          this.preConfig.push({ cycle: cycle, grade: value['grade'], sections: sections });
+          this.preConfig.push({ cycle: { ...cycle }, grade: value['grade'], sections: sections });
         });
       });
     } else if (this.assignation[1] && this.assignation[1][0]) {
@@ -74,7 +74,7 @@ export class AcademicAssignmentsComponent implements OnInit {
             sections.push(value['section']);
           });
 
-          this.preConfig.push({ cycle: cycle, grade: value['grade'], sections: sections });
+          this.preConfig.push({ cycle: { ...cycle }, grade: value['grade'], sections: sections });
         });
       });
     }

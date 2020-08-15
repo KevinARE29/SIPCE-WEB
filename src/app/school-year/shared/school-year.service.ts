@@ -100,7 +100,7 @@ export class SchoolYearService {
 
         schoolYears[0] = schoolYear;
         schoolYears[1] = previousSchoolYear;
-
+        console.log(schoolYears);
         return schoolYears;
       })
     );
