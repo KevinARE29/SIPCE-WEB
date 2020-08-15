@@ -403,13 +403,18 @@ export class UpdateStudentComponent implements OnInit {
 
   saveEdit(id: number): void {
     if (this.validateNotNulls(this.editCache[id].data)) {
-      if (/^[0-9]{8}$/.test(this.editCache[id].data.phone)) {
+      if (/^[267]{1}[0-9]{3}[-]{1}[0-9]{4}$/.test(this.editCache[id].data.phone)) {
         if (id > 0) this.updateResponsible(id);
         else this.createResponsible();
       } else {
-        this.notification.create('warning', 'Formato incorrecto.', 'El número de teléfono debe contener 8 dígitos.', {
-          nzDuration: 0
-        });
+        this.notification.create(
+          'warning',
+          'Formato incorrecto.',
+          'Ingrese un número de teléfono valido (ej.2222-2222)',
+          {
+            nzDuration: 0
+          }
+        );
       }
     } else {
       this.notification.create('warning', 'Campos vacíos.', 'Todos los campos son obligatorios.', { nzDuration: 0 });

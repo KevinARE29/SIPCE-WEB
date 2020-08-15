@@ -35,8 +35,8 @@
                         "value": "empty",
                         "message": "El nombre de usuario es requerido"
                     }, {
-                        "value": "text",
-                        "message": "El nombre de usuario debe ser texto"
+                        "value": "textnumber",
+                        "message": "El nombre de usuario puede contener texto y números sin espacios"
                     }, {
                         "value": "unique",
                         "message": "El nombre de usuario debe ser único"

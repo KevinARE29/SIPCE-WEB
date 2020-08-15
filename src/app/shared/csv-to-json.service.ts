@@ -43,7 +43,7 @@ export class CsvToJsonService {
     const result = [];
     const realHeaders = new Array<any>();
     const headers = lines[0].split(',');
-
+    console.log(availableHeaders, dictionary, headers);
     /*---------------    Validate headers     ---------------*/
     if (group === 'students') {
       if (
@@ -198,6 +198,33 @@ export class CsvToJsonService {
             });
           } else if (typeof field.value === 'string') {
             if (!this.text(field.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
+                field.isValid = true;
+                field.message = null;
+              }
+            }
+          }
+          break;
+        case 'textnumber':
+          if (typeof field.value === 'object') {
+            Object.keys(field.value).forEach((value) => {
+              if (!this.textnumber(value)) {
+                field.isValid = false;
+                field.message = validate.message;
+                flag = false;
+              } else {
+                if (flag) {
+                  field.isValid = true;
+                  field.message = null;
+                }
+              }
+            });
+          } else if (typeof field.value === 'string') {
+            if (!this.textnumber(field.value)) {
               field.isValid = false;
               field.message = validate.message;
               flag = false;
@@ -365,7 +392,11 @@ export class CsvToJsonService {
   }
 
   text(field): boolean {
-    return typeof field === 'string' || field instanceof String;
+    return /[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ ]+$/.test(field);
+  }
+
+  textnumber(field): boolean {
+    return /[A-Za-z0-9äÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ]+$/.test(field);
   }
 
   empty(field): boolean {
@@ -377,7 +408,7 @@ export class CsvToJsonService {
   }
 
   phoneNumber(field): boolean {
-    return /^[0-9]{4}[-]{1}[0-9]{4}$/.test(field);
+    return /^[267]{1}[0-9]{3}[-]{1}[0-9]{4}$/.test(field);
   }
 
   date(field): boolean {

@@ -21,6 +21,8 @@ export class UploadUsersComponent implements OnInit {
   fileList: UploadFile[];
   loading = false;
   appRoles: Role[];
+  filesHelp: string;
+
   // Pre upload users errors
   uploadMsg: string;
 
@@ -41,6 +43,8 @@ export class UploadUsersComponent implements OnInit {
   ngOnInit(): void {
     this.uploadMsg = '';
     this.getRoles();
+
+    this.filesHelp = 'Encabezados esperados: NIM, Nombres, Apellidos, Correo electrónico, Rol y Nombre de usuario';
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
