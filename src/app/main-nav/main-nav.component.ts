@@ -27,6 +27,7 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   responseLogIn: any;
   data: any;
   year: number;
+  checked = false;
 
   constructor(private router: Router, private authService: AuthService) {}
 
@@ -73,8 +74,25 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
     this.menuOptions = MenuJson.menu;
 
     this.menuOptions.forEach((menu) => {
-      const index = permissions.indexOf(menu.permission);
-      menu.allow = index == -1 ? false : true;
+      let counter = 0;
+      menu.permissions.forEach((permission) => {
+        const index = permissions.indexOf(permission);
+        if (index !== -1) counter++;
+      });
+
+      if (counter > 0) {
+        menu.allowed = true;
+
+        menu.children.forEach((option) => {
+          if (menu.permissions.length === 1) option.allowed = true;
+          else {
+            const index = permissions.indexOf(option.permission);
+            option.allowed = index !== -1 ? true : false;
+          }
+        });
+      } else {
+        menu.allowed = false;
+      }
     });
   }
 }

@@ -16,7 +16,10 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const url = request.url;
 
-    if (
+    if (url.includes('images')) {
+      const newRequest = this.appendformData(request);
+      return next.handle(newRequest);
+    } else if (
       !url.includes('auth') ||
       url.includes('politics') ||
       url.includes('users') ||
@@ -62,6 +65,19 @@ export class AuthInterceptor implements HttpInterceptor {
     return request;
   }
 
+  private appendformData(request: HttpRequest<any>): HttpRequest<any> {
+    const token = localStorage.getItem('accessToken');
+
+    if (token) {
+      return request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    }
+    return request;
+  }
+
   private appendContentType(request: HttpRequest<any>): HttpRequest<any> {
     request.clone({
       headers: request.headers.set('Content-Type', 'application/json')
@@ -74,6 +90,7 @@ export class AuthInterceptor implements HttpInterceptor {
     const refresh = localStorage.getItem('refreshToken') || '';
     const tokenExpired = this.jwtHelper.isTokenExpired(accessToken);
     const refreshTokenExpired = this.jwtHelper.isTokenExpired(refresh);
+
     if (tokenExpired && !refreshTokenExpired) {
       if (!this.tokenBeingRefreshed) {
         this.tokenBeingRefreshed = true;
@@ -98,7 +115,8 @@ export class AuthInterceptor implements HttpInterceptor {
       }
     } else {
       localStorage.clear();
-      this.router.navigate(['/login']);
+      // this.router.navigate(['/login']);
+      this.router.navigate(['login/error401']);
       return next.handle(request);
     }
   }

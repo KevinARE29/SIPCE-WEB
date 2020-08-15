@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Observer, Observable } from 'rxjs';
 
-import DictionaryJson from './../../../../assets/dictionary.json';
-import { CsvToJsonService } from 'src/app/shared/csv-to-json.service';
+import { differenceInCalendarDays } from 'date-fns';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { UploadFile } from 'ng-zorro-antd/upload';
+
+import DictionaryJson from './../../../../assets/dictionary.json';
+import { CsvToJsonService } from 'src/app/shared/csv-to-json.service';
 import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
 import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
 import { StudentService } from '../../shared/student.service';
@@ -60,6 +62,11 @@ export class UploadStudentsComponent implements OnInit {
       this.grades = data['data'];
     });
   }
+
+  disabledDate = (current: Date): boolean => {
+    // Can not select days after today
+    return differenceInCalendarDays(current, new Date()) > 0;
+  };
 
   beforeUpload = (file: UploadFile): Observable<any> => {
     this.uploadMsg = '';
