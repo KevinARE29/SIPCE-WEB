@@ -79,13 +79,26 @@ export class UserComponent implements OnInit {
   gateway(): void {
     this.route.paramMap.subscribe((params) => {
       const param: string = params.get('user');
+      const emailPattern = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 
       this.userForm = this.fb.group({
-        code: [null, [Validators.required, Validators.maxLength(32)]],
-        username: [null, [Validators.required, Validators.maxLength(64)]],
-        firstname: [null, [Validators.required, Validators.maxLength(128)]],
-        lastname: [null, [Validators.required, Validators.maxLength(128)]],
-        email: [null, [Validators.required, Validators.maxLength(128), Validators.email]]
+        code: [
+          null,
+          [Validators.required, Validators.maxLength(32), Validators.pattern('[A-Za-z0-9äÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ]+$')]
+        ],
+        username: [
+          null,
+          [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-z0-9äÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ]+$')]
+        ],
+        firstname: [
+          null,
+          [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ ]+$')]
+        ],
+        lastname: [
+          null,
+          [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ]+$')]
+        ],
+        email: [null, [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]]
       });
 
       if (typeof param === 'string' && !Number.isNaN(Number(param))) {

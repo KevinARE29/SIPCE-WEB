@@ -35,10 +35,9 @@
                             <nz-form-control [nzErrorTip]="firstnameErrors">
                                 <input nz-input formControlName="firstname" placeholder="Nombre" />
                                 <ng-template #firstnameErrors let-control>
-                                    <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128
-                                        caracteres
-                                    </ng-container>
-                                    <ng-container *ngIf="control.hasError('required')">El nombre es requerido</ng-container>
+                                    <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres<br></ng-container>
+                                    <ng-container *ngIf="control.hasError('required')">El nombre es requerido<br></ng-container>
+                                    <ng-container *ngIf="control.hasError('pattern')">El nombre solo puede contener letras<br></ng-container>
                                 </ng-template>
                             </nz-form-control>
                         </nz-form-item>
@@ -51,11 +50,9 @@
                             <nz-form-control [nzErrorTip]="lastnameErrors">
                                 <input nz-input formControlName="lastname" placeholder="Apellido" />
                                 <ng-template #lastnameErrors let-control>
-                                    <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128
-                                        caracteres
-                                    </ng-container>
-                                    <ng-container *ngIf="control.hasError('required')">El apellido es requerido
-                                    </ng-container>
+                                    <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres<br></ng-container>
+                                    <ng-container *ngIf="control.hasError('required')">El apellido es requerido<br></ng-container>
+                                    <ng-container *ngIf="control.hasError('pattern')">El apellido solo puede contener letras<br></ng-container>
                                 </ng-template>
                             </nz-form-control>
                         </nz-form-item>
@@ -68,15 +65,9 @@
                             <nz-form-control [nzErrorTip]="emailErrors">
                                 <input nz-input formControlName="email" placeholder="Correo electrónico" type="email" />
                                 <ng-template #emailErrors let-control>
-                                    <ng-container *ngIf="control.hasError('maxlength')">
-                                        La longitud máxima es de 128 caracteres
-                                    </ng-container>
-                                    <ng-container *ngIf="control.hasError('required')">
-                                        El correo electrónico es requerido
-                                    </ng-container>
-                                    <ng-container *ngIf="control.hasError('pattern')">
-                                        Ingrese un correo electrónico valido
-                                    </ng-container>
+                                    <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres<br></ng-container>
+                                    <ng-container *ngIf="control.hasError('required')">El correo electrónico es requerido<br</ng-container>
+                                    <ng-container *ngIf="control.hasError('pattern')">Ingrese un correo electrónico valido<br></ng-container>
                                 </ng-template>
                             </nz-form-control>
                         </nz-form-item>
@@ -90,9 +81,7 @@
                                 <nz-date-picker formControlName="dateOfBirth" nzFormat="dd/MM/yyyy" [nzDisabledDate]="disabledDate">
                                 </nz-date-picker>
                                 <ng-template #dateOfBirthErrors let-control>
-                                    <ng-container *ngIf="control.hasError('required')">
-                                        La fecha de nacimiento es requerida
-                                    </ng-container>
+                                    <ng-container *ngIf="control.hasError('required')">La fecha de nacimiento es requerida</ng-container>
                                 </ng-template>
                             </nz-form-control>
                         </nz-form-item>

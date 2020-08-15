@@ -106,8 +106,14 @@ export class UpdateStudentComponent implements OnInit {
     const emailPattern = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 
     this.studentForm = this.fb.group({
-      firstname: ['', [Validators.required, Validators.maxLength(128)]],
-      lastname: ['', [Validators.required, Validators.maxLength(128)]],
+      firstname: [
+        '',
+        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ ]+$')]
+      ],
+      lastname: [
+        '',
+        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ ]+$')]
+      ],
       email: ['', [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]],
       dateOfBirth: ['', [Validators.required]],
       status: ['', [Validators.required]],

@@ -44,8 +44,9 @@
                     <nz-form-control [nzErrorTip]="codeErrors">
                         <input nz-input formControlName="code" placeholder="Código"/>
                         <ng-template #codeErrors let-control>
-                            <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 32 caracteres</ng-container>
-                            <ng-container *ngIf="control.hasError('required')">El código es requerido</ng-container>
+                            <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 32 caracteres<br></ng-container>
+                            <ng-container *ngIf="control.hasError('required')">El código es requerido<br></ng-container>
+                            <ng-container *ngIf="control.hasError('pattern')">El código solo puede contener letras y números sin espacios<br></ng-container>
                         </ng-template>
                     </nz-form-control>
                 </nz-form-item>
@@ -58,8 +59,9 @@
                     <nz-form-control [nzErrorTip]="usernameErrors">
                         <input nz-input formControlName="username" placeholder="Nombre de usuario"/>
                         <ng-template #usernameErrors let-control>
-                            <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 64 caracteres</ng-container>
-                            <ng-container *ngIf="control.hasError('required')">El nombre de usuario es requerido</ng-container>
+                            <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 64 caracteres<br></ng-container>
+                            <ng-container *ngIf="control.hasError('required')">El nombre de usuario es requerido<br></ng-container>
+                            <ng-container *ngIf="control.hasError('pattern')">El nombre de usuario solo puede contener letras y números sin espacios<br></ng-container>
                         </ng-template>
                     </nz-form-control>
                 </nz-form-item>
@@ -72,8 +74,9 @@
                     <nz-form-control [nzErrorTip]="firstnameErrors">
                         <input nz-input formControlName="firstname" placeholder="Nombre"/>
                         <ng-template #firstnameErrors let-control>
-                            <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres</ng-container>
-                            <ng-container *ngIf="control.hasError('required')">El nombre es requerido</ng-container>
+                            <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres<br></ng-container>
+                            <ng-container *ngIf="control.hasError('required')">El nombre es requerido<br></ng-container>
+                            <ng-container *ngIf="control.hasError('pattern')">El nombre solo puede contener letras<br></ng-container>
                         </ng-template>
                     </nz-form-control>
                 </nz-form-item>
@@ -86,8 +89,9 @@
                     <nz-form-control [nzErrorTip]="lastnameErrors">
                         <input nz-input formControlName="lastname" placeholder="Apellido"/>
                         <ng-template #lastnameErrors let-control>
-                            <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres</ng-container>
-                            <ng-container *ngIf="control.hasError('required')">El apellido es requerido</ng-container>
+                            <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres<br></ng-container>
+                            <ng-container *ngIf="control.hasError('required')">El apellido es requerido<br></ng-container>
+                            <ng-container *ngIf="control.hasError('pattern')">El apellido solo puede contener letras<br></ng-container>
                         </ng-template>
                     </nz-form-control>
                 </nz-form-item>
@@ -100,9 +104,9 @@
                     <nz-form-control [nzErrorTip]="emailErrors">
                         <input nz-input formControlName="email" placeholder="Correo electrónico" type="email" />
                         <ng-template #emailErrors let-control>
-                            <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres</ng-container>
-                            <ng-container *ngIf="control.hasError('required')">El correo electrónico es requerido</ng-container>
-                            <ng-container *ngIf="control.hasError('email')">Ingrese un correo electrónico valido</ng-container>
+                            <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres<br></ng-container>
+                            <ng-container *ngIf="control.hasError('required')">El correo electrónico es requerido<br></ng-container>
+                            <ng-container *ngIf="control.hasError('pattern')">Ingrese un correo electrónico valido<br></ng-container>
                         </ng-template>
                     </nz-form-control>
                 </nz-form-item>
