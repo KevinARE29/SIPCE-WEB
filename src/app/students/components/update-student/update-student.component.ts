@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { differenceInCalendarDays } from 'date-fns';
+import { differenceInCalendarDays, getYear } from 'date-fns';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzModalService, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -36,6 +36,7 @@ export class UpdateStudentComponent implements OnInit {
   // Form variables
   btnLoading = false;
   student: Student;
+  editStudentCache: Student;
   studentForm!: FormGroup;
   responsibleForm!: FormGroup;
   results: Student[];
@@ -72,6 +73,7 @@ export class UpdateStudentComponent implements OnInit {
   ngOnInit(): void {
     this.init();
     this.student = new Student();
+    this.editStudentCache = new Student();
     this.results = new Array<Student>();
     this.kinshipRelationships = Object.keys(KinshipRelationship).filter((k) => isNaN(Number(k)));
     this.status = Object.keys(StudentStatus).filter((k) => isNaN(Number(k)));
@@ -162,6 +164,14 @@ export class UpdateStudentComponent implements OnInit {
       (data) => {
         this.student = data['student'];
         if (!this.student.section) this.student.section = new ShiftPeriodGrade();
+        // Student copy
+        this.editStudentCache = { ...this.student };
+        this.editStudentCache.shift = { ...this.student.shift };
+        this.editStudentCache.grade = { ...this.student.grade };
+        this.editStudentCache.section = { ...this.student.section };
+        this.editStudentCache.startedGrade = { ...this.student.startedGrade };
+        this.editStudentCache.siblings = { ...this.student.siblings };
+
         // Sections data
         this.sections = data['sections'].data;
 
@@ -254,6 +264,7 @@ export class UpdateStudentComponent implements OnInit {
 
     if (this.studentForm.valid && this.save) {
       // Student
+      this.student.status = this.studentForm.controls['status'].value;
       this.student.firstname = this.studentForm.controls['firstname'].value;
       this.student.lastname = this.studentForm.controls['lastname'].value;
       this.student.email = this.studentForm.controls['email'].value;
@@ -297,28 +308,116 @@ export class UpdateStudentComponent implements OnInit {
 
   updateStudent(): void {
     this.btnLoading = true;
-    this.studentService.updateStudent(this.student).subscribe(
-      () => {
-        this.organizeImages();
-        this.message.success('Estudiante actualizado con éxito');
-        this.btnLoading = false;
-      },
-      (error) => {
-        const statusCode = error.statusCode;
-        const notIn = [401, 403];
+    const update = this.isEquivalent(this.student, this.editStudentCache);
 
-        this.btnLoading = false;
+    if (update['update']) {
+      this.studentService.updateStudent(update['fields']).subscribe(
+        () => {
+          this.organizeImages();
+          this.message.success('Estudiante actualizado con éxito');
+          // Student copy
+          this.editStudentCache = { ...this.student };
+          this.editStudentCache.shift = { ...this.student.shift };
+          this.editStudentCache.grade = { ...this.student.grade };
+          this.editStudentCache.section = { ...this.student.section };
+          this.editStudentCache.startedGrade = { ...this.student.startedGrade };
+          this.editStudentCache.siblings = { ...this.student.siblings };
+          this.btnLoading = false;
+        },
+        (error) => {
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
 
-        if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create(
-            'error',
-            'Ocurrió un error al actualizar al estudiante. Por favor verifique lo siguiente:',
-            error.message,
-            { nzDuration: 0 }
-          );
+          this.btnLoading = false;
+
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create(
+              'error',
+              'Ocurrió un error al actualizar al estudiante. Por favor verifique lo siguiente:',
+              error.message,
+              { nzDuration: 0 }
+            );
+          }
+        }
+      );
+    } else {
+      this.message.warning('No se detectaron cambios para actualizar.');
+    }
+  }
+
+  isEquivalent(actual: unknown, objCopy: unknown): unknown {
+    const aProps = Object.getOwnPropertyNames(actual);
+    const bProps = Object.getOwnPropertyNames(objCopy);
+    const updateStudent = new Student();
+    const propertiesToUpdate = [
+      'status',
+      'firstname',
+      'lastname',
+      'email',
+      'birthdate',
+      'shift',
+      'grade',
+      'section',
+      'startedGrade',
+      'registrationYear',
+      'siblings'
+    ];
+
+    if (aProps.length != bProps.length) {
+      return { update: false, fields: updateStudent };
+    }
+
+    let count = 0;
+    updateStudent['id'] = actual['id'];
+    propertiesToUpdate.forEach((property) => {
+      if (actual[property] !== objCopy[property]) {
+        switch (property) {
+          case 'status':
+          case 'firstname':
+          case 'lastname':
+          case 'email':
+            updateStudent[property] = actual[property];
+            count++;
+            break;
+          case 'birthdate':
+          case 'registrationYear':
+            if (objCopy[property] !== getYear(actual[property])) {
+              updateStudent[property] = actual[property];
+              count++;
+            }
+            break;
+          case 'shift':
+          case 'grade':
+          case 'section':
+          case 'startedGrade':
+            if (actual[property]['id'] !== objCopy[property].id) {
+              updateStudent[property] = actual[property];
+              count++;
+            }
+            break;
+          case 'siblings':
+            if (actual[property].length !== Object.keys(objCopy[property]).length) {
+              updateStudent[property] = actual[property];
+              count++;
+            } else {
+              const result = Object.values(objCopy[property]);
+              let exists = 0;
+              actual[property].forEach((sibling) => {
+                const element = result.find((x) => x['id'] === sibling.id);
+                if (element) exists++;
+              });
+
+              if (exists !== actual[property].length) {
+                updateStudent[property] = actual[property];
+                count++;
+              }
+            }
+            break;
         }
       }
-    );
+    });
+
+    return count > 0 ? { update: true, fields: updateStudent } : { update: false, fields: updateStudent };
   }
   //#endregion Update general information
 

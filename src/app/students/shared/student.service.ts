@@ -209,21 +209,23 @@ export class StudentService {
     const data = {};
     const siblingsIds = new Array<number>();
 
-    student.siblings.forEach((sibling) => {
-      siblingsIds.push(sibling.id);
-    });
+    if (student.siblings) {
+      data['siblings'] = siblingsIds;
+      student.siblings.forEach((sibling) => {
+        siblingsIds.push(sibling.id);
+      });
+    }
 
-    data['status'] = student.status;
-    data['firstname'] = student.firstname;
-    data['lastname'] = student.lastname;
-    data['email'] = student.email;
-    data['birthdate'] = student.birthdate;
-    data['shiftId'] = student.shift.id;
-    data['gradeId'] = student.grade.id;
-    data['sectionId'] = student.section ? student.section.id : null;
-    data['startedGradeId'] = student.startedGrade.id;
-    data['registrationYear'] = getYear(student.registrationYear);
-    data['siblings'] = siblingsIds;
+    if (student.status) data['status'] = student.status;
+    if (student.firstname) data['firstname'] = student.firstname;
+    if (student.lastname) data['lastname'] = student.lastname;
+    if (student.email) data['email'] = student.email;
+    if (student.birthdate) data['birthdate'] = student.birthdate;
+    if (student.shift) data['shiftId'] = student.shift.id;
+    if (student.grade) data['gradeId'] = student.grade.id;
+    if (student.section) data['sectionId'] = student.section ? student.section.id : null;
+    if (student.startedGrade) data['startedGradeId'] = student.startedGrade.id;
+    if (student.registrationYear) data['registrationYear'] = getYear(student.registrationYear);
 
     return this.http
       .put<Student>(`${this.baseUrl}students/${student.id}`, JSON.stringify(data))
