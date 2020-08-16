@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Component, OnInit } from '@angular/core';
 import { PermissionService } from 'src/app/roles/shared/permission.service';
 import { RoleService } from 'src/app/roles/shared/role.service';
@@ -82,21 +83,15 @@ export class UserComponent implements OnInit {
       const emailPattern = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 
       this.userForm = this.fb.group({
-        code: [
-          null,
-          [Validators.required, Validators.maxLength(32), Validators.pattern('[A-Za-z0-9äÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ]+$')]
-        ],
-        username: [
-          null,
-          [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-z0-9äÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ]+$')]
-        ],
+        code: [null, [Validators.required, Validators.maxLength(32), Validators.pattern('[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$')]],
+        username: [null, [Validators.required, Validators.maxLength(64), Validators.pattern('[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$')]],
         firstname: [
           null,
-          [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ ]+$')]
+          [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
         ],
         lastname: [
           null,
-          [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ]+$')]
+          [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
         ],
         email: [null, [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]]
       });

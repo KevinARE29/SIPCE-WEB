@@ -108,11 +108,11 @@ export class UpdateStudentComponent implements OnInit {
     this.studentForm = this.fb.group({
       firstname: [
         '',
-        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ ]+$')]
+        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
       ],
       lastname: [
         '',
-        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ ]+$')]
+        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
       ],
       email: ['', [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]],
       dateOfBirth: ['', [Validators.required]],

@@ -43,7 +43,7 @@ export class CsvToJsonService {
     const result = [];
     const realHeaders = new Array<any>();
     const headers = lines[0].split(',');
-    console.log(availableHeaders, dictionary, headers);
+
     /*---------------    Validate headers     ---------------*/
     if (group === 'students') {
       if (
@@ -59,11 +59,13 @@ export class CsvToJsonService {
     }
 
     headers.forEach((header) => {
+      let next = true;
       Object.keys(availableHeaders).forEach((key) => {
         if (dictionary.hasOwnProperty(key)) {
-          if (dictionary[key].toLowerCase() == header.toLowerCase().trim()) {
+          if (dictionary[key].toLowerCase() === header.toLowerCase().trim() && next) {
             realHeaders.push(key);
             availableHeaders[key].check = true;
+            next = false;
           }
         }
       });
@@ -392,11 +394,11 @@ export class CsvToJsonService {
   }
 
   text(field): boolean {
-    return /[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ ]+$/.test(field);
+    return /[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$/.test(field);
   }
 
   textnumber(field): boolean {
-    return /[A-Za-z0-9äÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚ]+$/.test(field);
+    return /[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$/.test(field);
   }
 
   empty(field): boolean {
