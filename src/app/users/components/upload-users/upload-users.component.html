@@ -4,6 +4,7 @@
         <div nz-col nzSm="24" nzMd="24" nzLg="6" nzXl="5" class="gutter-row">
             <nz-upload [nzFileList]="fileList" [nzBeforeUpload]="beforeUpload" [nzCustomRequest]="customReq" [nzRemove]="handleChange">
                 <button nz-button>Seleccionar archivo</button>
+                <i class="question" nz-icon nzType="question-circle"  nz-tooltip [nzTooltipTitle]="filesHelp" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ef6c00'"></i>
             </nz-upload>
             <span class="error">{{uploadMsg}}</span>
         </div>

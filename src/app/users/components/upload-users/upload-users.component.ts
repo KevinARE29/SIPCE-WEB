@@ -21,6 +21,8 @@ export class UploadUsersComponent implements OnInit {
   fileList: UploadFile[];
   loading = false;
   appRoles: Role[];
+  filesHelp: string;
+
   // Pre upload users errors
   uploadMsg: string;
 
@@ -41,6 +43,8 @@ export class UploadUsersComponent implements OnInit {
   ngOnInit(): void {
     this.uploadMsg = '';
     this.getRoles();
+
+    this.filesHelp = 'Encabezados esperados: NIM, Nombres, Apellidos, Correo electrónico, Rol y Nombre de usuario';
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -81,8 +85,25 @@ export class UploadUsersComponent implements OnInit {
     if (this.csv) {
       this.csvToJsonService.csvJSON(this.csv, 'users').subscribe(
         (r) => {
-          this._listOfColumns = JSON.parse(JSON.stringify(r['headers']));
-          this.generateTable(r);
+          if (r['data'].length > 0) {
+            this._listOfColumns = JSON.parse(JSON.stringify(r['headers']));
+            this.generateTable(r);
+          } else {
+            // TODO: Improve this code
+            this.notification.create(
+              'error',
+              'Ocurrió un error al intentar cargar el archivo.',
+              'Verifique que las columnas ingresadas correspondan a las esperadas. O que el archivo tenga datos.',
+              {
+                nzDuration: 0
+              }
+            );
+
+            this.listOfColumns = {};
+            this._listOfColumns = null;
+            this.listOfData = [];
+            this.editCache = {};
+          }
         },
         (error) => {
           this.notification.create('error', 'Ocurrió un error al intentar cargar el archivo.', error, {

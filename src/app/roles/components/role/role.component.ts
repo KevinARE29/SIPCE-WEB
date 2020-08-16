@@ -81,7 +81,10 @@ export class RoleComponent implements OnInit {
       const param: string = params.get('role');
 
       this.roleForm = this.fb.group({
-        name: [null, [Validators.required, Validators.maxLength(32)]]
+        name: [
+          null,
+          [Validators.required, Validators.maxLength(32), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        ]
       });
 
       if (typeof param === 'string' && !Number.isNaN(Number(param))) {

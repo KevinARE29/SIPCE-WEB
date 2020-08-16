@@ -59,11 +59,13 @@ export class CsvToJsonService {
     }
 
     headers.forEach((header) => {
+      let next = true;
       Object.keys(availableHeaders).forEach((key) => {
         if (dictionary.hasOwnProperty(key)) {
-          if (dictionary[key].toLowerCase() == header.toLowerCase().trim()) {
+          if (dictionary[key].toLowerCase() === header.toLowerCase().trim() && next) {
             realHeaders.push(key);
             availableHeaders[key].check = true;
+            next = false;
           }
         }
       });
@@ -198,6 +200,33 @@ export class CsvToJsonService {
             });
           } else if (typeof field.value === 'string') {
             if (!this.text(field.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
+                field.isValid = true;
+                field.message = null;
+              }
+            }
+          }
+          break;
+        case 'textnumber':
+          if (typeof field.value === 'object') {
+            Object.keys(field.value).forEach((value) => {
+              if (!this.textnumber(value)) {
+                field.isValid = false;
+                field.message = validate.message;
+                flag = false;
+              } else {
+                if (flag) {
+                  field.isValid = true;
+                  field.message = null;
+                }
+              }
+            });
+          } else if (typeof field.value === 'string') {
+            if (!this.textnumber(field.value)) {
               field.isValid = false;
               field.message = validate.message;
               flag = false;
@@ -365,7 +394,11 @@ export class CsvToJsonService {
   }
 
   text(field): boolean {
-    return typeof field === 'string' || field instanceof String;
+    return /[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$/.test(field);
+  }
+
+  textnumber(field): boolean {
+    return /[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$/.test(field);
   }
 
   empty(field): boolean {
@@ -377,7 +410,7 @@ export class CsvToJsonService {
   }
 
   phoneNumber(field): boolean {
-    return /^[0-9]{4}[-]{1}[0-9]{4}$/.test(field);
+    return /^[267]{1}[0-9]{3}[-]{1}[0-9]{4}$/.test(field);
   }
 
   date(field): boolean {

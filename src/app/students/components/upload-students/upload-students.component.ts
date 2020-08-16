@@ -26,6 +26,7 @@ export class UploadStudentsComponent implements OnInit {
   shifts: any[];
   nextYear = false;
   year: number;
+  filesHelp: string;
 
   // Pre upload users errors
   uploadMsg: string;
@@ -51,6 +52,9 @@ export class UploadStudentsComponent implements OnInit {
     this.shiftMsg = '';
     this.year = new Date().getFullYear() + 1;
     this.getAcademicCatalogs();
+
+    this.filesHelp =
+      'Encabezados esperados: NIE, Nombres, Apellidos, Correo electrónico, Fecha de nacimiento, Nombre del responsable, Apellido del responsable, Parentesco y Correo electrónico del responsable. Opcionales: Año de ingreso y Grado de ingreso';
   }
 
   getAcademicCatalogs(): void {
@@ -105,8 +109,25 @@ export class UploadStudentsComponent implements OnInit {
     if (this.csv && this.shift) {
       this.csvToJsonService.csvJSON(this.csv, 'students').subscribe(
         (r) => {
-          this._listOfColumns = JSON.parse(JSON.stringify(r['headers']));
-          this.generateTable(r);
+          if (r['data'].length > 0) {
+            this._listOfColumns = JSON.parse(JSON.stringify(r['headers']));
+            this.generateTable(r);
+          } else {
+            // TODO: Improve this code
+            this.notification.create(
+              'error',
+              'Ocurrió un error al intentar cargar el archivo.',
+              'Verifique que las columnas ingresadas correspondan a las esperadas. O que el archivo tenga datos.',
+              {
+                nzDuration: 0
+              }
+            );
+
+            this.listOfColumns = {};
+            this._listOfColumns = null;
+            this.listOfData = [];
+            this.editCache = {};
+          }
         },
         (error) => {
           this.notification.create('error', 'Ocurrió un error al intentar cargar el archivo.', error, {

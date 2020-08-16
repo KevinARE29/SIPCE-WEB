@@ -61,20 +61,32 @@ export class NewStudentComponent implements OnInit {
   init(): void {
     // eslint-disable-next-line prettier/prettier
     const emailPattern = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
-    const phonePattern = new RegExp(/^[0-9]{4}[-]{1}[0-9]{4}$/);
+    const phonePattern = new RegExp(/^[267]{1}[0-9]{3}[-]{1}[0-9]{4}$/);
 
     this.studentForm = this.fb.group({
-      code: ['', [Validators.required, Validators.maxLength(32)]],
-      firstname: ['', [Validators.required, Validators.maxLength(128)]],
-      lastname: ['', [Validators.required, Validators.maxLength(128)]],
+      code: ['', [Validators.required, Validators.maxLength(32), Validators.pattern('[0-9]+$')]],
+      firstname: [
+        '',
+        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+      ],
+      lastname: [
+        '',
+        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+      ],
       email: ['', [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]],
       dateOfBirth: ['', [Validators.required]],
       shift: ['', [Validators.required]],
       currentGrade: ['', [Validators.required]],
       registrationGrade: [''],
       registrationYear: [''],
-      responsibleFirstname: ['', [Validators.required, Validators.maxLength(128)]],
-      responsibleLastname: ['', [Validators.required, Validators.maxLength(128)]],
+      responsibleFirstname: [
+        '',
+        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+      ],
+      responsibleLastname: [
+        '',
+        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+      ],
       responsibleEmail: ['', [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]],
       responsiblePhone: ['', [Validators.required, Validators.pattern(phonePattern)]],
       responsibleRelationship: ['', Validators.required]
