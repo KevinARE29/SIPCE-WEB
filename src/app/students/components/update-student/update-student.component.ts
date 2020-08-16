@@ -402,10 +402,25 @@ export class UpdateStudentComponent implements OnInit {
   }
 
   saveEdit(id: number): void {
+    const textValidation = RegExp(/[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]$/);
     if (this.validateNotNulls(this.editCache[id].data)) {
-      if (/^[267]{1}[0-9]{3}[-]{1}[0-9]{4}$/.test(this.editCache[id].data.phone)) {
-        if (id > 0) this.updateResponsible(id);
-        else this.createResponsible();
+      if (/^[267]{1}[0-9]{3}[0-9]{4}$/.test(this.editCache[id].data.phone)) {
+        if (
+          textValidation.test(this.editCache[id].data.firstname) &&
+          textValidation.test(this.editCache[id].data.lastname)
+        ) {
+          if (id > 0) this.updateResponsible(id);
+          else this.createResponsible();
+        } else {
+          this.notification.create(
+            'warning',
+            'Formato incorrecto.',
+            'Los nombres y apellidos pueden contener letras únicamente',
+            {
+              nzDuration: 0
+            }
+          );
+        }
       } else {
         this.notification.create(
           'warning',
