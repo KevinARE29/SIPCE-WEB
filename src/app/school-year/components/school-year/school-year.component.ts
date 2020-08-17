@@ -53,7 +53,8 @@ export class SchoolYearComponent implements OnInit {
 
         // School Year
         this.schoolYear = data['schoolYear'][0];
-        this.schoolYear.status = 'En curso'; // En curso, Nuevo
+        console.log(this.schoolYear);
+        // this.schoolYear.status = 'En curso'; //TODO: Delete En curso, Nuevo
 
         // Catalogs
         this.catalogs.shifts = data['shifts']['data'].filter((x) => x.active === true).sort((a, b) => a.id - b.id);
@@ -157,11 +158,30 @@ export class SchoolYearComponent implements OnInit {
 
   //#region Draf school year
   updateItem(content: unknown): void {
-    console.log('Parent ', content);
+    console.log('Parent ', content, content['data']['cycle']);
+    // console.log(this.schoolYear.shifts, content['shift'], this.getShifts(content['shift']));
+    let shift = this.schoolYear.shifts.filter((x) => x['shift']['id'] === content['shift']);
+    const actualCycle = content['data']['cycle']['name']
+      ? this.catalogs.cycles.find((x) => x.name == content['data']['cycle']['name'])
+      : this.catalogs.cycles.find((x) => x.id == content['data']['cycle']['id']);
+
+    if (shift.length == 0) {
+      const prev = this.previousSchoolYear.shifts.filter((x) => x['shift']['id'] === content['shift']);
+      shift = prev;
+      this.schoolYear.shifts.push(prev);
+    }
+
     switch (content['type']) {
       case 'cycle':
-        const findCycle = this.catalogs.cycles.find((x) => x.id == content['field']);
-
+        Object.entries(shift[0]['shift']['cycles']).forEach(([key, value]) => {
+          console.log(value);
+          // Remove the grade from the current cycle
+          // value['gradeDetails'] = value['gradeDetails'].filter((x) => x.id === content['data']['grade']['id']);
+        });
+        // Set grade in the new cycle
+        console.log(shift['cycles']);
+        break;
+      case 'section':
         break;
     }
   }

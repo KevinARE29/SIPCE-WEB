@@ -33,7 +33,7 @@
                     </ng-container>
                     <ng-template #checkBoxCells>
                         <td nzAlign="center">
-                            <label nz-checkbox [(ngModel)]="section.active"></label>
+                            <label nz-checkbox [(ngModel)]="section.active" (ngModelChange)="updateField(section, 'section', data)"></label>
                         </td>
                     </ng-template>
                 </ng-container>

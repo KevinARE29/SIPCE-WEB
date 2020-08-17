@@ -83,7 +83,11 @@ export class AcademicAssignmentsComponent implements OnInit {
 
         this.listOfData.push({ cycle: dataRow['cycle'], grade: grade, sections: sections });
       } else {
-        this.listOfData.push({ cycle: new ShiftPeriodGrade(), grade: grade, sections: emptySections });
+        const newSections = new Array<ShiftPeriodGrade>();
+        this.sections.forEach((section) => {
+          newSections.push({ id: section.id, name: section.name, active: false });
+        });
+        this.listOfData.push({ cycle: new ShiftPeriodGrade(), grade: grade, sections: newSections });
       }
     });
   }
