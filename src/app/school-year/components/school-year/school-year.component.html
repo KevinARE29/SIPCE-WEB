@@ -41,7 +41,7 @@
                         <!-- <nz-tab *ngFor="let shift of catalogs.shifts" [nzTitle]="shift.name"> -->
                             <div class="step-content" [ngSwitch]="currentStep">
                                 <ng-container *ngSwitchCase="0">
-                                    <app-academic-assignments [catalogs]="catalogs" [assignation]="[schoolYear, previousSchoolYear]"
+                                    <app-academic-assignments [catalogs]="catalogs" [assignation]="schoolYear"
                                         [isActive]="false" (academicEvent)="updateItem($event)">
                                     </app-academic-assignments>
                                 </ng-container>
@@ -83,7 +83,7 @@
             <nz-tabset>
                 <nz-tab nzTitle="Ciclos, grados y secciones">
                     <div class="shifts">
-                        <app-academic-assignments [catalogs]="catalogs" [assignation]="[schoolYear, previousSchoolYear]"
+                        <app-academic-assignments [catalogs]="catalogs" [assignation]="schoolYear"
                             [isActive]="true"></app-academic-assignments>
                     </div>
                 </nz-tab>

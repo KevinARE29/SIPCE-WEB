@@ -20,7 +20,7 @@ export class AcademicAssignmentsComponent implements OnInit {
 
   @Output() academicEvent = new EventEmitter<unknown>();
   @Input() catalogs: Catalogs;
-  @Input() assignation: unknown[];
+  @Input() assignation: unknown;
   @Input() isActive: boolean;
 
   allCatalogs: Catalogs;
@@ -38,16 +38,6 @@ export class AcademicAssignmentsComponent implements OnInit {
     this.isActive ? this.currentData() : this.generateDataTable();
   }
 
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   for (const propName in changes) {
-  //     const chng = changes[propName];
-  //     const cur = chng.currentValue;
-  //     const prev = chng.previousValue;
-
-  //     console.log(`${propName}`, cur === prev, cur, prev);
-  //   }
-  // }
-
   //#region Transform the data
   generateDataTable(): void {
     const emptySections = new Array<ShiftPeriodGrade>();
@@ -58,9 +48,9 @@ export class AcademicAssignmentsComponent implements OnInit {
     });
 
     this.catalogs.shifts.forEach((shift) => {
-      const currentShift = this.getShifts(shift.id);
+      const currentShift = this.assignation['shifts'].filter((x) => x['shift']['id'] === shift.id);
       const listOfData = new Array<ItemData>();
-
+      console.log(currentShift);
       // Get current assignation
       Object.entries(currentShift[0]['shift']['cycles']).forEach(([key, value]) => {
         const cycle = value['cycle'];
@@ -124,7 +114,7 @@ export class AcademicAssignmentsComponent implements OnInit {
 
     this.catalogs.shifts.forEach((shift) => {
       // Get current assignation
-      const currentShift = this.assignation[0]['shifts'].filter((x) => x['shift']['id'] === shift.id);
+      const currentShift = this.assignation['shifts'].filter((x) => x['shift']['id'] === shift.id);
 
       if (currentShift.length) {
         Object.entries(currentShift[0]['shift']['cycles']).forEach(([key, value]) => {
@@ -192,28 +182,4 @@ export class AcademicAssignmentsComponent implements OnInit {
     return listOfData;
   }
   //#endregion
-
-  getShifts(id: number): unknown {
-    let currentShift: unknown;
-    let previousShift: unknown;
-
-    currentShift = this.assignation[0]['shifts'].filter((x) => x['shift']['id'] === id);
-
-    previousShift = this.assignation[1]['shifts'].filter((x) => x['shift']['id'] === id);
-
-    if (Object.keys(currentShift).length === 0 && Object.keys(previousShift).length === 0) {
-      currentShift = [
-        {
-          shift: {
-            id: id,
-            cycles: {}
-          }
-        }
-      ];
-    } else if (Object.keys(currentShift).length === 0 && Object.keys(previousShift).length >= 0) {
-      currentShift = previousShift;
-    }
-
-    return currentShift;
-  }
 }

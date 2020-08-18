@@ -56,6 +56,8 @@ export class SchoolYearComponent implements OnInit {
         // School Year
         this.schoolYear = data['schoolYear'][0];
         // this.schoolYear.status = 'En curso'; //TODO: Delete En curso, Nuevo
+        this.schoolYear.shifts = new Array<unknown>(); // TODO: Delete
+        // this.previousSchoolYear.shifts = new Array<unknown>();
 
         // Catalogs
         this.catalogs.shifts = data['shifts']['data'].filter((x) => x.active === true).sort((a, b) => a.id - b.id);
@@ -65,6 +67,7 @@ export class SchoolYearComponent implements OnInit {
           .filter((x) => x.name.length === 1)
           .concat(data['sections']['data'].filter((x) => x.name.length > 1));
 
+        if (this.schoolYear.status === 'En proceso de apertura') this.initializeShifts();
         this.loading = false;
       },
       (error) => {
@@ -72,6 +75,29 @@ export class SchoolYearComponent implements OnInit {
         this.loading = false;
       }
     );
+  }
+
+  initializeShifts(): void {
+    if (this.schoolYear.shifts.length === 0) {
+      this.catalogs.shifts.forEach((shift) => {
+        const _shift = this.previousSchoolYear.shifts.find((x) => x['shift']['id'] === shift.id);
+
+        if (_shift) this.schoolYear.shifts.push(_shift);
+        else {
+          this.schoolYear.shifts.push({
+            shift: { id: shift.id, name: shift.name, cycles: new Array<unknown>() }
+          });
+        }
+      });
+    } else if (this.catalogs.shifts.length !== this.schoolYear.shifts.length) {
+      this.catalogs.shifts.forEach((shift) => {
+        const _shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === shift.id);
+
+        if (!_shift) {
+          this.schoolYear.shifts.push({ shift: { id: shift.id, name: shift.name, cycles: new Array<unknown>() } });
+        }
+      });
+    }
   }
 
   //#region New school year
@@ -129,17 +155,8 @@ export class SchoolYearComponent implements OnInit {
 
   //#region Draf school year
   updateItem(content: unknown): void {
-    console.log(content);
     let grade, actualCycle;
-    // Get shift
-    let shift = this.schoolYear.shifts.filter((x) => x['shift']['id'] === content['shift']['id']);
-
-    if (shift.length == 0) {
-      const prev = this.previousSchoolYear.shifts.filter((x) => x['shift']['id'] === content['shift']);
-      shift = prev;
-      this.schoolYear.shifts.push(prev);
-    }
-
+    const shift = this.schoolYear.shifts.filter((x) => x['shift']['id'] === content['shift']['id']);
     const newCycle = shift[0]['shift']['cycles'].find((x) => x['cycle']['id'] == content['field']);
 
     // Find grade
@@ -170,21 +187,64 @@ export class SchoolYearComponent implements OnInit {
         }
         break;
       case 'section':
-        grade['sectionDetails'] = content['data']['sections'];
+        const section = grade['sectionDetails'].find((x) => x['section'].id === content['field']['id']);
+
+        section
+          ? (grade['sectionDetails'] = grade['sectionDetails'].filter(
+              (x) => x['section'].id !== content['field']['id']
+            ))
+          : grade['sectionDetails'].push({ id: null, section: content['field'], teacher: new User() });
         break;
     }
   }
 
   pre(): void {
-    this.currentStep -= 1;
+    this.sendData(false);
   }
 
   next(): void {
-    this.currentStep += 1;
+    this.sendData(true);
   }
 
   done(): void {
     console.log('done');
+  }
+
+  sendData(next: boolean): void {
+    switch (this.currentStep) {
+      case 0:
+        console.log('Ciclos, grados y secciones');
+        this.academicAssignmentsStep(next);
+        break;
+      case 1:
+        console.log('Coordinadores');
+        break;
+      case 2:
+        console.log('Titulares');
+        break;
+      case 3:
+        console.log('Orientadores');
+        break;
+      case 4:
+        console.log('Resumen');
+        break;
+    }
+    // Current step direction will be setted in the api calls
+  }
+
+  academicAssignmentsStep(next: boolean): void {
+    this.loading = true;
+    this.schoolYearService.saveAcademicAssignments(this.schoolYear).subscribe(
+      (r) => {
+        console.log(r);
+        this.loading = false;
+        next ? (this.currentStep += 1) : (this.currentStep -= 1);
+      },
+      (error) => {
+        this.loading = false;
+        console.log(error);
+      }
+    );
   }
   //#endregion
 }

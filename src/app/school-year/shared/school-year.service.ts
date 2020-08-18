@@ -55,7 +55,7 @@ export class SchoolYearService {
             Object.entries(response['cycleDetails']).forEach(([key, value]) => {
               // Get shift
               const shift = {};
-              shift['shift'] = value[0]['shift'];
+              shift['shift'] = { ...value[0]['shift'] };
 
               // Get cycles
               shift['shift']['cycles'] = new Array<unknown>();
@@ -84,7 +84,7 @@ export class SchoolYearService {
             Object.entries(previousResponse['cycleDetails']).forEach(([key, value]) => {
               // Get shift
               const shift = {};
-              shift['shift'] = value[0]['shift'];
+              shift['shift'] = { ...value[0]['shift'] };
 
               // Get cycles
               shift['shift']['cycles'] = new Array<unknown>();
@@ -100,10 +100,20 @@ export class SchoolYearService {
 
         schoolYears[0] = schoolYear;
         schoolYears[1] = previousSchoolYear;
-
+        console.log(schoolYears);
         return schoolYears;
       })
     );
+  }
+
+  mergeSchoolYearAndCatalogs(): Observable<unknown> {
+    return forkJoin({
+      sections: this.sectionService.getAllSections(),
+      grades: this.gradeService.getAllGrades(),
+      cycles: this.cycleService.searchCycle(null, false),
+      shifts: this.shiftService.getShifts(),
+      schoolYear: this.getSchoolYear()
+    });
   }
 
   initializeSchoolYear(startDate: Date, endDate: Date): Observable<any> {
@@ -116,14 +126,38 @@ export class SchoolYearService {
     return this.http.post<void>(`${this.baseUrl}academics/school-year`, data).pipe(catchError(this.handleError()));
   }
 
-  mergeSchoolYearAndCatalogs(): Observable<unknown> {
-    return forkJoin({
-      sections: this.sectionService.getAllSections(),
-      grades: this.gradeService.getAllGrades(),
-      cycles: this.cycleService.searchCycle(null, false),
-      shifts: this.shiftService.getShifts(),
-      schoolYear: this.getSchoolYear()
+  saveAcademicAssignments(schoolYear: unknown): Observable<unknown> {
+    const assignment = new Array<unknown>();
+
+    schoolYear['shifts'].forEach((shift) => {
+      let mappedShift: unknown;
+      const cycles = new Array<unknown>();
+
+      shift['shift']['cycles'].forEach((cycle) => {
+        const grades = new Array<unknown>();
+
+        cycle['gradeDetails'].forEach((grade) => {
+          const sections = new Array<number>();
+
+          grade['sectionDetails'].forEach((section) => {
+            sections.push(section['section'].id);
+          });
+
+          grades.push({ gradeId: grade['grade'].id, sections: sections });
+        });
+
+        cycles.push({ cycleId: cycle['cycle'].id, grades: grades });
+      });
+      // eslint-disable-next-line prefer-const
+      mappedShift = { shiftId: shift['shift'].id, cycles: cycles };
+
+      assignment.push(mappedShift);
     });
+
+
+    return this.http
+      .post<unknown>(`${this.baseUrl}academics/school-year/academic-catalogues`, JSON.stringify({ shifts: assignment }))
+      .pipe(catchError(this.handleError()));
   }
 
   /**
