@@ -1,43 +1,53 @@
-<div nz-col nzXs="23">
-    <nz-table #fixedTable [nzData]="listOfData" nzSize="middle" nzTableLayout="auto" [nzFrontPagination]="false">
-        <thead>
-            <tr>
-                <th nzLeft nzWidth="150px" nzAlign="center">Ciclo</th>
-                <th nzLeft nzWidth="100px" nzAlign="center">Grado</th>
-                <ng-container *ngFor="let section of sections">
-                    <th nzAlign="center" *ngIf="section.active" [nzWidth]="section.name.length > 1 ? '100px' : '50px'">
-                        {{ section.name }}
-                    </th>
-                </ng-container>
-                
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let data of listOfData">
-                <td nzLeft nzAlign="center">
-                    <ng-container *ngIf="isActive;else editableCell">
-                        {{ data.cycle.name }}
-                    </ng-container>
-                    <ng-template #editableCell>
-                        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="data.cycle.id" (ngModelChange)="updateField($event, 'cycle', data)">
-                            <nz-option *ngFor="let cycle of catalogs.cycles" [nzLabel]="cycle.name" [nzValue]="cycle.id"></nz-option>
-                        </nz-select>
-                    </ng-template>
-                </td>
-                <td nzLeft nzAlign="center">{{ data.grade.name }}</td>
-                <ng-container *ngFor="let section of data.sections">
-                    <ng-container *ngIf="isActive;else checkBoxCells">
-                        <td nzAlign="center">
-                            <i nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="section.active ? '#ef6c00' : '#cecece'"></i>
+<nz-tabset nzTabPosition="left" [nzType]="'line'">
+    <nz-tab *ngFor="let item of lists" [nzTitle]="item.shift.name">
+        <div nz-col nzXs="23">
+            <nz-table #fixedTable [nzData]="item.items" nzSize="middle" nzTableLayout="auto" [nzFrontPagination]="false">
+                <thead>
+                    <tr>
+                        <th nzLeft nzWidth="150px" nzAlign="center">Ciclo</th>
+                        <th nzLeft nzWidth="100px" nzAlign="center">Grado</th>
+                        <ng-container *ngFor="let section of sections">
+                            <th nzAlign="center" *ngIf="section.active" [nzWidth]="section.name.length > 1 ? '100px' : '50px'">
+                                {{ section.name }}
+                            </th>
+                        </ng-container>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of item.items">
+                        <td nzLeft nzAlign="center">
+                            <ng-container *ngIf="isActive;else editableCell">
+                                {{ data.cycle.name }}
+                            </ng-container>
+                            <ng-template #editableCell>
+                                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="data.cycle.id" (ngModelChange)="updateField($event, 'cycle', data, item.shift)">
+                                    <nz-option *ngFor="let cycle of catalogs.cycles" [nzLabel]="cycle.name" [nzValue]="cycle.id"></nz-option>
+                                </nz-select>
+                            </ng-template>
                         </td>
-                    </ng-container>
-                    <ng-template #checkBoxCells>
-                        <td nzAlign="center">
-                            <label nz-checkbox [(ngModel)]="section.active" (ngModelChange)="updateField(section, 'section', data)"></label>
-                        </td>
-                    </ng-template>
-                </ng-container>
-            </tr>
-        </tbody>
-    </nz-table>
-</div>
+                        <td nzLeft nzAlign="center">{{ data.grade.name }}</td>
+                        <ng-container *ngFor="let section of data.sections">
+                            <ng-container *ngIf="isActive;else checkBoxCells">
+                                <td nzAlign="center">
+                                    <i nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="section.active ? '#ef6c00' : '#cecece'"></i>
+                                </td>
+                            </ng-container>
+                            <ng-template #checkBoxCells>
+                                <ng-container *ngIf="data.cycle.id;else noEditable">
+                                    <td nzAlign="center">
+                                        <label nz-checkbox [(ngModel)]="section.active" (ngModelChange)="updateField(section, 'section', data, item.shift)"></label>
+                                    </td>
+                                </ng-container>
+                                <ng-template #noEditable>
+                                    <td nzAlign="center" nz-tooltip nzTooltipTitle="Seleccione un ciclo para poder asignar secciones al grado">
+                                        <label nz-checkbox [(ngModel)]="section.active" (ngModelChange)="updateField(section, 'section', data, item.shift)" nzDisabled ></label>
+                                    </td>
+                                </ng-template>
+                            </ng-template>
+                        </ng-container>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </div>
+    </nz-tab>
+</nz-tabset>
