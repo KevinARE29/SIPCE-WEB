@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 
 import { Catalogs } from '../../shared/catalogs.model';
 import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
@@ -13,7 +13,7 @@ interface ItemData {
   templateUrl: './academic-assignments.component.html',
   styleUrls: ['./academic-assignments.component.css']
 })
-export class AcademicAssignmentsComponent implements OnInit {
+export class AcademicAssignmentsComponent implements OnInit, OnChanges {
   listOfData: ItemData[] = [];
   preConfig: ItemData[] = [];
 
@@ -35,6 +35,15 @@ export class AcademicAssignmentsComponent implements OnInit {
     });
 
     this.isActive ? this.currentData() : this.generateDataTable();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    for (const propName in changes) {
+      const chng = changes[propName];
+      const cur = chng.currentValue;
+      const prev = chng.previousValue;
+      console.log(`${propName}`, cur === prev, cur, prev);
+    }
   }
 
   //#region Transform the data

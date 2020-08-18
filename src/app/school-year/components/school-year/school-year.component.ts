@@ -10,6 +10,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { SchoolYear } from './../../shared/school-year.model';
 import { SchoolYearService } from '../../shared/school-year.service';
 import { Catalogs } from '../../shared/catalogs.model';
+import { User } from 'src/app/logs/shared/user-log.model';
+import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
 
 @Component({
   selector: 'app-school-year',
@@ -158,12 +160,8 @@ export class SchoolYearComponent implements OnInit {
 
   //#region Draf school year
   updateItem(content: unknown): void {
-    console.log('Parent ', content, content['data']['cycle']);
-    // console.log(this.schoolYear.shifts, content['shift'], this.getShifts(content['shift']));
+    // Get shift
     let shift = this.schoolYear.shifts.filter((x) => x['shift']['id'] === content['shift']);
-    const actualCycle = content['data']['cycle']['name']
-      ? this.catalogs.cycles.find((x) => x.name == content['data']['cycle']['name'])
-      : this.catalogs.cycles.find((x) => x.id == content['data']['cycle']['id']);
 
     if (shift.length == 0) {
       const prev = this.previousSchoolYear.shifts.filter((x) => x['shift']['id'] === content['shift']);
@@ -171,15 +169,33 @@ export class SchoolYearComponent implements OnInit {
       this.schoolYear.shifts.push(prev);
     }
 
+    // Get previous cycle
+    const actualCycle = content['data']['cycle']['name']
+      ? shift[0]['shift']['cycles'].find((x) => x['cycle']['name'] == content['data']['cycle']['name'])
+      : shift[0]['shift']['cycles'].find((x) => x['cycle']['id'] == content['data']['cycle']['id']);
+
     switch (content['type']) {
       case 'cycle':
-        Object.entries(shift[0]['shift']['cycles']).forEach(([key, value]) => {
-          console.log(value);
-          // Remove the grade from the current cycle
-          // value['gradeDetails'] = value['gradeDetails'].filter((x) => x.id === content['data']['grade']['id']);
-        });
-        // Set grade in the new cycle
-        console.log(shift['cycles']);
+        // Get new cycle
+        const newCycle = shift[0]['shift']['cycles'].find((x) => x['cycle']['id'] == content['field']);
+
+        // Find grade
+        const grade = actualCycle['gradeDetails'].find((x) => x['grade']['id'] == content['data']['grade']['id']);
+
+        if (grade) {
+          actualCycle['gradeDetails'] = actualCycle['gradeDetails'].filter(
+            (x) => x['grade']['id'] != content['data']['grade']['id']
+          );
+          newCycle['gradeDetails'].push(grade);
+        } else {
+          newCycle['gradeDetails'].push({
+            counselor: new User(),
+            grade: content['data']['grade'],
+            sectionDetails: new Array<unknown>()
+          });
+        }
+
+        console.log(actualCycle, newCycle);
         break;
       case 'section':
         break;
