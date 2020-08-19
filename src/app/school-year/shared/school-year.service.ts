@@ -154,7 +154,6 @@ export class SchoolYearService {
       assignment.push(mappedShift);
     });
 
-
     return this.http
       .post<unknown>(`${this.baseUrl}academics/school-year/academic-catalogues`, JSON.stringify({ shifts: assignment }))
       .pipe(catchError(this.handleError()));

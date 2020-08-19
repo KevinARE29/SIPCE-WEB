@@ -11,7 +11,6 @@ import { SchoolYear } from './../../shared/school-year.model';
 import { SchoolYearService } from '../../shared/school-year.service';
 import { Catalogs } from '../../shared/catalogs.model';
 import { User } from 'src/app/logs/shared/user-log.model';
-import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
 
 @Component({
   selector: 'app-school-year',
@@ -22,6 +21,7 @@ export class SchoolYearComponent implements OnInit {
   loading = false;
   previousSchoolYear: SchoolYear;
   schoolYear: SchoolYear;
+  cacheSchoolYear: SchoolYear;
   catalogs: Catalogs;
 
   // No active or draft school year
@@ -55,9 +55,9 @@ export class SchoolYearComponent implements OnInit {
 
         // School Year
         this.schoolYear = data['schoolYear'][0];
+        this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
+
         // this.schoolYear.status = 'En curso'; //TODO: Delete En curso, Nuevo
-        this.schoolYear.shifts = new Array<unknown>(); // TODO: Delete
-        // this.previousSchoolYear.shifts = new Array<unknown>();
 
         // Catalogs
         this.catalogs.shifts = data['shifts']['data'].filter((x) => x.active === true).sort((a, b) => a.id - b.id);
@@ -89,6 +89,8 @@ export class SchoolYearComponent implements OnInit {
           });
         }
       });
+
+      this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
     } else if (this.catalogs.shifts.length !== this.schoolYear.shifts.length) {
       this.catalogs.shifts.forEach((shift) => {
         const _shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === shift.id);
@@ -97,6 +99,8 @@ export class SchoolYearComponent implements OnInit {
           this.schoolYear.shifts.push({ shift: { id: shift.id, name: shift.name, cycles: new Array<unknown>() } });
         }
       });
+
+      this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
     }
   }
 
@@ -157,7 +161,7 @@ export class SchoolYearComponent implements OnInit {
   updateItem(content: unknown): void {
     let grade, actualCycle;
     const shift = this.schoolYear.shifts.filter((x) => x['shift']['id'] === content['shift']['id']);
-    const newCycle = shift[0]['shift']['cycles'].find((x) => x['cycle']['id'] == content['field']);
+    let newCycle = shift[0]['shift']['cycles'].find((x) => x['cycle']['id'] == content['field']);
 
     // Find grade
     for (let i = 0; i < shift[0]['shift']['cycles'].length; i++) {
@@ -173,21 +177,44 @@ export class SchoolYearComponent implements OnInit {
 
     switch (content['type']) {
       case 'cycle':
+        // Find grade and move it to the new cycle if it exists or insert a new item if not
         if (grade) {
           actualCycle['gradeDetails'] = actualCycle['gradeDetails'].filter(
             (x) => x['grade']['id'] != content['data']['grade']['id']
           );
-          newCycle['gradeDetails'].push(grade);
+
+          if (newCycle) newCycle['gradeDetails'].push(grade);
         } else {
+          if (!newCycle) {
+            const findCycle = this.catalogs.cycles.find((x) => x.id === content['data']['cycle'].id);
+            newCycle = {
+              id: null,
+              cycle: { ...findCycle },
+              cycleCoordinator: new User(),
+              gradeDetails: new Array<unknown>()
+            };
+            shift[0]['shift']['cycles'].push(newCycle);
+          }
+
           newCycle['gradeDetails'].push({
             counselor: new User(),
             grade: content['data']['grade'],
             sectionDetails: new Array<unknown>()
           });
         }
+
+        // If the cycle doesn't have gradeDetails must be removed from the shift
+        if (actualCycle && actualCycle['gradeDetails'].length === 0) {
+          shift[0]['shift']['cycles'] = shift[0]['shift']['cycles'].filter(
+            (x) => x['cycle'].id !== actualCycle['cycle'].id
+          );
+        }
         break;
       case 'section':
-        const section = grade['sectionDetails'].find((x) => x['section'].id === content['field']['id']);
+        let section;
+        grade
+          ? (section = grade['sectionDetails'].find((x) => x['section'].id === content['field']['id']))
+          : (grade = { sectionDetails: new Array<unknown>() });
 
         section
           ? (grade['sectionDetails'] = grade['sectionDetails'].filter(
@@ -218,6 +245,7 @@ export class SchoolYearComponent implements OnInit {
         break;
       case 1:
         console.log('Coordinadores');
+        this.cycleCoordinatorsStep(next);
         break;
       case 2:
         console.log('Titulares');
@@ -233,18 +261,49 @@ export class SchoolYearComponent implements OnInit {
   }
 
   academicAssignmentsStep(next: boolean): void {
-    this.loading = true;
-    this.schoolYearService.saveAcademicAssignments(this.schoolYear).subscribe(
-      (r) => {
-        console.log(r);
-        this.loading = false;
+    console.log(this.schoolYear.shifts);
+    let emptyShifts = false;
+    this.schoolYear.shifts.forEach((shift) => {
+      if (!shift['cycles']) emptyShifts = true;
+    });
+    if (!emptyShifts) {
+      if (JSON.stringify(this.schoolYear) !== JSON.stringify(this.cacheSchoolYear)) {
+        this.loading = true;
+        this.schoolYearService.saveAcademicAssignments(this.schoolYear).subscribe(
+          () => {
+            this.loading = false;
+            this.message.success(`La asignación de ciclos, grados y secciones se ha guardado con éxito`);
+            this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
+            if (next) this.currentStep += 1;
+          },
+          (error) => {
+            const statusCode = error.statusCode;
+            const notIn = [401, 403];
+            if (!notIn.includes(statusCode) && statusCode < 500) {
+              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
+                nzDuration: 0
+              });
+            }
+            this.loading = false;
+          }
+        );
+      } else {
         next ? (this.currentStep += 1) : (this.currentStep -= 1);
-      },
-      (error) => {
-        this.loading = false;
-        console.log(error);
       }
-    );
+    } else {
+      this.notification.create(
+        'error',
+        'Uno o más turnos vacíos.',
+        'Debe asignar al menos un grado a algún ciclo para poder continuar',
+        {
+          nzDuration: 15000
+        }
+      );
+    }
+  }
+
+  cycleCoordinatorsStep(next: boolean): void {
+    next ? (this.currentStep += 1) : (this.currentStep -= 1);
   }
   //#endregion
 }

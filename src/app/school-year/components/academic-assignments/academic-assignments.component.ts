@@ -50,7 +50,7 @@ export class AcademicAssignmentsComponent implements OnInit {
     this.catalogs.shifts.forEach((shift) => {
       const currentShift = this.assignation['shifts'].filter((x) => x['shift']['id'] === shift.id);
       const listOfData = new Array<ItemData>();
-      console.log(currentShift);
+
       // Get current assignation
       Object.entries(currentShift[0]['shift']['cycles']).forEach(([key, value]) => {
         const cycle = value['cycle'];
@@ -62,7 +62,7 @@ export class AcademicAssignmentsComponent implements OnInit {
             sections.push(value['section']);
           });
 
-          this.preConfig.push({ cycle: { ...cycle }, grade: value['grade'], sections: sections });
+          this.preConfig.push({ cycle: { ...cycle }, grade: { ...value['grade'] }, sections: sections });
         });
       });
 
@@ -84,13 +84,13 @@ export class AcademicAssignmentsComponent implements OnInit {
               : sections.push({ id: section.id, name: section.name, active: false });
           });
 
-          listOfData.push({ cycle: dataRow['cycle'], grade: grade, sections: sections });
+          listOfData.push({ cycle: { ...dataRow['cycle'] }, grade: { ...grade }, sections: sections });
         } else {
           const newSections = new Array<ShiftPeriodGrade>();
           this.sections.forEach((section) => {
             newSections.push({ id: section.id, name: section.name, active: false });
           });
-          listOfData.push({ cycle: new ShiftPeriodGrade(), grade: grade, sections: newSections });
+          listOfData.push({ cycle: new ShiftPeriodGrade(), grade: { ...grade }, sections: newSections });
         }
       });
 
@@ -99,6 +99,12 @@ export class AcademicAssignmentsComponent implements OnInit {
   }
 
   updateField(field: any, type: string, data: unknown, shift: ShiftPeriodGrade): void {
+    if (type === 'cycle' && !field) {
+      data['sections'].forEach((section) => {
+        if (section.active) section.active = false;
+      });
+    }
+
     this.academicEvent.emit({ shift: shift, field, type, data });
   }
   //#endregion
