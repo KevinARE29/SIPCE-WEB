@@ -8,6 +8,7 @@ interface ItemData {
   grade: ShiftPeriodGrade;
   sections: ShiftPeriodGrade[];
 }
+
 @Component({
   selector: 'app-academic-assignments',
   templateUrl: './academic-assignments.component.html',
@@ -15,8 +16,6 @@ interface ItemData {
 })
 export class AcademicAssignmentsComponent implements OnInit {
   lists: unknown[] = [];
-  // listOfData: ItemData[];
-  preConfig: ItemData[] = [];
 
   @Output() academicEvent = new EventEmitter<unknown>();
   @Input() catalogs: Catalogs;
@@ -49,26 +48,29 @@ export class AcademicAssignmentsComponent implements OnInit {
 
     this.catalogs.shifts.forEach((shift) => {
       const currentShift = this.assignation['shifts'].filter((x) => x['shift']['id'] === shift.id);
+      const preConfig: ItemData[] = [];
       const listOfData = new Array<ItemData>();
 
       // Get current assignation
       Object.entries(currentShift[0]['shift']['cycles']).forEach(([key, value]) => {
         const cycle = value['cycle'];
-
         Object.entries(value['gradeDetails']).forEach(([key, value]) => {
           const sections = new Array<ShiftPeriodGrade>();
-
           Object.entries(value['sectionDetails']).forEach(([key, value]) => {
             sections.push(value['section']);
           });
 
-          this.preConfig.push({ cycle: { ...cycle }, grade: { ...value['grade'] }, sections: sections });
+          preConfig.push({
+            cycle: { ...cycle },
+            grade: { ...value['grade'] },
+            sections: sections
+          });
         });
       });
 
       // Merge data
       this.catalogs.grades.forEach((grade) => {
-        const dataRow = this.preConfig.find((x) => x['grade'].id === grade.id);
+        const dataRow = preConfig.find((x) => x['grade'].id === grade.id);
 
         if (dataRow) {
           const sections = new Array<ShiftPeriodGrade>();
@@ -84,13 +86,21 @@ export class AcademicAssignmentsComponent implements OnInit {
               : sections.push({ id: section.id, name: section.name, active: false });
           });
 
-          listOfData.push({ cycle: { ...dataRow['cycle'] }, grade: { ...grade }, sections: sections });
+          listOfData.push({
+            cycle: { ...dataRow['cycle'] },
+            grade: { ...grade },
+            sections: sections
+          });
         } else {
           const newSections = new Array<ShiftPeriodGrade>();
           this.sections.forEach((section) => {
             newSections.push({ id: section.id, name: section.name, active: false });
           });
-          listOfData.push({ cycle: new ShiftPeriodGrade(), grade: { ...grade }, sections: newSections });
+          listOfData.push({
+            cycle: new ShiftPeriodGrade(),
+            grade: { ...grade },
+            sections: newSections
+          });
         }
       });
 
@@ -112,15 +122,20 @@ export class AcademicAssignmentsComponent implements OnInit {
   //#region Get assignation
   currentData(): void {
     const emptySections = new Array<ShiftPeriodGrade>();
-    let listOfData = new Array<ItemData>();
 
     this.sections.forEach((section) => {
       emptySections.push({ id: section.id, name: section.name, active: false });
     });
 
     this.catalogs.shifts.forEach((shift) => {
+      this.sections.forEach((section) => {
+        section.active = false;
+      });
+
       // Get current assignation
       const currentShift = this.assignation['shifts'].filter((x) => x['shift']['id'] === shift.id);
+      let listOfData = new Array<ItemData>();
+      const preConfig: ItemData[] = [];
 
       if (currentShift.length) {
         Object.entries(currentShift[0]['shift']['cycles']).forEach(([key, value]) => {
@@ -133,13 +148,13 @@ export class AcademicAssignmentsComponent implements OnInit {
               sections.push(value['section']);
             });
 
-            this.preConfig.push({ cycle: cycle, grade: value['grade'], sections: sections });
+            preConfig.push({ cycle: cycle, grade: value['grade'], sections: sections });
           });
         });
 
         // Merge data
         this.catalogs.grades.forEach((grade) => {
-          const dataRow = this.preConfig.find((x) => x['grade'].id === grade.id);
+          const dataRow = preConfig.find((x) => x['grade'].id === grade.id);
 
           if (dataRow) {
             const sections = new Array<ShiftPeriodGrade>();
@@ -162,7 +177,8 @@ export class AcademicAssignmentsComponent implements OnInit {
         });
       }
       listOfData = this.fillBlanks(listOfData);
-      this.lists.push({ shift, items: listOfData });
+      const sec = this.sections.filter((x) => x.active === true);
+      this.lists.push({ shift, items: listOfData, sections: sec });
     });
   }
 

@@ -6,11 +6,16 @@
                     <tr>
                         <th nzLeft nzWidth="150px" nzAlign="center">Ciclo</th>
                         <th nzLeft nzWidth="100px" nzAlign="center">Grado</th>
-                        <ng-container *ngFor="let section of sections">
-                            <th nzAlign="center" *ngIf="section.active" [nzWidth]="section.name.length > 1 ? '100px' : '50px'">
+                        <ng-container *ngIf="!isActive;else showAvailables">
+                            <th nzAlign="center" *ngFor="let section of sections" [nzWidth]="section.name.length > 1 ? '100px' : '50px'">
                                 {{ section.name }}
                             </th>
                         </ng-container>
+                        <ng-template #showAvailables>
+                            <th nzAlign="center" *ngFor="let section of item.sections" [nzWidth]="section.name.length > 1 ? '100px' : '50px'">
+                                {{ section.name }}
+                            </th>
+                        </ng-template>
                     </tr>
                 </thead>
                 <tbody>

@@ -100,7 +100,7 @@ export class SchoolYearService {
 
         schoolYears[0] = schoolYear;
         schoolYears[1] = previousSchoolYear;
-        console.log(schoolYears);
+
         return schoolYears;
       })
     );
@@ -128,9 +128,9 @@ export class SchoolYearService {
 
   saveAcademicAssignments(schoolYear: unknown): Observable<unknown> {
     const assignment = new Array<unknown>();
+    let valid = true;
 
     schoolYear['shifts'].forEach((shift) => {
-      let mappedShift: unknown;
       const cycles = new Array<unknown>();
 
       shift['shift']['cycles'].forEach((cycle) => {
@@ -143,20 +143,30 @@ export class SchoolYearService {
             sections.push(section['section'].id);
           });
 
+          if (valid && sections.length === 0) valid = false;
           grades.push({ gradeId: grade['grade'].id, sections: sections });
         });
 
         cycles.push({ cycleId: cycle['cycle'].id, grades: grades });
       });
       // eslint-disable-next-line prefer-const
-      mappedShift = { shiftId: shift['shift'].id, cycles: cycles };
+      const mappedShift = { shiftId: shift['shift'].id, cycles: cycles };
 
       assignment.push(mappedShift);
     });
 
-    return this.http
-      .post<unknown>(`${this.baseUrl}academics/school-year/academic-catalogues`, JSON.stringify({ shifts: assignment }))
-      .pipe(catchError(this.handleError()));
+    if (valid) {
+      return this.http
+        .post<unknown>(
+          `${this.baseUrl}academics/school-year/academic-catalogues`,
+          JSON.stringify({ shifts: assignment })
+        )
+        .pipe(catchError(this.handleError()));
+    } else {
+      return new Observable<unknown>((observer) => {
+        observer.error('Verifique que todos los grados que tengan asignado un ciclo tengan asignados secciones');
+      });
+    }
   }
 
   /**

@@ -18,7 +18,7 @@ export class CycleCoordinatorsComponent implements OnInit {
 
   getCycleCoordinators(): void {
     this.userService.getUsersByRole(5).subscribe((data) => {
-      console.log(data);
+      this.coordinators = data['data'];
     });
   }
 }
