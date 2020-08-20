@@ -264,7 +264,7 @@ export class SchoolYearComponent implements OnInit {
     console.log(this.schoolYear.shifts);
     let emptyShifts = false;
     this.schoolYear.shifts.forEach((shift) => {
-      if (!shift['cycles']) emptyShifts = true;
+      if (!shift['shift']['cycles']) emptyShifts = true;
     });
     if (!emptyShifts) {
       if (JSON.stringify(this.schoolYear) !== JSON.stringify(this.cacheSchoolYear)) {
