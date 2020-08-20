@@ -134,7 +134,7 @@ export class SchoolYearComponent implements OnInit {
       nzContent: `<p class="principal">DETALLES</p> 
                   <p><b>Periodo:</b> ${startFormat} a ${endFormat}</p> 
                   <p><b>Duración:</b> ${distance}</p><br>
-                  <p><i>Una vez iniciada la apartura del año escolar, el periodo dejará de ser accesible para mofidicaciones hasta que se completen todos los pasos.</i></p>`,
+                  <p><i>Una vez iniciada la apertura del año escolar, el periodo dejará de ser accesible para mofidicaciones hasta que se completen todos los pasos.</i></p>`,
       nzOnOk: () =>
         this.schoolYearService
           .initializeSchoolYear(period[0], period[1])
