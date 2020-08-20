@@ -12,7 +12,13 @@ import { StudentComponent } from './components/student/student.component';
 import { UpdateStudentComponent } from './components/update-student/update-student.component';
 
 @NgModule({
-  declarations: [UploadStudentsComponent, StudentsComponent, NewStudentComponent, StudentComponent, UpdateStudentComponent],
+  declarations: [
+    UploadStudentsComponent,
+    StudentsComponent,
+    NewStudentComponent,
+    StudentComponent,
+    UpdateStudentComponent
+  ],
   imports: [CommonModule, ReactiveFormsModule, AntDesignModule, StudentsRoutingModule]
 })
-export class StudentsModule { }
+export class StudentsModule {}

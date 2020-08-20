@@ -84,6 +84,12 @@ export class UserService {
     return this.http.get<User[]>(url).pipe(catchError(this.handleError()));
   }
 
+  getUsersByRole(roleId: number) {
+    return this.http
+      .get<User>(`${this.baseUrl}users?role=${roleId}&paginate=false`)
+      .pipe(catchError(this.handleError()));
+  }
+
   getUnauthorizedUsers(params: NzTableQueryParams, search: User, paginate: boolean): Observable<any> {
     let url = this.baseUrl + 'users';
     let queryParams = '';

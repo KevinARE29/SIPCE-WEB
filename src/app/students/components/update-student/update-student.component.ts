@@ -428,7 +428,7 @@ export class UpdateStudentComponent implements OnInit {
       const element = this.student.responsibles.find((x) => x.id === id);
 
       this.confirmModal = this.modal.confirm({
-        nzTitle: `¿Desea eliminar al responsable"?`,
+        nzTitle: `¿Desea eliminar al responsable?`,
         nzContent: `Eliminará de los responsables a ${element.firstname} ${element.lastname}, ${element.relationship} del alumno ${this.student.firstname} ${this.student.lastname}. La acción no puede deshacerse.`,
 
         nzOnOk: () =>
@@ -444,7 +444,7 @@ export class UpdateStudentComponent implements OnInit {
               const notIn = [401, 403];
 
               if (!notIn.includes(statusCode) && statusCode < 500) {
-                this.notification.create('error', 'Ocurrió un error al eliminar al resposnsable.', err.message, {
+                this.notification.create('error', 'Ocurrió un error al eliminar al responsable.', err.message, {
                   nzDuration: 0
                 });
               }

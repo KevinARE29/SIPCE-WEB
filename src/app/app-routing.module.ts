@@ -62,6 +62,11 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'asignaciones',
+    loadChildren: () => import('./school-year/school-year.module').then((m) => m.SchoolYearModule),
+    canLoad: [AuthGuard]
+  },
+  {
     path: '**',
     redirectTo: '/error404',
     pathMatch: 'full'
