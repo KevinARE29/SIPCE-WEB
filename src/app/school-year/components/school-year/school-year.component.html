@@ -46,7 +46,8 @@
                                     </app-academic-assignments>
                                 </ng-container>
                                 <ng-container *ngSwitchCase="1">
-                                    <app-cycle-coordinators></app-cycle-coordinators>
+                                    <app-cycle-coordinators [catalogs]="catalogs" [assignation]="schoolYear"
+                                    [isActive]="false" (coordinatorsEvent)="updateCycleCoordinators($event)"></app-cycle-coordinators>
                                 </ng-container>
                                 <ng-container *ngSwitchCase="2">
                                     <app-head-teachers></app-head-teachers>
@@ -89,15 +90,8 @@
                 </nz-tab>
                 <nz-tab nzTitle="Coordinadores de ciclo">
                     <div class="shifts">
-                        <nz-tabset nzTabPosition="left" [nzType]="'line'"
-                            *ngIf="catalogs.shifts.length > 1;else noShiftTabs">
-                            <nz-tab *ngFor="let shift of catalogs.shifts" [nzTitle]="shift.name">
-                                <app-cycle-coordinators></app-cycle-coordinators>
-                            </nz-tab>
-                        </nz-tabset>
-                        <ng-template #noShiftTabs>
-                            <app-cycle-coordinators></app-cycle-coordinators>
-                        </ng-template>
+                        <app-cycle-coordinators [catalogs]="catalogs" [assignation]="schoolYear"
+                                    [isActive]="false" (coordinatorsEvent)="updateCycleCoordinators($event)"></app-cycle-coordinators>
                     </div>
                 </nz-tab>
                 <nz-tab nzTitle="Docentes">

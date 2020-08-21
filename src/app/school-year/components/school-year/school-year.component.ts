@@ -29,7 +29,7 @@ export class SchoolYearComponent implements OnInit {
   confirmModal?: NzModalRef;
 
   // Draf school year
-  currentStep = 0;
+  currentStep = 1; // TODO: return value 0
 
   constructor(
     private fb: FormBuilder,
@@ -57,7 +57,7 @@ export class SchoolYearComponent implements OnInit {
         this.schoolYear = data['schoolYear'][0];
         this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
 
-        // this.schoolYear.status = 'En curso'; //TODO: Delete En curso, Nuevo
+        this.schoolYear.status = 'En curso'; //TODO: Delete En curso, Nuevo
 
         // Catalogs
         this.catalogs.shifts = data['shifts']['data'].filter((x) => x.active === true).sort((a, b) => a.id - b.id);
@@ -239,6 +239,8 @@ export class SchoolYearComponent implements OnInit {
         break;
     }
   }
+
+  updateCycleCoordinators(content: unknown) {}
 
   pre(): void {
     this.sendData(false);

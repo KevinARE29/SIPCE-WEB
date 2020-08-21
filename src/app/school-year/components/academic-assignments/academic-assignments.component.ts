@@ -22,7 +22,6 @@ export class AcademicAssignmentsComponent implements OnInit {
   @Input() assignation: unknown;
   @Input() isActive: boolean;
 
-  allCatalogs: Catalogs;
   sections: ShiftPeriodGrade[];
 
   constructor() {}

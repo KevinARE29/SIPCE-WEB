@@ -7,6 +7,7 @@ import { Permission } from 'src/app/shared/permission.model';
 export class User {
   id: number;
   code: string;
+  fullname: string;
   firstname: string;
   lastname: string;
   username: string;
