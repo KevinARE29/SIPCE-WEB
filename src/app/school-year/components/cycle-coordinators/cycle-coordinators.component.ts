@@ -56,9 +56,11 @@ export class CycleCoordinatorsComponent implements OnInit {
         shift,
         cycles: listOfData,
         coordinators: { ...this.coordinators },
-        filteredOptions: this.coordinators.slice()
+        filteredOptions: [...this.coordinators],
+        cacheFilter: [...this.coordinators]
       });
     });
+    console.log(this.items);
   }
 
   onChange(value: string, shiftId: number, cycle: unknown): void {
@@ -68,9 +70,33 @@ export class CycleCoordinatorsComponent implements OnInit {
       shift['filteredOptions'] = Object.values(shift['coordinators']).filter(
         (option) => option['fullname'].toLowerCase().indexOf(value.toLowerCase()) !== -1
       );
+      console.log(shift['filteredOptions']);
     } else if (typeof value === 'object') {
-      shift['coordinators'] = Object.values(shift['coordinators']).filter((x) => x['id'] !== value['id']);
-      shift['filteredOptions'] = shift['coordinators'];
+      if (value) {
+        shift['filteredOptions'] = Object.values(shift['coordinators']).filter((x) => x['id'] !== value['id']);
+        shift['cacheFilter'] = shift['filteredOptions'];
+        cycle['cycleCoordinator'] = value;
+      } else {
+        shift['filteredOptions'].push(cycle['cycleCoordinator']);
+        cycle['cycleCoordinator'] = new User();
+
+        // Reorder the filtered options
+        shift['filteredOptions'].sort(function (a, b) {
+          if (a.firstname < b.firstname) return -1;
+          if (a.firstname > b.firstname) return 1;
+          return 0;
+        });
+        shift['cacheFilter'] = shift['filteredOptions'];
+      }
+    }
+  }
+
+  cleanFilter(shiftId: number, cycle: unknown) {
+    const shift = this.items.find((x) => x['shift'].id === shiftId);
+    console.log('Limpiar filtro', cycle, shift['cacheFilter']);
+    if (!cycle['cycleCoordinator'].id) {
+      console.log('No existe coordinador');
+      shift['filteredOptions'] = shift['cacheFilter'];
     }
   }
 }

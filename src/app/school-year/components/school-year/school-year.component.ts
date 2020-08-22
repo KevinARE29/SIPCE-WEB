@@ -57,7 +57,7 @@ export class SchoolYearComponent implements OnInit {
         this.schoolYear = data['schoolYear'][0];
         this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
 
-        this.schoolYear.status = 'En curso'; //TODO: Delete En curso, Nuevo
+        // this.schoolYear.status = 'En curso'; //TODO: Delete En curso, Nuevo
 
         // Catalogs
         this.catalogs.shifts = data['shifts']['data'].filter((x) => x.active === true).sort((a, b) => a.id - b.id);
