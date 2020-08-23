@@ -6,18 +6,21 @@
                 <nz-form-label>{{cycle.cycle.name}}</nz-form-label>
                 <nz-form-control>
                     <nz-input-group [nzSuffix]="inputClearTpl">
-                        <input type="text" nz-input [(ngModel)]="cycle.cycleCoordinator.fullname"
+                        <input [id]="item.shift.id + '_' + cycle.cycle.id" type="text" nz-input [(ngModel)]="cycle.cycleCoordinator"
                             placeholder="Coordinador de {{cycle.cycle.name}}"
-                            (ngModelChange)="onChange($event, item.shift.id, cycle)" 
-                            (blur)="cleanFilter(item.shift.id, cycle)" [nzAutocomplete]="auto" />
+                            (blur)="onBlur(cycle, item)" [nzAutocomplete]="auto" (ngModelChange)="onChange($event, item)"/>
                         <nz-autocomplete #auto>
-                            <nz-auto-option *ngFor="let param of item.filteredOptions" [nzValue]="param"
-                                [nzLabel]="param.firstname">{{ param.fullname }}</nz-auto-option>
+                            <nz-auto-option *ngFor="let param of item.filteredOptions"
+                                [nzValue]="param"
+                                [nzLabel]="param.fullname"
+                                [hidden]="!param.active"
+                            >{{ param.fullname }}</nz-auto-option>
                         </nz-autocomplete>
                     </nz-input-group>
+                    <span class="error">{{cycle.error}}</span>
                     <ng-template #inputClearTpl>
                         <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
-                            *ngIf="cycle.cycleCoordinator.fullname" (click)="onChange(null, item.shift.id, cycle)"></i>
+                            *ngIf="cycle.cycleCoordinator" (click)="cleanCoordinator(cycle, item)"></i>
                     </ng-template>
                 </nz-form-control>
             </nz-form-item>

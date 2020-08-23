@@ -3,10 +3,12 @@ import { UserService } from 'src/app/users/shared/user.service';
 import { User } from 'src/app/users/shared/user.model';
 import { Catalogs } from '../../shared/catalogs.model';
 import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 interface ItemData {
   cycle: ShiftPeriodGrade;
   cycleCoordinator: User;
+  error: string;
 }
 
 @Component({
@@ -24,7 +26,7 @@ export class CycleCoordinatorsComponent implements OnInit {
   @Input() assignation: unknown;
   @Input() isActive: boolean; // TODO: Delete if isn't used
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private message: NzMessageService) {}
 
   ngOnInit(): void {
     this.getCycleCoordinators();
@@ -47,56 +49,55 @@ export class CycleCoordinatorsComponent implements OnInit {
 
         listOfData.push({
           cycle: { ...value['cycle'] },
-          cycleCoordinator: coordinator ? { ...coordinator } : new User()
+          cycleCoordinator: coordinator ? { ...coordinator } : '',
+          error: null
         });
       });
 
       listOfData.sort((a, b) => a['cycle'].id - b['cycle'].id);
-      this.items.push({
+
+      const item = {
         shift,
         cycles: listOfData,
-        coordinators: { ...this.coordinators },
-        filteredOptions: [...this.coordinators],
-        cacheFilter: [...this.coordinators]
-      });
+        coordinators: this.coordinators.map((coordinator) => {
+          return { ...coordinator };
+        })
+      };
+
+      item['filteredOptions'] = item.coordinators;
+
+      this.items.push(item);
     });
-    console.log(this.items);
   }
 
-  onChange(value: string, shiftId: number, cycle: unknown): void {
-    const shift = this.items.find((x) => x['shift'].id === shiftId);
+  onBlur(cycle: unknown, item: unknown): void {
+    if (typeof cycle['cycleCoordinator'] === 'string') {
+      cycle['error'] = 'No se encontró un coordinador de ciclo con ese nombre';
+    } else if (typeof cycle['cycleCoordinator'] === 'object') {
+      cycle['cycleCoordinator'].active = false;
+      document.getElementById(item['shift']['id'] + '_' + cycle['cycle']['id']).setAttribute('disabled', 'true');
+    }
 
+    item['filteredOptions'] = item['coordinators'];
+  }
+
+  onChange(value: string, item: unknown): void {
     if (typeof value === 'string') {
-      shift['filteredOptions'] = Object.values(shift['coordinators']).filter(
-        (option) => option['fullname'].toLowerCase().indexOf(value.toLowerCase()) !== -1
-      );
-      console.log(shift['filteredOptions']);
-    } else if (typeof value === 'object') {
-      if (value) {
-        shift['filteredOptions'] = Object.values(shift['coordinators']).filter((x) => x['id'] !== value['id']);
-        shift['cacheFilter'] = shift['filteredOptions'];
-        cycle['cycleCoordinator'] = value;
-      } else {
-        shift['filteredOptions'].push(cycle['cycleCoordinator']);
-        cycle['cycleCoordinator'] = new User();
-
-        // Reorder the filtered options
-        shift['filteredOptions'].sort(function (a, b) {
-          if (a.firstname < b.firstname) return -1;
-          if (a.firstname > b.firstname) return 1;
-          return 0;
-        });
-        shift['cacheFilter'] = shift['filteredOptions'];
-      }
+      item['filteredOptions'] = item['coordinators'].filter((coordinator) => {
+        return coordinator['fullname'].toLowerCase().includes(value.toLowerCase());
+      });
     }
   }
 
-  cleanFilter(shiftId: number, cycle: unknown) {
-    const shift = this.items.find((x) => x['shift'].id === shiftId);
-    console.log('Limpiar filtro', cycle, shift['cacheFilter']);
-    if (!cycle['cycleCoordinator'].id) {
-      console.log('No existe coordinador');
-      shift['filteredOptions'] = shift['cacheFilter'];
+  cleanCoordinator(cycle: unknown, item: unknown): void {
+    if (typeof cycle['cycleCoordinator'] === 'object') {
+      cycle['cycleCoordinator'].active = true;
+      cycle['cycleCoordinator'] = '';
+
+      document.getElementById(item['shift']['id'] + '_' + cycle['cycle']['id']).removeAttribute('disabled');
+    } else if (typeof cycle['cycleCoordinator'] === 'string') {
+      cycle['cycleCoordinator'] = '';
+      cycle['error'] = null;
     }
   }
 }
