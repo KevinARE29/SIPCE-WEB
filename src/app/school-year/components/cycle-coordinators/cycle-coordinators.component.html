@@ -7,9 +7,9 @@
                 <nz-form-control>
                     <nz-input-group [nzSuffix]="inputClearTpl">
                         <input [id]="item.shift.id + '_' + cycle.cycle.id" type="text" nz-input [(ngModel)]="cycle.cycleCoordinator"
-                            placeholder="Coordinador de {{cycle.cycle.name}}"
+                            placeholder="Coordinador de {{cycle.cycle.name}}" [attr.disabled]="cycle.initialDisabled ? '' : null"
                             (blur)="onBlur(cycle, item)" [nzAutocomplete]="auto" (ngModelChange)="onChange($event, item)"/>
-                        <nz-autocomplete #auto>
+                        <nz-autocomplete #auto [compareWith]="compareFun">
                             <nz-auto-option *ngFor="let param of item.filteredOptions"
                                 [nzValue]="param"
                                 [nzLabel]="param.fullname"
@@ -17,13 +17,14 @@
                             >{{ param.fullname }}</nz-auto-option>
                         </nz-autocomplete>
                     </nz-input-group>
-                    <span class="error">{{cycle.error}}</span>
-                    <span class="error" *ngIf="!cycle.cycleCoordinator && !isValid">El campo es requerido</span>
                     <ng-template #inputClearTpl>
                         <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
                             *ngIf="cycle.cycleCoordinator" (click)="cleanCoordinator(cycle, item)"></i>
                     </ng-template>
                 </nz-form-control>
+
+                <span class="error">{{cycle.error}}</span>
+                <span class="error" *ngIf="!cycle.cycleCoordinator && !isValid">El campo es requerido</span>
             </nz-form-item>
         </div>
     </nz-tab>

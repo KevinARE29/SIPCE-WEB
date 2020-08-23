@@ -11,6 +11,7 @@ interface ItemData {
   cycle: ShiftPeriodGrade;
   cycleCoordinator: User;
   error: string;
+  initialDisabled: boolean;
 }
 
 @Component({
@@ -52,7 +53,8 @@ export class CycleCoordinatorsComponent implements OnInit {
         listOfData.push({
           cycle: { ...value['cycle'] },
           cycleCoordinator: coordinator ? { ...coordinator } : '',
-          error: null
+          error: null,
+          initialDisabled: false
         });
       });
 
@@ -66,7 +68,27 @@ export class CycleCoordinatorsComponent implements OnInit {
         })
       };
 
-      item['filteredOptions'] = item.coordinators;
+      item['filteredOptions'] = [...item.coordinators];
+
+      const idCoordinators = item.coordinators.map((coordinator) => coordinator.id);
+      listOfData.forEach((data) => {
+        if (data.cycleCoordinator) {
+          // If the coordinator is on the list of coordinators, assign him/her the same instance of coordinator of the list
+          if (idCoordinators.includes(data.cycleCoordinator.id)) {
+            data.cycleCoordinator = item.coordinators.find(
+              (coordinator) => coordinator.id === data.cycleCoordinator.id
+            );
+            // Make it not show up in the possible options
+            data.cycleCoordinator.active = false;
+          } else {
+            // If the coordinator is not there, add him/her to the initial list only, and add an error to the cycle.
+            item['filteredOptions'].push(data.cycleCoordinator);
+            data.error = 'El coordinador asignado no está entre los coordinadores registrados';
+          }
+
+          data.initialDisabled = true;
+        }
+      });
 
       this.items.push(item);
     });
@@ -97,6 +119,7 @@ export class CycleCoordinatorsComponent implements OnInit {
     if (typeof cycle['cycleCoordinator'] === 'object') {
       cycle['cycleCoordinator'].active = true;
       cycle['cycleCoordinator'] = '';
+      cycle['error'] = null;
       this.coordinatorsEvent.emit({ shift: item['shift'], cycle });
 
       document.getElementById(item['shift']['id'] + '_' + cycle['cycle']['id']).removeAttribute('disabled');
@@ -105,4 +128,12 @@ export class CycleCoordinatorsComponent implements OnInit {
       cycle['error'] = null;
     }
   }
+
+  compareFun = (o1: User | string, o2: User) => {
+    if (o1) {
+      return typeof o1 === 'string' ? o1 === o2.fullname : o1.id === o2.id;
+    } else {
+      return false;
+    }
+  };
 }
