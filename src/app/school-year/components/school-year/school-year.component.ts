@@ -30,6 +30,8 @@ export class SchoolYearComponent implements OnInit {
 
   // Draf school year
   currentStep = 1; // TODO: return value 0
+  isValid = true;
+  emptyCoordinators: { total: number; empty: number };
 
   constructor(
     private fb: FormBuilder,
@@ -67,7 +69,10 @@ export class SchoolYearComponent implements OnInit {
           .filter((x) => x.name.length === 1)
           .concat(data['sections']['data'].filter((x) => x.name.length > 1));
 
-        if (this.schoolYear.status === 'En proceso de apertura') this.initializeShifts();
+        if (this.schoolYear.status === 'En proceso de apertura') {
+          this.initializeShifts();
+          this.initializeCycleCoordinators();
+        }
         this.loading = false;
       },
       (error) => {
@@ -101,6 +106,27 @@ export class SchoolYearComponent implements OnInit {
       });
 
       this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
+    }
+  }
+
+  initializeCycleCoordinators(): void {
+    this.checkEmptyCoordinators();
+
+    if (this.emptyCoordinators['total'] === this.emptyCoordinators['empty']) {
+      this.previousSchoolYear.shifts.forEach((shift) => {
+        const _shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === shift['shift']['id']);
+        shift['shift']['cycles'].forEach((cycle) => {
+          const _cycle = _shift['shift']['cycles'].find((x) => x['cycle']['id'] === cycle['cycle']['id']);
+          _cycle['cycleCoordinator'] = cycle['cycleCoordinator'];
+          _cycle['cycleCoordinator']['fullname'] = cycle['cycleCoordinator']['firstname'].concat(
+            ' ',
+            cycle['cycleCoordinator']['lastname']
+          );
+        });
+      });
+
+      this.schoolYear.shifts[0]['shift']['cycles'][0]['cycle']['id'] = 74;
+      this.schoolYear.shifts[0]['shift']['cycles'][0]['cycle']['fullname'] = 'Adaline Vardey';
     }
   }
 
@@ -240,7 +266,13 @@ export class SchoolYearComponent implements OnInit {
     }
   }
 
-  updateCycleCoordinators(content: unknown) {}
+  updateCycleCoordinators(content: unknown): void {
+    const shift = this.schoolYear.shifts.filter((x) => x['shift']['id'] === content['shift']['id']);
+    const cycle = shift[0]['shift']['cycles'].find((x) => x['cycle'].id === content['cycle']['cycle']['id']);
+
+    cycle['cycleCoordinator'] = content['cycle']['cycleCoordinator'];
+    console.log(cycle['cycleCoordinator'], content['cycle']['cycleCoordinator']);
+  }
 
   pre(): void {
     this.sendData(false);
@@ -323,7 +355,22 @@ export class SchoolYearComponent implements OnInit {
   }
 
   cycleCoordinatorsStep(next: boolean): void {
-    next ? (this.currentStep += 1) : (this.currentStep -= 1);
+    // Find empty coordinators, and comunicated to the children
+    console.log(this.isValid);
+    this.isValid = false;
+    console.log(this.isValid);
+    // next ? (this.currentStep += 1) : (this.currentStep -= 1);
+  }
+
+  checkEmptyCoordinators(): void {
+    this.emptyCoordinators = { total: 0, empty: 0 };
+
+    this.schoolYear.shifts.forEach((shift) => {
+      shift['shift']['cycles'].forEach((cycle) => {
+        this.emptyCoordinators['total']++;
+        if (!cycle['cycleCoordinator']) this.emptyCoordinators['empty']++;
+      });
+    });
   }
   //#endregion
 }

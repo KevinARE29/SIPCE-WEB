@@ -38,28 +38,29 @@
             <div class="steps-content">
                 <div class="shifts">
                     <!-- <nz-tabset nzTabPosition="left" [nzType]="'line'"> -->
-                        <!-- <nz-tab *ngFor="let shift of catalogs.shifts" [nzTitle]="shift.name"> -->
-                            <div class="step-content" [ngSwitch]="currentStep">
-                                <ng-container *ngSwitchCase="0">
-                                    <app-academic-assignments [catalogs]="catalogs" [assignation]="schoolYear"
-                                        [isActive]="false" (academicEvent)="updateItem($event)">
-                                    </app-academic-assignments>
-                                </ng-container>
-                                <ng-container *ngSwitchCase="1">
-                                    <app-cycle-coordinators [catalogs]="catalogs" [assignation]="schoolYear"
-                                    [isActive]="false" (coordinatorsEvent)="updateCycleCoordinators($event)"></app-cycle-coordinators>
-                                </ng-container>
-                                <ng-container *ngSwitchCase="2">
-                                    <app-head-teachers></app-head-teachers>
-                                </ng-container>
-                                <ng-container *ngSwitchCase="3">
-                                    <app-counselors></app-counselors>
-                                </ng-container>
-                                <ng-container *ngSwitchCase="4">
-                                    <app-new-school-year-summary></app-new-school-year-summary>
-                                </ng-container>
-                            </div>
-                        <!-- </nz-tab> -->
+                    <!-- <nz-tab *ngFor="let shift of catalogs.shifts" [nzTitle]="shift.name"> -->
+                    <div class="step-content" [ngSwitch]="currentStep">
+                        <ng-container *ngSwitchCase="0">
+                            <app-academic-assignments [catalogs]="catalogs" [assignation]="schoolYear"
+                                [isActive]="false" (academicEvent)="updateItem($event)">
+                            </app-academic-assignments>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="1">
+                            <app-cycle-coordinators [catalogs]="catalogs" [assignation]="schoolYear"
+                                [isValid]="isValid" (coordinatorsEvent)="updateCycleCoordinators($event)">
+                            </app-cycle-coordinators>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="2">
+                            <app-head-teachers></app-head-teachers>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="3">
+                            <app-counselors></app-counselors>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="4">
+                            <app-new-school-year-summary></app-new-school-year-summary>
+                        </ng-container>
+                    </div>
+                    <!-- </nz-tab> -->
                     <!-- </nz-tabset> -->
                 </div>
             </div>
@@ -84,20 +85,20 @@
             <nz-tabset>
                 <nz-tab nzTitle="Ciclos, grados y secciones">
                     <div class="shifts">
-                        <app-academic-assignments [catalogs]="catalogs" [assignation]="schoolYear"
-                            [isActive]="true"></app-academic-assignments>
+                        <app-academic-assignments [catalogs]="catalogs" [assignation]="schoolYear" [isActive]="true">
+                        </app-academic-assignments>
                     </div>
                 </nz-tab>
                 <nz-tab nzTitle="Coordinadores de ciclo">
                     <div class="shifts">
                         <app-cycle-coordinators [catalogs]="catalogs" [assignation]="schoolYear"
-                                    [isActive]="false" (coordinatorsEvent)="updateCycleCoordinators($event)"></app-cycle-coordinators>
+                            [isValid]="isValid" (coordinatorsEvent)="updateCycleCoordinators($event)">
+                        </app-cycle-coordinators>
                     </div>
                 </nz-tab>
                 <nz-tab nzTitle="Docentes">
                     <div class="shifts">
-                        <nz-tabset nzTabPosition="left" [nzType]="'line'"
-                            *ngIf="catalogs.shifts.length > 1;else noShiftTabs">
+                        <nz-tabset nzTabPosition="left" [nzType]="'line'" *ngIf="catalogs.shifts.length > 1;else noShiftTabs">
                             <nz-tab *ngFor="let shift of catalogs.shifts" [nzTitle]="shift.name">
                                 <app-head-teachers></app-head-teachers>
                             </nz-tab>

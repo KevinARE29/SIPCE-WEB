@@ -1,9 +1,11 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
+
+import { NzMessageService } from 'ng-zorro-antd/message';
+
 import { UserService } from 'src/app/users/shared/user.service';
 import { User } from 'src/app/users/shared/user.model';
 import { Catalogs } from '../../shared/catalogs.model';
 import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
-import { NzMessageService } from 'ng-zorro-antd/message';
 
 interface ItemData {
   cycle: ShiftPeriodGrade;
@@ -21,10 +23,10 @@ export class CycleCoordinatorsComponent implements OnInit {
   cycleCoordinators: string[] = [];
   items: unknown[] = [];
 
-  @Output() academicEvent = new EventEmitter<unknown>();
+  @Output() coordinatorsEvent = new EventEmitter<unknown>();
   @Input() catalogs: Catalogs;
   @Input() assignation: unknown;
-  @Input() isActive: boolean; // TODO: Delete if isn't used
+  @Input() isValid: boolean;
 
   constructor(private userService: UserService, private message: NzMessageService) {}
 
@@ -72,10 +74,12 @@ export class CycleCoordinatorsComponent implements OnInit {
 
   onBlur(cycle: unknown, item: unknown): void {
     if (typeof cycle['cycleCoordinator'] === 'string') {
-      cycle['error'] = 'No se encontró un coordinador de ciclo con ese nombre';
+      if (cycle['cycleCoordinator'].length > 0) cycle['error'] = 'No se encontró un coordinador de ciclo con ese nombre';
     } else if (typeof cycle['cycleCoordinator'] === 'object') {
       cycle['cycleCoordinator'].active = false;
       document.getElementById(item['shift']['id'] + '_' + cycle['cycle']['id']).setAttribute('disabled', 'true');
+
+      this.coordinatorsEvent.emit({ shift: item['shift'], cycle });
     }
 
     item['filteredOptions'] = item['coordinators'];
@@ -93,6 +97,7 @@ export class CycleCoordinatorsComponent implements OnInit {
     if (typeof cycle['cycleCoordinator'] === 'object') {
       cycle['cycleCoordinator'].active = true;
       cycle['cycleCoordinator'] = '';
+      this.coordinatorsEvent.emit({ shift: item['shift'], cycle });
 
       document.getElementById(item['shift']['id'] + '_' + cycle['cycle']['id']).removeAttribute('disabled');
     } else if (typeof cycle['cycleCoordinator'] === 'string') {

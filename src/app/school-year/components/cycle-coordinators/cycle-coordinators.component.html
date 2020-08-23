@@ -18,6 +18,7 @@
                         </nz-autocomplete>
                     </nz-input-group>
                     <span class="error">{{cycle.error}}</span>
+                    <span class="error" *ngIf="!cycle.cycleCoordinator && !isValid">El campo es requerido</span>
                     <ng-template #inputClearTpl>
                         <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
                             *ngIf="cycle.cycleCoordinator" (click)="cleanCoordinator(cycle, item)"></i>
