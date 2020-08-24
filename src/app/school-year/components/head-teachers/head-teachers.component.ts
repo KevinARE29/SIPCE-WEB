@@ -99,7 +99,7 @@ export class HeadTeachersComponent implements OnInit {
             } else {
               // If the teacher is not there, add him/her to the initial list only, and add an error to the section.
               item['filteredOptions'].push(section.teacher);
-              console.log(section);
+
               section.error = 'El docente asignado no está entre los docentes titulares registrados';
               if (!section.teacher.fullname)
                 section.teacher.fullname = section.teacher.firstname.concat(' ', section.teacher.lastname);
@@ -112,7 +112,6 @@ export class HeadTeachersComponent implements OnInit {
 
       this.items.push(item);
     });
-    console.log(this.items);
   }
 
   onBlur(section: unknown, grade: unknown, item: unknown): void {
