@@ -90,6 +90,9 @@ export class UserService {
         response['data'].forEach((user) => {
           user.fullname = user['firstname'].concat(' ', user['lastname']);
         });
+
+        response['data'] = response['data'].filter((x) => x.active === true); // TODO: Remove
+
         return response;
       }),
       catchError(this.handleError())

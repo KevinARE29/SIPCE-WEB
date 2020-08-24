@@ -1,7 +1,5 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 
-import { NzMessageService } from 'ng-zorro-antd/message';
-
 import { UserService } from 'src/app/users/shared/user.service';
 import { User } from 'src/app/users/shared/user.model';
 import { Catalogs } from '../../shared/catalogs.model';
@@ -30,7 +28,7 @@ export class CycleCoordinatorsComponent implements OnInit {
   @Input() assignation: unknown;
   @Input() isValid: boolean;
 
-  constructor(private userService: UserService, private message: NzMessageService) {}
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
     this.getCycleCoordinators();
@@ -86,6 +84,11 @@ export class CycleCoordinatorsComponent implements OnInit {
           } else {
             // If the coordinator is not there, add him/her to the initial list only, and add an error to the cycle.
             item['filteredOptions'].push(data.cycleCoordinator);
+            if (!data.cycleCoordinator.fullname)
+              data.cycleCoordinator.fullname = data.cycleCoordinator.firstname.concat(
+                ' ',
+                data.cycleCoordinator.lastname
+              );
             data.error = 'El coordinador asignado no está entre los coordinadores registrados';
             this.coordinatorsEvent.emit({ shift: item['shift'], cycle: data });
           }

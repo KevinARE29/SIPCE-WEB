@@ -189,6 +189,35 @@ export class SchoolYearService {
       .pipe(catchError(this.handleError()));
   }
 
+  saveHeadteachers(schoolYear: unknown): Observable<unknown> {
+    const assignment = new Array<unknown>();
+
+    schoolYear['shifts'].forEach((shift) => {
+      const grades = new Array<unknown>();
+
+      shift['shift']['cycles'].forEach((cycle) => {
+        // cycles.push({ cycleId: cycle['cycle'].id, cycleCoordinatorId: cycle['cycleCoordinator'].id });
+        cycle['gradeDetails'].forEach((grade) => {
+          const sections = new Array<unknown>();
+
+          grade['sectionDetails'].forEach((section) => {
+            sections.push({ sectionId: section['section']['id'], teacherId: section['teacher']['id']});
+          });
+
+          grades.push({ gradeId: grade['grade']['id'], sections });
+        });
+      });
+      // eslint-disable-next-line prefer-const
+      const mappedShift = { shiftId: shift['shift'].id, grades: grades };
+
+      assignment.push(mappedShift);
+    });
+
+    return this.http
+      .post<unknown>(`${this.baseUrl}academics/school-year/teachers`, JSON.stringify({ shifts: assignment }))
+      .pipe(catchError(this.handleError()));
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.
