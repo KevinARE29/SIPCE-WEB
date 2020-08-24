@@ -1,7 +1,5 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 
-import { NzMessageService } from 'ng-zorro-antd/message';
-
 import { UserService } from 'src/app/users/shared/user.service';
 import { User } from 'src/app/users/shared/user.model';
 import { Catalogs } from '../../shared/catalogs.model';
@@ -30,7 +28,7 @@ export class CycleCoordinatorsComponent implements OnInit {
   @Input() assignation: unknown;
   @Input() isValid: boolean;
 
-  constructor(private userService: UserService, private message: NzMessageService) {}
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
     this.getCycleCoordinators();
