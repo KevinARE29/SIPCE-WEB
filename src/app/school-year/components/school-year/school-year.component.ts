@@ -150,6 +150,10 @@ export class SchoolYearComponent implements OnInit {
               if (_grade) {
                 _section = _grade['sectionDetails'].find((x) => x['section']['id'] === section['section']['id']);
                 _section['teacher'] = section['teacher'];
+                _section['teacher']['fullname'] = section['teacher']['firstname'].concat(
+                  ' ',
+                  section['teacher']['lastname']
+                );
                 _section['teacher']['isValid'] = true;
               } else if (_section) {
                 _section['teacher'] = new User();

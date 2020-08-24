@@ -1,3 +1,37 @@
 <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-
+    <nz-tabset nzTabPosition="left" [nzType]="'line'">
+        <nz-tab *ngFor="let item of items" [nzTitle]="item.shift.name">
+            <div nz-col nzXs="24" nzMd="18">
+                <nz-collapse>
+                    <nz-collapse-panel *ngFor="let grade of item.grades; first as isFirst" [nzHeader]="grade.grade.name" [nzActive]="isFirst">
+                        <!-- Cycle inputs -->
+                        <nz-form-item *ngFor="let section of grade.sections">
+                            <nz-form-label>{{section.section.name}}</nz-form-label>
+                            <nz-form-control>
+                                <nz-input-group [nzSuffix]="inputClearTpl">
+                                    <input [id]="item.shift.id + '_' + grade.grade.id + '_' + section.section.id" type="text" nz-input [(ngModel)]="section.teacher"
+                                        placeholder="Docente titular de {{grade.grade.name}} {{section.section.name}}" [attr.disabled]="section.initialDisabled ? '' : null"
+                                        (blur)="onBlur(section, grade, item)" [nzAutocomplete]="auto" (ngModelChange)="onChange($event, item)"/>
+                                    <nz-autocomplete #auto [compareWith]="compareFun">
+                                        <nz-auto-option *ngFor="let param of item.filteredOptions"
+                                            [nzValue]="param"
+                                            [nzLabel]="param.fullname"
+                                            [hidden]="!param.active"
+                                        >{{ param.fullname }}</nz-auto-option>
+                                    </nz-autocomplete>
+                                </nz-input-group>
+                                <ng-template #inputClearTpl>
+                                    <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
+                                        *ngIf="section.teacher" (click)="cleanTeacher(section, grade, item)"></i>
+                                </ng-template>
+                            </nz-form-control>
+            
+                            <span class="error">{{section.error}}</span>
+                            <span class="error" *ngIf="!section.teacher && !isValid">El campo es requerido</span>
+                        </nz-form-item>
+                    </nz-collapse-panel>
+                  </nz-collapse>
+            </div>
+        </nz-tab>
+    </nz-tabset>
 </nz-spin>
