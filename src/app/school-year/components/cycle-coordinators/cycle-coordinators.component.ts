@@ -23,6 +23,7 @@ export class CycleCoordinatorsComponent implements OnInit {
   coordinators: User[];
   cycleCoordinators: string[] = [];
   items: unknown[] = [];
+  loading = false;
 
   @Output() coordinatorsEvent = new EventEmitter<unknown>();
   @Input() catalogs: Catalogs;
@@ -36,8 +37,10 @@ export class CycleCoordinatorsComponent implements OnInit {
   }
 
   getCycleCoordinators(): void {
+    this.loading = true;
     this.userService.getUsersByRole(5).subscribe((data) => {
       this.coordinators = data['data'];
+      this.loading = false;
       this.transformData();
     });
   }
@@ -84,6 +87,7 @@ export class CycleCoordinatorsComponent implements OnInit {
             // If the coordinator is not there, add him/her to the initial list only, and add an error to the cycle.
             item['filteredOptions'].push(data.cycleCoordinator);
             data.error = 'El coordinador asignado no está entre los coordinadores registrados';
+            this.coordinatorsEvent.emit({ shift: item['shift'], cycle: data });
           }
 
           data.initialDisabled = true;
@@ -96,7 +100,8 @@ export class CycleCoordinatorsComponent implements OnInit {
 
   onBlur(cycle: unknown, item: unknown): void {
     if (typeof cycle['cycleCoordinator'] === 'string') {
-      if (cycle['cycleCoordinator'].length > 0) cycle['error'] = 'No se encontró un coordinador de ciclo con ese nombre';
+      if (cycle['cycleCoordinator'].length > 0)
+        cycle['error'] = 'No se encontró un coordinador de ciclo con ese nombre';
     } else if (typeof cycle['cycleCoordinator'] === 'object') {
       cycle['cycleCoordinator'].active = false;
       document.getElementById(item['shift']['id'] + '_' + cycle['cycle']['id']).setAttribute('disabled', 'true');

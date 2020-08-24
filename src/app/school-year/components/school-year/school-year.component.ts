@@ -29,9 +29,10 @@ export class SchoolYearComponent implements OnInit {
   confirmModal?: NzModalRef;
 
   // Draf school year
-  currentStep = 1; // TODO: return value 0
-  isValid = true;
-  emptyCoordinators: { total: number; empty: number };
+  currentStep = 0;
+
+  // School year
+  emptyCoordinators: { total: number; empty: number; valid: boolean };
 
   constructor(
     private fb: FormBuilder,
@@ -46,6 +47,8 @@ export class SchoolYearComponent implements OnInit {
     this.catalogs = new Catalogs();
     this.initClassPeriod();
     this.getSchoolYear();
+
+    this.emptyCoordinators = { total: 0, empty: 0, valid: true };
   }
 
   getSchoolYear(): void {
@@ -122,11 +125,12 @@ export class SchoolYearComponent implements OnInit {
             ' ',
             cycle['cycleCoordinator']['lastname']
           );
+          _cycle['cycleCoordinator']['isValid'] = true;
         });
       });
 
-      this.schoolYear.shifts[0]['shift']['cycles'][0]['cycle']['id'] = 74;
-      this.schoolYear.shifts[0]['shift']['cycles'][0]['cycle']['fullname'] = 'Adaline Vardey';
+      this.schoolYear.shifts[0]['shift']['cycles'][0]['cycleCoordinator']['id'] = 74;
+      this.schoolYear.shifts[0]['shift']['cycles'][0]['cycleCoordinator']['fullname'] = 'Adaline Vardey';
     }
   }
 
@@ -183,7 +187,7 @@ export class SchoolYearComponent implements OnInit {
   }
   //#endregion
 
-  //#region Draf school year
+  //#region School year
   updateItem(content: unknown): void {
     let grade, actualCycle;
     const shift = this.schoolYear.shifts.filter((x) => x['shift']['id'] === content['shift']['id']);
@@ -267,11 +271,15 @@ export class SchoolYearComponent implements OnInit {
   }
 
   updateCycleCoordinators(content: unknown): void {
-    const shift = this.schoolYear.shifts.filter((x) => x['shift']['id'] === content['shift']['id']);
-    const cycle = shift[0]['shift']['cycles'].find((x) => x['cycle'].id === content['cycle']['cycle']['id']);
+    const shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === content['shift']['id']);
+    const cycle = shift['shift']['cycles'].find((x) => x['cycle'].id === content['cycle']['cycle']['id']);
 
-    cycle['cycleCoordinator'] = content['cycle']['cycleCoordinator'];
-    console.log(cycle['cycleCoordinator'], content['cycle']['cycleCoordinator']);
+    cycle['cycleCoordinator'] = content['cycle']['cycleCoordinator']
+      ? content['cycle']['cycleCoordinator']
+      : new User();
+
+    cycle['cycleCoordinator']['isValid'] = !content['cycle']['error'];
+    if (!cycle['cycleCoordinator']['id']) cycle['cycleCoordinator']['isValid'] = false;
   }
 
   pre(): void {
@@ -298,6 +306,7 @@ export class SchoolYearComponent implements OnInit {
         break;
       case 2:
         console.log('Titulares');
+        this.headTeachersStep(next);
         break;
       case 3:
         console.log('Orientadores');
@@ -355,20 +364,67 @@ export class SchoolYearComponent implements OnInit {
   }
 
   cycleCoordinatorsStep(next: boolean): void {
-    // Find empty coordinators, and comunicated to the children
-    console.log(this.isValid);
-    this.isValid = false;
-    console.log(this.isValid);
-    // next ? (this.currentStep += 1) : (this.currentStep -= 1);
+    this.checkEmptyCoordinators();
+    if (this.emptyCoordinators['empty'] > 0 && this.emptyCoordinators['valid']) this.emptyCoordinators['valid'] = false;
+
+    if (this.emptyCoordinators['valid']) {
+      if (JSON.stringify(this.schoolYear) !== JSON.stringify(this.cacheSchoolYear)) {
+        this.loading = true;
+        this.emptyCoordinators['valid'] = true;
+        this.schoolYearService.saveCycleCoordinators(this.schoolYear).subscribe(
+          () => {
+            this.loading = false;
+            this.message.success(`La asignación de coordinadores se ha guardado con éxito`);
+            this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
+            next ? (this.currentStep += 1) : (this.currentStep -= 1);
+          },
+          (error) => {
+            const statusCode = error.statusCode;
+            const notIn = [401, 403];
+            if (!notIn.includes(statusCode) && statusCode < 500) {
+              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
+                nzDuration: 0
+              });
+            } else if (typeof error === 'string') {
+              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
+                nzDuration: 0
+              });
+            }
+            this.loading = false;
+          }
+        );
+      } else {
+        next ? (this.currentStep += 1) : (this.currentStep -= 1);
+      }
+    } else {
+      this.notification.create(
+        'error',
+        'Error en la asignación de coordinadores.',
+        'Verifique que los valores ingresados en todos los turnos son correctos, no se permiten campos vacíos.',
+        {
+          nzDuration: 15000
+        }
+      );
+    }
+  }
+
+  headTeachersStep(next: boolean): void {
+    next ? (this.currentStep += 1) : (this.currentStep -= 1);
   }
 
   checkEmptyCoordinators(): void {
-    this.emptyCoordinators = { total: 0, empty: 0 };
+    this.emptyCoordinators = { total: 0, empty: 0, valid: true };
 
     this.schoolYear.shifts.forEach((shift) => {
       shift['shift']['cycles'].forEach((cycle) => {
         this.emptyCoordinators['total']++;
         if (!cycle['cycleCoordinator']) this.emptyCoordinators['empty']++;
+        if (
+          this.emptyCoordinators['valid'] &&
+          'isValid' in cycle['cycleCoordinator'] &&
+          !cycle['cycleCoordinator']['isValid']
+        )
+          this.emptyCoordinators['valid'] = false;
       });
     });
   }

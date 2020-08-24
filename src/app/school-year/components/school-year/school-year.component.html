@@ -47,7 +47,7 @@
                         </ng-container>
                         <ng-container *ngSwitchCase="1">
                             <app-cycle-coordinators [catalogs]="catalogs" [assignation]="schoolYear"
-                                [isValid]="isValid" (coordinatorsEvent)="updateCycleCoordinators($event)">
+                                [isValid]="emptyCoordinators.valid" (coordinatorsEvent)="updateCycleCoordinators($event)">
                             </app-cycle-coordinators>
                         </ng-container>
                         <ng-container *ngSwitchCase="2">
@@ -92,8 +92,11 @@
                 <nz-tab nzTitle="Coordinadores de ciclo">
                     <div class="shifts">
                         <app-cycle-coordinators [catalogs]="catalogs" [assignation]="schoolYear"
-                            [isValid]="isValid" (coordinatorsEvent)="updateCycleCoordinators($event)">
+                            [isValid]="emptyCoordinators.valid" (coordinatorsEvent)="updateCycleCoordinators($event)">
                         </app-cycle-coordinators>
+                        <div nz-row nzJustify="space-around">
+                            <button nz-button nzType="primary" (click)="cycleCoordinatorsStep(null)">Buscar</button>
+                        </div>
                     </div>
                 </nz-tab>
                 <nz-tab nzTitle="Docentes">

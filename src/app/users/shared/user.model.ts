@@ -19,4 +19,5 @@ export class User {
   active: boolean;
   createdAt: any;
   permissions: Permission[];
+  isValid: boolean;
 }
