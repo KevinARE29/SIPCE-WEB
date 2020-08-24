@@ -85,9 +85,15 @@ export class UserService {
   }
 
   getUsersByRole(roleId: number) {
-    return this.http
-      .get<User>(`${this.baseUrl}users?role=${roleId}&paginate=false`)
-      .pipe(catchError(this.handleError()));
+    return this.http.get<User>(`${this.baseUrl}users?role=${roleId}&paginate=false`).pipe(
+      map((response: User) => {
+        response['data'].forEach((user) => {
+          user.fullname = user['firstname'].concat(' ', user['lastname']);
+        });
+        return response;
+      }),
+      catchError(this.handleError())
+    );
   }
 
   getUnauthorizedUsers(params: NzTableQueryParams, search: User, paginate: boolean): Observable<any> {

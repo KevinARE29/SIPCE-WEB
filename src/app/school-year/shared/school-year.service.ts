@@ -169,6 +169,26 @@ export class SchoolYearService {
     }
   }
 
+  saveCycleCoordinators(schoolYear: unknown): Observable<unknown> {
+    const assignment = new Array<unknown>();
+
+    schoolYear['shifts'].forEach((shift) => {
+      const cycles = new Array<unknown>();
+
+      shift['shift']['cycles'].forEach((cycle) => {
+        cycles.push({ cycleId: cycle['cycle'].id, cycleCoordinatorId: cycle['cycleCoordinator'].id });
+      });
+      // eslint-disable-next-line prefer-const
+      const mappedShift = { shiftId: shift['shift'].id, cycles: cycles };
+
+      assignment.push(mappedShift);
+    });
+
+    return this.http
+      .post<unknown>(`${this.baseUrl}academics/school-year/cycle-coordinators`, JSON.stringify({ shifts: assignment }))
+      .pipe(catchError(this.handleError()));
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.
