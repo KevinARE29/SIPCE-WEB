@@ -29,7 +29,7 @@ export class SchoolYearComponent implements OnInit {
   confirmModal?: NzModalRef;
 
   // Draf school year
-  currentStep = 2; // TODO: Set 0
+  currentStep = 0;
 
   // School year
   emptyUsers: { total: number; empty: number; valid: boolean };
@@ -317,6 +317,18 @@ export class SchoolYearComponent implements OnInit {
     if (!cycle['cycleCoordinator']['id']) cycle['cycleCoordinator']['isValid'] = false;
   }
 
+  updateHeadTeachers(content: unknown): void {
+    const shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === content['shift']['id']);
+    const cycle = shift['shift']['cycles'].find((x) => x['cycle'].id === content['grade']['cycle']['id']);
+    const grade = cycle['gradeDetails'].find((x) => x['grade'].id === content['grade']['grade']['id']);
+    const section = grade['sectionDetails'].find((x) => x['section'].id === content['section']['section']['id']);
+
+    section['teacher'] = content['section']['teacher'] ? content['section']['teacher'] : new User();
+
+    section['teacher']['isValid'] = !content['section']['error'];
+    if (!section['teacher']['id']) section['teacher']['isValid'] = false;
+  }
+
   pre(): void {
     this.sendData(false);
   }
@@ -345,6 +357,7 @@ export class SchoolYearComponent implements OnInit {
         break;
       case 3:
         console.log('Orientadores');
+        this.counselorsStep(next);
         break;
       case 4:
         console.log('Resumen');
@@ -405,7 +418,7 @@ export class SchoolYearComponent implements OnInit {
     if (this.emptyUsers['valid']) {
       if (JSON.stringify(this.schoolYear) !== JSON.stringify(this.cacheSchoolYear)) {
         this.loading = true;
-        this.emptyUsers['valid'] = true;
+
         this.schoolYearService.saveCycleCoordinators(this.schoolYear).subscribe(
           () => {
             this.loading = false;
@@ -444,6 +457,51 @@ export class SchoolYearComponent implements OnInit {
   }
 
   headTeachersStep(next: boolean): void {
+    this.checkEmptyHeadTeachers();
+    if (this.emptyUsers['empty'] > 0 && this.emptyUsers['valid']) this.emptyUsers['valid'] = false;
+
+    if (this.emptyUsers['valid']) {
+      if (JSON.stringify(this.schoolYear) !== JSON.stringify(this.cacheSchoolYear)) {
+        this.loading = true;
+
+        this.schoolYearService.saveHeadteachers(this.schoolYear).subscribe(
+          () => {
+            this.loading = false;
+            this.message.success(`La asignación de docentes titulares se ha guardado con éxito`);
+            this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
+            next ? (this.currentStep += 1) : (this.currentStep -= 1);
+          },
+          (error) => {
+            const statusCode = error.statusCode;
+            const notIn = [401, 403];
+            if (!notIn.includes(statusCode) && statusCode < 500) {
+              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
+                nzDuration: 0
+              });
+            } else if (typeof error === 'string') {
+              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
+                nzDuration: 0
+              });
+            }
+            this.loading = false;
+          }
+        );
+      } else {
+        next ? (this.currentStep += 1) : (this.currentStep -= 1);
+      }
+    } else {
+      this.notification.create(
+        'error',
+        'Error en la asignación de docentes titulares.',
+        'Verifique que los valores ingresados en todos los turnos son correctos, no se permiten campos vacíos.',
+        {
+          nzDuration: 15000
+        }
+      );
+    }
+  }
+
+  counselorsStep(next: boolean): void {
     next ? (this.currentStep += 1) : (this.currentStep -= 1);
   }
 
@@ -470,7 +528,7 @@ export class SchoolYearComponent implements OnInit {
             this.emptyUsers['total']++;
 
             if (!section['teacher']) this.emptyUsers['empty']++;
-            if (this.emptyUsers['valid'] && section['teacher'] && !section['teacher']['isValid'])
+            if (this.emptyUsers['valid'] && 'isValid' in section['teacher'] && !section['teacher']['isValid'])
               this.emptyUsers['valid'] = false;
           });
         });

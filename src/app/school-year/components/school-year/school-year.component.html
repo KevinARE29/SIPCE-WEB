@@ -51,7 +51,9 @@
                             </app-cycle-coordinators>
                         </ng-container>
                         <ng-container *ngSwitchCase="2">
-                            <app-head-teachers [catalogs]="catalogs" [assignation]="schoolYear" [isValid]="emptyUsers.valid"></app-head-teachers>
+                            <app-head-teachers [catalogs]="catalogs" [assignation]="schoolYear"
+                                [isValid]="emptyUsers.valid" (headTeachersEvent)="updateHeadTeachers($event)">
+                            </app-head-teachers>
                         </ng-container>
                         <ng-container *ngSwitchCase="3">
                             <app-counselors></app-counselors>
@@ -95,13 +97,19 @@
                             [isValid]="emptyUsers.valid" (coordinatorsEvent)="updateCycleCoordinators($event)">
                         </app-cycle-coordinators>
                         <div nz-row nzJustify="space-around">
-                            <button nz-button nzType="primary" (click)="cycleCoordinatorsStep(null)">Buscar</button>
+                            <button nz-button nzType="primary" (click)="cycleCoordinatorsStep(null)">Actualizar</button>
                         </div>
                     </div>
                 </nz-tab>
                 <nz-tab nzTitle="Docentes">
                     <div class="shifts">
-                        <app-head-teachers [catalogs]="catalogs" [assignation]="schoolYear" [isValid]="emptyUsers.valid"></app-head-teachers>
+                        <app-head-teachers [catalogs]="catalogs" [assignation]="schoolYear" [isValid]="emptyUsers.valid"
+                            (headTeachersEvent)="updateHeadTeachers($event)">
+                        </app-head-teachers>
+                        
+                        <div nz-row nzJustify="space-around">
+                            <button nz-button nzType="primary" (click)="headTeachersStep(null)">Actualizar</button>
+                        </div>
                     </div>
                 </nz-tab>
                 <nz-tab nzTitle="Orientadores">

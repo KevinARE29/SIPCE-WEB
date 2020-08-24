@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 
 import { Catalogs } from '../../shared/catalogs.model';
 import { UserService } from 'src/app/users/shared/user.service';
@@ -23,6 +23,7 @@ export class HeadTeachersComponent implements OnInit {
   headTeachers: string[] = [];
   items: unknown[] = [];
 
+  @Output() headTeachersEvent = new EventEmitter<unknown>();
   @Input() catalogs: Catalogs;
   @Input() assignation: unknown;
   @Input() isValid: boolean;
@@ -88,8 +89,8 @@ export class HeadTeachersComponent implements OnInit {
 
       const idTeachers = item.teachers.map((teacher) => teacher.id);
 
-      listOfGrades.forEach((data) => {
-        data['sections'].forEach((section) => {
+      listOfGrades.forEach((grade) => {
+        grade['sections'].forEach((section) => {
           if (section.teacher) {
             if (idTeachers.includes(section.teacher.id)) {
               section.teacher = item.teachers.find((teacher) => teacher.id === section.teacher.id);
@@ -98,8 +99,11 @@ export class HeadTeachersComponent implements OnInit {
             } else {
               // If the teacher is not there, add him/her to the initial list only, and add an error to the section.
               item['filteredOptions'].push(section.teacher);
+              console.log(section);
               section.error = 'El docente asignado no está entre los docentes titulares registrados';
-              // this.headTeachersEvent.emit({ shift: item['shift'], grade: data, section: section });
+              if (!section.teacher.fullname)
+                section.teacher.fullname = section.teacher.firstname.concat(' ', section.teacher.lastname);
+              this.headTeachersEvent.emit({ shift: item['shift'], grade: grade, section: section });
             }
             section.initialDisabled = true;
           }
@@ -120,7 +124,7 @@ export class HeadTeachersComponent implements OnInit {
         .getElementById(item['shift']['id'] + '_' + grade['grade']['id'] + '_' + section['section']['id'])
         .setAttribute('disabled', 'true');
 
-      // this.headTeachersEvent.emit({ shift: item['shift'], grade: data, section: section });
+      this.headTeachersEvent.emit({ shift: item['shift'], grade: grade, section: section });
     }
 
     item['filteredOptions'] = item['teachers'];
@@ -139,7 +143,7 @@ export class HeadTeachersComponent implements OnInit {
       section['teacher'].active = true;
       section['teacher'] = '';
       section['error'] = null;
-      // this.headTeachersEvent.emit({ shift: item['shift'], grade: data, section: section });
+      this.headTeachersEvent.emit({ shift: item['shift'], grade: grade, section: section });
 
       document
         .getElementById(item['shift']['id'] + '_' + grade['grade']['id'] + '_' + section['section']['id'])

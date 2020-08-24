@@ -84,6 +84,11 @@ export class CycleCoordinatorsComponent implements OnInit {
           } else {
             // If the coordinator is not there, add him/her to the initial list only, and add an error to the cycle.
             item['filteredOptions'].push(data.cycleCoordinator);
+            if (!data.cycleCoordinator.fullname)
+              data.cycleCoordinator.fullname = data.cycleCoordinator.firstname.concat(
+                ' ',
+                data.cycleCoordinator.lastname
+              );
             data.error = 'El coordinador asignado no está entre los coordinadores registrados';
             this.coordinatorsEvent.emit({ shift: item['shift'], cycle: data });
           }
