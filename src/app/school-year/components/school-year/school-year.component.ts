@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -29,7 +30,7 @@ export class SchoolYearComponent implements OnInit {
   confirmModal?: NzModalRef;
 
   // Draf school year
-  currentStep = 0;
+  currentStep = 3; // TODO -> 0
 
   // School year
   emptyUsers: { total: number; empty: number; valid: boolean };
@@ -76,6 +77,7 @@ export class SchoolYearComponent implements OnInit {
           this.initializeShifts();
           this.initializeCycleCoordinators();
           this.initializeHeadTeachers();
+          this.initializeCounselors();
         }
         this.loading = false;
       },
@@ -155,7 +157,7 @@ export class SchoolYearComponent implements OnInit {
                   section['teacher']['lastname']
                 );
                 _section['teacher']['isValid'] = true;
-              } else if (_section) {
+              } else if (section) {
                 _section['teacher'] = new User();
                 _section['teacher']['isValid'] = true;
               }
@@ -166,6 +168,34 @@ export class SchoolYearComponent implements OnInit {
 
       // this.schoolYear.shifts[0]['shift']['cycles'][0]['cycleCoordinator']['id'] = 74;
       // this.schoolYear.shifts[0]['shift']['cycles'][0]['cycleCoordinator']['fullname'] = 'Adaline Vardey';
+    }
+  }
+
+  initializeCounselors(): void {
+    this.checkEmptyCounselors();
+    
+    if (this.emptyUsers['total'] === this.emptyUsers['empty']) {
+      this.previousSchoolYear.shifts.forEach((shift) => {
+        const _shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === shift['shift']['id']);
+
+        shift['shift']['cycles'].forEach((cycle) => {
+          const _cycle = _shift['shift']['cycles'].find((x) => x['cycle']['id'] === cycle['cycle']['id']);
+
+          cycle['gradeDetails'].forEach((grade) => {
+            const _grade = _cycle['gradeDetails'].find((x) => x['grade']['id'] === grade['grade']['id']);
+
+            if (_grade) {
+              _grade['counselor'] = grade['counselor'];
+              _grade['counselor']['fullname'] = grade['counselor']['firstname'].concat(
+                ' ',
+                grade['counselor']['lastname']
+              );
+              grade['counselor']['isValid'] = true;
+            }
+
+          });
+        });
+      });
     }
   }
 
@@ -223,6 +253,7 @@ export class SchoolYearComponent implements OnInit {
   //#endregion
 
   //#region School year
+  // Update school year
   updateItem(content: unknown): void {
     let grade, actualCycle;
     const shift = this.schoolYear.shifts.filter((x) => x['shift']['id'] === content['shift']['id']);
@@ -329,6 +360,7 @@ export class SchoolYearComponent implements OnInit {
     if (!section['teacher']['id']) section['teacher']['isValid'] = false;
   }
 
+  // Steps
   pre(): void {
     this.sendData(false);
   }
@@ -341,6 +373,7 @@ export class SchoolYearComponent implements OnInit {
     console.log('done');
   }
 
+  // Save data
   sendData(next: boolean): void {
     switch (this.currentStep) {
       case 0:
@@ -505,6 +538,7 @@ export class SchoolYearComponent implements OnInit {
     next ? (this.currentStep += 1) : (this.currentStep -= 1);
   }
 
+  // Check school year elements
   checkEmptyCoordinators(): void {
     this.emptyUsers = { total: 0, empty: 0, valid: true };
 
@@ -512,7 +546,8 @@ export class SchoolYearComponent implements OnInit {
       shift['shift']['cycles'].forEach((cycle) => {
         this.emptyUsers['total']++;
         if (!cycle['cycleCoordinator']) this.emptyUsers['empty']++;
-        if (this.emptyUsers['valid'] && 'isValid' in cycle['cycleCoordinator'] && !cycle['cycleCoordinator']['isValid'])
+
+        if (cycle['cycleCoordinator'] && cycle['cycleCoordinator']['isValid'] && !cycle['cycleCoordinator']['isValid'])
           this.emptyUsers['valid'] = false;
       });
     });
@@ -528,12 +563,29 @@ export class SchoolYearComponent implements OnInit {
             this.emptyUsers['total']++;
 
             if (!section['teacher']) this.emptyUsers['empty']++;
-            if (this.emptyUsers['valid'] && 'isValid' in section['teacher'] && !section['teacher']['isValid'])
+            if (section['teacher'] && section['teacher']['isValid'] && !section['teacher']['isValid'])
               this.emptyUsers['valid'] = false;
           });
         });
       });
     });
   }
+
+  checkEmptyCounselors(): void {
+    this.emptyUsers = { total: 0, empty: 0, valid: true };
+
+    this.schoolYear.shifts.forEach((shift) => {
+      shift['shift']['cycles'].forEach((cycle) => {
+        cycle['gradeDetails'].forEach((grade) => {
+          this.emptyUsers['total']++;
+          
+          if (!grade['counselor']) this.emptyUsers['empty']++;
+          if (grade['counselor'] && grade['counselor']['isValid'] && !grade['counselor']['isValid'])
+              this.emptyUsers['valid'] = false;
+        });
+      });
+    });
+  }
+
   //#endregion
 }
