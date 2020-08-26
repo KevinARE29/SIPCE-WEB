@@ -360,6 +360,53 @@ export class SchoolYearComponent implements OnInit {
     if (!section['teacher']['id']) section['teacher']['isValid'] = false;
   }
 
+  updateCounselors(content: unknown): void {
+    const shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === content['shift']['id']);
+    const cycles = shift['shift']['cycles'];
+
+    if (!content['remove']) {
+      // Assign counselor to the respective grades
+      content['counselor']['grades'].forEach((gradeId) => {
+        for (const c in cycles) {
+          const cycle = cycles[c];
+          let found = false;
+
+          for (const g in cycle['gradeDetails']) {
+            const grade = cycle['gradeDetails'][g];
+
+            if(grade['grade'].id === gradeId) {
+              grade['counselor'] = content['counselor'];
+              found = true;
+
+              break;
+            }
+          }
+
+          if(found) break;
+        }
+      });
+    } else {
+      // Remove counselor from grade
+      for (const c in cycles) {
+        const cycle = cycles[c];
+        let found = false;
+
+        for (const g in cycle['gradeDetails']) {
+          const grade = cycle['gradeDetails'][g];
+
+          if(grade['grade'].id === content['remove']['id']) {
+            grade['counselor'] = null;
+            found = true;
+
+            break;
+          }
+        }
+
+        if(found) break;
+      }
+    }
+  }
+
   // Steps
   pre(): void {
     this.sendData(false);

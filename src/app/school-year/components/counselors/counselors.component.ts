@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { Catalogs } from '../../shared/catalogs.model';
 import { UserService } from 'src/app/users/shared/user.service';
@@ -15,6 +15,7 @@ export class CounselorsComponent implements OnInit {
   counselors: User[];
   items: unknown[] = [];
 
+  @Output() counselorsEvent = new EventEmitter<unknown>();
   @Input() catalogs: Catalogs;
   @Input() assignation: unknown;
   @Input() isValid: boolean;
@@ -30,7 +31,7 @@ export class CounselorsComponent implements OnInit {
     this.userService.getUsersByRole(1).subscribe((data) => {
       this.counselors = data['data'];
       this.loading = false;
-      console.log(this.counselors);
+
       this.transformData();
     });
   }
@@ -42,6 +43,7 @@ export class CounselorsComponent implements OnInit {
 
       this.counselors.forEach((counselor) => {
         counselor.grades = new Array<ShiftPeriodGrade>();
+        counselor['gradesCache'] = new Array<ShiftPeriodGrade>();
       });
 
       Object.entries(currentShift['shift']['cycles']).forEach(([key, value]) => {
@@ -51,6 +53,7 @@ export class CounselorsComponent implements OnInit {
 
           if (counselor) {
             counselor.grades.push(addGrade);
+            counselor['gradesCache'].push(addGrade);
             addGrade.active = false;
           } else {
             addGrade.active = true;
@@ -72,17 +75,28 @@ export class CounselorsComponent implements OnInit {
       };
       this.items.push(item);
     });
-    console.log(this.items);
   }
 
   onChange(item: unknown, counselor: User, gradesId: number[]): void {
+    let remove;
     // Assign new grades
     gradesId.forEach((grade) => {
       const currentGrade = item['grades'].find((x) => x.id === grade);
       currentGrade.active = false;
     });
 
-    // Removed grades
-    
+    if (counselor['gradesCache'].length > counselor.grades.length) {
+      counselor['gradesCache'].forEach((g) => {
+        const grade = counselor.grades.find((x) => x === g);
+
+        if (!grade) {
+          remove = item['grades'].find((x) => x.id == g);
+          remove.active = true;
+        }
+      });
+    }
+
+    this.counselorsEvent.emit({ shift: item['shift'], counselor, remove });
+    counselor['gradesCache'] = [...counselor.grades];
   }
 }
