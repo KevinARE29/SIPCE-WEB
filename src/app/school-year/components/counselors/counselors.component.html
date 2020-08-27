@@ -5,7 +5,7 @@
                 <p>{{counselor.fullname}}:</p>
                 <nz-select nzMode="tags" nzPlaceHolder="Asignar grados" [(ngModel)]="counselor.grades" [compareWith]="compareFn" (ngModelChange)="onChange(item, counselor, $event)">
                     <ng-container *ngFor="let grade of item.grades">
-                        <nz-option *ngIf="grade.active" [nzLabel]="grade.name" [nzValue]="grade">{{grade.name}}</nz-option>
+                        <nz-option [nzHide]="!grade.active" [nzLabel]="grade.name" [nzValue]="grade">{{grade.name}}</nz-option>
                     </ng-container>
                 </nz-select>
             </div>

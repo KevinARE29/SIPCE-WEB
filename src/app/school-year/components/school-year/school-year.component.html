@@ -116,7 +116,12 @@
                 <nz-tab nzTitle="Orientadores">
                     <div class="shifts">
                         <app-counselors [catalogs]="catalogs" [assignation]="schoolYear"
-                            [isValid]="emptyUsers.valid" (counselorsEvent)="updateCounselors($event)"></app-counselors>
+                            [isValid]="emptyUsers.valid" (counselorsEvent)="updateCounselors($event)">
+                        </app-counselors>
+
+                        <div nz-row nzJustify="space-around">
+                            <button nz-button nzType="primary" (click)="counselorsStep(null)">Actualizar</button>
+                        </div>
                     </div>
                 </nz-tab>
                 <!-- <nz-tab nzTitle="Cerrar año escolar">
