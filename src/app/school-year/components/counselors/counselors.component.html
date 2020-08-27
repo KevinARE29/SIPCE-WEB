@@ -3,9 +3,9 @@
         <nz-tab *ngFor="let item of items" [nzTitle]="item.shift.name">
             <div class="counselor" nz-col nzXs="24" nzMd="18" *ngFor="let counselor of item.counselors">
                 <p>{{counselor.fullname}}:</p>
-                <nz-select nzMode="tags" nzPlaceHolder="Asignar grados" [(ngModel)]="counselor.grades" (ngModelChange)="onChange(item, counselor, $event)">
+                <nz-select nzMode="tags" nzPlaceHolder="Asignar grados" [(ngModel)]="counselor.grades" [compareWith]="compareFn" (ngModelChange)="onChange(item, counselor, $event)">
                     <ng-container *ngFor="let grade of item.grades">
-                        <nz-option *ngIf="grade.active" [nzLabel]="grade.name" [nzValue]="grade.id"></nz-option>
+                        <nz-option *ngIf="grade.active" [nzLabel]="grade.name" [nzValue]="grade">{{grade.name}}</nz-option>
                     </ng-container>
                 </nz-select>
             </div>

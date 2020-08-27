@@ -366,7 +366,7 @@ export class SchoolYearComponent implements OnInit {
 
     if (!content['remove']) {
       // Assign counselor to the respective grades
-      content['counselor']['grades'].forEach((gradeId) => {
+      content['counselor']['grades'].forEach((gr) => {
         for (const c in cycles) {
           const cycle = cycles[c];
           let found = false;
@@ -374,7 +374,7 @@ export class SchoolYearComponent implements OnInit {
           for (const g in cycle['gradeDetails']) {
             const grade = cycle['gradeDetails'][g];
 
-            if(grade['grade'].id === gradeId) {
+            if(grade['grade'].id === gr.id) {
               grade['counselor'] = content['counselor'];
               found = true;
 
@@ -404,6 +404,7 @@ export class SchoolYearComponent implements OnInit {
 
         if(found) break;
       }
+      
     }
   }
 
@@ -441,6 +442,7 @@ export class SchoolYearComponent implements OnInit {
         break;
       case 4:
         console.log('Resumen');
+        this.finalStep(next);
         break;
     }
     // Current step direction will be setted in the api calls
@@ -581,8 +583,52 @@ export class SchoolYearComponent implements OnInit {
     }
   }
 
-  counselorsStep(next: boolean): void {
+  finalStep(next: boolean): void {
     next ? (this.currentStep += 1) : (this.currentStep -= 1);
+  }
+
+  counselorsStep(next: boolean): void {
+    this.checkEmptyCounselors();
+    if (this.emptyUsers['empty'] > 0 && this.emptyUsers['valid']) this.emptyUsers['valid'] = false;
+
+    if (this.emptyUsers['valid']) {
+      if (JSON.stringify(this.schoolYear) !== JSON.stringify(this.cacheSchoolYear)) {
+        this.loading = true;
+        this.schoolYearService.saveCounselors(this.schoolYear).subscribe(
+          () => {
+            this.loading = false;
+            this.message.success(`La asignación de orientadores se ha guardado con éxito`);
+            this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
+            next ? (this.currentStep += 1) : (this.currentStep -= 1);
+          },
+          (error) => {
+            const statusCode = error.statusCode;
+            const notIn = [401, 403];
+            if (!notIn.includes(statusCode) && statusCode < 500) {
+              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
+                nzDuration: 0
+              });
+            } else if (typeof error === 'string') {
+              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
+                nzDuration: 0
+              });
+            }
+            this.loading = false;
+          }
+        );
+      } else {
+        next ? (this.currentStep += 1) : (this.currentStep -= 1);
+      }
+    } else {
+      this.notification.create(
+        'error',
+        'Error en la asignación de orientadores.',
+        'Verifique que todos los grados hayan sido asignados a las orientadoras en todos los turnos.',
+        {
+          nzDuration: 15000
+        }
+      );
+    }
   }
 
   // Check school year elements

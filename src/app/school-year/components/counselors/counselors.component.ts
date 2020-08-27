@@ -57,6 +57,7 @@ export class CounselorsComponent implements OnInit {
             addGrade.active = false;
           } else {
             addGrade.active = true;
+            this.counselorsEvent.emit({ shift: currentShift['shift'], counselor, remove: addGrade });
           }
 
           listOfGrades.push(grade.grade);
@@ -77,20 +78,20 @@ export class CounselorsComponent implements OnInit {
     });
   }
 
-  onChange(item: unknown, counselor: User, gradesId: number[]): void {
+  onChange(item: unknown, counselor: User, gradesId: ShiftPeriodGrade[]): void {
     let remove;
     // Assign new grades
     gradesId.forEach((grade) => {
-      const currentGrade = item['grades'].find((x) => x.id === grade);
+      const currentGrade = item['grades'].find((x) => x.id === grade.id);
       currentGrade.active = false;
     });
 
     if (counselor['gradesCache'].length > counselor.grades.length) {
       counselor['gradesCache'].forEach((g) => {
-        const grade = counselor.grades.find((x) => x === g);
+        const grade = counselor.grades.find((x) => x.id === g.id);
 
         if (!grade) {
-          remove = item['grades'].find((x) => x.id == g);
+          remove = item['grades'].find((x) => x.id == g.id);
           remove.active = true;
         }
       });
@@ -99,4 +100,12 @@ export class CounselorsComponent implements OnInit {
     this.counselorsEvent.emit({ shift: item['shift'], counselor, remove });
     counselor['gradesCache'] = [...counselor.grades];
   }
+
+  compareFn = (o1: ShiftPeriodGrade, o2: ShiftPeriodGrade) => {
+    if (o1 && o2) {
+      return o1.id === o2.id;
+    } else {
+      return false;
+    }
+  };
 }

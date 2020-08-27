@@ -126,7 +126,7 @@ export class SchoolYearService {
     return this.http.post<void>(`${this.baseUrl}academics/school-year`, data).pipe(catchError(this.handleError()));
   }
 
-  saveAcademicAssignments(schoolYear: unknown): Observable<unknown> {
+  saveAcademicAssignments(schoolYear: unknown): Observable<void> {
     const assignment = new Array<unknown>();
     let valid = true;
 
@@ -157,19 +157,16 @@ export class SchoolYearService {
 
     if (valid) {
       return this.http
-        .post<unknown>(
-          `${this.baseUrl}academics/school-year/academic-catalogues`,
-          JSON.stringify({ shifts: assignment })
-        )
+        .post<void>(`${this.baseUrl}academics/school-year/academic-catalogues`, JSON.stringify({ shifts: assignment }))
         .pipe(catchError(this.handleError()));
     } else {
-      return new Observable<unknown>((observer) => {
+      return new Observable<void>((observer) => {
         observer.error('Verifique que todos los grados que tengan asignado un ciclo tengan asignados secciones');
       });
     }
   }
 
-  saveCycleCoordinators(schoolYear: unknown): Observable<unknown> {
+  saveCycleCoordinators(schoolYear: unknown): Observable<void> {
     const assignment = new Array<unknown>();
 
     schoolYear['shifts'].forEach((shift) => {
@@ -185,23 +182,22 @@ export class SchoolYearService {
     });
 
     return this.http
-      .post<unknown>(`${this.baseUrl}academics/school-year/cycle-coordinators`, JSON.stringify({ shifts: assignment }))
+      .post<void>(`${this.baseUrl}academics/school-year/cycle-coordinators`, JSON.stringify({ shifts: assignment }))
       .pipe(catchError(this.handleError()));
   }
 
-  saveHeadteachers(schoolYear: unknown): Observable<unknown> {
+  saveHeadteachers(schoolYear: unknown): Observable<void> {
     const assignment = new Array<unknown>();
 
     schoolYear['shifts'].forEach((shift) => {
       const grades = new Array<unknown>();
 
       shift['shift']['cycles'].forEach((cycle) => {
-        // cycles.push({ cycleId: cycle['cycle'].id, cycleCoordinatorId: cycle['cycleCoordinator'].id });
         cycle['gradeDetails'].forEach((grade) => {
           const sections = new Array<unknown>();
 
           grade['sectionDetails'].forEach((section) => {
-            sections.push({ sectionId: section['section']['id'], teacherId: section['teacher']['id']});
+            sections.push({ sectionId: section['section']['id'], teacherId: section['teacher']['id'] });
           });
 
           grades.push({ gradeId: grade['grade']['id'], sections });
@@ -214,7 +210,36 @@ export class SchoolYearService {
     });
 
     return this.http
-      .post<unknown>(`${this.baseUrl}academics/school-year/teachers`, JSON.stringify({ shifts: assignment }))
+      .post<void>(`${this.baseUrl}academics/school-year/teachers`, JSON.stringify({ shifts: assignment }))
+      .pipe(catchError(this.handleError()));
+  }
+
+  saveCounselors(schoolYear: unknown): Observable<void> {
+    const assignment = new Array<unknown>();
+
+    schoolYear['shifts'].forEach((shift) => {
+      console.log(shift);
+      const counselors = new Array<unknown>();
+
+      shift['shift']['cycles'].forEach((cycle) => {
+        cycle['gradeDetails'].forEach((grade) => {
+          const registeredCounselor = grade['counselor'];
+
+          let counselor = counselors.find((x) => x['counselorId'] === registeredCounselor.id);
+
+          if (counselor === undefined) {
+            counselor = { counselorId: registeredCounselor.id, gradeIds: new Array<number>() };
+            counselors.push(counselor);
+          }
+
+          counselor['gradeIds'].push(grade['grade']['id']);
+        });
+      });
+      assignment.push({ shiftId: shift['shift'].id, counselors });
+    });
+
+    return this.http
+      .post<void>(`${this.baseUrl}academics/school-year/counselors`, JSON.stringify({ shifts: assignment }))
       .pipe(catchError(this.handleError()));
   }
 
