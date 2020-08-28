@@ -151,7 +151,6 @@ export class SchoolYearService {
       });
       // eslint-disable-next-line prefer-const
       const mappedShift = { shiftId: shift['shift'].id, cycles: cycles };
-
       assignment.push(mappedShift);
     });
 
@@ -218,7 +217,6 @@ export class SchoolYearService {
     const assignment = new Array<unknown>();
 
     schoolYear['shifts'].forEach((shift) => {
-      console.log(shift);
       const counselors = new Array<unknown>();
 
       shift['shift']['cycles'].forEach((cycle) => {

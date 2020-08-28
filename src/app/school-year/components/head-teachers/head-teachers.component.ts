@@ -91,7 +91,7 @@ export class HeadTeachersComponent implements OnInit {
 
       listOfGrades.forEach((grade) => {
         grade['sections'].forEach((section) => {
-          if (section.teacher) {
+          if (section.teacher.id) {
             if (idTeachers.includes(section.teacher.id)) {
               section.teacher = item.teachers.find((teacher) => teacher.id === section.teacher.id);
               // Make it not show up in the possible options
@@ -101,11 +101,14 @@ export class HeadTeachersComponent implements OnInit {
               item['filteredOptions'].push(section.teacher);
 
               section.error = 'El docente asignado no está entre los docentes titulares registrados';
-              if (!section.teacher.fullname)
+              if (!section.teacher.fullname) {
                 section.teacher.fullname = section.teacher.firstname.concat(' ', section.teacher.lastname);
+              }
               this.headTeachersEvent.emit({ shift: item['shift'], grade: grade, section: section });
             }
             section.initialDisabled = true;
+          } else {
+            section.teacher = null;
           }
         });
       });

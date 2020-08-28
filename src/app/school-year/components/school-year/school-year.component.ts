@@ -30,7 +30,7 @@ export class SchoolYearComponent implements OnInit {
   confirmModal?: NzModalRef;
 
   // Draf school year
-  currentStep = 3; // TODO -> 0
+  currentStep = 0;
 
   // School year
   emptyUsers: { total: number; empty: number; valid: boolean };
@@ -62,8 +62,6 @@ export class SchoolYearComponent implements OnInit {
         // School Year
         this.schoolYear = data['schoolYear'][0];
         this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
-
-        // this.schoolYear.status = 'En curso'; //TODO: Delete En curso, Nuevo
 
         // Catalogs
         this.catalogs.shifts = data['shifts']['data'].filter((x) => x.active === true).sort((a, b) => a.id - b.id);
@@ -100,8 +98,6 @@ export class SchoolYearComponent implements OnInit {
           });
         }
       });
-
-      this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
     } else if (this.catalogs.shifts.length !== this.schoolYear.shifts.length) {
       this.catalogs.shifts.forEach((shift) => {
         const _shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === shift.id);
@@ -110,9 +106,9 @@ export class SchoolYearComponent implements OnInit {
           this.schoolYear.shifts.push({ shift: { id: shift.id, name: shift.name, cycles: new Array<unknown>() } });
         }
       });
-
-      this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
     }
+
+    this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
   }
 
   initializeCycleCoordinators(): void {
@@ -132,6 +128,8 @@ export class SchoolYearComponent implements OnInit {
         });
       });
     }
+
+    this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
   }
 
   initializeHeadTeachers(): void {
@@ -166,8 +164,7 @@ export class SchoolYearComponent implements OnInit {
         });
       });
 
-      // this.schoolYear.shifts[0]['shift']['cycles'][0]['cycleCoordinator']['id'] = 74;
-      // this.schoolYear.shifts[0]['shift']['cycles'][0]['cycleCoordinator']['fullname'] = 'Adaline Vardey';
+      this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
     }
   }
 
@@ -197,6 +194,8 @@ export class SchoolYearComponent implements OnInit {
         });
       });
     }
+  
+    this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
   }
 
   //#region New school year
@@ -256,17 +255,17 @@ export class SchoolYearComponent implements OnInit {
   // Update school year
   updateItem(content: unknown): void {
     let grade, actualCycle;
-    const shift = this.schoolYear.shifts.filter((x) => x['shift']['id'] === content['shift']['id']);
-    let newCycle = shift[0]['shift']['cycles'].find((x) => x['cycle']['id'] == content['field']);
+    const shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === content['shift']['id']);
+    let newCycle = shift['shift']['cycles'].find((x) => x['cycle']['id'] == content['field']);
 
     // Find grade
-    for (let i = 0; i < shift[0]['shift']['cycles'].length; i++) {
-      grade = shift[0]['shift']['cycles'][i]['gradeDetails'].find(
+    for (let i = 0; i < shift['shift']['cycles'].length; i++) {
+      grade = shift['shift']['cycles'][i]['gradeDetails'].find(
         (x) => x['grade']['id'] === content['data']['grade']['id']
       );
 
       if (grade) {
-        actualCycle = shift[0]['shift']['cycles'][i];
+        actualCycle = shift['shift']['cycles'][i];
         break;
       }
     }
@@ -277,7 +276,7 @@ export class SchoolYearComponent implements OnInit {
           actualCycle['gradeDetails'] = actualCycle['gradeDetails'].filter(
             (x) => x['grade']['id'] != content['data']['grade']['id']
           );
-
+            
           if (newCycle) newCycle['gradeDetails'].push(grade);
           else if (content['field']) {
             const findCycle = this.catalogs.cycles.find((x) => x.id === content['data']['cycle'].id);
@@ -294,7 +293,7 @@ export class SchoolYearComponent implements OnInit {
               sectionDetails: new Array<unknown>()
             });
 
-            shift[0]['shift']['cycles'].push(newCycle);
+            shift['shift']['cycles'].push(newCycle);
           }
         } else {
           if (content['field'] && !newCycle) {
@@ -305,7 +304,7 @@ export class SchoolYearComponent implements OnInit {
               cycleCoordinator: new User(),
               gradeDetails: new Array<unknown>()
             };
-            shift[0]['shift']['cycles'].push(newCycle);
+            shift['shift']['cycles'].push(newCycle);
           }
 
           newCycle['gradeDetails'].push({
@@ -314,12 +313,7 @@ export class SchoolYearComponent implements OnInit {
             sectionDetails: new Array<unknown>()
           });
         }
-        // If the cycle doesn't have gradeDetails must be removed from the shift
-        if (actualCycle && actualCycle['gradeDetails'].length === 0) {
-          shift[0]['shift']['cycles'] = shift[0]['shift']['cycles'].filter(
-            (x) => x['cycle'].id !== actualCycle['cycle'].id
-          );
-        }
+
         break;
       case 'section':
         let section;
@@ -445,7 +439,6 @@ export class SchoolYearComponent implements OnInit {
         this.finalStep(next);
         break;
     }
-    // Current step direction will be setted in the api calls
   }
 
   academicAssignmentsStep(next: boolean): void {
@@ -454,33 +447,39 @@ export class SchoolYearComponent implements OnInit {
       if (!shift['shift']['cycles']) emptyShifts = true;
     });
     if (!emptyShifts) {
-      if (JSON.stringify(this.schoolYear) !== JSON.stringify(this.cacheSchoolYear)) {
-        this.loading = true;
-        this.schoolYearService.saveAcademicAssignments(this.schoolYear).subscribe(
-          () => {
-            this.loading = false;
-            this.message.success(`La asignación de ciclos, grados y secciones se ha guardado con éxito`);
-            this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
-            if (next) this.currentStep += 1;
-          },
-          (error) => {
-            const statusCode = error.statusCode;
-            const notIn = [401, 403];
-            if (!notIn.includes(statusCode) && statusCode < 500) {
+      this.loading = true;
+      this.schoolYearService.saveAcademicAssignments(this.schoolYear).subscribe(
+        () => {
+          this.schoolYear['shifts'].forEach((shift) => {
+            shift['shift']['cycles'].forEach((cycle) => {
+              if (cycle['gradeDetails'].length === 0) {
+                shift['shift']['cycles'] = shift['shift']['cycles'].filter(
+                  (x) => x['cycle'].id !== cycle['cycle'].id
+                );
+              }
+            });
+          });
+
+          this.loading = false;
+          this.message.success(`La asignación de ciclos, grados y secciones se ha guardado con éxito`);
+          this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
+          if (next) this.currentStep += 1;
+        },
+        (error) => {
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
+          if (!notIn.includes(statusCode) && statusCode < 500) {
               this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
-                nzDuration: 0
-              });
-            } else if (typeof error === 'string') {
-              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
-                nzDuration: 0
-              });
-            }
-            this.loading = false;
+              nzDuration: 0
+            });
+          } else if (typeof error === 'string') {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
+              nzDuration: 0
+            });
           }
-        );
-      } else {
-        next ? (this.currentStep += 1) : (this.currentStep -= 1);
-      }
+          this.loading = false;
+        }
+      );
     } else {
       this.notification.create(
         'error',
@@ -500,7 +499,6 @@ export class SchoolYearComponent implements OnInit {
     if (this.emptyUsers['valid']) {
       if (JSON.stringify(this.schoolYear) !== JSON.stringify(this.cacheSchoolYear)) {
         this.loading = true;
-
         this.schoolYearService.saveCycleCoordinators(this.schoolYear).subscribe(
           () => {
             this.loading = false;
@@ -545,7 +543,6 @@ export class SchoolYearComponent implements OnInit {
     if (this.emptyUsers['valid']) {
       if (JSON.stringify(this.schoolYear) !== JSON.stringify(this.cacheSchoolYear)) {
         this.loading = true;
-
         this.schoolYearService.saveHeadteachers(this.schoolYear).subscribe(
           () => {
             this.loading = false;
