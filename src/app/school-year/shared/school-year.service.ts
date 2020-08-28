@@ -241,6 +241,11 @@ export class SchoolYearService {
       .pipe(catchError(this.handleError()));
   }
 
+  startSchoolYear(): Observable<void> {
+    const body = JSON.stringify({ status: 'En curso' });
+
+    return this.http.patch<void>(`${this.baseUrl}academics/school-year`, body).pipe(catchError(this.handleError()));
+  }
   /**
    * Handle Http operation that failed.
    * Let the app continue.

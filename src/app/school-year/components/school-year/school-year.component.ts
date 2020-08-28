@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { es } from 'date-fns/locale';
-import { format, formatDistanceStrict } from 'date-fns';
+import { format, formatDistanceStrict, getYear, parseISO } from 'date-fns';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -34,6 +34,9 @@ export class SchoolYearComponent implements OnInit {
 
   // School year
   emptyUsers: { total: number; empty: number; valid: boolean };
+
+  // Open school year
+  confirmSchoolYearModal?: NzModalRef;
 
   constructor(
     private fb: FormBuilder,
@@ -252,7 +255,7 @@ export class SchoolYearComponent implements OnInit {
   //#endregion
 
   //#region School year
-  // Update school year
+  //#region Update school year
   updateItem(content: unknown): void {
     let grade, actualCycle;
     const shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === content['shift']['id']);
@@ -401,8 +404,9 @@ export class SchoolYearComponent implements OnInit {
       
     }
   }
+  //#endregion
 
-  // Steps
+  //#region Steps
   pre(): void {
     this.sendData(false);
   }
@@ -412,34 +416,52 @@ export class SchoolYearComponent implements OnInit {
   }
 
   done(): void {
-    console.log('done');
+    const year = getYear(parseISO(this.schoolYear.startDate.toString()));
+    this.confirmSchoolYearModal = this.modal.confirm({
+      nzTitle: `¿Aperturar año escolar ${year}?`,
+      nzContent: 'Al dar clic al botón Aceptar se iniciará un nuevo año escolar con las configuraciones asignadas.',
+      nzOnOk: () =>
+        this.schoolYearService
+          .startSchoolYear()
+          .toPromise()
+          .then(() => {
+            this.message.success(`El año escolar ${year} se ha iniciado con éxito`);
+            this.getSchoolYear();
+          })
+          .catch((err) => {
+            const statusCode = err.statusCode;
+            const notIn = [401, 403];
+
+            if (!notIn.includes(statusCode) && statusCode < 500) {
+              this.notification.create('error', 'Ocurrió un error al aperturar el año escolar.', err.message, {
+                nzDuration: 0
+              });
+            }
+          })
+    });
   }
 
   // Save data
   sendData(next: boolean): void {
     switch (this.currentStep) {
       case 0:
-        console.log('Ciclos, grados y secciones');
         this.academicAssignmentsStep(next);
         break;
       case 1:
-        console.log('Coordinadores');
         this.cycleCoordinatorsStep(next);
         break;
       case 2:
-        console.log('Titulares');
         this.headTeachersStep(next);
         break;
       case 3:
-        console.log('Orientadores');
         this.counselorsStep(next);
         break;
       case 4:
-        console.log('Resumen');
         this.finalStep(next);
         break;
     }
   }
+  //#endregion 
 
   academicAssignmentsStep(next: boolean): void {
     let emptyShifts = false;
@@ -580,10 +602,6 @@ export class SchoolYearComponent implements OnInit {
     }
   }
 
-  finalStep(next: boolean): void {
-    next ? (this.currentStep += 1) : (this.currentStep -= 1);
-  }
-
   counselorsStep(next: boolean): void {
     this.checkEmptyCounselors();
     if (this.emptyUsers['empty'] > 0 && this.emptyUsers['valid']) this.emptyUsers['valid'] = false;
@@ -626,6 +644,10 @@ export class SchoolYearComponent implements OnInit {
         }
       );
     }
+  }
+
+  finalStep(next: boolean): void {
+    next ? (this.currentStep += 1) : (this.currentStep -= 1);
   }
 
   // Check school year elements
@@ -676,6 +698,5 @@ export class SchoolYearComponent implements OnInit {
       });
     });
   }
-
   //#endregion
 }

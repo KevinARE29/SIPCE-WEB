@@ -58,7 +58,8 @@
             "phone": "Número de teléfono del responsable"
         },
         "school-year": {
-            "year": "Año"
+            "year": "Año",
+            "status": "Estado"
         }
     }
 }
