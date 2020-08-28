@@ -1,0 +1,16 @@
+nz-tabset { 
+    margin-top: 25px;
+}
+
+nz-select {
+    width: 650px;
+}
+
+.counselor {
+    margin: 10px;
+}
+
+.counselor p {
+    margin-bottom: 0;
+    font-weight: 500;
+}

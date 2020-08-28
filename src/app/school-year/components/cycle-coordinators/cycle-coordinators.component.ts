@@ -45,10 +45,10 @@ export class CycleCoordinatorsComponent implements OnInit {
 
   transformData(): void {
     this.catalogs.shifts.forEach((shift) => {
-      const currentShift = this.assignation['shifts'].filter((x) => x['shift']['id'] === shift.id);
+      const currentShift = this.assignation['shifts'].find((x) => x['shift']['id'] === shift.id);
       const listOfData = new Array<ItemData>();
 
-      Object.entries(currentShift[0]['shift']['cycles']).forEach(([key, value]) => {
+      Object.entries(currentShift['shift']['cycles']).forEach(([key, value]) => {
         const coordinator = value['cycleCoordinator'];
 
         listOfData.push({
@@ -73,7 +73,7 @@ export class CycleCoordinatorsComponent implements OnInit {
 
       const idCoordinators = item.coordinators.map((coordinator) => coordinator.id);
       listOfData.forEach((data) => {
-        if (data.cycleCoordinator) {
+        if (data.cycleCoordinator.id) {
           // If the coordinator is on the list of coordinators, assign him/her the same instance of coordinator of the list
           if (idCoordinators.includes(data.cycleCoordinator.id)) {
             data.cycleCoordinator = item.coordinators.find(
@@ -94,6 +94,8 @@ export class CycleCoordinatorsComponent implements OnInit {
           }
 
           data.initialDisabled = true;
+        } else {
+          data.cycleCoordinator = null;
         }
       });
 

@@ -56,10 +56,11 @@
                             </app-head-teachers>
                         </ng-container>
                         <ng-container *ngSwitchCase="3">
-                            <app-counselors></app-counselors>
+                            <app-counselors [catalogs]="catalogs" [assignation]="schoolYear"
+                            [isValid]="emptyUsers.valid" (counselorsEvent)="updateCounselors($event)"></app-counselors>
                         </ng-container>
                         <ng-container *ngSwitchCase="4">
-                            <app-new-school-year-summary></app-new-school-year-summary>
+                            <app-new-school-year-summary [assignation]="schoolYear"></app-new-school-year-summary>
                         </ng-container>
                     </div>
                     <!-- </nz-tab> -->
@@ -114,15 +115,13 @@
                 </nz-tab>
                 <nz-tab nzTitle="Orientadores">
                     <div class="shifts">
-                        <nz-tabset nzTabPosition="left" [nzType]="'line'"
-                            *ngIf="catalogs.shifts.length > 1;else noShiftTabs">
-                            <nz-tab *ngFor="let shift of catalogs.shifts" [nzTitle]="shift.name">
-                                <app-counselors></app-counselors>
-                            </nz-tab>
-                        </nz-tabset>
-                        <ng-template #noShiftTabs>
-                            <app-counselors></app-counselors>
-                        </ng-template>
+                        <app-counselors [catalogs]="catalogs" [assignation]="schoolYear"
+                            [isValid]="emptyUsers.valid" (counselorsEvent)="updateCounselors($event)">
+                        </app-counselors>
+
+                        <div nz-row nzJustify="space-around">
+                            <button nz-button nzType="primary" (click)="counselorsStep(null)">Actualizar</button>
+                        </div>
                     </div>
                 </nz-tab>
                 <!-- <nz-tab nzTitle="Cerrar año escolar">
