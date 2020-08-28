@@ -60,7 +60,7 @@
                             [isValid]="emptyUsers.valid" (counselorsEvent)="updateCounselors($event)"></app-counselors>
                         </ng-container>
                         <ng-container *ngSwitchCase="4">
-                            <app-new-school-year-summary></app-new-school-year-summary>
+                            <app-new-school-year-summary [assignation]="schoolYear"></app-new-school-year-summary>
                         </ng-container>
                     </div>
                     <!-- </nz-tab> -->
