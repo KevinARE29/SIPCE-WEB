@@ -1,0 +1,63 @@
+<h1>Estudiantes</h1>
+
+<!-- Grade -->
+<div class="grade" nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="9" nzXl="10" class="gutter-row">
+    <label>Grado: </label>
+    <!-- <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar grado" [(ngModel)]="currentGrade.id" (ngModelChange)="getCurrentGrade()">
+            <nz-option *ngFor="let grade of availableGrades" [nzLabel]="grade.name" [nzValue]="grade.id"></nz-option>
+        </nz-select> -->
+</div>
+
+<!-- Tabs -->
+<nz-tabset>
+    <nz-tab nzTitle="Estudiantes sin asignar" (nzClick)="cleanTab('availables')">
+        <!-- Filters -->
+        <div nz-col nzXs="24" nzLg="22">
+            <div nz-row class="filter" nzJustify="space-around" [nzGutter]="[10, 10]">
+                <div nz-col nzXs="22" nzSm="5" nzMd="5" nzLg="4" class="gutter-row text-filter">
+                    <span>Filtrar por: </span>
+                </div>
+                <!-- NIE -->
+                <div class="code" nz-col nzXs="22" nzSm="5" nzMd="5" nzLg="5" class="gutter-row">
+                    <nz-input-group [nzSuffix]="inputClearCode">
+                        <input nz-input [(ngModel)]="searchParams.code" placeholder="NIE" />
+                    </nz-input-group>
+                    <ng-template #inputClearCode>
+                        <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.code" (click)="searchParams.code = null; search()"></i>
+                    </ng-template>
+                </div>
+            
+                <!-- Name -->
+                <div class="name" nz-col nzXs="22" nzSm="5" nzMd="5" nzLg="5" class="gutter-row">
+                    <nz-input-group [nzSuffix]="inputClearName">
+                        <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Nombre" />
+                    </nz-input-group>
+                    <ng-template #inputClearName>
+                        <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.firstname" (click)="searchParams.firstname = null; search()"></i>
+                    </ng-template>
+                </div>
+            
+                <!-- Lastname -->
+                <div class="lastname" nz-col nzXs="22" nzSm="5" nzMd="5" nzLg="5" class="gutter-row">
+                    <nz-input-group [nzSuffix]="inputClearLastname">
+                        <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Apellido" />
+                    </nz-input-group>
+                    <ng-template #inputClearLastname>
+                        <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.lastname" (click)="searchParams.lastname = null; search()"></i>
+                    </ng-template>
+                </div>
+    
+                <!-- Search button-->
+                <div class="status" nz-col nzXs="4" nzSm="3" nzMd="3" nzLg="1" class="gutter-row">
+                    <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search" nzTheme="outline"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table -->
+    </nz-tab>
+    <!-- <nz-tab nzTitle="Estudiantes asignados" (nzClick)="cleanTab('assigned')">
+    </nz-tab> -->
+    <!-- <nz-tab nzTitle="Mis estudiantes" (nzClick)="cleanTab('my students')">
+    </nz-tab> -->
+</nz-tabset>

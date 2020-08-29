@@ -8,6 +8,7 @@ import { StudentsComponent } from './components/students/students.component';
 import { NewStudentComponent } from './components/new-student/new-student.component';
 import { StudentComponent } from './components/student/student.component';
 import { UpdateStudentComponent } from './components/update-student/update-student.component';
+import { StudentsAssignmentComponent } from './components/students-assignment/students-assignment.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,12 @@ const routes: Routes = [
     component: NewStudentComponent,
     canActivate: [AuthGuard],
     data: { permission: 17 }
+  },
+  {
+    path: 'asignar',
+    component: StudentsAssignmentComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 21 } // TODO: UPDATE here and in the menu.json file
   },
   {
     path: ':student',

@@ -123,6 +123,11 @@
                     "name": "Cargar estudiantes",
                     "permission": 17,
                     "allowed": false
+                }, {
+                    "route": "/estudiantes/asignar",
+                    "name": "Asignar estudiantes",
+                    "permission": 21,
+                    "allowed": false
                 }
             ]
         },
