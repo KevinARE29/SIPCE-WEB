@@ -2,7 +2,7 @@
 
 <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
     <ng-container [ngSwitch]="schoolYear.status">
-        <ng-container *ngSwitchCase="'Nuevo'">
+        <ng-container *ngSwitchCase="'Histórico'">
             <!-- #region No active or draft school year -->
             <form nz-form [formGroup]="classPeriodForm" (ngSubmit)="submitClassPeriod()">
                 <div nz-col nzXs="24" nzSm="24" nzMd="20" nzLg="11">
