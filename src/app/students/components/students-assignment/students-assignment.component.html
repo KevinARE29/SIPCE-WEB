@@ -55,6 +55,47 @@
         </div>
 
         <!-- Table -->
+        <div nz-row>
+            <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 24 }" [nzXl]="{ span: 22, offset: 1 }">
+                <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+                    <nz-table #filterTable 
+                        [nzData]="studentsWithoutAssignation" 
+                        nzTableLayout="fixed"
+                        nzSize="small"
+                        nzShowPagination
+                        nzShowSizeChanger
+                        (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+                    >
+                        <thead>
+                            <tr>
+                                <th [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
+                                <th *ngFor="let column of availableColumns" [nzSortFn]="column.compare" [nzSortPriority]="column.priority">{{ column.title }}</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                            <tr *ngFor="let data of filterTable.data">
+                                <td
+                                    [nzChecked]="setOfCheckedId.has(data.student.id)"
+                                    [nzDisabled]="data.disabled"
+                                    (nzCheckedChange)="onItemChecked(data.student.id, $event)"
+                                ></td>
+                                <td>{{ data.student.code }}</td>
+                                <td>{{ data.student.firstname }}</td>
+                                <td>{{ data.student.lastname }}</td>
+                            </tr>
+                        </tbody>
+                    </nz-table>
+                </nz-spin>
+            </div>
+        </div>
+        
+        <div class="send-request">
+            <button nz-button nzType="primary" [disabled]="setOfCheckedId.size === 0">
+              Vincular estudiantes
+            </button>
+            <span> {{ setOfCheckedId.size }} estudiantes seleccionados</span>
+        </div>
     </nz-tab>
     <!-- <nz-tab nzTitle="Estudiantes asignados" (nzClick)="cleanTab('assigned')">
     </nz-tab> -->

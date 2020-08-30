@@ -89,7 +89,7 @@ export class StudentService {
     return this.http.get<Student[]>(url).pipe(catchError(this.handleError()));
   }
 
-  bulkStudents(students: any, shift: number, currentYear: boolean): Observable<any> {
+  bulkStudents(students: any, shift: number, currentYear: boolean): Observable<unknown> {
     const newStudents = new Array<any>();
     const data = {};
     students.forEach((element) => {
@@ -232,10 +232,27 @@ export class StudentService {
       .pipe(catchError(this.handleError()));
   }
 
-  getStudentsAssignation(gradeId: number, shiftId: number): Observable<Student[]> {
+  getStudentsAssignation(gradeId: number, shiftId: number): Observable<unknown> {
     return this.http
-      .get<Student[]>(`${this.baseUrl}students-assignation?currentGradeId=${gradeId}&currentShiftId=${shiftId}`)
-      .pipe(catchError(this.handleError()));
+      .get<unknown>(`${this.baseUrl}students-assignation?currentGradeId=${gradeId}&currentShiftId=${shiftId}`)
+      .pipe(
+        map((response) => {
+          const assignedStudents = new Array<unknown>();
+          const studentsWithoutAssignation = new Array<unknown>();
+
+          for (let i = 0; i < response['assignedStudents'].length; i++) {
+            assignedStudents[i] = { student: response['assignedStudents'][i], disabled: false };
+          }
+
+          for (let i = 0; i < response['studentsWithoutAssignation'].length; i++) {
+            studentsWithoutAssignation[i] = { student: response['studentsWithoutAssignation'][i], disabled: false };
+          }
+
+          // myStudents:
+          return { assignedStudents, studentsWithoutAssignation, myStudents: response['myStudents'] };
+        }),
+        catchError(this.handleError())
+      );
   }
 
   mergeStudentAndCatalogs(id: number): Observable<unknown> {

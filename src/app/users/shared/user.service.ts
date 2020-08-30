@@ -180,7 +180,7 @@ export class UserService {
     users.forEach((element) => {
       const ids = new Array<number>();
       Object.keys(element['role']['value']).forEach((role) => {
-        if (element['role']['value'][role]['role']){
+        if (element['role']['value'][role]['role']) {
           const id = element['role']['value'][role]['role']['id'];
           if (id) ids.push(element['role']['value'][role]['role']['id']);
         }
