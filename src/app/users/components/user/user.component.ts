@@ -82,7 +82,7 @@ export class UserComponent implements OnInit {
       const param: string = params.get('user');
       const emailPattern = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 
-      this.userForm = this.fb.group({
+      const newUserForm = this.fb.group({
         code: [null, [Validators.required, Validators.maxLength(32), Validators.pattern('[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$')]],
         username: [null, [Validators.required, Validators.maxLength(64), Validators.pattern('[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$')]],
         firstname: [
@@ -96,6 +96,21 @@ export class UserComponent implements OnInit {
         email: [null, [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]]
       });
 
+      const updateUserForm = this.fb.group({
+        code: [null, [Validators.required]],
+        username: [null, [Validators.required, Validators.maxLength(64), Validators.pattern('[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$')]],
+        firstname: [
+          null,
+          [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        ],
+        lastname: [
+          null,
+          [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        ],
+        email: [null, [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]]
+      });
+
+
       if (typeof param === 'string' && !Number.isNaN(Number(param))) {
         this.id = Number(param);
 
@@ -105,6 +120,9 @@ export class UserComponent implements OnInit {
         } else if (this.id > 0) {
           this.getUser();
         }
+
+        this.userForm = this.id > 0 ? updateUserForm : newUserForm;
+
       } else {
         this.router.navigateByUrl('/usuario/' + param, { skipLocationChange: true });
       }
