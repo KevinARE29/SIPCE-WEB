@@ -232,6 +232,12 @@ export class StudentService {
       .pipe(catchError(this.handleError()));
   }
 
+  getStudentsAssignation(gradeId: number, shiftId: number): Observable<Student[]> {
+    return this.http
+      .get<Student[]>(`${this.baseUrl}students-assignation?currentGradeId=${gradeId}&currentShiftId=${shiftId}`)
+      .pipe(catchError(this.handleError()));
+  }
+
   mergeStudentAndCatalogs(id: number): Observable<unknown> {
     return forkJoin({
       sections: this.sectionService.getAllSections(),
