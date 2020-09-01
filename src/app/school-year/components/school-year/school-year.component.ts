@@ -83,7 +83,7 @@ export class SchoolYearComponent implements OnInit {
         this.loading = false;
       },
       (error) => {
-        if (error.status === 404) this.schoolYear.status = 'Nuevo';
+        if (error.status === 404) this.schoolYear.status = 'Histórico';
         this.loading = false;
       }
     );
