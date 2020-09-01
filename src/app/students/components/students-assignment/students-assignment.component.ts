@@ -9,6 +9,11 @@ export interface Data {
   disabled: boolean;
 }
 
+export interface Grade {
+  name: string;
+  ids: string;
+}
+
 @Component({
   selector: 'app-students-assignment',
   templateUrl: './students-assignment.component.html',
@@ -16,6 +21,8 @@ export interface Data {
 })
 export class StudentsAssignmentComponent implements OnInit {
   loading = false;
+  teacherAssignation: Grade[] = [];
+  currentGrade: string;
 
   // Tables variables
   assignedStudents: Data[] = [];
@@ -44,26 +51,41 @@ export class StudentsAssignmentComponent implements OnInit {
     this.searchParams.lastname = null;
 
     this.initializeColumns();
-    // this.getStudents();
     this.getProfile();
   }
 
   getProfile(): void {
     this.userService.getUserProfile().subscribe((data) => {
-      console.log(data);
+      Object.values(data['teacherAssignation']).forEach((assignation) => {
+        const name = assignation['grade']['name'].concat(' (', assignation['shift']['name'], ')');
+        const ids = assignation['shift']['id'].toString().concat(';', assignation['grade']['id']);
+        this.teacherAssignation.push({ name, ids });
+      });
+
+      if (this.teacherAssignation.length === 1) {
+        this.currentGrade = this.teacherAssignation[0].ids;
+        this.getStudents();
+      }
     });
   }
 
   getStudents(): void {
-    this.loading = true;
-    this.studentService.getStudentsAssignation(7, 1).subscribe((data) => {
-      console.log(data);
-      this.studentsWithoutAssignation = data['studentsWithoutAssignation'];
-      this.assignedStudents = data['assignedStudents'];
-      this.myStudents = data['myStudents'];
+    if (this.currentGrade) {
+      const ids = this.currentGrade.split(';');
+      this.loading = true;
 
-      this.loading = false;
-    });
+      this.studentService.getStudentsAssignation(parseInt(ids[0]), parseInt(ids[1])).subscribe((data) => {
+        this.studentsWithoutAssignation = data['studentsWithoutAssignation'];
+        this.assignedStudents = data['assignedStudents'];
+        this.myStudents = data['myStudents'];
+
+        this.loading = false;
+      });
+    } else {
+      this.studentsWithoutAssignation = [];
+      this.assignedStudents = [];
+      this.myStudents = [];
+    }
   }
 
   initializeColumns(): void {

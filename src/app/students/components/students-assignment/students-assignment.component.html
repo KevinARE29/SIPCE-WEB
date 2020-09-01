@@ -1,11 +1,19 @@
-<h1>Estudiantes</h1>
+<div nz-row>
+    <div nz-col nzSm="24" nzMd="6" nzXl="4">
+        <h1>Estudiantes</h1>
+    </div>
+    <div nz-col *ngIf="teacherAssignation.length === 1" class="grade-name">
+        {{ teacherAssignation[0].name }}
+    </div>
+</div>
+
 
 <!-- Grade -->
-<div class="grade" nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="9" nzXl="10" class="gutter-row">
+<div class="grade" nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="9" nzXl="10" class="gutter-row" *ngIf="teacherAssignation.length > 1">
     <label>Grado: </label>
-    <!-- <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar grado" [(ngModel)]="currentGrade.id" (ngModelChange)="getCurrentGrade()">
-            <nz-option *ngFor="let grade of availableGrades" [nzLabel]="grade.name" [nzValue]="grade.id"></nz-option>
-        </nz-select> -->
+    <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar grado" [(ngModel)]="currentGrade" (ngModelChange)="getStudents()">
+        <nz-option *ngFor="let assignation of teacherAssignation" [nzLabel]="assignation.name" [nzValue]="assignation.ids"></nz-option>
+    </nz-select>
 </div>
 
 <!-- Tabs -->

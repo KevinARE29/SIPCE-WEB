@@ -33,7 +33,7 @@ const routes: Routes = [
     path: 'asignar',
     component: StudentsAssignmentComponent,
     canActivate: [AuthGuard],
-    data: { permission: 21 } // TODO: UPDATE here and in the menu.json file
+    data: { permission: 23 }
   },
   {
     path: ':student',

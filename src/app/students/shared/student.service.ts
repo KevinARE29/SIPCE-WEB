@@ -232,7 +232,7 @@ export class StudentService {
       .pipe(catchError(this.handleError()));
   }
 
-  getStudentsAssignation(gradeId: number, shiftId: number): Observable<unknown> {
+  getStudentsAssignation(shiftId: number, gradeId: number): Observable<unknown> {
     return this.http
       .get<unknown>(`${this.baseUrl}students-assignation?currentGradeId=${gradeId}&currentShiftId=${shiftId}`)
       .pipe(
