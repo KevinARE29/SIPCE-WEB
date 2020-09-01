@@ -108,10 +108,12 @@ export class CycleCoordinatorsComponent implements OnInit {
       if (cycle['cycleCoordinator'].length > 0)
         cycle['error'] = 'No se encontró un coordinador de ciclo con ese nombre';
     } else if (typeof cycle['cycleCoordinator'] === 'object') {
-      cycle['cycleCoordinator'].active = false;
-      document.getElementById(item['shift']['id'] + '_' + cycle['cycle']['id']).setAttribute('disabled', 'true');
+      if (cycle['cycleCoordinator']) {
+        cycle['cycleCoordinator'].active = false;
+        document.getElementById(item['shift']['id'] + '_' + cycle['cycle']['id']).setAttribute('disabled', 'true');
 
-      this.coordinatorsEvent.emit({ shift: item['shift'], cycle });
+        this.coordinatorsEvent.emit({ shift: item['shift'], cycle });
+      }
     }
 
     item['filteredOptions'] = item['coordinators'];

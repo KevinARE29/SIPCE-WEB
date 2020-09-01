@@ -121,12 +121,14 @@ export class HeadTeachersComponent implements OnInit {
     if (typeof section['teacher'] === 'string') {
       if (section['teacher'].length > 0) section['error'] = 'No se encontró un docente titular con ese nombre';
     } else if (typeof section['teacher'] === 'object') {
-      section['teacher'].active = false;
-      document
-        .getElementById(item['shift']['id'] + '_' + grade['grade']['id'] + '_' + section['section']['id'])
-        .setAttribute('disabled', 'true');
+      if (section['teacher']) {
+        section['teacher'].active = false;
+        document
+          .getElementById(item['shift']['id'] + '_' + grade['grade']['id'] + '_' + section['section']['id'])
+          .setAttribute('disabled', 'true');
 
-      this.headTeachersEvent.emit({ shift: item['shift'], grade: grade, section: section });
+        this.headTeachersEvent.emit({ shift: item['shift'], grade: grade, section: section });
+      }
     }
 
     item['filteredOptions'] = item['teachers'];
