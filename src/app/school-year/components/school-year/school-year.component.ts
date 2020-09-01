@@ -417,28 +417,55 @@ export class SchoolYearComponent implements OnInit {
 
   done(): void {
     const year = getYear(parseISO(this.schoolYear.startDate.toString()));
-    this.confirmSchoolYearModal = this.modal.confirm({
-      nzTitle: `¿Aperturar año escolar ${year}?`,
-      nzContent: 'Al dar clic al botón Aceptar se iniciará un nuevo año escolar con las configuraciones asignadas.',
-      nzOnOk: () =>
-        this.schoolYearService
-          .startSchoolYear()
-          .toPromise()
-          .then(() => {
-            this.message.success(`El año escolar ${year} se ha iniciado con éxito`);
-            this.getSchoolYear();
-          })
-          .catch((err) => {
-            const statusCode = err.statusCode;
-            const notIn = [401, 403];
+    let allowFinalStep = true;
+    let errorMessage = '';
 
-            if (!notIn.includes(statusCode) && statusCode < 500) {
-              this.notification.create('error', 'Ocurrió un error al aperturar el año escolar.', err.message, {
-                nzDuration: 0
-              });
-            }
-          })
-    });
+    this.checkEmptyCoordinators();
+    if (this.emptyUsers.empty > 0 && this.emptyUsers.valid) {
+      allowFinalStep = false; 
+      errorMessage += 'Se detectaron ciclos sin coordinadores asignados. ';
+    } 
+
+    this.checkEmptyHeadTeachers();
+    if (this.emptyUsers.empty > 0 && this.emptyUsers.valid) {
+      allowFinalStep = false; 
+      errorMessage += 'Se detectaron grados sin docentes titulares asignados. ';
+    } 
+
+    this.checkEmptyCounselors();
+    if (this.emptyUsers.empty > 0 && this.emptyUsers.valid) {
+      allowFinalStep = false; 
+      errorMessage += 'Se detectaron grados sin orientadores asignados. ';
+    } 
+
+    if (allowFinalStep) {
+      this.confirmSchoolYearModal = this.modal.confirm({
+        nzTitle: `¿Aperturar año escolar ${year}?`,
+        nzContent: 'Al dar clic al botón Aceptar se iniciará un nuevo año escolar con las configuraciones asignadas.',
+        nzOnOk: () =>
+          this.schoolYearService
+            .startSchoolYear()
+            .toPromise()
+            .then(() => {
+              this.message.success(`El año escolar ${year} se ha iniciado con éxito`);
+              this.getSchoolYear();
+            })
+            .catch((err) => {
+              const statusCode = err.statusCode;
+              const notIn = [401, 403];
+  
+              if (!notIn.includes(statusCode) && statusCode < 500) {
+                this.notification.create('error', 'Ocurrió un error al aperturar el año escolar.', err.message, {
+                  nzDuration: 0
+                });
+              }
+            })
+      });
+    } else {
+      this.notification.create('error', 'Ocurrió un error al aperturar el año escolar. Verifique lo siguiente: ', errorMessage, {
+        nzDuration: 0
+      });
+    }
   }
 
   // Save data
