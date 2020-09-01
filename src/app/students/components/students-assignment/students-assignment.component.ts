@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Student } from '../../shared/student.model';
 import { StudentService } from '../../shared/student.service';
+import { UserService } from 'src/app/users/shared/user.service';
 
 export interface Data {
   student: Student;
@@ -34,12 +35,23 @@ export class StudentsAssignmentComponent implements OnInit {
   assignedColumns = [];
   myStudentsColumns = [];
 
-  constructor(private studentService: StudentService) {}
+  constructor(private studentService: StudentService, private userService: UserService) {}
 
   ngOnInit(): void {
     this.searchParams = new Student();
+    this.searchParams.code = null;
+    this.searchParams.firstname = null;
+    this.searchParams.lastname = null;
+
     this.initializeColumns();
-    this.getStudents();
+    // this.getStudents();
+    this.getProfile();
+  }
+
+  getProfile(): void {
+    this.userService.getUserProfile().subscribe((data) => {
+      console.log(data);
+    });
   }
 
   getStudents(): void {
@@ -101,8 +113,18 @@ export class StudentsAssignmentComponent implements OnInit {
     }
   }
 
-  search(): void {
-    console.log('Search');
+  search(list: string): void {
+    console.log('Search', this.searchParams);
+    switch (list) {
+      case 'availables':
+        this.studentsWithoutAssignation = this.studentsWithoutAssignation.filter((x) => {
+          if (this.searchParams.code) x.student.code === this.searchParams.code;
+          if (this.searchParams.firstname) x.student.firstname === this.searchParams.firstname;
+          if (this.searchParams.lastname) x.student.lastname === this.searchParams.lastname;
+          return x;
+        });
+        break;
+    }
   }
 
   //#region Selection & operations over table

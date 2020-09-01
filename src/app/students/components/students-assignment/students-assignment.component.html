@@ -23,7 +23,7 @@
                         <input nz-input [(ngModel)]="searchParams.code" placeholder="NIE" />
                     </nz-input-group>
                     <ng-template #inputClearCode>
-                        <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.code" (click)="searchParams.code = null; search()"></i>
+                        <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.code" (click)="searchParams.code = null; search('availables')"></i>
                     </ng-template>
                 </div>
             
@@ -33,7 +33,7 @@
                         <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Nombre" />
                     </nz-input-group>
                     <ng-template #inputClearName>
-                        <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.firstname" (click)="searchParams.firstname = null; search()"></i>
+                        <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.firstname" (click)="searchParams.firstname = null; search('availables')"></i>
                     </ng-template>
                 </div>
             
@@ -43,13 +43,13 @@
                         <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Apellido" />
                     </nz-input-group>
                     <ng-template #inputClearLastname>
-                        <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.lastname" (click)="searchParams.lastname = null; search()"></i>
+                        <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.lastname" (click)="searchParams.lastname = null; search('availables')"></i>
                     </ng-template>
                 </div>
     
                 <!-- Search button-->
                 <div class="status" nz-col nzXs="4" nzSm="3" nzMd="3" nzLg="1" class="gutter-row">
-                    <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search" nzTheme="outline"></i></button>
+                    <button nz-button nzType="primary" (click)="search('availables')"><i nz-icon nzType="search" nzTheme="outline"></i></button>
                 </div>
             </div>
         </div>

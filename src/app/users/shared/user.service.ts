@@ -32,6 +32,10 @@ export class UserService {
     return this.http.get<User>(`${this.baseUrl}users/${id}`).pipe(catchError(this.handleError()));
   }
 
+  getUserProfile(): Observable<unknown> {
+    return this.http.get<unknown>(`${this.baseUrl}me`).pipe(catchError(this.handleError()));
+  }
+
   getUsers(params: NzTableQueryParams, search: User, paginate: boolean): Observable<User[]> {
     let url = this.baseUrl + 'users';
     let queryParams = '';
