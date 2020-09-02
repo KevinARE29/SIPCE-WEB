@@ -13,8 +13,8 @@ import { AuthGuard } from '../login/guards/auth.guard';
 const routes: Routes = [
   {
     path: '',
-    component: CalendarComponent
-    //  canActivate: [AuthGuard]
+    component: CalendarComponent,
+    // canActivate: [AuthGuard]
   },
   {
     path: '**',

@@ -100,8 +100,8 @@
         },
         {
             "title": "Agenda",
-            "icon": "solution",
-            "permission": 3,
+            "icon": "calendar",
+            "permission": 22,
             "allow": null,
             "children": [
                 {
