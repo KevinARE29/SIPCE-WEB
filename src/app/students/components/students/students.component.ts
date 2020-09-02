@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { NzMessageService } from 'ng-zorro-antd/message';
+
 import { Student } from '../../shared/student.model';
 import { Permission } from 'src/app/shared/permission.model';
 import { Pagination } from 'src/app/shared/pagination.model';
 import { StudentService } from '../../shared/student.service';
 import { AuthService } from 'src/app/login/shared/auth.service';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
 import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
 import { StudentStatus } from 'src/app/shared/student-status.enum';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-students',
@@ -18,6 +21,8 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 })
 export class StudentsComponent implements OnInit {
   permissions: Array<Permission> = [];
+  confirmModal?: NzModalRef;
+
   // Search params
   searchParams: Student;
   statusSwitch: boolean;
@@ -35,6 +40,8 @@ export class StudentsComponent implements OnInit {
     private studentService: StudentService,
     private gradeService: GradeService,
     private authService: AuthService,
+    private message: NzMessageService,
+    private modal: NzModalService,
     private notification: NzNotificationService
   ) {}
 
@@ -63,7 +70,9 @@ export class StudentsComponent implements OnInit {
 
     const permissions = content.permissions;
 
-    // this.permissions.push(new Permission(14, ''));
+    this.permissions.push(new Permission(17, 'Create student'));
+    this.permissions.push(new Permission(20, 'Update student'));
+    this.permissions.push(new Permission(21, 'Get student'));
 
     this.permissions.forEach((p) => {
       const index = permissions.indexOf(p.id);

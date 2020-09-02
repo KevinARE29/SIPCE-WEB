@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
+import { differenceInCalendarDays } from 'date-fns';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzMessageService } from 'ng-zorro-antd/message';
+
 import { Student } from '../../shared/student.model';
 import { Responsible } from '../../shared/responsible.model';
 import { KinshipRelationship } from './../../../shared/kinship-relationship.enum';
@@ -9,8 +13,6 @@ import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftP
 import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
 import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
 import { StudentService } from '../../shared/student.service';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-new-student',
@@ -91,6 +93,16 @@ export class NewStudentComponent implements OnInit {
       this.shifts = data['data'].filter((x) => x.active === true);
     });
   }
+
+  disabledDate = (current: Date): boolean => {
+    // Can not select days after today
+    return differenceInCalendarDays(current, new Date()) > 0;
+  };
+
+  disabledYear = (current: Date): boolean => {
+    // Can not select days after today
+    return differenceInCalendarDays(current, new Date()) > 365;
+  };
 
   submitForm(): void {
     for (const i in this.studentForm.controls) {

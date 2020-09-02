@@ -127,7 +127,7 @@
                 "validations": [
                     {
                         "value": "empty",
-                        "message": "El código es requerido"
+                        "message": "El NIE es requerido"
                     }
                 ]
             },

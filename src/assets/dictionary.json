@@ -32,13 +32,13 @@
             "grade": "Grado",
             "section": "Sección",
             "email": "Correo electrónico",
-            "code": "Código",
+            "code": "NIM",
             "role": "Rol",
             "all": "Registro"
         },
         "students": {
             "all": "Registro",
-            "code": "Código",
+            "code": "NIE",
             "firstname": "Nombres",
             "lastname": "Apellidos",
             "email": "Correo electrónico",
@@ -54,7 +54,8 @@
             "responsibleLastname": "Apellido del responsable",
             "contact": "Contacto",
             "responsibleEmail": "Correo electrónico del responsable",
-            "responsiblePhone": "Número de celular del responsable"
+            "responsiblePhone": "Número de celular del responsable",
+            "phone": "Número de celular del responsable"
         }
     }
 }

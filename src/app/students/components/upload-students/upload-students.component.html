@@ -30,7 +30,7 @@
         <nz-table #editRowTable [nzData]="listOfData" nzTableLayout="fixed" nzSize="small">
             <thead>
                 <tr>
-                    <th>Código</th>
+                    <th>NIE</th>
                     <th>Estudiante</th>
                     <th>Correo</th>
                     <th>Grado</th>
@@ -173,7 +173,7 @@
                         <!-- Date of birth -->
                         <td [ngClass]="{ 'fieldError': !data['birthdate']['isValid'] }"
                         nz-tooltip nzTooltipPlacement="topLeft" [nzTooltipTitle]="data['birthdate']['message']">
-                            <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [(ngModel)]="editCache[data.id].data['birthdate']['value']"></nz-date-picker>
+                            <nz-date-picker [nzFormat]="'dd/MM/yyyy'" [nzDisabledDate]="disabledDate" [(ngModel)]="editCache[data.id].data['birthdate']['value']"></nz-date-picker>
                         </td>
                         <!-- Responsible -->
                         <td>
