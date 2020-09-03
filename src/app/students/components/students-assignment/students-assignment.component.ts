@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+
 import { Student } from '../../shared/student.model';
 import { StudentService } from '../../shared/student.service';
 import { UserService } from 'src/app/users/shared/user.service';
@@ -21,6 +25,9 @@ export interface Grade {
 })
 export class StudentsAssignmentComponent implements OnInit {
   loading = false;
+  isConfirmLoading = false;
+  linking = false;
+  unlinking = false;
   firstLoad = false;
   teacherAssignation: Grade[] = [];
   currentGrade: string;
@@ -30,7 +37,7 @@ export class StudentsAssignmentComponent implements OnInit {
   dataTables: { availables: Data[]; assigned: Data[]; students: Data[] };
   assignedStudents: Data[] = [];
   studentsWithoutAssignation: Data[] = [];
-  myStudents: Student[] = [];
+  myStudents: Data[] = [];
 
   // Shared variables
   searchParams: Student;
@@ -45,7 +52,13 @@ export class StudentsAssignmentComponent implements OnInit {
   assignedColumns = [];
   myStudentsColumns = [];
 
-  constructor(private studentService: StudentService, private userService: UserService) {}
+  constructor(
+    private studentService: StudentService,
+    private userService: UserService,
+    private message: NzMessageService,
+    // private modal: NzModalService,
+    private notification: NzNotificationService
+  ) {}
 
   ngOnInit(): void {
     this.currentTab = 'availables';
@@ -150,6 +163,22 @@ export class StudentsAssignmentComponent implements OnInit {
               (!params.lastname || x['student'].lastname.toLowerCase().includes(params.lastname.toLowerCase()))
           );
           break;
+        // case 'assigned':
+        //   this.assignedStudents = this.dataTables.assigned.filter(
+        //     (x) =>
+        //       (!params.code || x['student'].code.toLowerCase().includes(params.code.toLowerCase())) &&
+        //       (!params.firstname || x['student'].firstname.toLowerCase().includes(params.firstname.toLowerCase())) &&
+        //       (!params.lastname || x['student'].lastname.toLowerCase().includes(params.lastname.toLowerCase()))
+        //   );
+        //   break;
+        // case 'my students':
+        //   this.myStudents = this.dataTables.students.filter(
+        //     (x) =>
+        //       (!params.code || x['student'].code.toLowerCase().includes(params.code.toLowerCase())) &&
+        //       (!params.firstname || x['student'].firstname.toLowerCase().includes(params.firstname.toLowerCase())) &&
+        //       (!params.lastname || x['student'].lastname.toLowerCase().includes(params.lastname.toLowerCase()))
+        //   );
+        //   break;
       }
     }
   }
@@ -186,9 +215,68 @@ export class StudentsAssignmentComponent implements OnInit {
     this.refreshCheckedStatus();
   }
 
-  // sendRequest(): void {
-  //   this.loading = true;
-  //   this.isConfirmLoading = true;
-  // }
+  linkStudents(): void {
+    if (this.currentGrade) {
+      const ids = this.currentGrade.split(';');
+      this.loading = true;
+      this.isConfirmLoading = true;
+
+      this.studentService
+        .updateStudentsAssignation(parseInt(ids[0]), parseInt(ids[1]), Array.from(this.setOfCheckedId), true)
+        .subscribe(
+          (r) => {
+            this.linking = false;
+            this.isConfirmLoading = false;
+            this.loading = false;
+
+            this.setOfCheckedId.clear();
+            this.refreshCheckedStatus();
+            this.message.success('Estudiantes vinculados con éxito');
+
+            this.getStudents();
+          },
+          (error) => {
+            this.linking = false;
+            this.isConfirmLoading = false;
+            this.loading = false;
+
+            const statusCode = error.statusCode;
+            const notIn = [401, 403];
+
+            if (!notIn.includes(statusCode) && statusCode < 500) {
+              this.notification.create('error', 'Ocurrió un error al vincular a los estudiantes.', error.message, {
+                nzDuration: 0
+              });
+            }
+          }
+        );
+    }
+  }
+  //#endregion
+
+  //#region Custom modals
+  showModal(vinculate: boolean): void {
+    if (vinculate) {
+      this.filteredList = this.dataTables.availables.filter((x) =>
+        Array.from(this.setOfCheckedId).includes(x.student.id)
+      );
+
+      this.linking = true;
+    } else {
+      this.filteredList = this.dataTables.students.filter((x) =>
+        Array.from(this.setOfCheckedId).includes(x.student.id)
+      );
+
+      this.unlinking = true;
+    }
+  }
+
+  handleOk(vinculate: boolean): void {
+    if (vinculate) this.linkStudents();
+  }
+
+  handleCancel(vinculate: boolean): void {
+    vinculate ? (this.linking = false) : (this.unlinking = false);
+  }
   //#endregion
 }

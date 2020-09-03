@@ -255,6 +255,18 @@ export class StudentService {
       );
   }
 
+  updateStudentsAssignation(
+    shiftId: number,
+    gradeId: number,
+    students: number[],
+    vinculate: boolean
+  ): Observable<unknown> {
+    const data = JSON.stringify({ studentIds: students, vinculate });
+    return this.http
+      .patch<unknown>(`${this.baseUrl}students-assignation?currentGradeId=${gradeId}&currentShiftId=${shiftId}`, data)
+      .pipe(catchError(this.handleError()));
+  }
+
   mergeStudentAndCatalogs(id: number): Observable<unknown> {
     return forkJoin({
       sections: this.sectionService.getAllSections(),
