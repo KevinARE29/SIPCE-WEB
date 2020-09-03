@@ -24,6 +24,7 @@ export class StudentsAssignmentComponent implements OnInit {
   firstLoad = false;
   teacherAssignation: Grade[] = [];
   currentGrade: string;
+  currentTab: string;
 
   // Tables variables
   dataTables: { availables: Data[]; assigned: Data[]; students: Data[] };
@@ -47,6 +48,8 @@ export class StudentsAssignmentComponent implements OnInit {
   constructor(private studentService: StudentService, private userService: UserService) {}
 
   ngOnInit(): void {
+    this.currentTab = 'availables';
+
     this.searchParams = new Student();
     this.searchParams.code = null;
     this.searchParams.firstname = null;
@@ -121,44 +124,33 @@ export class StudentsAssignmentComponent implements OnInit {
   }
 
   cleanTab(tab: string): void {
-    console.log(tab);
-    this.searchParams = new Student();
     this.checked = false;
     this.indeterminate = false;
     this.setOfCheckedId = new Set<number>();
     this.listOfCurrentPageData = [];
     this.filteredList = [];
 
-    console.log(
-      this.searchParams,
-      this.checked,
-      this.indeterminate,
-      this.setOfCheckedId,
-      this.listOfCurrentPageData,
-      this.filteredList
-    );
-    switch (tab) {
-      case 'availables':
-        break;
-      case 'assigned':
-        break;
-      case 'my students':
-        break;
-    }
+    Object.keys(this.searchParams).forEach((key) => {
+      this.searchParams[key] = null;
+    });
+
+    this.currentTab === tab ? this.search(tab) : (this.currentTab = tab);
   }
 
   search(list: string): void {
     const params = this.searchParams;
 
-    switch (list) {
-      case 'availables':
-        this.studentsWithoutAssignation = this.dataTables.availables.filter(
-          (x) =>
-            (!params.code || x['student'].code.toLowerCase().includes(params.code.toLowerCase())) &&
-            (!params.firstname || x['student'].firstname.toLowerCase().includes(params.firstname.toLowerCase())) &&
-            (!params.lastname || x['student'].lastname.toLowerCase().includes(params.lastname.toLowerCase()))
-        );
-        break;
+    if (this.dataTables) {
+      switch (list) {
+        case 'availables':
+          this.studentsWithoutAssignation = this.dataTables.availables.filter(
+            (x) =>
+              (!params.code || x['student'].code.toLowerCase().includes(params.code.toLowerCase())) &&
+              (!params.firstname || x['student'].firstname.toLowerCase().includes(params.firstname.toLowerCase())) &&
+              (!params.lastname || x['student'].lastname.toLowerCase().includes(params.lastname.toLowerCase()))
+          );
+          break;
+      }
     }
   }
 
