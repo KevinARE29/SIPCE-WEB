@@ -21,10 +21,12 @@ export interface Grade {
 })
 export class StudentsAssignmentComponent implements OnInit {
   loading = false;
+  firstLoad = false;
   teacherAssignation: Grade[] = [];
   currentGrade: string;
 
   // Tables variables
+  dataTables: { availables: Data[]; assigned: Data[]; students: Data[] };
   assignedStudents: Data[] = [];
   studentsWithoutAssignation: Data[] = [];
   myStudents: Student[] = [];
@@ -55,6 +57,7 @@ export class StudentsAssignmentComponent implements OnInit {
   }
 
   getProfile(): void {
+    this.firstLoad = true;
     this.userService.getUserProfile().subscribe((data) => {
       Object.values(data['teacherAssignation']).forEach((assignation) => {
         const name = assignation['grade']['name'].concat(' (', assignation['shift']['name'], ')');
@@ -66,6 +69,8 @@ export class StudentsAssignmentComponent implements OnInit {
         this.currentGrade = this.teacherAssignation[0].ids;
         this.getStudents();
       }
+
+      this.firstLoad = false;
     });
   }
 
@@ -78,6 +83,13 @@ export class StudentsAssignmentComponent implements OnInit {
         this.studentsWithoutAssignation = data['studentsWithoutAssignation'];
         this.assignedStudents = data['assignedStudents'];
         this.myStudents = data['myStudents'];
+
+        // Contains the copy of the original lists
+        this.dataTables = {
+          availables: data['studentsWithoutAssignation'],
+          assigned: data['assignedStudents'],
+          students: data['myStudents']
+        };
 
         this.loading = false;
       });
@@ -136,15 +148,16 @@ export class StudentsAssignmentComponent implements OnInit {
   }
 
   search(list: string): void {
-    console.log('Search', this.searchParams);
+    const params = this.searchParams;
+
     switch (list) {
       case 'availables':
-        this.studentsWithoutAssignation = this.studentsWithoutAssignation.filter((x) => {
-          if (this.searchParams.code) x.student.code === this.searchParams.code;
-          if (this.searchParams.firstname) x.student.firstname === this.searchParams.firstname;
-          if (this.searchParams.lastname) x.student.lastname === this.searchParams.lastname;
-          return x;
-        });
+        this.studentsWithoutAssignation = this.dataTables.availables.filter(
+          (x) =>
+            (!params.code || x['student'].code.toLowerCase().includes(params.code.toLowerCase())) &&
+            (!params.firstname || x['student'].firstname.toLowerCase().includes(params.firstname.toLowerCase())) &&
+            (!params.lastname || x['student'].lastname.toLowerCase().includes(params.lastname.toLowerCase()))
+        );
         break;
     }
   }
@@ -184,32 +197,6 @@ export class StudentsAssignmentComponent implements OnInit {
   // sendRequest(): void {
   //   this.loading = true;
   //   this.isConfirmLoading = true;
-
-  //   this.userService.generateCredentials(Array.from(this.setOfCheckedId)).subscribe(
-  //     () => {
-  //       this.search();
-  //       this.isVisible = false;
-  //       this.isConfirmLoading = false;
-  //       this.loading = false;
-  //       this.setOfCheckedId.clear();
-  //       this.refreshCheckedStatus();
-  //       this.message.success('Credenciales generadas con éxito');
-  //     },
-  //     (error) => {
-  //       this.isVisible = false;
-  //       this.isConfirmLoading = false;
-  //       this.loading = false;
-
-  //       const statusCode = error.statusCode;
-  //       const notIn = [401, 403];
-
-  //       if (!notIn.includes(statusCode) && statusCode < 500) {
-  //         this.notification.create('error', 'Ocurrió un error al crear las credenciales.', error.message, {
-  //           nzDuration: 0
-  //         });
-  //       }
-  //     }
-  //   );
   // }
   //#endregion
 }
