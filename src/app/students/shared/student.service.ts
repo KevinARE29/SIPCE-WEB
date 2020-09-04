@@ -239,9 +239,9 @@ export class StudentService {
       .pipe(
         map((response) => {
           const myStudents = new Array<unknown>();
-          const assignedStudents = new Array<unknown>();
+          let assignedStudents = new Array<unknown>();
           const studentsWithoutAssignation = new Array<unknown>();
-          const availableSections = new Array<ShiftPeriodGrade>();
+          let availableSections = new Array<ShiftPeriodGrade>();
 
           for (let i = 0; i < response['assignedStudents'].length; i++) {
             const student = response['assignedStudents'][i];
@@ -258,6 +258,9 @@ export class StudentService {
           for (let i = 0; i < response['myStudents'].length; i++) {
             myStudents[i] = { student: response['myStudents'][i], disabled: false };
           }
+
+          availableSections = availableSections.sort((a, b) => a.id - b.id);
+          assignedStudents = assignedStudents.sort((a, b) => a['student'].section.id - b['student'].section.id);
 
           return { assignedStudents, studentsWithoutAssignation, myStudents, availableSections };
         }),

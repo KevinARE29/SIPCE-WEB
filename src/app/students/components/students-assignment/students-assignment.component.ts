@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 import { Student } from '../../shared/student.model';
@@ -46,6 +45,7 @@ export class StudentsAssignmentComponent implements OnInit {
   checked = false;
   stChecked = false;
   indeterminate = false;
+  stIndeterminate = false;
   setOfCheckedId = new Set<number>();
   setOfStudentsCheckedId = new Set<number>();
   listOfCurrentPageData: Data[] = [];
@@ -60,7 +60,6 @@ export class StudentsAssignmentComponent implements OnInit {
     private studentService: StudentService,
     private userService: UserService,
     private message: NzMessageService,
-    // private modal: NzModalService,
     private notification: NzNotificationService
   ) {}
 
@@ -121,6 +120,7 @@ export class StudentsAssignmentComponent implements OnInit {
       this.studentsWithoutAssignation = [];
       this.assignedStudents = [];
       this.myStudents = [];
+      this.sections = [];
     }
   }
 
@@ -171,6 +171,7 @@ export class StudentsAssignmentComponent implements OnInit {
     this.checked = false;
     this.stChecked = false;
     this.indeterminate = false;
+    this.stIndeterminate = false;
     this.setOfCheckedId = new Set<number>();
     this.setOfStudentsCheckedId = new Set<number>();
     this.listOfCurrentPageData = new Array<Data>();
@@ -251,7 +252,7 @@ export class StudentsAssignmentComponent implements OnInit {
         listOfEnabledData.some(({ student }) => this.setOfCheckedId.has(student.id)) && !this.checked;
     } else {
       this.stChecked = listOfEnabledData.every(({ student }) => this.setOfStudentsCheckedId.has(student.id));
-      this.indeterminate =
+      this.stIndeterminate =
         listOfEnabledData.some(({ student }) => this.setOfStudentsCheckedId.has(student.id)) && !this.stChecked;
     }
   }
@@ -269,43 +270,51 @@ export class StudentsAssignmentComponent implements OnInit {
     this.refreshCheckedStatus(vinculate);
   }
 
-  linkStudents(): void {
+  linkStudents(vinculate: boolean): void {
     if (this.currentGrade) {
       const ids = this.currentGrade.split(';');
+      const students = vinculate ? Array.from(this.setOfCheckedId) : Array.from(this.setOfStudentsCheckedId);
+
       this.loading = true;
       this.isConfirmLoading = true;
 
-      this.studentService
-        .updateStudentsAssignation(parseInt(ids[0]), parseInt(ids[1]), Array.from(this.setOfCheckedId), true)
-        .subscribe(
-          (r) => {
-            this.linking = false;
-            this.isConfirmLoading = false;
-            this.loading = false;
+      this.studentService.updateStudentsAssignation(parseInt(ids[0]), parseInt(ids[1]), students, vinculate).subscribe(
+        () => {
+          this.linking = false;
+          this.unlinking = false;
+          this.isConfirmLoading = false;
+          this.loading = false;
 
-            this.setOfCheckedId.clear();
-            this.refreshCheckedStatus(true);
-            this.message.success('Estudiantes vinculados con éxito');
+          this.setOfCheckedId.clear();
+          this.refreshCheckedStatus(true);
+          vinculate
+            ? this.message.success('Estudiantes vinculados con éxito')
+            : this.message.success('Estudiantes desvinculados con éxito');
 
-            this.getStudents();
-          },
-          (error) => {
-            const statusCode = error.statusCode;
-            const notIn = [401, 403];
+          this.getStudents();
+        },
+        (error) => {
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
 
-            this.isConfirmLoading = false;
-            this.linking = false;
-            this.loading = false;
+          this.isConfirmLoading = false;
+          this.linking = false;
+          this.unlinking = false;
+          this.loading = false;
 
-            this.setOfCheckedId.clear();
+          this.setOfCheckedId.clear();
 
-            if (!notIn.includes(statusCode) && statusCode < 500) {
-              this.notification.create('error', 'Ocurrió un error al vincular a los estudiantes.', error.message, {
-                nzDuration: 0
-              });
-            }
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            vinculate
+              ? this.notification.create('error', 'Ocurrió un error al vincular a los estudiantes.', error.message, {
+                  nzDuration: 0
+                })
+              : this.notification.create('error', 'Ocurrió un error al desvincular a los estudiantes.', error.message, {
+                  nzDuration: 0
+                });
           }
-        );
+        }
+      );
     }
   }
   //#endregion
@@ -328,7 +337,7 @@ export class StudentsAssignmentComponent implements OnInit {
   }
 
   handleOk(vinculate: boolean): void {
-    if (vinculate) this.linkStudents();
+    this.linkStudents(vinculate);
   }
 
   handleCancel(vinculate: boolean): void {
