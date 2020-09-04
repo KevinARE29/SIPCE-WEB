@@ -13,6 +13,7 @@ import { Responsible } from './responsible.model';
 import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
 import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
 import { SectionService } from 'src/app/manage-academic-catalogs/shared/section.service';
+import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
 
 @Injectable({
   providedIn: 'root'
@@ -89,7 +90,7 @@ export class StudentService {
     return this.http.get<Student[]>(url).pipe(catchError(this.handleError()));
   }
 
-  bulkStudents(students: any, shift: number, currentYear: boolean): Observable<any> {
+  bulkStudents(students: any, shift: number, currentYear: boolean): Observable<unknown> {
     const newStudents = new Array<any>();
     const data = {};
     students.forEach((element) => {
@@ -229,6 +230,53 @@ export class StudentService {
 
     return this.http
       .put<Student>(`${this.baseUrl}students/${student.id}`, JSON.stringify(data))
+      .pipe(catchError(this.handleError()));
+  }
+
+  getStudentsAssignation(shiftId: number, gradeId: number): Observable<unknown> {
+    return this.http
+      .get<unknown>(`${this.baseUrl}students-assignation?currentGradeId=${gradeId}&currentShiftId=${shiftId}`)
+      .pipe(
+        map((response) => {
+          const myStudents = new Array<unknown>();
+          let assignedStudents = new Array<unknown>();
+          const studentsWithoutAssignation = new Array<unknown>();
+          let availableSections = new Array<ShiftPeriodGrade>();
+
+          for (let i = 0; i < response['assignedStudents'].length; i++) {
+            const student = response['assignedStudents'][i];
+            const section = availableSections.find((x) => x.id === student.section.id);
+
+            if (!section) availableSections.push(student.section);
+            assignedStudents[i] = { student, disabled: false };
+          }
+
+          for (let i = 0; i < response['studentsWithoutAssignation'].length; i++) {
+            studentsWithoutAssignation[i] = { student: response['studentsWithoutAssignation'][i], disabled: false };
+          }
+
+          for (let i = 0; i < response['myStudents'].length; i++) {
+            myStudents[i] = { student: response['myStudents'][i], disabled: false };
+          }
+
+          availableSections = availableSections.sort((a, b) => a.id - b.id);
+          assignedStudents = assignedStudents.sort((a, b) => a['student'].section.id - b['student'].section.id);
+
+          return { assignedStudents, studentsWithoutAssignation, myStudents, availableSections };
+        }),
+        catchError(this.handleError())
+      );
+  }
+
+  updateStudentsAssignation(
+    shiftId: number,
+    gradeId: number,
+    students: number[],
+    vinculate: boolean
+  ): Observable<unknown> {
+    const data = JSON.stringify({ studentIds: students, vinculate });
+    return this.http
+      .patch<unknown>(`${this.baseUrl}students-assignation?currentGradeId=${gradeId}&currentShiftId=${shiftId}`, data)
       .pipe(catchError(this.handleError()));
   }
 

@@ -1,0 +1,18 @@
+.filter {
+  background-color: #f3f3f3;
+  padding-bottom: 5px;
+}
+
+.text-filter {
+  margin-top: 5px;
+  margin-left: 10px;
+}
+
+nz-table {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.grade-name {
+  margin-top: 15px;
+}
