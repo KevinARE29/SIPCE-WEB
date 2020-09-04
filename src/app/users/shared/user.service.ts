@@ -279,7 +279,6 @@ export class UserService {
    */
   private handleError() {
     return (error: any) => {
-      console.log(error);
       error.error.message = this.errorMessageService.transformMessage('users', error.error.message);
       return throwError(error.error);
     };

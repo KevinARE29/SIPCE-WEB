@@ -73,7 +73,6 @@ export class StudentsAssignmentComponent implements OnInit {
     this.searchParams.lastname = null;
     this.searchParams.id = null;
 
-    console.log(this.listOfCurrentPageData);
     this.initializeColumns();
     this.getProfile();
   }
@@ -102,9 +101,18 @@ export class StudentsAssignmentComponent implements OnInit {
       this.loading = true;
 
       this.studentService.getStudentsAssignation(parseInt(ids[0]), parseInt(ids[1])).subscribe((data) => {
-        this.studentsWithoutAssignation = data['studentsWithoutAssignation'];
-        this.assignedStudents = data['assignedStudents'];
-        this.myStudents = data['myStudents'];
+        switch (this.currentTab) {
+          case 'availables':
+            this.studentsWithoutAssignation = data['studentsWithoutAssignation'];
+            break;
+          case 'assigned':
+            this.assignedStudents = data['assignedStudents'];
+            break;
+          case 'my students':
+            this.myStudents = data['myStudents'];
+            break;
+        }
+
         this.sections = data['availableSections'];
 
         // Contains the copy of the original lists
@@ -117,6 +125,7 @@ export class StudentsAssignmentComponent implements OnInit {
         this.loading = false;
       });
     } else {
+      this.dataTables = null;
       this.studentsWithoutAssignation = [];
       this.assignedStudents = [];
       this.myStudents = [];
@@ -230,7 +239,6 @@ export class StudentsAssignmentComponent implements OnInit {
 
   //#region Selection & operations over table
   updateCheckedSet(id: number, checked: boolean, vinculate: boolean): void {
-    console.log('Update checked set', id, checked, vinculate);
     if (vinculate) {
       checked ? this.setOfCheckedId.add(id) : this.setOfCheckedId.delete(id);
     } else {
