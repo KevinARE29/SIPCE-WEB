@@ -13,6 +13,7 @@ import { Responsible } from './responsible.model';
 import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
 import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
 import { SectionService } from 'src/app/manage-academic-catalogs/shared/section.service';
+import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
 
 @Injectable({
   providedIn: 'root'
@@ -237,19 +238,28 @@ export class StudentService {
       .get<unknown>(`${this.baseUrl}students-assignation?currentGradeId=${gradeId}&currentShiftId=${shiftId}`)
       .pipe(
         map((response) => {
+          const myStudents = new Array<unknown>();
           const assignedStudents = new Array<unknown>();
           const studentsWithoutAssignation = new Array<unknown>();
+          const availableSections = new Array<ShiftPeriodGrade>();
 
           for (let i = 0; i < response['assignedStudents'].length; i++) {
-            assignedStudents[i] = { student: response['assignedStudents'][i], disabled: false };
+            const student = response['assignedStudents'][i];
+            const section = availableSections.find((x) => x.id === student.section.id);
+
+            if (!section) availableSections.push(student.section);
+            assignedStudents[i] = { student, disabled: false };
           }
 
           for (let i = 0; i < response['studentsWithoutAssignation'].length; i++) {
             studentsWithoutAssignation[i] = { student: response['studentsWithoutAssignation'][i], disabled: false };
           }
 
-          // myStudents:
-          return { assignedStudents, studentsWithoutAssignation, myStudents: response['myStudents'] };
+          for (let i = 0; i < response['myStudents'].length; i++) {
+            myStudents[i] = { student: response['myStudents'][i], disabled: false };
+          }
+
+          return { assignedStudents, studentsWithoutAssignation, myStudents, availableSections };
         }),
         catchError(this.handleError())
       );

@@ -110,7 +110,7 @@
         {
             "title": "Estudiantes",
             "icon": "solution",
-            "permissions": [18, 17],
+            "permissions": [18, 17, 23],
             "allowed": null,
             "children": [
                 {
