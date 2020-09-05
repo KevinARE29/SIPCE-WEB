@@ -81,7 +81,13 @@ export class StudentsAssignmentComponent implements OnInit {
     this.firstLoad = true;
     this.userService.getUserProfile().subscribe((data) => {
       Object.values(data['teacherAssignation']).forEach((assignation) => {
-        const name = assignation['grade']['name'].concat(' (', assignation['shift']['name'], ')');
+        const name = assignation['grade']['name'].concat(
+          ' ',
+          assignation['section']['name'],
+          ' (',
+          assignation['shift']['name'],
+          ')'
+        );
         const ids = assignation['shift']['id'].toString().concat(';', assignation['grade']['id']);
         this.teacherAssignation.push({ name, ids });
       });

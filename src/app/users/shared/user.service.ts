@@ -44,7 +44,7 @@ export class UserService {
               shift: assignation[0]['shift'],
               cycle: assignation[0]['cycle'],
               grade: assignation[0]['gradeDetails'][0]['grade'],
-              section: new ShiftPeriodGrade() // TODO: Set section
+              section: assignation[0]['gradeDetails'][0]['sectionDetails'][0]['section']
             });
           });
 
