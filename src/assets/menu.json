@@ -110,7 +110,7 @@
         {
             "title": "Estudiantes",
             "icon": "solution",
-            "permissions": [18, 17],
+            "permissions": [18, 17, 23],
             "allowed": null,
             "children": [
                 {
@@ -122,6 +122,11 @@
                     "route": "/estudiantes/carga-masiva",
                     "name": "Cargar estudiantes",
                     "permission": 17,
+                    "allowed": false
+                }, {
+                    "route": "/estudiantes/asignar",
+                    "name": "Asignar estudiantes",
+                    "permission": 23,
                     "allowed": false
                 }
             ]

@@ -12,6 +12,7 @@ import { User } from './user.model';
 import { subMonths } from 'date-fns';
 import { RoleService } from 'src/app/roles/shared/role.service';
 import { PermissionService } from 'src/app/roles/shared/permission.service';
+import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,29 @@ export class UserService {
 
   getUser(id: number): Observable<User> {
     return this.http.get<User>(`${this.baseUrl}users/${id}`).pipe(catchError(this.handleError()));
+  }
+
+  getUserProfile(): Observable<unknown> {
+    return this.http.get<unknown>(`${this.baseUrl}me`).pipe(
+      map((response) => {
+        if (response['data']['teacherAssignation']) {
+          const teacherAssignation = new Array<unknown>();
+
+          Object.values(response['data']['teacherAssignation']).forEach((assignation) => {
+            teacherAssignation.push({
+              shift: assignation[0]['shift'],
+              cycle: assignation[0]['cycle'],
+              grade: assignation[0]['gradeDetails'][0]['grade'],
+              section: new ShiftPeriodGrade() // TODO: Set section
+            });
+          });
+
+          response['data']['teacherAssignation'] = teacherAssignation;
+        }
+        return response['data'];
+      }),
+      catchError(this.handleError())
+    );
   }
 
   getUsers(params: NzTableQueryParams, search: User, paginate: boolean): Observable<User[]> {
@@ -180,7 +204,7 @@ export class UserService {
     users.forEach((element) => {
       const ids = new Array<number>();
       Object.keys(element['role']['value']).forEach((role) => {
-        if (element['role']['value'][role]['role']){
+        if (element['role']['value'][role]['role']) {
           const id = element['role']['value'][role]['role']['id'];
           if (id) ids.push(element['role']['value'][role]['role']['id']);
         }
