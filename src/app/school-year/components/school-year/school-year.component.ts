@@ -22,7 +22,6 @@ export class SchoolYearComponent implements OnInit {
   loading = false;
   previousSchoolYear: SchoolYear;
   schoolYear: SchoolYear;
-  cacheSchoolYear: SchoolYear;
   catalogs: Catalogs;
 
   // No active or draft school year
@@ -64,7 +63,6 @@ export class SchoolYearComponent implements OnInit {
 
         // School Year
         this.schoolYear = data['schoolYear'][0];
-        this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
 
         // Catalogs
         this.catalogs.shifts = data['shifts']['data'].filter((x) => x.active === true).sort((a, b) => a.id - b.id);
@@ -110,8 +108,6 @@ export class SchoolYearComponent implements OnInit {
         }
       });
     }
-
-    this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
   }
 
   initializeCycleCoordinators(): void {
@@ -131,8 +127,6 @@ export class SchoolYearComponent implements OnInit {
         });
       });
     }
-
-    this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
   }
 
   initializeHeadTeachers(): void {
@@ -166,8 +160,6 @@ export class SchoolYearComponent implements OnInit {
           });
         });
       });
-
-      this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
     }
   }
 
@@ -197,8 +189,6 @@ export class SchoolYearComponent implements OnInit {
         });
       });
     }
-  
-    this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
   }
 
   //#region New school year
@@ -511,7 +501,6 @@ export class SchoolYearComponent implements OnInit {
 
           this.loading = false;
           this.message.success(`La asignación de ciclos, grados y secciones se ha guardado con éxito`);
-          this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
           if (next) this.currentStep += 1;
         },
         (error) => {
@@ -546,33 +535,28 @@ export class SchoolYearComponent implements OnInit {
     if (this.emptyUsers['empty'] > 0 && this.emptyUsers['valid']) this.emptyUsers['valid'] = false;
 
     if (this.emptyUsers['valid']) {
-      if (JSON.stringify(this.schoolYear) !== JSON.stringify(this.cacheSchoolYear)) {
-        this.loading = true;
-        this.schoolYearService.saveCycleCoordinators(this.schoolYear).subscribe(
-          () => {
-            this.loading = false;
-            this.message.success(`La asignación de coordinadores se ha guardado con éxito`);
-            this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
-            next ? (this.currentStep += 1) : (this.currentStep -= 1);
-          },
-          (error) => {
-            const statusCode = error.statusCode;
-            const notIn = [401, 403];
-            if (!notIn.includes(statusCode) && statusCode < 500) {
-              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
-                nzDuration: 0
-              });
-            } else if (typeof error === 'string') {
-              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
-                nzDuration: 0
-              });
-            }
-            this.loading = false;
+      this.loading = true;
+      this.schoolYearService.saveCycleCoordinators(this.schoolYear).subscribe(
+        () => {
+          this.loading = false;
+          this.message.success(`La asignación de coordinadores se ha guardado con éxito`);
+          next ? (this.currentStep += 1) : (this.currentStep -= 1);
+        },
+        (error) => {
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
+              nzDuration: 0
+            });
+          } else if (typeof error === 'string') {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
+              nzDuration: 0
+            });
           }
-        );
-      } else {
-        next ? (this.currentStep += 1) : (this.currentStep -= 1);
-      }
+          this.loading = false;
+        }
+      );
     } else {
       this.notification.create(
         'error',
@@ -590,33 +574,28 @@ export class SchoolYearComponent implements OnInit {
     if (this.emptyUsers['empty'] > 0 && this.emptyUsers['valid']) this.emptyUsers['valid'] = false;
 
     if (this.emptyUsers['valid']) {
-      if (JSON.stringify(this.schoolYear) !== JSON.stringify(this.cacheSchoolYear)) {
-        this.loading = true;
-        this.schoolYearService.saveHeadteachers(this.schoolYear).subscribe(
-          () => {
-            this.loading = false;
-            this.message.success(`La asignación de docentes titulares se ha guardado con éxito`);
-            this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
-            next ? (this.currentStep += 1) : (this.currentStep -= 1);
-          },
-          (error) => {
-            const statusCode = error.statusCode;
-            const notIn = [401, 403];
-            if (!notIn.includes(statusCode) && statusCode < 500) {
-              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
-                nzDuration: 0
-              });
-            } else if (typeof error === 'string') {
-              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
-                nzDuration: 0
-              });
-            }
-            this.loading = false;
+      this.loading = true;
+      this.schoolYearService.saveHeadteachers(this.schoolYear).subscribe(
+        () => {
+          this.loading = false;
+          this.message.success(`La asignación de docentes titulares se ha guardado con éxito`);
+          next ? (this.currentStep += 1) : (this.currentStep -= 1);
+        },
+        (error) => {
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
+              nzDuration: 0
+            });
+          } else if (typeof error === 'string') {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
+              nzDuration: 0
+            });
           }
-        );
-      } else {
-        next ? (this.currentStep += 1) : (this.currentStep -= 1);
-      }
+          this.loading = false;
+        }
+      );
     } else {
       this.notification.create(
         'error',
@@ -634,33 +613,28 @@ export class SchoolYearComponent implements OnInit {
     if (this.emptyUsers['empty'] > 0 && this.emptyUsers['valid']) this.emptyUsers['valid'] = false;
 
     if (this.emptyUsers['valid']) {
-      if (JSON.stringify(this.schoolYear) !== JSON.stringify(this.cacheSchoolYear)) {
-        this.loading = true;
-        this.schoolYearService.saveCounselors(this.schoolYear).subscribe(
-          () => {
-            this.loading = false;
-            this.message.success(`La asignación de orientadores se ha guardado con éxito`);
-            this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
-            next ? (this.currentStep += 1) : (this.currentStep -= 1);
-          },
-          (error) => {
-            const statusCode = error.statusCode;
-            const notIn = [401, 403];
-            if (!notIn.includes(statusCode) && statusCode < 500) {
-              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
-                nzDuration: 0
-              });
-            } else if (typeof error === 'string') {
-              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
-                nzDuration: 0
-              });
-            }
-            this.loading = false;
+      this.loading = true;
+      this.schoolYearService.saveCounselors(this.schoolYear).subscribe(
+        () => {
+          this.loading = false;
+          this.message.success(`La asignación de orientadores se ha guardado con éxito`);
+          next ? (this.currentStep += 1) : (this.currentStep -= 1);
+        },
+        (error) => {
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
+              nzDuration: 0
+            });
+          } else if (typeof error === 'string') {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
+              nzDuration: 0
+            });
           }
-        );
-      } else {
-        next ? (this.currentStep += 1) : (this.currentStep -= 1);
-      }
+          this.loading = false;
+        }
+      );
     } else {
       this.notification.create(
         'error',
