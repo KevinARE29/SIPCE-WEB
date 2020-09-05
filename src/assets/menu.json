@@ -129,12 +129,14 @@
         {
             "title": "Agenda",
             "icon": "calendar",
-            "permission": 22,
-            "allow": null,
+            "permissions": [22],
+            "allowed": null,
             "children": [
                 {
                     "route": "/calendario",
-                    "name": "Calendario"
+                    "name": "Calendario",
+                    "permission": 22,
+                    "allowed": false
                 }
             ]
         }

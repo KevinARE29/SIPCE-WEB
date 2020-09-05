@@ -10,13 +10,15 @@ import {
 } from '@syncfusion/ej2-angular-schedule';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataManager, WebApiAdaptor } from '@syncfusion/ej2-data';
-import { L10n, loadCldr } from '@syncfusion/ej2-base';
+import { L10n, loadCldr, isNullOrUndefined } from '@syncfusion/ej2-base';
 import { Events } from '../shared/events.model';
 
 import * as numberingSystems from '../../../../node_modules/cldr-data/supplemental/numberingSystems.json';
 import * as gregorian from '../../../../node_modules/cldr-data/main/es/ca-gregorian.json';
 import * as numbers from 'cldr-data/main/es/numbers.json';
 import * as timeZoneNames from 'cldr-data/main/es/timeZoneNames.json';
+import { StudentService } from '../../students/shared/student.service';
+import { Student } from '../../students/shared/student.model';
 
 loadCldr(numberingSystems['default'], gregorian['default'], numbers['default'], timeZoneNames['default']);
 
@@ -165,6 +167,12 @@ export class CalendarComponent implements OnInit {
   IsAllDay = true;
   show = true;
   event: Events = new Events();
+  // Search variables
+  searchLoader = false;
+  student: Student;
+  results: Student[];
+  noResults: string;
+  searching = false;
 
   @ViewChild('scheduleObj')
   public scheduleObj: ScheduleComponent;
@@ -194,11 +202,12 @@ export class CalendarComponent implements OnInit {
     { Id: 'Wide', Label: 'Wide' }
   ];
 
+  /*
   allDayEvent(): void {
     console.log(this.show);
     this.show = !this.show;
   }
-
+*/
   public dateParser(data: string): Date {
     return new Date(data);
   }
@@ -215,8 +224,6 @@ export class CalendarComponent implements OnInit {
     //  this.scheduleObj.setRecurrenceEditor(recurrObject);
     //  }
   }
-
-  //RecurrenceRule = new RecurrenceRule();
 
   // public eventData: EventSettingsModel = {
   //   dataSource: this.dataManager,
@@ -264,13 +271,12 @@ export class CalendarComponent implements OnInit {
       id: 'Id',
       subject: { validation: { required: true } },
       location: { validation: { required: true, regex: ['^[a-zA-Z0-9- ]*'] } },
-      description: { validation: { required: true } },
       startTime: { validation: { required: true } },
       endTime: { validation: { required: true } }
     }
   };
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private studentService: StudentService) {}
 
   ngOnInit(): void {
     this.eventForm = this.fb.group({
@@ -281,21 +287,59 @@ export class CalendarComponent implements OnInit {
       StartTime: [null, [Validators.required]],
       EndTime: [null, [Validators.required]],
       IsAllDay: [false, [Validators.required]],
-      RecurrenceID: [null, [Validators.required]],
+      //  RecurrenceID: [null, [Validators.required]],
       RecurrenceRule: [null, [Validators.required]],
-      RecurrenceException: [null, [Validators.required]],
+      Description: [null, [Validators.required]],
+      //  RecurrenceException: [null, [Validators.required]],
       Users: [null, [Validators.required]],
       Students: [null, [Validators.required]]
     });
+
+    this.student = new Student();
+    this.results = new Array<Student>();
   }
 
-  /* Method to show the recurrence rule with dataBinding*/
+  /* Method to show the recurrence rule with dataBinding
   onChange(args: RecurrenceEditorChangeEventArgs): void {
     const outputElement: HTMLElement = <HTMLElement>document.querySelector('#RecurrenceRule');
     if (args.value == '') {
       outputElement.innerText = null;
     } else {
-      this.recurrenceRule = '"' + args.value + '"';
+     //  this.recurrenceRule = '"' + args.value + '"';
+      this.recurrenceRule = args.value;
+      console.log(this.recurrenceRule);
+    }
+  }*/
+
+  public onChange(args: any): void {
+    this.recurrenceRule = '';
+    this.recurrenceRule = args.value;
+    console.log();
+  }
+
+  public onBegin(args: any): void {
+    if (args.requestType === 'eventChange' || args.requestType === 'eventCreate') {
+      let data = !isNullOrUndefined(args.data[0]) ? args.data[0] : args.data;
+      data.RecurrenceRule = this.recurrenceRule;
+      console.log('esto tiene data');
+      console.log(data);
+
+      if (args.requestType === 'eventCreate') {
+        this.submitForm();
+        console.log('--------------');
+        console.log('esto tiene el eventForm');
+        console.log(this.eventForm.value);
+        console.log('esto tiene el objeto de event');
+        console.log(this.event);
+        console.log('esto tiene data');
+        console.log(data);
+      } else if (args.requestType === 'eventChange') {
+        console.log('--------------');
+        data = <any>args.data;
+        console.log(<any>args.data);
+        console.log('esto tiene data');
+        console.log(data);
+      }
     }
   }
 
@@ -307,78 +351,79 @@ export class CalendarComponent implements OnInit {
       this.event.EndTime = this.eventForm.controls['EndTime'].value;
       this.event.Location = this.eventForm.controls['Location'].value;
       this.event.RecurrenceRule = this.eventForm.controls['RecurrenceRule'].value;
+      this.event.Description = this.eventForm.controls['Description'].value;
       this.event.Users = this.eventForm.controls['Users'].value;
       this.event.Students = this.eventForm.controls['Students'].value;
     }
     // console.log(this.event);
-  //  this.scheduleObj.addEvent(this.event);
+    //  this.scheduleObj.addEvent(this.event);
   }
 
-  // public onActionBegin(args: ActionEventArgs): void {
-  //   if (args.requestType == 'eventCreate') {
-  //     console.log(this.eventData);
-  //     //if the action is create and event i would use the API for that in this space
-  //     // args.cancel = true; if the event is not created use this line
-  //   }
-  // }
-
-  public onEventRendered(args: EventRenderedArgs): void {
-    switch (args.data.EventType) {
-      case 'Sesión estudiante':
-        (args.element as HTMLElement).style.backgroundColor = '#F57F17';
-        break;
-      case 'Entrevista con docente titular':
-        (args.element as HTMLElement).style.backgroundColor = '#7fa900';
-        break;
-      case 'Entrevista con con padres de familia':
-        (args.element as HTMLElement).style.backgroundColor = '#8e24aa';
-        break;
-      case 'Otros':
-        (args.element as HTMLElement).style.backgroundColor = '#8e24aa';
-        break;
-    }
-  }
 
   onPopupOpen(args: PopupOpenEventArgs): void {
     if (args.type === 'Editor') {
       const startElement: HTMLInputElement = args.element.querySelector('#StartTime') as HTMLInputElement;
       if (!startElement.classList.contains('e-datetimepicker')) {
-        new DateTimePicker({ value: new Date(startElement.value) || new Date(), locale: 'es' }, startElement);
+        new DateTimePicker(
+          {
+            value: new Date(startElement.value) || new Date(),
+            locale: 'es'
+          },
+          startElement
+        );
       }
       const endElement: HTMLInputElement = args.element.querySelector('#EndTime') as HTMLInputElement;
       if (!endElement.classList.contains('e-datetimepicker')) {
         new DateTimePicker({ value: new Date(endElement.value) || new Date(), locale: 'es' }, endElement);
       }
+      /*
       const recurElement: HTMLElement = args.element.querySelector('#RecurrenceEditor');
       if (!recurElement.classList.contains('e-recurrenceeditor')) {
-        const recurrObject: RecurrenceEditor = new RecurrenceEditor({
-     //   value: 'FREQ=DAILY;INTERVAL=1;',
-          locale: 'es'
-        });
-        recurrObject.appendTo(recurElement);
-        this.scheduleObj.setRecurrenceEditor(recurrObject);
-        console.log(recurrObject);
+        this.recurrenceObj.appendTo(recurElement);
+        this.scheduleObj.setRecurrenceEditor(this.recurrenceObj);
+        (this.scheduleObj.eventWindow as any).recurrenceEditor = this.recurrenceObj;
+        console.log(this.recurrenceObj.value);
       }
-      //  document.getElementById('RecurrenceEditor').style.display =
-      // this.scheduleObj.currentAction == 'EditOccurrence' ? 'none' : 'block';
+      */
+
+      //  const recurElement: HTMLElement = args.element.querySelector('#RecurrenceEditor');
+      // if (!recurElement.classList.contains('e-recurrenceeditor')) {
+      //   const recurrObject: RecurrenceEditor = new RecurrenceEditor({
+      //   value: 'FREQ=DAILY;INTERVAL=1;',
+      //    locale: 'es'
+      //  });
+      //  recurrObject.appendTo(recurElement);
+      //  this.scheduleObj.setRecurrenceEditor(recurrObject);
+      //    this.scheduleObj.eventWindow.recurrenceEditor = recurrObject;
+      //  (this.scheduleObj.eventWindow as any).recurrenceEditor = recurrObject;
+      //  console.log(recurrObject);
+      //  }
+      document.getElementById('RecurrenceRule').style.display =
+        this.scheduleObj.currentAction === 'EditOccurrence' ? 'none' : 'block';
     }
   }
 
-  public onActionBegin(args: { [key: string]: Object }): void {
-    if (args.requestType === 'eventCreate' || args.requestType === 'eventChange') {
-      let data: any;
-      if (args.requestType === 'eventCreate') {
-        data = <any>args.data[0];
-        console.log('args.data tiene');
-        // console.log(this.recurrenceRule);
-        console.log(<any>args.data[0]);
-      } else if (args.requestType === 'eventChange') {
-        data = <any>args.data;
-        console.log(<any>args.data);
-      }
-      if (!this.scheduleObj.isSlotAvailable(data.StartTime as Date, data.EndTime as Date)) {
-        args.cancel = true;
-      }
+  searchStudent(): void {
+    const search = new Student();
+    search.code = this.eventForm.controls['Users'].value;
+    this.searching = !this.searching;
+
+    if (search.code !== this.student.code && this.searching) {
+      this.searchLoader = true;
+      this.studentService.getStudents(null, search, true, null).subscribe((r) => {
+        this.results = r['data'];
+        this.results = this.results.filter((d) => d['id'] !== this.student.id);
+        this.searchLoader = false;
+      });
+    } else if (!this.searching) {
+      this.results = new Array<Student>();
+      this.eventForm.get('Users')?.setValue(null);
     }
+  }
+
+  addStudent(Student: Student): void {
+    console.log(Student.id);
+    this.event.Students.push(Student.id);
+    this.results = this.results.filter((d) => d['id'] !== Student.id);
   }
 }

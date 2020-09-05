@@ -14,7 +14,8 @@ const routes: Routes = [
   {
     path: '',
     component: CalendarComponent,
-    // canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { permission: 22 }
   },
   {
     path: '**',

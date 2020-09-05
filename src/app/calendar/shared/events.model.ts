@@ -9,6 +9,7 @@ export class Events {
   RecurrenceID: number;
   RecurrenceRule: string;
   RecurrenceException: string;
-  Users: Array<string>;
-  Students: Array<string>;
+  Description: string;
+  Users: Array<number>;
+  Students: Array<number>;
 }
