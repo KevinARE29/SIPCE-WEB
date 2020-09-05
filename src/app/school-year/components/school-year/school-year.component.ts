@@ -684,9 +684,9 @@ export class SchoolYearComponent implements OnInit {
     this.schoolYear.shifts.forEach((shift) => {
       shift['shift']['cycles'].forEach((cycle) => {
         this.emptyUsers['total']++;
-        if (!cycle['cycleCoordinator']) this.emptyUsers['empty']++;
 
-        if (cycle['cycleCoordinator'] && cycle['cycleCoordinator']['isValid'] && !cycle['cycleCoordinator']['isValid'])
+        if (!cycle['cycleCoordinator'] || !cycle['cycleCoordinator'].id) this.emptyUsers['empty']++;
+        if (cycle['cycleCoordinator'] && cycle['cycleCoordinator']['isValid'] === false)
           this.emptyUsers['valid'] = false;
       });
     });
@@ -701,8 +701,8 @@ export class SchoolYearComponent implements OnInit {
           grade['sectionDetails'].forEach((section) => {
             this.emptyUsers['total']++;
 
-            if (!section['teacher']) this.emptyUsers['empty']++;
-            if (section['teacher'] && section['teacher']['isValid'] && !section['teacher']['isValid'])
+            if (!section['teacher'] || !section['teacher'].id) this.emptyUsers['empty']++;
+            if (section['teacher'] && section['teacher']['isValid'] === false)
               this.emptyUsers['valid'] = false;
           });
         });
@@ -718,8 +718,8 @@ export class SchoolYearComponent implements OnInit {
         cycle['gradeDetails'].forEach((grade) => {
           this.emptyUsers['total']++;
           
-          if (!grade['counselor']) this.emptyUsers['empty']++;
-          if (grade['counselor'] && grade['counselor']['isValid'] && !grade['counselor']['isValid'])
+          if (!grade['counselor'] || !grade['counselor'].id) this.emptyUsers['empty']++;
+          if (grade['counselor'] && grade['counselor']['isValid'] === false)
               this.emptyUsers['valid'] = false;
         });
       });
