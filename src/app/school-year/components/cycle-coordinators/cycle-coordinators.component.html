@@ -4,8 +4,8 @@
             <div nz-col nzXs="24" nzMd="14">
                 <!-- Cycle inputs -->
                 <nz-form-item *ngFor="let cycle of item.cycles">
-                    <nz-form-label [nzMd]="7" [nzSm]="24" [nzXs]="24">{{cycle.cycle.name}}</nz-form-label>
-                    <nz-form-control [nzMd]="17" [nzSm]="14" [nzXs]="24">
+                    <nz-form-label [nzMd]="8" [nzSm]="24" [nzXs]="24">{{cycle.cycle.name}}</nz-form-label>
+                    <nz-form-control [nzMd]="16" [nzSm]="14" [nzXs]="24">
                         <nz-input-group [nzSuffix]="inputClearTpl">
                             <input [id]="item.shift.id + '_' + cycle.cycle.id" type="text" nz-input [(ngModel)]="cycle.cycleCoordinator"
                                 placeholder="Coordinador de {{cycle.cycle.name}}" [attr.disabled]="cycle.initialDisabled ? '' : null"
@@ -24,8 +24,10 @@
                         </ng-template>
                     </nz-form-control>
     
-                    <span class="error">{{cycle.error}}</span>
-                    <span class="error" *ngIf="!cycle.cycleCoordinator && !isValid">El campo es requerido</span>
+                    <div nz-col nzSpan="20" nzOffset="4">
+                        <span class="error">{{cycle.error}}</span>
+                        <span class="error" *ngIf="!cycle.cycleCoordinator && !isValid">El campo es requerido</span>
+                    </div>
                 </nz-form-item>
             </div>
         </nz-tab>
