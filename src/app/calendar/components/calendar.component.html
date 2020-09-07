@@ -1,6 +1,6 @@
 <ejs-schedule #scheduleObj heigth='500px' (popupOpen)='onPopupOpen($event)' [currentView]="newViewMode"
     (actionBegin)="onBegin($event)" [views]='views' [selectedDate]="selectedDate" timezone="America/El_Salvador"
-    locale='es' [eventSettings]="eventData">
+    locale='es' [eventSettings]="eventData" (eventRendered)="applyCategoryColor($event)">
     <ng-template #editorTemplate let-data>
         <!--   (actionBegin)="onActionBegin($event)"-->
         <form class="custom-event-editor" [formGroup]="eventForm">
@@ -23,7 +23,8 @@
             </div>
             <div colspan="4">
                 <label class="e-textlabel">Lugar</label>
-                <input id="Location" class="e-field e-input" type="text" value="{{data.Location}}"
+                <!-- -->
+                <input id="Location" class="e-field e-input" value="{{data.Location}}" type="text" data-name="Location"
                     FormControlName="Location" name="Location" style="width: 100%" />
             </div>
             <div colspan="4">
@@ -62,15 +63,33 @@
                     name="Description" rows="3" cols="50"
                     style="width: 100%; height: 60px !important; resize: vertical"></textarea>
             </div>
-            <!-- atendees 
+            <!-- atendees -->
 
+            
+            <div colspan="4">
+                <label class="e-textlabel"> Participantes del evento</label>
+            </div>
+            <br>
             <div nz-row colspan="4">
-                <label> Participantes del evento</label>
+           <!-- Students  -->  
+           <!-- Current student [nzGutter]="24"-->
+           <div class="addStudent" nz-row >
+               <div nz-col *ngFor="let student of event.Students">
+                   {{ student.firstname }} {{ student.lastname }} 
+                   <a  nz-button nzType="link"
+                       nz-popconfirm
+                       nzPopconfirmTitle="¿Desea desvincular al estudiante?"
+                       (nzOnConfirm)="confirmDeleteStudent(student.id)"
+                   >
+                   <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ff4d4f'"></i>
+                   </a>
+               </div>
+           </div>
                 <nz-spin nzTip="Cargando ..." [nzSpinning]="searchLoader">
-                  
+                  <label> Estudiantes</label>
                     <div nz-col nzXs="24" nzSm="24" nzMd="15">
                         <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                            <input type="text" nz-input formControlName="Users" placeholder="Buscar NIE" />
+                            <input type="text" nz-input formControlName="Students" placeholder="Buscar por NIE" />
                         </nz-input-group>
                         <ng-template #suffixIconButton>
                             <button nz-button [nzType]="searching ? '' : 'primary'" nzSearch (click)="searchStudent()">
@@ -78,7 +97,7 @@
                             </button>
                         </ng-template>
                     </div>
-                  
+                   <!-- Students result-->
                     <div nz-col nzXs="24" nzSm="24" nzMd="24">
                         <ng-container *ngIf="results.length;else noResults">
                             <div class="addStudent" *ngFor="let result of results">
@@ -94,8 +113,50 @@
                         </ng-template>
                     </div>
                 </nz-spin>
+
+                <div class="addStudent" nz-row [nzGutter]="24">
+                    <div nz-col *ngFor="let user of event.Users">
+                        {{ user.firstname }} {{ user.lastname }} 
+                        <a  nz-button nzType="link"
+                            nz-popconfirm
+                            nzPopconfirmTitle="¿Desea desvincular al estudiante?"
+                            (nzOnConfirm)="confirmDeleteUser(user.id)"
+                        >
+                        <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ff4d4f'"></i>
+                        </a>
+                    </div>
+                </div>
+                <nz-spin nzTip="Cargando ..." [nzSpinning]="searchLoaderUser">
+                   
+                   <label> Empleados</label>
+                    <div nz-col nzXs="24" nzSm="24" nzMd="15">
+                        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButtonUser">
+                            <input type="text" nz-input formControlName="Users" placeholder="Buscar por nombre de usuario" />
+                        </nz-input-group>
+                        <ng-template #suffixIconButtonUser>
+                            <button nz-button [nzType]="searchingUser ? '' : 'primary'" nzSearch (click)="searchUser()">
+                                <i nz-icon [nzType]="searchingUser ? 'close' : 'search'"></i>
+                            </button>
+                        </ng-template>
+                    </div>
+                   <!-- Students result-->
+                    <div nz-col nzXs="24" nzSm="24" nzMd="24">
+                        <ng-container *ngIf="resultsUsers.length;else noResultsUser">
+                            <div class="addStudent" *ngFor="let result of resultsUsers">
+                                <span>{{ result.firstname }} {{ result.lastname }}</span>
+                                <a (click)="addUser(result)">
+                                    <i nz-icon nzType="plus-circle" [nzTheme]="'twotone'"
+                                        [nzTwotoneColor]="'#ef6c00'"></i>
+                                </a>
+                            </div>
+                        </ng-container>
+                        <ng-template #noResultsUser>
+                            <ng-container *ngIf="searchingUser">No se encontraron resultados.</ng-container>
+                        </ng-template>
+                    </div>
+                </nz-spin>
             </div>
-        -->
+    
         </form>
 
         <!--   </tbody>
