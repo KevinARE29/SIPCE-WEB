@@ -92,35 +92,10 @@ export class StudentsComponent implements OnInit {
 
   /* ------      Main actions      ------ */
   getStudents(params: NzTableQueryParams): void {
+    const paginate = params ? params.pageIndex !== this.pagination.page : false;
     this.loading = true;
 
-    this.studentService
-      .getStudents(params, this.searchParams, this.statusSwitch, params.pageIndex !== this.pagination.page)
-      .subscribe(
-        (data) => {
-          this.pagination = data['pagination'];
-          this.listOfDisplayData = data['data'];
-
-          this.loading = false;
-        },
-        (error) => {
-          this.loading = false;
-          const statusCode = error.statusCode;
-          const notIn = [401, 403];
-
-          if (!notIn.includes(statusCode) && statusCode < 500) {
-            this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
-              nzDuration: 0
-            });
-          }
-        }
-      );
-  }
-
-  search(): void {
-    this.loading = true;
-
-    this.studentService.getStudents(null, this.searchParams, this.statusSwitch, false).subscribe(
+    this.studentService.getStudents(params, this.searchParams, this.statusSwitch, paginate).subscribe(
       (data) => {
         this.pagination = data['pagination'];
         this.listOfDisplayData = data['data'];
@@ -154,7 +129,7 @@ export class StudentsComponent implements OnInit {
           .toPromise()
           .then(() => {
             this.message.success(`El estudiante ${element.firstname} ${element.lastname} ha sido eliminado`);
-            this.search();
+            this.getStudents(null);
           })
           .catch((err) => {
             const statusCode = err.statusCode;
@@ -192,6 +167,6 @@ export class StudentsComponent implements OnInit {
 
   statusToggle(): void {
     this.setStatuses();
-    this.search();
+    this.getStudents(null);
   }
 }

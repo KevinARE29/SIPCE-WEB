@@ -14,7 +14,7 @@
             <input nz-input [(ngModel)]="searchParams.code" placeholder="Buscar código" />
         </nz-input-group>
         <ng-template #inputClearCode>
-            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.code" (click)="searchParams.code = null; search()"></i>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.code" (click)="searchParams.code = null; getStudents(null)"></i>
         </ng-template>
     </div>
 
@@ -24,7 +24,7 @@
             <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Buscar nombre" />
         </nz-input-group>
         <ng-template #inputClearName>
-            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.firstname" (click)="searchParams.firstname = null; search()"></i>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.firstname" (click)="searchParams.firstname = null; getStudents(null)"></i>
         </ng-template>
     </div>
 
@@ -34,7 +34,7 @@
             <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Buscar apellido" />
         </nz-input-group>
         <ng-template #inputClearLastname>
-            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.lastname" (click)="searchParams.lastname = null; search()"></i>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.lastname" (click)="searchParams.lastname = null; getStudents(null)"></i>
         </ng-template>
     </div>
 
@@ -44,7 +44,7 @@
             <input nz-input [(ngModel)]="searchParams.email" placeholder="Buscar correo electrónico" />
         </nz-input-group>
         <ng-template #inputClearEmail>
-            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.email" (click)="searchParams.email = null; search()"></i>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.email" (click)="searchParams.email = null; getStudents(null)"></i>
         </ng-template>
     </div>
 
@@ -52,7 +52,7 @@
     <div class="status" nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="11" nzXl="10" class="gutter-row">
         <label>Estado: </label>
         <nz-switch [(ngModel)]="statusSwitch" [nzCheckedChildren]="'Activos'" [nzUnCheckedChildren]="'Inactivos'" (ngModelChange)="statusToggle()"></nz-switch>
-        <nz-select class="status" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.status" (ngModelChange)="search()">
+        <nz-select class="status" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.status" (ngModelChange)="getStudents(null)">
             <nz-option *ngFor="let state of statuses" [nzLabel]="state" [nzValue]="state"></nz-option>
         </nz-select>
     </div>
@@ -60,14 +60,14 @@
     <!-- Grade -->
     <div class="grade" nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="9" nzXl="10" class="gutter-row">
         <label>Grado: </label>
-        <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.grade.id" (ngModelChange)="search()">
+        <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.grade.id" (ngModelChange)="getStudents(null)">
             <nz-option *ngFor="let grade of grades" [nzLabel]="grade.name" [nzValue]="grade.id"></nz-option>
         </nz-select>
     </div>
 
     <!-- Search button-->
     <div class="status" nz-col nzXs="24" nzSm="4" nzMd="4" nzLg="2" nzXl="2" class="gutter-row">
-        <button nz-button nzType="primary" (click)="search()">Buscar</button>
+        <button nz-button nzType="primary" (click)="getStudents(null)">Buscar</button>
     </div>
 </div>
 
