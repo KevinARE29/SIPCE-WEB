@@ -5,7 +5,7 @@ import { Observable, throwError, forkJoin } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
-import { getYear, differenceInYears } from 'date-fns';
+import { differenceInMonths, differenceInYears, getYear } from 'date-fns';
 
 import { Student } from './student.model';
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
@@ -87,7 +87,19 @@ export class StudentService {
 
     url += queryParams;
 
-    return this.http.get<Student[]>(url).pipe(catchError(this.handleError()));
+    return this.http.get<Student[]>(url).pipe(
+      map((response) => {
+        response['data'].forEach((student) => {
+          const months = differenceInMonths(new Date(), new Date(student.createdAt));
+          const years = differenceInYears(new Date(), new Date(student.createdAt));
+
+          student.canBeDeleted = student.status === 'Egresado' || months < 3 || years > 15;
+        });
+
+        return response;
+      }),
+      catchError(this.handleError())
+    );
   }
 
   bulkStudents(students: any, shift: number, currentYear: boolean): Observable<unknown> {
@@ -231,6 +243,10 @@ export class StudentService {
     return this.http
       .put<Student>(`${this.baseUrl}students/${student.id}`, JSON.stringify(data))
       .pipe(catchError(this.handleError()));
+  }
+
+  deleteStudent(studentId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}students/${studentId}`);
   }
 
   getStudentsAssignation(shiftId: number, gradeId: number): Observable<unknown> {
