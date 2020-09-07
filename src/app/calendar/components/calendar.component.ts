@@ -321,7 +321,9 @@ export class CalendarComponent implements OnInit {
       endDate = addDays(endDate, 6 - getDay(endDate));
     }
 
-    // TODO: Add the call to get the events
+    this.eventService.getEvents(startDate, endDate).subscribe((data) => {
+      console.log(data);
+    });
   }
 
   submitForm(): void {

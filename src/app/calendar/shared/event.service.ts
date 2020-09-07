@@ -9,6 +9,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { Student } from '../../students/shared/student.model';
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { User } from 'src/app/users/shared/user.model';
+import { Events } from './events.model';
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +28,19 @@ export class EventService {
   }
 
   createAppointment(data: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}schedules/me`, data).pipe(catchError(this.handleError()));
+    console.log(data);
+    return this.http.post<any>(`${this.baseUrl}me/schedules`, data).pipe(catchError(this.handleError()));
   }
+
+  getEvents(fromDate: Date, toDate: Date): Observable<Events[]> {
+    const startDate = fromDate.toISOString();
+    const endDate = toDate.toISOString();
+
+    return this.http
+      .get<Events[]>(`${this.baseUrl}me/schedules?fromDate=${startDate}&toDate=${endDate}`)
+      .pipe(catchError(this.handleError()));
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.
