@@ -1,5 +1,6 @@
 import { Student } from 'src/app/students/shared/student.model';
 import { User } from 'src/app/users/shared/user.model';
+
 export class Events {
   Id: number;
   Subject: string;
