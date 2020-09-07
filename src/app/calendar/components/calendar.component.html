@@ -1,8 +1,7 @@
 <ejs-schedule #scheduleObj heigth='500px' (popupOpen)='onPopupOpen($event)' [currentView]="newViewMode"
     (actionBegin)="onBegin($event)" [views]='views' [selectedDate]="selectedDate" timezone="America/El_Salvador"
-    locale='es' [eventSettings]="eventData" (eventRendered)="applyCategoryColor($event)">
+    locale='es' [eventSettings]="eventData" (eventRendered)="applyCategoryColor($event)" (actionComplete)='onActionComplete($event)'>
     <ng-template #editorTemplate let-data>
-        <!--   (actionBegin)="onActionBegin($event)"-->
         <form class="custom-event-editor" [formGroup]="eventForm">
             <!-- (ngSubmit)="submitForm()"-->
             <!--   <table class="custom-event-editor" width="100%" cellpadding="5">

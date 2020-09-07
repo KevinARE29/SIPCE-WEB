@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DateTimePicker } from '@syncfusion/ej2-calendars';
-import { RecurrenceEditorChangeEventArgs, EventRenderedArgs } from '@syncfusion/ej2-angular-schedule';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   EventSettingsModel,
   ScheduleComponent,
@@ -9,19 +8,21 @@ import {
   View
 } from '@syncfusion/ej2-angular-schedule';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataManager, WebApiAdaptor } from '@syncfusion/ej2-data';
 import { L10n, loadCldr, isNullOrUndefined } from '@syncfusion/ej2-base';
-import { Events } from '../shared/events.model';
-import { User } from '../../users/shared/user.model';
-import { Student } from '../../students/shared/student.model';
+import { DateTimePicker } from '@syncfusion/ej2-calendars';
+import { RecurrenceEditorChangeEventArgs, EventRenderedArgs } from '@syncfusion/ej2-angular-schedule';
 
+import { addDays, endOfMonth, getDay, startOfMonth, subDays } from 'date-fns';
 import * as numberingSystems from '../../../../node_modules/cldr-data/supplemental/numberingSystems.json';
 import * as gregorian from '../../../../node_modules/cldr-data/main/es/ca-gregorian.json';
 import * as numbers from 'cldr-data/main/es/numbers.json';
 import * as timeZoneNames from 'cldr-data/main/es/timeZoneNames.json';
 
 import language from './../shared/calendar-language.json';
+import { Events } from '../shared/events.model';
+import { User } from '../../users/shared/user.model';
+import { Student } from '../../students/shared/student.model';
 import { StudentService } from '../../students/shared/student.service';
 import { UserService } from '../../users/shared/user.service';
 import { EventService } from '../shared/event.service';
@@ -301,6 +302,26 @@ export class CalendarComponent implements OnInit {
         console.log(data);
       }
     }
+  }
+
+  onActionComplete(args): void {
+    let startDate, endDate;
+
+    if (args.requestType === 'dateNavigate') {
+      const currentViewDates = this.scheduleObj.getCurrentViewDates();
+      startDate = currentViewDates[0];
+      endDate = currentViewDates[currentViewDates.length - 1];
+    } else if (args.requestType === 'toolBarItemRendered') {
+      // Get the current month's start and end dates
+      startDate = startOfMonth(this.selectedDate);
+      endDate = endOfMonth(this.selectedDate);
+
+      // Calculate the dates visible on the calendar
+      startDate = subDays(startDate, getDay(startDate));
+      endDate = addDays(endDate, 6 - getDay(endDate));
+    }
+
+    // TODO: Add the call to get the events
   }
 
   submitForm(): void {
