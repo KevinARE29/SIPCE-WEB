@@ -181,8 +181,6 @@ export class CalendarComponent implements OnInit {
   noResults: string;
   searching = false;
   searchingUser = false;
-  UsersData: User[];
-  StudentId: number;
 
   @ViewChild('scheduleObj')
   public scheduleObj: ScheduleComponent;
@@ -262,8 +260,9 @@ export class CalendarComponent implements OnInit {
       {
         Id: 2,
         Subject: 'Training session on JSP',
-        StartTime: new Date(2018, 10, 30, 15, 0),
-        EndTime: new Date(2018, 10, 30, 17, 0)
+        StartTime: '2018-11-15T06:00:00.000Z',
+        EndTime: '2018-11-15T06:00:00.000Z',
+        IsAllDay: true
       },
       {
         Id: 3,
@@ -278,16 +277,13 @@ export class CalendarComponent implements OnInit {
         StartTime: new Date(2018, 10, 21, 9, 30),
         EndTime: new Date(2018, 10, 22, 11, 0)
       }
-    ]
-    /* ,
+    ],
     fields: {
       id: 'Id',
-      subject: { validation: { required: true } },
-      location: { validation: { required: true, regex: ['^[a-zA-Z0-9- ]*'] } },
-      startTime: { validation: { required: true } },
-      endTime: { validation: { required: true } }
+      subject: { validation: { required: [true, 'El título del evento es requerido'] } },
+      startTime: { validation: { required: [true, 'La fecha de inicio del evento es requerida'] } },
+      endTime: { validation: { required: [true, 'La fecha de fin del evento es requerida'] } }
     }
-    */
   };
 
   constructor(private fb: FormBuilder, private eventService: EventService, private studentService: StudentService) {}
@@ -353,14 +349,14 @@ export class CalendarComponent implements OnInit {
       const participantIds = new Array<number>();
       data.RecurrenceRule = this.recurrenceRule;
 
-      if (this.UsersData !== undefined) {
-        this.UsersData.forEach((user) => {
+      if (this.event.Users !== undefined) {
+        this.event.Users.forEach((user) => {
           participantIds.push(user.id);
           console.log('participants Ids!!!!!!!!!!!!');
           console.log(participantIds);
         });
       } else {
-        this.UsersData = null;
+        this.event.Users = null;
       }
 
       //initializing the event object that will be send to the json data
@@ -394,7 +390,7 @@ export class CalendarComponent implements OnInit {
       createEvent['description'] = this.event.Description;
       createEvent['jsonData'] = this.event;
       if (participantIds.length !== 0) createEvent['participantIds'] = participantIds;
-      if (this.StudentId) createEvent['studentId'] = this.StudentId;
+      if (this.event.Students) createEvent['studentId'] = this.event.Students;
 
       if (args.requestType === 'eventCreate') {
         //   args.cancel = true;
@@ -402,7 +398,7 @@ export class CalendarComponent implements OnInit {
         console.log('--------------');
         console.log('esto tiene el createEvent');
         console.log(createEvent);
-        this.eventService.createAppointment(createEvent).subscribe(
+        /* this.eventService.createAppointment(createEvent).subscribe(
           (r) => {
             console.log('--------------');
             console.log('esto devuelve la ruta');
@@ -415,10 +411,10 @@ export class CalendarComponent implements OnInit {
             args.cancel = true;
             console.log(err);
           }
-        );
-        //   console.log('--------------');
-        //   console.log('esto tiene el eventForm');
-        //   console.log(this.eventForm.value);
+        ); */
+        console.log('--------------');
+        console.log('esto tiene el eventForm');
+        console.log(this.eventForm.value);
         console.log('esto tiene el objeto de event !!!!');
         console.log(this.event);
         console.log('esto tiene data');
@@ -445,7 +441,7 @@ export class CalendarComponent implements OnInit {
       // this.event.Users = this.eventForm.controls['Users'].value;
       // this.event.Students = this.eventForm.controls['Students'].value;
     }
-    // console.log(this.event);
+    console.log(this.event);
     //  this.scheduleObj.addEvent(this.event);
   }
 
@@ -524,19 +520,14 @@ export class CalendarComponent implements OnInit {
     this.event.Students = new Array<Student>();
     console.log(this.event.Students);
     this.event.Students.push(Student);
-    this.StudentId = null;
-    this.StudentId = Student.id;
-    console.log(Student);
-    console.log(this.StudentId);
+    //  this.StudentId = null;
+    //  this.StudentId = Student.id;
     this.results = this.results.filter((d) => d['id'] !== Student.id);
   }
 
-  confirmDeleteStudent(id: number): void {
+  confirmDeleteStudent(id: number, student: Student): void {
+    this.results.push(student);
     this.event.Students = this.event.Students.filter((d) => d['id'] !== id);
-  }
-
-  confirmDeleteUser(id: number): void {
-    this.event.Users = this.event.Users.filter((d) => d['id'] !== id);
   }
 
   searchUser(): void {
@@ -563,12 +554,13 @@ export class CalendarComponent implements OnInit {
     //add condition to know if the event has students previously
     this.event.Users = new Array<User>();
     this.event.Users.push(User);
-    this.UsersData = new Array<User>();
-    console.log(this.UsersData);
-    this.UsersData.push(User);
-    console.log(User);
-    console.log('esto guarda UsersData');
-    console.log(this.UsersData);
+    console.log('esto guarda user');
+    console.log(this.event.Users);
     this.resultsUsers = this.resultsUsers.filter((d) => d['id'] !== User.id);
+  }
+
+  confirmDeleteUser(id: number, user: User): void {
+    this.resultsUsers.push(user);
+    this.event.Users = this.event.Users.filter((d) => d['id'] !== id);
   }
 }
