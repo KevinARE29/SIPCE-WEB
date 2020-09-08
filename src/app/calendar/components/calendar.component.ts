@@ -258,7 +258,9 @@ export class CalendarComponent implements OnInit {
       }
 
       if (data.Description === undefined) {
+        console.log('entro al undefined');
         this.event.Description = null;
+        console.log(this.event.Description);
       } else {
         this.event.Description = data.Description;
       }
@@ -280,7 +282,7 @@ export class CalendarComponent implements OnInit {
         console.log('--------------');
         console.log('esto tiene el createEvent');
         console.log(createEvent);
-        /* this.eventService.createAppointment(createEvent).subscribe(
+        this.eventService.createAppointment(createEvent).subscribe(
           (r) => {
             console.log('--------------');
             console.log('esto devuelve la ruta');
@@ -293,7 +295,7 @@ export class CalendarComponent implements OnInit {
             args.cancel = true;
             console.log(err);
           }
-        ); */
+        );
         console.log('--------------');
         console.log('esto tiene el eventForm');
         console.log(this.eventForm.value);
