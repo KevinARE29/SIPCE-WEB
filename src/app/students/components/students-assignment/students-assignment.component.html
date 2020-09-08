@@ -84,13 +84,14 @@
                 <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }" [nzMd]="{ span: 24 }" [nzLg]="{ span: 24 }"
                     [nzXl]="{ span: 22, offset: 1 }">
                     <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-                        <nz-table #filterTable [nzData]="studentsWithoutAssignation" nzTableLayout="fixed"
+                        <nz-table #filterTable [nzData]="studentsWithoutAssignation" nzTableLayout="auto"
                             nzSize="small" nzShowPagination nzShowSizeChanger
                             (nzCurrentPageDataChange)="onCurrentPageDataChange($event, true)">
                             <thead>
                                 <tr>
                                     <th [nzChecked]="checked" [nzIndeterminate]="indeterminate"
                                         (nzCheckedChange)="onAllChecked($event, true)"></th>
+                                    <th></th>
                                     <th *ngFor="let column of availableColumns" [nzSortFn]="column.compare"
                                         [nzSortPriority]="column.priority">{{ column.title }}</th>
                                 </tr>
@@ -100,6 +101,14 @@
                                 <tr *ngFor="let data of filterTable.data">
                                     <td [nzChecked]="setOfCheckedId.has(data.student.id)" [nzDisabled]="data.disabled"
                                         (nzCheckedChange)="onItemChecked(data.student.id, $event, true)"></td>
+                                    <td>
+                                        <ng-container *ngIf="data.student.images.length > 0;else avatar">
+                                            <nz-avatar nzIcon="user" [nzSize]="40" [nzSrc]="data.student.images[0].path"></nz-avatar>
+                                        </ng-container>
+                                        <ng-template #avatar>
+                                            <nz-avatar nzIcon="user" [nzSize]="40"></nz-avatar>
+                                        </ng-template>                                        
+                                    </td>
                                     <td>{{ data.student.code }}</td>
                                     <td>{{ data.student.firstname }}</td>
                                     <td>{{ data.student.lastname }}</td>
@@ -185,10 +194,11 @@
                 <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }" [nzMd]="{ span: 24 }" [nzLg]="{ span: 24 }"
                     [nzXl]="{ span: 22, offset: 1 }">
                     <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-                        <nz-table #assignedStudentsTable [nzData]="assignedStudents" nzTableLayout="fixed"
+                        <nz-table #assignedStudentsTable [nzData]="assignedStudents" nzTableLayout="auto"
                             nzSize="small" nzShowPagination nzShowSizeChanger>
                             <thead>
                                 <tr>
+                                    <th></th>
                                     <th *ngFor="let column of assignedColumns" [nzSortFn]="column.compare"
                                         [nzSortPriority]="column.priority">{{ column.title }}</th>
                                 </tr>
@@ -196,6 +206,14 @@
 
                             <tbody>
                                 <tr *ngFor="let data of assignedStudentsTable.data">
+                                    <td>
+                                        <ng-container *ngIf="data.student.images.length > 0;else avatar">
+                                            <nz-avatar nzIcon="user" [nzSize]="40" [nzSrc]="data.student.images[0].path"></nz-avatar>
+                                        </ng-container>
+                                        <ng-template #avatar>
+                                            <nz-avatar nzIcon="user" [nzSize]="40"></nz-avatar>
+                                        </ng-template> 
+                                    </td>
                                     <td>{{ data.student.code }}</td>
                                     <td>{{ data.student.firstname }}</td>
                                     <td>{{ data.student.lastname }}</td>
@@ -265,13 +283,14 @@
                 <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }" [nzMd]="{ span: 24 }" [nzLg]="{ span: 24 }"
                     [nzXl]="{ span: 22, offset: 1 }">
                     <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-                        <nz-table #myStudentsTable [nzData]="myStudents" nzTableLayout="fixed" nzSize="small"
+                        <nz-table #myStudentsTable [nzData]="myStudents" nzTableLayout="auto" nzSize="small"
                             nzShowPagination nzShowSizeChanger
                             (nzCurrentPageDataChange)="onCurrentPageDataChange($event, false)">
                             <thead>
                                 <tr>
                                     <th [nzChecked]="stChecked" [nzIndeterminate]="stIndeterminate"
                                         (nzCheckedChange)="onAllChecked($event, false)"></th>
+                                    <th></th>
                                     <th *ngFor="let column of availableColumns" [nzSortFn]="column.compare"
                                         [nzSortPriority]="column.priority">{{ column.title }}</th>
                                 </tr>
@@ -282,6 +301,14 @@
                                     <td [nzChecked]="setOfStudentsCheckedId.has(data.student.id)"
                                         [nzDisabled]="data.disabled"
                                         (nzCheckedChange)="onItemChecked(data.student.id, $event, false)"></td>
+                                    <td>
+                                        <ng-container *ngIf="data.student.images.length > 0;else avatar">
+                                            <nz-avatar nzIcon="user" [nzSize]="40" [nzSrc]="data.student.images[0].path"></nz-avatar>
+                                        </ng-container>
+                                        <ng-template #avatar>
+                                            <nz-avatar nzIcon="user" [nzSize]="40"></nz-avatar>
+                                        </ng-template> 
+                                    </td>
                                     <td>{{ data.student.code }}</td>
                                     <td>{{ data.student.firstname }}</td>
                                     <td>{{ data.student.lastname }}</td>

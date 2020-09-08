@@ -19,4 +19,5 @@ export class Student {
   responsibles: Responsible[];
   images: unknown[];
   siblings: Student[];
+  canBeDeleted: boolean;
 }
