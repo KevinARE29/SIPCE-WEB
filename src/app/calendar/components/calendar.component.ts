@@ -318,6 +318,8 @@ export class CalendarComponent implements OnInit {
       const currentViewDates = this.scheduleObj.getCurrentViewDates();
       startDate = currentViewDates[0];
       endDate = currentViewDates[currentViewDates.length - 1];
+
+      this.getEvents(startDate, endDate);
     } else if (args.requestType === 'toolBarItemRendered') {
       // Get the current month's start and end dates
       startDate = startOfMonth(this.selectedDate);
@@ -326,8 +328,12 @@ export class CalendarComponent implements OnInit {
       // Calculate the dates visible on the calendar
       startDate = subDays(startDate, getDay(startDate));
       endDate = addDays(endDate, 6 - getDay(endDate));
-    }
 
+      this.getEvents(startDate, endDate);
+    }
+  }
+
+  getEvents(startDate, endDate): void {
     this.eventService.getEvents(startDate, endDate).subscribe((data) => {
       console.log(data);
     });
