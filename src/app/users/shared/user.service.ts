@@ -28,6 +28,12 @@ export class UserService {
     this.baseUrl = environment.apiURL;
   }
 
+  getUserByUsername(username: string): Observable<User> {
+    return this.http
+      .get<User>(`${this.baseUrl}users?paginate=false&username=${username}`)
+      .pipe(catchError(this.handleError()));
+  }
+
   getUser(id: number): Observable<User> {
     return this.http.get<User>(`${this.baseUrl}users/${id}`).pipe(catchError(this.handleError()));
   }

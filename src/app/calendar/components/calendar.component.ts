@@ -52,6 +52,7 @@ export class CalendarComponent implements OnInit {
   noResults: string;
   searching = false;
   searchingUser = false;
+  showAlert = false;
 
   @ViewChild('scheduleObj')
   public scheduleObj: ScheduleComponent;
@@ -157,7 +158,12 @@ export class CalendarComponent implements OnInit {
     }
   };
 
-  constructor(private fb: FormBuilder, private eventService: EventService, private studentService: StudentService) {}
+  constructor(
+    private fb: FormBuilder,
+    private eventService: EventService,
+    private studentService: StudentService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
     this.eventForm = this.fb.group({
@@ -250,7 +256,12 @@ export class CalendarComponent implements OnInit {
       } else {
         this.event.Location = data.Location;
       }
-      this.event.Description = data.Description;
+
+      if (data.Description === undefined) {
+        this.event.Description = null;
+      } else {
+        this.event.Description = data.Description;
+      }
 
       //initializing the event object that will be send to the backend
       createEvent['eventType'] = this.event.EventType;
@@ -261,7 +272,7 @@ export class CalendarComponent implements OnInit {
       createEvent['description'] = this.event.Description;
       createEvent['jsonData'] = this.event;
       if (participantIds.length !== 0) createEvent['participantIds'] = participantIds;
-      if (this.event.Students) createEvent['studentId'] = this.event.Students;
+      if (this.event.Students) createEvent['studentId'] = this.event.Students[0].id;
 
       if (args.requestType === 'eventCreate') {
         //   args.cancel = true;
@@ -340,12 +351,15 @@ export class CalendarComponent implements OnInit {
 
   onPopupOpen(args: PopupOpenEventArgs): void {
     this.eventForm.reset;
+    this.event.Users = new Array<User>();
     for (const i in this.eventForm.controls) {
       this.eventForm.controls[i].markAsDirty();
       this.eventForm.controls[i].updateValueAndValidity();
     }
     this.results = new Array<Student>();
     this.resultsUsers = new Array<User>();
+    this.event.Students = null;
+    this.showAlert = false;
     //initializing event object
     if (args.type === 'Editor') {
       const startElement: HTMLInputElement = args.element.querySelector('#StartTime') as HTMLInputElement;
@@ -391,6 +405,7 @@ export class CalendarComponent implements OnInit {
 
   searchStudent(): void {
     const search = new Student();
+    search.code = '';
     search.code = this.eventForm.controls['Students'].value;
     this.searching = !this.searching;
 
@@ -411,14 +426,22 @@ export class CalendarComponent implements OnInit {
     //add condition to know if the event has students previously
     //add condition to know if the event has students previously
     this.event.Students = new Array<Student>();
-    console.log(this.event.Students);
+    // if (this.event.Students.length === 0) {
+
+    this.showAlert = true;
+    console.log('entro');
     this.event.Students.push(Student);
+    console.log(this.event.Students);
     //  this.StudentId = null;
     //  this.StudentId = Student.id;
     this.results = this.results.filter((d) => d['id'] !== Student.id);
+    // } else {
+
+    // }
   }
 
   confirmDeleteStudent(id: number, student: Student): void {
+    this.showAlert = false;
     this.results.push(student);
     this.event.Students = this.event.Students.filter((d) => d['id'] !== id);
   }
@@ -431,7 +454,7 @@ export class CalendarComponent implements OnInit {
 
     if (this.searchingUser) {
       this.searchLoaderUser = true;
-      this.eventService.getUser(search).subscribe((r) => {
+      this.userService.getUserByUsername(search).subscribe((r) => {
         this.resultsUsers = r['data'];
         console.log(this.resultsUsers);
         this.resultsUsers = this.resultsUsers.filter((d) => d['id'] !== this.user.id);
@@ -445,7 +468,7 @@ export class CalendarComponent implements OnInit {
 
   addUser(User: User): void {
     //add condition to know if the event has students previously
-    this.event.Users = new Array<User>();
+    // this.event.Users = new Array<User>();
     this.event.Users.push(User);
     console.log('esto guarda user');
     console.log(this.event.Users);

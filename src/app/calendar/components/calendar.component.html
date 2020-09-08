@@ -71,16 +71,21 @@
             <br>
           <div nz-row>
            <!-- Students  -->  
-           <!-- Current student [nzGutter]="24"-->
-            <div>
+           <!-- Current student [nzGutter]="24"-->  
+             <nz-alert *ngIf="showAlert"  nzType="warning" nzDuration  nzMessage="Se permite seleccionar solo un estudiante, para agregar otro cancele el seleccionado." nzCloseable></nz-alert>
+             <div>
                    <div class="addStudent" nz-row >
                          <div nz-col *ngFor="let student of event.Students">
-                            {{ student.firstname }} {{ student.lastname }} 
-                            <a (click)="confirmDeleteStudent(student.id, student)">
+                            {{ student.firstname }} {{ student.lastname }}   
+                       
+                            <a (click)="confirmDeleteStudent(student.id, student)">  
+                            
                                 <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ff4d4f'"></i>
                             </a>
                         </div>
-                  </div>
+                      
+                  </div>  
+               
                 <nz-spin nzTip="Cargando ..." [nzSpinning]="searchLoader">
                 <label> Estudiantes</label>  
                     <div nz-col nzXs="24" nzSm="24" nzMd="20">

@@ -21,12 +21,6 @@ export class EventService {
     this.baseUrl = environment.apiURL;
   }
 
-  getUser(username: string): Observable<User> {
-    return this.http
-      .get<User>(`${this.baseUrl}users?paginate=false&username=${username}`)
-      .pipe(catchError(this.handleError()));
-  }
-
   createAppointment(data: any): Observable<any> {
     console.log(data);
     return this.http.post<any>(`${this.baseUrl}me/schedules`, data).pipe(catchError(this.handleError()));
