@@ -21,3 +21,53 @@ body {
 .principal {
   color: #ef6c00;
 }
+
+/* Override input style on login, forgot password, etc. */
+
+/* Override spacing between elements */
+.auth-form .ant-form-item:not(:last-of-type) {
+  margin-bottom: 45px;
+}
+
+/* Override not-focused inputs */
+.auth-form input {
+  background-color: transparent;
+  border: none;
+  color: white;
+  transition: none;
+}
+
+.auth-form input::placeholder {
+  color: white;
+  font-weight: lighter;
+}
+
+.auth-form .ant-input-affix-wrapper{
+  background-color: transparent;
+  border: none;
+  border-bottom: white 1px solid;
+  color: white;
+  transition: none;
+}
+
+/* Override focused inputs */
+.auth-form .ant-input-affix-wrapper-focused{
+  box-shadow: none;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: black;
+}
+
+.auth-form .ant-input-affix-wrapper-focused input {
+  color: black;
+}
+
+.auth-form .ant-input-affix-wrapper-focused input::placeholder {
+  color: black;
+}
+
+/* Avoids white background */
+.auth-form .ant-form-item-has-error input,
+.auth-form .ant-form-item-has-error .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-focused),
+.auth-form .ant-form-item-has-error .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-focused) input{
+  background-color: transparent;
+}
