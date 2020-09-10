@@ -152,18 +152,23 @@
                     <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="11">
                         <nz-form-item nzJustify="space-around">
                             <nz-form-label nzFor="registrationGrade">Grado</nz-form-label>
-                            <nz-form-control>
+                            <nz-form-control nzDisableAutoTips [nzErrorTip]="registrationGradeError">
                                 <nz-select id="registrationGrade" nzShowSearch nzAllowClear
                                     formControlName="registrationGrade" nzPlaceHolder="Seleccionar">
                                     <nz-option *ngFor="let grade of allGrades" [nzValue]="grade.id" [nzLabel]="grade.name">
                                     </nz-option>
                                 </nz-select>
+                                <ng-template #registrationGradeError let-control>
+                                    <!-- <ng-container *ngIf="control.hasError('higherthan')">
+                                      El grado de registro no puede ser mayor al grado actual.
+                                    </ng-container> -->
+                                  </ng-template>
                             </nz-form-control>
                         </nz-form-item>
                     </div>
                 </div>
     
-                <!----------       Hermanos        ---------->
+                <!----------       Siblings        ---------->
                 <div>
                     <nz-divider nzText="Hermanos" nzOrientation="left"></nz-divider>
                     <!-- Current siblings -->

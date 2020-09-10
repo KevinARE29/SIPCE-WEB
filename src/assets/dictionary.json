@@ -55,7 +55,8 @@
             "contact": "Contacto",
             "responsibleEmail": "Correo electrónico del responsable",
             "responsiblePhone": "Número de teléfono del responsable",
-            "phone": "Número de teléfono del responsable"
+            "phone": "Número de teléfono del responsable",
+            "status": "Estado"
         },
         "school-year": {
             "year": "Año",
