@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
@@ -20,6 +21,7 @@ import * as numberingSystems from '../../../../node_modules/cldr-data/supplement
 import * as gregorian from '../../../../node_modules/cldr-data/main/es/ca-gregorian.json';
 import * as numbers from 'cldr-data/main/es/numbers.json';
 import * as timeZoneNames from 'cldr-data/main/es/timeZoneNames.json';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 import language from './../shared/calendar-language.json';
 import { Events } from '../shared/events.model';
@@ -28,7 +30,6 @@ import { Student } from '../../students/shared/student.model';
 import { StudentService } from '../../students/shared/student.service';
 import { UserService } from '../../users/shared/user.service';
 import { EventService } from '../shared/event.service';
-
 loadCldr(numberingSystems['default'], gregorian['default'], numbers['default'], timeZoneNames['default']);
 
 L10n.load(language);
@@ -81,6 +82,9 @@ export class CalendarComponent implements OnInit {
     { eventTypeText: 'Programa de intervención', Id: 5 }
   ];
 
+  public data: object[] = [];
+  public eventData: EventSettingsModel;
+
   allDayEvent(): void {
     console.log(this.show);
     console.log(this.eventForm.value);
@@ -104,53 +108,25 @@ export class CalendarComponent implements OnInit {
     //  }
   }
 
-  public eventData: EventSettingsModel = {
-    dataSource: [
-      {
-        Id: 1,
-        Subject: 'Board Meeting',
-        StartTime: new Date(2018, 10, 30, 9, 0),
-        EndTime: new Date(2018, 10, 30, 11, 0),
-        // RecurrenceRule: 'FREQ=DAILY;INTERVAL=1;',
-        EventType: 'Otros',
-        Students: ['1'],
-        CategoryColor: '#1fcfb5'
-      },
-      {
-        Id: 2,
-        Subject: 'Training session on JSP',
-        StartTime: '2018-11-15T06:00:00.000Z',
-        EndTime: '2018-11-15T06:00:00.000Z',
-        IsAllDay: true
-      },
-      {
-        Id: 3,
-        Subject: 'Sprint Planning with Team members',
-        StartTime: new Date(2018, 10, 30, 9, 30),
-        EndTime: new Date(2018, 10, 30, 11, 0),
-        CategoryColor: '#357cd2'
-      },
-      {
-        Id: 3,
-        Subject: 'Sprint Planning with Team members',
-        StartTime: new Date(2018, 10, 21, 9, 30),
-        EndTime: new Date(2018, 10, 22, 11, 0)
-      }
-    ],
-    fields: {
-      id: 'Id',
-      subject: { validation: { required: [true, 'El título del evento es requerido'] } },
-      startTime: { validation: { required: [true, 'La fecha de inicio del evento es requerida'] } },
-      endTime: { validation: { required: [true, 'La fecha de fin del evento es requerida'] } }
-    }
-  };
+  // public eventData: EventSettingsModel = {
+  //   dataSource: this.dataManager,
+  //   fields: {
+  //     id: 'Id',
+  //     subject: { validation: { required: true } },
+  //     location: { validation: { required: true, regex: ['^[a-zA-Z0-9- ]*'] } },
+  //     description: { validation: { required: true }},
+  //     startTime: { validation: { required: true } },
+  //     endTime: { validation: { required: true } }
+  //   }
+  // };
 
   constructor(
     private fb: FormBuilder,
     private eventService: EventService,
     private studentService: StudentService,
     private userService: UserService,
-    private notification: NzNotificationService
+    private notification: NzNotificationService,
+    private message: NzMessageService
   ) {}
 
   ngOnInit(): void {
@@ -189,6 +165,52 @@ export class CalendarComponent implements OnInit {
     }
   }
 
+  onActionComplete(args): void {
+    let startDate, endDate;
+
+    switch (args.requestType) {
+      case 'dateNavigate':
+        const currentViewDates = this.scheduleObj.getCurrentViewDates();
+        startDate = currentViewDates[0];
+        endDate = currentViewDates[currentViewDates.length - 1];
+
+        this.getEvents(startDate, endDate);
+        break;
+      case 'toolBarItemRendered':
+        // Get the current month's start and end dates
+        startDate = startOfMonth(this.selectedDate);
+        endDate = endOfMonth(this.selectedDate);
+
+        // Calculate the dates visible on the calendar
+        startDate = subDays(startDate, getDay(startDate));
+        endDate = addDays(endDate, 6 - getDay(endDate));
+
+        this.getEvents(startDate, endDate);
+        break;
+      case 'eventRemoved':
+        if (args.changedRecords.length) {
+          this.eventService.updateEvent(args.changedRecords[0]).subscribe(() => {
+            this.message.success(`El evento ha sido eliminado`);
+          });
+        }
+        break;
+    }
+  }
+
+  getEvents(startDate, endDate): void {
+    this.eventService.getEvents(startDate, endDate).subscribe((events) => {
+      this.eventData = {
+        dataSource: events,
+        fields: {
+          id: 'Id',
+          subject: { validation: { required: [true, 'El título del evento es requerido'] } },
+          startTime: { validation: { required: [true, 'La fecha de inicio del evento es requerida'] } },
+          endTime: { validation: { required: [true, 'La fecha de fin del evento es requerida'] } }
+        }
+      };
+    });
+  }
+
   /* Method to show the recurrence rule with dataBinding
   onChange(args: RecurrenceEditorChangeEventArgs): void {
     const outputElement: HTMLElement = <HTMLElement>document.querySelector('#RecurrenceRule');
@@ -208,7 +230,6 @@ export class CalendarComponent implements OnInit {
   public onChange(args: any): void {
     this.recurrenceRule = '';
     this.recurrenceRule = args.value;
-    console.log();
   }
 
   public onBegin(args: any): void {
@@ -296,80 +317,55 @@ export class CalendarComponent implements OnInit {
           console.log('La fecha de inicio debe ser menor a la fecha de fin');
         }
         //args.cancel = true;
+        args.cancel = true;
         // this.submitForm();
         console.log('--------------');
         console.log('esto tiene el createEvent');
         console.log(createEvent);
-        // this.scheduleObj.addEvent(args.data[0]);
         if (this.saveEvent) {
           this.eventService.createAppointment(createEvent).subscribe(
             (r) => {
+              args.cancel = false;
               console.log('--------------');
-              console.log('esto devuelve la ruta');
-              console.log(r);
-              data = r.data.jsonData;
-              console.log('--------------');
-              console.log('esto devuelve jsonData');
-              console.log(r.data.jsonData);
-              this.event = new Events();
-              // args.element.style.backgroundColor = r.data.jsonData['CategoryColor'];
-              // this.applyCategoryColor(args);
-              // data = <any>example;
-              // this.scheduleObj.addEvent(eventdata);
-              //  args.cancel = false;
+              console.log('esto devuelve la ruta', r);
+              data = <any>args.data;
+              this.data.push(data);
 
-              // this.EventData['dataSource'].push(r.jsonData);
+              // Refresh the calendar after adding a new event
+              this.scheduleObj.refresh();
+              console.log(this.data);
+              //  args.cancel = false;
+              // this.scheduleObj.addEvent(data);
             },
             (err) => {
               args.cancel = true;
-              console.log(err);
+              console.log(err, this.data);
             }
           );
-          console.log('--------------');
-          console.log('esto tiene el eventForm');
-          console.log(this.eventForm.value);
-          console.log('esto tiene el objeto de event !!!!');
-          console.log(this.event);
-          console.log('esto tiene data');
-          console.log(data);
-        } else if (args.requestType === 'eventChange') {
-          console.log('--------------');
-          data = <any>args.data;
-          console.log(<any>args.data);
-          console.log('esto tiene data');
-          console.log(data);
         }
+        console.log('--------------');
+        console.log('esto tiene el eventForm');
+        console.log(this.eventForm.value);
+        console.log('esto tiene el objeto de event !!!!');
+        console.log(this.event);
+        console.log('esto tiene data');
+        console.log(data);
+      } else if (args.requestType === 'eventChange') {
+        console.log('--------------');
+        data = <any>args.data;
+        console.log(<any>args.data);
+        console.log('esto tiene data');
+        console.log(data);
+      }
+      //delete event actions
+    } else if (args.requestType === 'eventRemove') {
+      if (!args.data[0].parent) {
+        this.eventService.deleteEvent(args.data[0].Id).subscribe(() => {
+          this.message.success(`El evento ha sido eliminado`);
+        });
       }
     }
   }
-
-  onActionComplete(args): void {
-    let startDate, endDate;
-
-    if (args.requestType === 'dateNavigate') {
-      const currentViewDates = this.scheduleObj.getCurrentViewDates();
-      startDate = currentViewDates[0];
-      endDate = currentViewDates[currentViewDates.length - 1];
-
-      // this.getEvents(startDate, endDate);
-    } else if (args.requestType === 'toolBarItemRendered') {
-      // Get the current month's start and end dates
-      startDate = startOfMonth(this.selectedDate);
-      endDate = endOfMonth(this.selectedDate);
-
-      // Calculate the dates visible on the calendar
-      startDate = subDays(startDate, getDay(startDate));
-      endDate = addDays(endDate, 6 - getDay(endDate));
-
-      //   this.getEvents(startDate, endDate);
-    }
-  }
-
-  /*  getEvents(startDate, endDate): void {
-    this.eventService.getEvents(startDate, endDate).subscribe((data) => {
-      console.log(data);
-    });
-  } */
 
   submitForm(): void {
     if (this.eventForm.valid) {

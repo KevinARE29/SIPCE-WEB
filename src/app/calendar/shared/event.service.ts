@@ -30,9 +30,39 @@ export class EventService {
     const startDate = fromDate.toISOString();
     const endDate = toDate.toISOString();
 
-    return this.http
-      .get<Events[]>(`${this.baseUrl}me/schedules?fromDate=${startDate}&toDate=${endDate}`)
-      .pipe(catchError(this.handleError()));
+    return this.http.get<Events[]>(`${this.baseUrl}me/schedules?fromDate=${startDate}&toDate=${endDate}`).pipe(
+      map((response) => {
+        const events = new Array<Events>();
+        response.forEach((event) => {
+          event['jsonData'].EndTime = new Date(event['jsonData'].EndTime);
+          event['jsonData'].StartTime = new Date(event['jsonData'].StartTime);
+          events.push(event['jsonData']);
+        });
+        return events;
+      }),
+      catchError(this.handleError())
+    );
+  }
+
+  updateEvent(event: Events): Observable<Events> {
+    const participants = new Array<number>();
+
+    event['Participants'].forEach((user) => {
+      participants.push(user.id);
+    });
+
+    const data = JSON.stringify({
+      eventType: event.EventType,
+      jsonData: event,
+      participantIds: participants,
+      studentId: event.Students ? event.Students[0].id : null // Set the Student id (not from an array)
+    });
+
+    return this.http.put<Events>(`${this.baseUrl}me/schedules/${event.Id}`, data).pipe(catchError(this.handleError()));
+  }
+
+  deleteEvent(eventId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}me/schedules/${eventId}`).pipe(catchError(this.handleError()));
   }
 
   /**
