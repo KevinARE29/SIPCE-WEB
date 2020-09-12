@@ -14,5 +14,5 @@ export class Events {
   RecurrenceException: string;
   Description: string;
   Users: User[];
-  Students: Student[];
+  Students: Student;
 }

@@ -1,3 +1,11 @@
 .addStudent span {
     margin: 5px;
   }
+
+.error {
+    color: #f5222d;
+}
+
+.dateTimePicker {
+  padding: 1px;
+}
