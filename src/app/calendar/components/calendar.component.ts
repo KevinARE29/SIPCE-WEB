@@ -19,6 +19,7 @@ import * as numberingSystems from '../../../../node_modules/cldr-data/supplement
 import * as gregorian from '../../../../node_modules/cldr-data/main/es/ca-gregorian.json';
 import * as numbers from 'cldr-data/main/es/numbers.json';
 import * as timeZoneNames from 'cldr-data/main/es/timeZoneNames.json';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 import language from './../shared/calendar-language.json';
 import { Events } from '../shared/events.model';
@@ -27,7 +28,6 @@ import { Student } from '../../students/shared/student.model';
 import { StudentService } from '../../students/shared/student.service';
 import { UserService } from '../../users/shared/user.service';
 import { EventService } from '../shared/event.service';
-
 loadCldr(numberingSystems['default'], gregorian['default'], numbers['default'], timeZoneNames['default']);
 
 L10n.load(language);
@@ -73,7 +73,7 @@ export class CalendarComponent implements OnInit {
     { eventTypeText: 'Sesión con estudiante', Id: 1 },
     { eventTypeText: 'Entrevista con docente titular', Id: 2 },
     { eventTypeText: 'Entrevista con padres de familia', Id: 3 },
-    { eventTypeText: 'Otros', Id: 4 }
+    { eventTypeText: 'Otro', Id: 4 }
   ];
   // define the JSON of data
   public formatData: Object[] = [
@@ -125,7 +125,8 @@ export class CalendarComponent implements OnInit {
     private fb: FormBuilder,
     private eventService: EventService,
     private studentService: StudentService,
-    private userService: UserService
+    private userService: UserService,
+    private message: NzMessageService
   ) {}
 
   ngOnInit(): void {
@@ -167,22 +168,32 @@ export class CalendarComponent implements OnInit {
   onActionComplete(args): void {
     let startDate, endDate;
 
-    if (args.requestType === 'dateNavigate') {
-      const currentViewDates = this.scheduleObj.getCurrentViewDates();
-      startDate = currentViewDates[0];
-      endDate = currentViewDates[currentViewDates.length - 1];
+    switch (args.requestType) {
+      case 'dateNavigate':
+        const currentViewDates = this.scheduleObj.getCurrentViewDates();
+        startDate = currentViewDates[0];
+        endDate = currentViewDates[currentViewDates.length - 1];
 
-      this.getEvents(startDate, endDate);
-    } else if (args.requestType === 'toolBarItemRendered') {
-      // Get the current month's start and end dates
-      startDate = startOfMonth(this.selectedDate);
-      endDate = endOfMonth(this.selectedDate);
+        this.getEvents(startDate, endDate);
+        break;
+      case 'toolBarItemRendered':
+        // Get the current month's start and end dates
+        startDate = startOfMonth(this.selectedDate);
+        endDate = endOfMonth(this.selectedDate);
 
-      // Calculate the dates visible on the calendar
-      startDate = subDays(startDate, getDay(startDate));
-      endDate = addDays(endDate, 6 - getDay(endDate));
+        // Calculate the dates visible on the calendar
+        startDate = subDays(startDate, getDay(startDate));
+        endDate = addDays(endDate, 6 - getDay(endDate));
 
-      this.getEvents(startDate, endDate);
+        this.getEvents(startDate, endDate);
+        break;
+      case 'eventRemoved':
+        if (args.changedRecords.length) {
+          this.eventService.updateEvent(args.changedRecords[0]).subscribe(() => {
+            this.message.success(`El evento ha sido eliminado`);
+          });
+        }
+        break;
     }
   }
 
@@ -215,7 +226,6 @@ export class CalendarComponent implements OnInit {
   public onChange(args: any): void {
     this.recurrenceRule = '';
     this.recurrenceRule = args.value;
-    console.log();
   }
 
   public onBegin(args: any): void {
@@ -313,6 +323,12 @@ export class CalendarComponent implements OnInit {
         console.log(<any>args.data);
         console.log('esto tiene data');
         console.log(data);
+      }
+    } else if (args.requestType === 'eventRemove') {
+      if (!args.data[0].parent) {
+        this.eventService.deleteEvent(args.data[0].Id).subscribe(() => {
+          this.message.success(`El evento ha sido eliminado`);
+        });
       }
     }
   }

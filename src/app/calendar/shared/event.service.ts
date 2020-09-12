@@ -44,6 +44,27 @@ export class EventService {
     );
   }
 
+  updateEvent(event: Events): Observable<Events> {
+    const participants = new Array<number>();
+
+    event['Participants'].forEach((user) => {
+      participants.push(user.id);
+    });
+
+    const data = JSON.stringify({
+      eventType: event.EventType,
+      jsonData: event,
+      participantIds: participants,
+      studentId: event.Students ? event.Students[0].id : null // Set the Student id (not from an array)
+    });
+
+    return this.http.put<Events>(`${this.baseUrl}me/schedules/${event.Id}`, data).pipe(catchError(this.handleError()));
+  }
+
+  deleteEvent(eventId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}me/schedules/${eventId}`).pipe(catchError(this.handleError()));
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.
