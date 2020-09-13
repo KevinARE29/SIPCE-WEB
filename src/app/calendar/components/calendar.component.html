@@ -4,89 +4,62 @@
     (actionComplete)="onActionComplete($event)">
     <ng-template #editorTemplate let-data>
         <form class="custom-event-editor" [formGroup]="eventForm">
-            <!---->
-            <!--   <table class="custom-event-editor" width="100%" cellpadding="5">
-            <tbody> -->
             <div colspan="4" cellpadding="5">
                 <label class="e-textlabel">Asunto</label>
-                <!--value="{{data.Subject}}" -->
+
                 <input id="Subject" class="e-field e-input" type="text" data-name="Subject" FormControlName="Subject"
                     name="Subject" style="width: 100%;" />
             </div>
             <br>
             <div  class="dateTimePicker" class="form-group" colspan="4">
                 <label class="e-textlabel">Tipo de entrevista</label>
-                <!-- value="" [(ngModel)]= 'EventType'-->
-                <ejs-dropdownlist id="EventType" class="e-field" data-name="EventType"  formControlName="EventType" 
+
+                <ejs-dropdownlist id="EventType" class="e-field" data-name="EventType" 
                     placeholder="Seleccione el tipo de entrevista" [dataSource]="EventData"  value='{{ data.EventType }}'
                     [fields]="eventFields" required>
                 </ejs-dropdownlist>
- 
-             <!--   <div *ngIf="(EventType.invalid && (EventType.dirty || EventType.touched))" class="alert alert-danger">
-                    <div *ngIf="EventType.errors.required">
-                        Value is required.
-                    </div>
-                </div> -->
+
             </div>
-            <br>
+        
             <div  class="dateTimePicker" colspan="4">
                 <label class="e-textlabel">Lugar</label>
                 <!-- -->
                 <input id="Location" class="e-field e-input" value="{{ data.Location }}" type="text"
                     data-name="Location" FormControlName="Location" name="Location" style="width: 100%;" />
             </div>
-            <br>
-          <!-- <div nz-row> --> 
+        
+           <div nz-row> 
                 <div class="dateTimePicker" colspan="4">
                     <label class="e-textlabel">Inicio</label>
                     <input  id="StartTime" class="e-field" type="text" data-name="StartTime" name="StartTime" />
-            <!--      <input id="StartTime" class="e-field" type="text" locale="es" timeFormat="h:mm a"
-                    format="M/dd/yy h:mm a" name="StartTime" />
-            <input id="StartTime" class="e-field" type="text"  data-name="StartTime" FormControlName="StartTime" name="StartTime" /> -->
                 </div>
-                <br>
+            
                 <div class="dateTimePicker" colspan="4">
                     <label class="e-textlabel">Fin</label>
                     <input id="EndTime" class="e-field" type="text" data-name="EndTime" name="EndTime" />
-
-              <!--     <input id="EndTime" class="e-field" type="text"  locale="es" timeFormat="h:mm a"
-                    format="M/dd/yy h:mm a" name="EndTime" />
-            <input id="EndTime" FormControlName='data.endTime || data.EndTime'class="e-field" type="text" data-name="EndTime" FormControlName="EndTime" name="EndTime" />-->
                 </div>
-          <!-- </div>--> 
-            <label nz-checkbox (ngModelChange)="IsAllDay" FormControlName="IsAllDay">Evento de todo el dia</label> 
-            <!-- <ejs-recurrenceeditor #recurrenceObj (change)="onChange($event)" id="RecurrenceRule"
-                     class="e-field" name="RecurrenceRule" data-name="RecurrenceRule" value="{{data.RecurrenceRule}}" locale='es' ></ejs-recurrenceeditor> <label nz-checkbox [(ngModel)]="IsAllDay" (ngModelChange)="allDayEvent()">Evento de todo el dia</label> -->
-
-            <!---->
-            <br>
+          </div>
+    
             <div  class="dateTimePicker" colspan="4">
                 <ejs-recurrenceeditor id="RecurrenceRule" class="e-field" name="RecurrenceRule" value='{{data.RecurrenceRule}}'
                     data-name="RecurrenceRule" FormControlName="RecurrenceRule" locale="es" #recurrenceObj
                     (change)="onChange($event)">
                 </ejs-recurrenceeditor>
             </div>
-            <!--    <div colspan="4">
-                    <label class="e-textlabel">Frecuencia del evento</label>
-                    <div #recurrenceObj id='RecurrenceEditor'></div>
-                </div>  
--->
-            <div colspan="4">
+
+            <div  class="dateTimePicker" colspan="4">
                 <label class="e-textlabel">Descripcion</label>
-                <!--  value="{{data.Description}}" -->
                 <textarea id="Description" class="e-field e-input" FormControlName="Description" data-name="Description"
                     name="Description" rows="3" cols="50"
                     style="width: 100%; height: 60px !important; resize: vertical;"></textarea>
             </div>
             <!-- atendees -->
-            <br>
-            <div colspan="4">
+        
+            <div class="dateTimePicker" colspan="4">
                 <label class="e-textlabel"> Participantes del evento</label>
             </div>
-            <br />
+
             <div nz-row>
-                <!-- Students  -->
-                <!-- Current student [nzGutter]="24"-->
                 <div *ngIf="showAlert" class="error">Se permite seleccionar solo un estudiante, para agregar otro cancele el seleccionado.</div>
                 <br>
                 <div>
@@ -133,7 +106,7 @@
                 <br />
                 <div>
                     <div class="addStudent" nz-row [nzGutter]="24">
-                        <div nz-col *ngFor="let user of event.Users">
+                        <div nz-col *ngFor="let user of event.Participant">
                             {{ user.firstname }} {{ user.lastname }}
                             <a (click)="confirmDeleteUser(user.id, user)">
                                 <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ff4d4f'"></i>
@@ -174,8 +147,7 @@
             </div>
         </form>
 
-        <!--   </tbody>
-        </table>-->
+
     </ng-template>
     <!-- <e-views>
         <e-view option="Day"></e-view>

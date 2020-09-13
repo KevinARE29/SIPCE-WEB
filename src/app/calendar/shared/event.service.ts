@@ -9,7 +9,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { Student } from '../../students/shared/student.model';
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { User } from 'src/app/users/shared/user.model';
-import { Events } from './events.model';
+import { Appointment } from './appointment.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,13 +26,13 @@ export class EventService {
     return this.http.post<any>(`${this.baseUrl}me/schedules`, data).pipe(catchError(this.handleError()));
   }
 
-  getEvents(fromDate: Date, toDate: Date): Observable<Events[]> {
+  getEvents(fromDate: Date, toDate: Date): Observable<Appointment[]> {
     const startDate = fromDate.toISOString();
     const endDate = toDate.toISOString();
 
-    return this.http.get<Events[]>(`${this.baseUrl}me/schedules?fromDate=${startDate}&toDate=${endDate}`).pipe(
+    return this.http.get<Appointment[]>(`${this.baseUrl}me/schedules?fromDate=${startDate}&toDate=${endDate}`).pipe(
       map((response) => {
-        const events = new Array<Events>();
+        const events = new Array<Appointment>();
         response.forEach((event) => {
           event['jsonData'].EndTime = new Date(event['jsonData'].EndTime);
           event['jsonData'].StartTime = new Date(event['jsonData'].StartTime);
@@ -44,7 +44,7 @@ export class EventService {
     );
   }
 
-  updateEvent(event: Events): Observable<Events> {
+  updateEvent(event: Appointment): Observable<Appointment> {
     const participants = new Array<number>();
 
     event['Participants'].forEach((user) => {
@@ -55,10 +55,12 @@ export class EventService {
       eventType: event.EventType,
       jsonData: event,
       participantIds: participants,
-      studentId: event.Students ? event.Students[0].id : null // Set the Student id (not from an array)
+      studentId: event.Student ? event.Student.id : null // Set the Student id (not from an array)
     });
 
-    return this.http.put<Events>(`${this.baseUrl}me/schedules/${event.Id}`, data).pipe(catchError(this.handleError()));
+    return this.http
+      .put<Appointment>(`${this.baseUrl}me/schedules/${event.Id}`, data)
+      .pipe(catchError(this.handleError()));
   }
 
   deleteEvent(eventId: number): Observable<void> {

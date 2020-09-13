@@ -24,7 +24,7 @@ import * as timeZoneNames from 'cldr-data/main/es/timeZoneNames.json';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 import language from './../shared/calendar-language.json';
-import { Events } from '../shared/events.model';
+import { Appointment } from '../shared/appointment.model';
 import { User } from '../../users/shared/user.model';
 import { Student } from '../../students/shared/student.model';
 import { StudentService } from '../../students/shared/student.service';
@@ -44,7 +44,8 @@ export class CalendarComponent implements OnInit {
   eventForm!: FormGroup;
   IsAllDay = true;
   show = true;
-  event: Events;
+  event: Appointment;
+  updateEvent: Appointment;
   // Search variables
   searchLoader = false;
   searchLoaderUser = false;
@@ -59,6 +60,7 @@ export class CalendarComponent implements OnInit {
   showAlert = false;
   //flag to know if the event can be saved
   saveEvent: boolean;
+  startTimeDate: string;
 
   @ViewChild('scheduleObj')
   public scheduleObj: ScheduleComponent;
@@ -67,19 +69,14 @@ export class CalendarComponent implements OnInit {
   public views: Array<string> = ['Day', 'Week', 'Month'];
   public selectedDate: Date = new Date();
   public newViewMode: View = 'Month';
-  private dataManager: DataManager = new DataManager({
-    url: 'https://js.syncfusion.com/demos/ejservices/api/Schedule/LoadData',
-    adaptor: new WebApiAdaptor(),
-    crossDomain: true
-  });
 
   public eventFields: Object = { text: 'eventTypeText', value: 'eventTypeText' };
   public EventData: Object[] = [
     { eventTypeText: 'Sesión con estudiante', Id: 1 },
     { eventTypeText: 'Entrevista con docente titular', Id: 2 },
     { eventTypeText: 'Entrevista con padres de familia', Id: 3 },
-    { eventTypeText: 'Otro', Id: 4 },
-    { eventTypeText: 'Programa de intervención', Id: 5 }
+    { eventTypeText: 'Programa de intervención', Id: 5 },
+    { eventTypeText: 'Otro', Id: 4 }
   ];
 
   public data: object[] = [];
@@ -95,31 +92,6 @@ export class CalendarComponent implements OnInit {
     return new Date(data);
   }
 
-  public recurrenceParser(dataR: string) {
-    //  const outputElement: HTMLElement = <HTMLElement>document.querySelector('#RecurrenceRule');
-    //  if (args.value == '') {
-    //    outputElement.innerText = null;
-    //  } else {
-    //    this.recurrenceRule = '"' + args.value + '"';
-    // return new RecurrenceEditor({ value: dataR });
-    //  const recurrObject: RecurrenceEditor = new RecurrenceEditor();
-    //  recurrObject.appendTo(dataR);
-    //  this.scheduleObj.setRecurrenceEditor(recurrObject);
-    //  }
-  }
-
-  // public eventData: EventSettingsModel = {
-  //   dataSource: this.dataManager,
-  //   fields: {
-  //     id: 'Id',
-  //     subject: { validation: { required: true } },
-  //     location: { validation: { required: true, regex: ['^[a-zA-Z0-9- ]*'] } },
-  //     description: { validation: { required: true }},
-  //     startTime: { validation: { required: true } },
-  //     endTime: { validation: { required: true } }
-  //   }
-  // };
-
   constructor(
     private fb: FormBuilder,
     private eventService: EventService,
@@ -131,16 +103,9 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit(): void {
     this.eventForm = this.fb.group({
-      Id: [null, [Validators.required]],
-      Subject: [null, [Validators.required, Validators.maxLength(128)]],
-      EventType: [null, [Validators.required]],
-      Location: [null, [Validators.required, Validators.maxLength(128)]],
-      StartTime: [null, [Validators.required]],
-      EndTime: [null, [Validators.required]],
       IsAllDay: [false, [Validators.required]],
       //  RecurrenceID: [null, [Validators.required]],
       RecurrenceRule: [null, [Validators.required]],
-      Description: [null, [Validators.required]],
       //  RecurrenceException: [null, [Validators.required]],
       Users: [null, [Validators.required]],
       Students: [null, [Validators.required]]
@@ -150,7 +115,8 @@ export class CalendarComponent implements OnInit {
     this.user = new User();
     this.results = new Array<Student>();
     this.resultsUsers = new Array<User>();
-    this.event = new Events();
+    this.event = new Appointment();
+    this.updateEvent = new Appointment();
   }
 
   applyCategoryColor(args: EventRenderedArgs): void {
@@ -203,7 +169,12 @@ export class CalendarComponent implements OnInit {
         dataSource: events,
         fields: {
           id: 'Id',
-          subject: { validation: { required: [true, 'El título del evento es requerido'] } },
+          subject: {
+            validation: {
+              required: [true, 'El título del evento es requerido'],
+              regex: ['^[a-zA-Z0-9- ]*', 'El título debe contener unicamente letras y números']
+            }
+          },
           startTime: { validation: { required: [true, 'La fecha de inicio del evento es requerida'] } },
           endTime: { validation: { required: [true, 'La fecha de fin del evento es requerida'] } }
         }
@@ -211,17 +182,6 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  /* Method to show the recurrence rule with dataBinding
-  onChange(args: RecurrenceEditorChangeEventArgs): void {
-    const outputElement: HTMLElement = <HTMLElement>document.querySelector('#RecurrenceRule');
-    if (args.value == '') {
-      outputElement.innerText = null;
-    } else {
-     //  this.recurrenceRule = '"' + args.value + '"';
-      this.recurrenceRule = args.value;
-      console.log(this.recurrenceRule);
-    }
-  }*/
   randomItem(): string {
     const items = ['#FB8500', '#023047', '#126782'];
     return items[Math.floor(Math.random() * items.length)];
@@ -240,23 +200,35 @@ export class CalendarComponent implements OnInit {
       this.saveEvent = true;
       data.RecurrenceRule = this.recurrenceRule;
 
-      if (this.event.Users !== undefined) {
-        this.event.Users.forEach((user) => {
+
+      if (this.event.Participant !== undefined) {
+        this.event.Participant.forEach((user) => {
           participantIds.push(user.id);
           console.log('participants Ids!!!!!!!!!!!!');
           console.log(participantIds);
         });
       } else {
-        this.event.Users = null;
+        this.event.Participant = null;
       }
 
       //initializing the event object that will be send to the json data
       this.event.Id = data.Id;
-      this.event.StartTime = data.StartTime.toISOString();
-      this.event.EndTime = data.EndTime.toISOString();
+      //console.log(data.StartTime);
+      if (args.requestType === 'eventCreate') {
+        this.event.StartTime = data.StartTime.toISOString();
+        this.event.EndTime = data.EndTime.toISOString();
+      } else if (args.requestType === 'eventChange') {
+        // data.StartTime = this.startTimeDate;
+        //data.StartTime = this.updateEvent.StartTime.toISOString();
+        console.log('actualizar evento FECHA INICIO');
+        console.log('--------------');
+        this.event.StartTime = data.StartTime.toISOString();
+        this.event.EndTime = data.EndTime.toISOString();
+      }
+
       this.event.Subject = data.Subject;
       this.event.IsAllDay = false;
-      if (data.RecurrenceRule === undefined) {
+      if (data.RecurrenceRule === undefined || data.RecurrenceRule === null) {
         this.event.RecurrenceRule = null;
         createEvent['recurrent'] = false;
       } else {
@@ -264,7 +236,7 @@ export class CalendarComponent implements OnInit {
         createEvent['recurrent'] = true;
       }
 
-      if (data.EventType === undefined || data.EventType === null) {
+      if (data.EventType === undefined || data.EventType === null || data.EventType === '') {
         this.event.EventType = 'Otro';
       } else {
         this.event.EventType = data.EventType;
@@ -294,12 +266,16 @@ export class CalendarComponent implements OnInit {
       createEvent['jsonData'] = this.event;
       createEvent['jsonData']['CategoryColor'] = this.randomItem();
       if (participantIds.length !== 0) createEvent['participantIds'] = participantIds;
-      console.log('event.students');
-      console.log(this.event.Students);
       console.log('event.students.id');
-      if (this.event.Students !== null) createEvent['studentId'] = this.event.Students.id;
-      // set random color to the new event created
-      console.log(this.randomItem());
+//      console.log(this.selectedStudent[0]);
+      console.log('selected estudiante');
+      console.log('------this.event.Student.id;---------');
+
+      if (this.event.Student === null || this.event.Student === undefined) {
+
+      } else {
+          createEvent['studentId'] = this.event.Student.id;
+      }
 
       if (args.requestType === 'eventCreate') {
         //validating the date
@@ -309,14 +285,13 @@ export class CalendarComponent implements OnInit {
           this.notification.create(
             'error',
             'Ocurrió un error al crear el evento. Por favor verifique lo siguiente:',
-            'La fecha de inicio debe ser menor a la fecha de fin',
+            'La fecha y hora de finalizacíon debe ser mayor a la fecha y hora de inicio',
             { nzDuration: 4500 }
           );
           this.saveEvent = false;
           args.cancel = true;
           console.log('La fecha de inicio debe ser menor a la fecha de fin');
         }
-        //args.cancel = true;
         args.cancel = true;
         // this.submitForm();
         console.log('--------------');
@@ -328,18 +303,23 @@ export class CalendarComponent implements OnInit {
               args.cancel = false;
               console.log('--------------');
               console.log('esto devuelve la ruta', r);
+
               data = <any>args.data;
               this.data.push(data);
 
               // Refresh the calendar after adding a new event
               this.scheduleObj.refresh();
+              // this.ngOnInit();
               console.log(this.data);
+              this.event = new Appointment();
+              // this.message.success(`Evento creado con éxito`);
               //  args.cancel = false;
               // this.scheduleObj.addEvent(data);
             },
             (err) => {
               args.cancel = true;
               console.log(err, this.data);
+              this.event = new Appointment();
             }
           );
         }
@@ -351,11 +331,47 @@ export class CalendarComponent implements OnInit {
         console.log('esto tiene data');
         console.log(data);
       } else if (args.requestType === 'eventChange') {
+        console.log('actualizar evento');
         console.log('--------------');
-        data = <any>args.data;
+        if (!args.data.parent) {
+          // create event
+          args.cancel = true;
+          console.log('parent');
+          console.log(<any>args.data);
+          console.log('esto tiene data');
+          console.log(args.data);
+          this.eventService.updateEvent(args.data).subscribe(
+            (r) => {
+              args.cancel = false;
+              console.log('ocurrence');
+              data = <any>args.data;
+              // this.updateEvent = new Events();
+              console.log('esto tiene la ruta', r);
+              this.message.success('Evento actualizado con éxito');
+              this.scheduleObj.refresh();
+            },
+            (err) => {
+              args.cancel = true;
+            }
+          );
+        } else {
+          this.eventService.updateEvent(args.data.occurrence).subscribe(
+            (r) => {
+              console.log('ocurrence');
+              data = <any>args.data;
+              this.updateEvent = new Appointment();
+              console.log('esto tiene la ruta', r);
+              // this.scheduleObj.refresh();
+            },
+            (err) => {
+              args.cancel = true;
+            }
+          );
+        }
+
         console.log(<any>args.data);
         console.log('esto tiene data');
-        console.log(data);
+        console.log(args.data.occurrence);
       }
       //delete event actions
     } else if (args.requestType === 'eventRemove') {
@@ -367,25 +383,13 @@ export class CalendarComponent implements OnInit {
     }
   }
 
-  submitForm(): void {
-    if (this.eventForm.valid) {
-      this.event.Id = this.eventForm.controls['Id'].value;
-      this.event.Subject = this.eventForm.controls['Subject'].value;
-      this.event.StartTime = this.eventForm.controls['StartTime'].value;
-      this.event.EndTime = this.eventForm.controls['EndTime'].value;
-      this.event.Location = this.eventForm.controls['Location'].value;
-      this.event.RecurrenceRule = this.eventForm.controls['RecurrenceRule'].value;
-      this.event.Description = this.eventForm.controls['Description'].value;
-      this.event.Users = this.eventForm.controls['Users'].value;
-      this.event.Students = this.eventForm.controls['Students'].value;
-    }
-    console.log(this.event);
-    //  this.scheduleObj.addEvent(this.event);
-  }
-
   onPopupOpen(args: PopupOpenEventArgs): void {
     this.eventForm.reset;
-    this.event.Users = new Array<User>();
+    // cleanning variables of atendees
+    this.event.Participant = new Array<User>();
+    this.event.Student = new Student();
+    this.updateEvent = new Appointment();
+    this.selectedStudent = new Array<Student>();
 
     for (const i in this.eventForm.controls) {
       this.eventForm.controls[i].markAsDirty();
@@ -393,7 +397,7 @@ export class CalendarComponent implements OnInit {
     }
     this.results = new Array<Student>();
     this.resultsUsers = new Array<User>();
-    this.event.Students = null;
+    this.event.Student = null;
     this.showAlert = false;
     //initializing event object
     if (args.type === 'Editor') {
@@ -411,7 +415,9 @@ export class CalendarComponent implements OnInit {
       if (!endElement.classList.contains('e-datetimepicker')) {
         new DateTimePicker({ value: new Date(endElement.value) || new Date(), locale: 'es' }, endElement);
       }
-
+      console.log('args.data en popun');
+      console.log(args.data);
+    
       /*
       const recurElement: HTMLElement = args.element.querySelector('#RecurrenceEditor');
       if (!recurElement.classList.contains('e-recurrenceeditor')) {
@@ -460,8 +466,7 @@ export class CalendarComponent implements OnInit {
 
   addStudent(SelectedStudent: Student): void {
     //add condition to know if the event has students previously
-    //add condition to know if the event has students previously
-    this.event.Students = this.student;
+    this.event.Student = this.student;
     this.selectedStudent = new Array<Student>();
     // if (this.event.Students.length === 0) {
     this.selectedStudent.push(SelectedStudent);
@@ -469,21 +474,15 @@ export class CalendarComponent implements OnInit {
     //Saving the student to the event object
     this.showAlert = true;
     console.log('entro');
-    this.event.Students = SelectedStudent;
-    console.log(this.event.Students);
-    //  this.StudentId = null;
-    //  this.StudentId = Student.id;
+    this.event.Student = SelectedStudent;
+    console.log(this.event.Student);
     this.results = this.results.filter((d) => d['id'] !== SelectedStudent.id);
-    // } else {
-
-    // }
   }
 
   confirmDeleteStudent(id: number, student: Student): void {
     this.showAlert = false;
-    this.results.push(student);
-    // this.event.Students = null;
-    this.event.Students = this.student;
+    if (this.results.length !== 0) this.results.push(student);
+    this.event.Student = this.student;
     this.selectedStudent = this.selectedStudent.filter((d) => d['id'] !== id);
   }
 
@@ -509,15 +508,14 @@ export class CalendarComponent implements OnInit {
 
   addUser(User: User): void {
     //add condition to know if the event has students previously
-    // this.event.Users = new Array<User>();
-    this.event.Users.push(User);
+    this.event.Participant.push(User);
     console.log('esto guarda user');
-    console.log(this.event.Users);
+    console.log(this.event.Participant);
     this.resultsUsers = this.resultsUsers.filter((d) => d['id'] !== User.id);
   }
 
   confirmDeleteUser(id: number, user: User): void {
-    this.resultsUsers.push(user);
-    this.event.Users = this.event.Users.filter((d) => d['id'] !== id);
+    if (this.resultsUsers.length !== 0) this.resultsUsers.push(user);
+    this.event.Participant = this.event.Participant.filter((d) => d['id'] !== id);
   }
 }

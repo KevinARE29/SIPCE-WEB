@@ -1,7 +1,7 @@
 import { Student } from 'src/app/students/shared/student.model';
 import { User } from 'src/app/users/shared/user.model';
 
-export class Events {
+export class Appointment {
   Id: number;
   Subject: string;
   EventType: string;
@@ -13,6 +13,6 @@ export class Events {
   RecurrenceRule: string;
   RecurrenceException: string;
   Description: string;
-  Users: User[];
-  Students: Student;
+  Participant: User[];
+  Student: Student;
 }
