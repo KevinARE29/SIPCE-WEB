@@ -311,10 +311,16 @@ export class UpdateStudentComponent implements OnInit {
   }
 
   updateStudent(): void {
-    this.btnLoading = true;
     const update = this.isEquivalent(this.student, this.editStudentCache);
 
     if (update['update']) {
+      this.btnLoading = true;
+      if (update['fields'].shift || update['fields'].grade || update['fields'].section) {
+        update['fields'].shift = { ...this.student.shift };
+        update['fields'].grade = { ...this.student.grade };
+        update['fields'].section = { ...this.student.section };
+      }
+
       this.studentService.updateStudent(update['fields']).subscribe(
         () => {
           this.organizeImages();
