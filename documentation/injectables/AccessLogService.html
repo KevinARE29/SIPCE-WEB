@@ -1,0 +1,514 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>sipce-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">sipce-web documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li>AccessLogService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/logs/shared/access-log.service.ts</code>
+        </p>
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#baseUrl">baseUrl</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#handleError">handleError</a>
+                            </li>
+                            <li>
+                                <a href="#searchAccessLog">searchAccessLog</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(http: <a href="https://angular.io/api/common/http/HttpClient" target="_blank">HttpClient</a>, errorMessageService: <a href="../injectables/ErrorMessageService.html">ErrorMessageService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/app/logs/shared/access-log.service.ts:17</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>http</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/common/http/HttpClient" target="_blank" >HttpClient</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>errorMessageService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ErrorMessageService.html" target="_self" >ErrorMessageService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleError"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            handleError
+                        </b>
+                        <a href="#handleError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleError()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="89"
+                            class="link-to-prism">src/app/logs/shared/access-log.service.ts:89</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Handle Http operation that failed.
+Let the app continue.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>(error: any) &#x3D;&gt; any</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="searchAccessLog"></a>
+                    <span class="name">
+                        <b>
+                            searchAccessLog
+                        </b>
+                        <a href="#searchAccessLog"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>searchAccessLog(params: NzTableQueryParams, search: <a href="../classes/AccessLog.html">AccessLog</a>, paginate: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="23"
+                            class="link-to-prism">src/app/logs/shared/access-log.service.ts:23</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>params</td>
+                                    <td>
+                                            <code>NzTableQueryParams</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>search</td>
+                                    <td>
+                                                <code><a href="../classes/AccessLog.html" target="_self" >AccessLog</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>paginate</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/AccessLog.html" target="_self" >Observable&lt;AccessLog[]&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="baseUrl"></a>
+                        <span class="name">
+                            <b>
+                            baseUrl</b>
+                            <a href="#baseUrl"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/app/logs/shared/access-log.service.ts:17</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
+import { HttpClient } from &#x27;@angular/common/http&#x27;;
+import { catchError, map } from &#x27;rxjs/operators&#x27;;
+import { Observable, throwError } from &#x27;rxjs&#x27;;
+
+import { NzTableQueryParams } from &#x27;ng-zorro-antd/table&#x27;;
+import { subMonths } from &#x27;date-fns&#x27;;
+
+import { environment } from &#x27;./../../../environments/environment&#x27;;
+import { ErrorMessageService } from &#x27;../../shared/error-message.service&#x27;;
+import { AccessLog } from &#x27;./access-log.model&#x27;;
+
+@Injectable({
+  providedIn: &#x27;root&#x27;
+})
+export class AccessLogService {
+  baseUrl: string;
+
+  constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
+    this.baseUrl &#x3D; environment.apiURL;
+  }
+
+  searchAccessLog(params: NzTableQueryParams, search: AccessLog, paginate: boolean): Observable&lt;AccessLog[]&gt; {
+    let url &#x3D; this.baseUrl + &#x27;logs/access-logs&#x27;;
+    let queryParams &#x3D; &#x27;&#x27;;
+
+    // Paginate?
+    if (paginate) queryParams +&#x3D; &#x27;?page&#x3D;&#x27; + params.pageIndex;
+
+    // Params
+    if (params) {
+      let sort &#x3D; &#x27;&amp;sort&#x3D;&#x27;;
+      params.sort.forEach((param) &#x3D;&gt; {
+        if (param.value) {
+          sort +&#x3D; param.key;
+          switch (param.value) {
+            case &#x27;ascend&#x27;:
+              sort +&#x3D; &#x27;-&#x27; + param.value.substring(0, 3) + &#x27;,&#x27;;
+              break;
+            case &#x27;descend&#x27;:
+              sort +&#x3D; &#x27;-&#x27; + param.value.substring(0, 4) + &#x27;,&#x27;;
+              break;
+          }
+        }
+      });
+
+      if (sort.length &gt; 6) {
+        if (sort.charAt(sort.length - 1) &#x3D;&#x3D;&#x3D; &#x27;,&#x27;) sort &#x3D; sort.slice(0, -1);
+
+        queryParams +&#x3D; sort;
+      }
+    }
+
+    // Search params
+    if (search) {
+      if (search.username) queryParams +&#x3D; &#x27;&amp;username&#x3D;&#x27; + search.username;
+
+      if (search.ip) queryParams +&#x3D; &#x27;&amp;ip&#x3D;&#x27; + search.ip;
+
+      if (search.statusCode) queryParams +&#x3D; &#x27;&amp;statusCode&#x3D;&#x27; + search.statusCode;
+
+      if (search.attemptTime &amp;&amp; search.attemptTime[0] !&#x3D; undefined &amp;&amp; search.attemptTime[1] !&#x3D; undefined) {
+        queryParams +&#x3D;
+          &#x27;&amp;attemptTimeStart&#x3D;&#x27; +
+          search.attemptTime[0].toISOString() +
+          &#x27;&amp;attemptTimeEnd&#x3D;&#x27; +
+          search.attemptTime[1].toISOString();
+      } else {
+        const currentDate &#x3D; new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 23, 59, 59);
+        let date &#x3D; subMonths(currentDate, 1);
+
+        date &#x3D; new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+
+        queryParams +&#x3D; &#x27;&amp;attemptTimeStart&#x3D;&#x27; + date.toISOString() + &#x27;&amp;attemptTimeEnd&#x3D;&#x27; + currentDate.toISOString();
+      }
+    }
+
+    if (queryParams.charAt(0) &#x3D;&#x3D;&#x3D; &#x27;&amp;&#x27;) queryParams &#x3D; queryParams.replace(&#x27;&amp;&#x27;, &#x27;?&#x27;);
+
+    url +&#x3D; queryParams;
+
+    return this.http.get&lt;AccessLog[]&gt;(url).pipe(catchError(this.handleError()));
+  }
+
+  /**
+   * Handle Http operation that failed.
+   * Let the app continue.
+   */
+  private handleError() {
+    return (error: any) &#x3D;&gt; {
+      error.error.message &#x3D; this.errorMessageService.transformMessage(&#x27;access-log&#x27;, error.error.message);
+      return throwError(error.error);
+    };
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'AccessLogService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

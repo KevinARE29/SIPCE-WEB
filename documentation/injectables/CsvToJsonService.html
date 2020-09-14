@@ -1,0 +1,1679 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>sipce-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">sipce-web documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li>CsvToJsonService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/shared/csv-to-json.service.ts</code>
+        </p>
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#csvJSON">csvJSON</a>
+                            </li>
+                            <li>
+                                <a href="#date">date</a>
+                            </li>
+                            <li>
+                                <a href="#email">email</a>
+                            </li>
+                            <li>
+                                <a href="#empty">empty</a>
+                            </li>
+                            <li>
+                                <a href="#kinship">kinship</a>
+                            </li>
+                            <li>
+                                <a href="#number">number</a>
+                            </li>
+                            <li>
+                                <a href="#phoneNumber">phoneNumber</a>
+                            </li>
+                            <li>
+                                <a href="#replaceAccents">replaceAccents</a>
+                            </li>
+                            <li>
+                                <a href="#text">text</a>
+                            </li>
+                            <li>
+                                <a href="#textnumber">textnumber</a>
+                            </li>
+                            <li>
+                                <a href="#transform">transform</a>
+                            </li>
+                            <li>
+                                <a href="#validateField">validateField</a>
+                            </li>
+                            <li>
+                                <a href="#validateUpdatedRow">validateUpdatedRow</a>
+                            </li>
+                            <li>
+                                <a href="#year">year</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/app/shared/csv-to-json.service.ts:13</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="csvJSON"></a>
+                    <span class="name">
+                        <b>
+                            csvJSON
+                        </b>
+                        <a href="#csvJSON"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>csvJSON(file: Blob, group: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="17"
+                            class="link-to-prism">src/app/shared/csv-to-json.service.ts:17</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>file</td>
+                                    <td>
+                                            <code>Blob</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>group</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;unknown&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="date"></a>
+                    <span class="name">
+                        <b>
+                            date
+                        </b>
+                        <a href="#date"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>date(field)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="416"
+                            class="link-to-prism">src/app/shared/csv-to-json.service.ts:416</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>field</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="email"></a>
+                    <span class="name">
+                        <b>
+                            email
+                        </b>
+                        <a href="#email"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>email(field)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="408"
+                            class="link-to-prism">src/app/shared/csv-to-json.service.ts:408</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>field</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="empty"></a>
+                    <span class="name">
+                        <b>
+                            empty
+                        </b>
+                        <a href="#empty"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>empty(field)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="404"
+                            class="link-to-prism">src/app/shared/csv-to-json.service.ts:404</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>field</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="kinship"></a>
+                    <span class="name">
+                        <b>
+                            kinship
+                        </b>
+                        <a href="#kinship"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>kinship(field)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="429"
+                            class="link-to-prism">src/app/shared/csv-to-json.service.ts:429</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>field</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="number"></a>
+                    <span class="name">
+                        <b>
+                            number
+                        </b>
+                        <a href="#number"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>number(field)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="420"
+                            class="link-to-prism">src/app/shared/csv-to-json.service.ts:420</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>field</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="phoneNumber"></a>
+                    <span class="name">
+                        <b>
+                            phoneNumber
+                        </b>
+                        <a href="#phoneNumber"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>phoneNumber(field)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="412"
+                            class="link-to-prism">src/app/shared/csv-to-json.service.ts:412</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>field</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="replaceAccents"></a>
+                    <span class="name">
+                        <b>
+                            replaceAccents
+                        </b>
+                        <a href="#replaceAccents"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>replaceAccents(text: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="432"
+                            class="link-to-prism">src/app/shared/csv-to-json.service.ts:432</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>text</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="text"></a>
+                    <span class="name">
+                        <b>
+                            text
+                        </b>
+                        <a href="#text"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>text(field)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="396"
+                            class="link-to-prism">src/app/shared/csv-to-json.service.ts:396</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>field</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="textnumber"></a>
+                    <span class="name">
+                        <b>
+                            textnumber
+                        </b>
+                        <a href="#textnumber"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>textnumber(field)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="400"
+                            class="link-to-prism">src/app/shared/csv-to-json.service.ts:400</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>field</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="transform"></a>
+                    <span class="name">
+                        <b>
+                            transform
+                        </b>
+                        <a href="#transform"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>transform(csv: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, group: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="37"
+                            class="link-to-prism">src/app/shared/csv-to-json.service.ts:37</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>csv</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>group</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>unknown</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateField"></a>
+                    <span class="name">
+                        <b>
+                            validateField
+                        </b>
+                        <a href="#validateField"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>validateField(header, field)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="155"
+                            class="link-to-prism">src/app/shared/csv-to-json.service.ts:155</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>header</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>field</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateUpdatedRow"></a>
+                    <span class="name">
+                        <b>
+                            validateUpdatedRow
+                        </b>
+                        <a href="#validateUpdatedRow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>validateUpdatedRow(group, headers, row)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="387"
+                            class="link-to-prism">src/app/shared/csv-to-json.service.ts:387</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>group</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>headers</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>row</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="year"></a>
+                    <span class="name">
+                        <b>
+                            year
+                        </b>
+                        <a href="#year"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>year(field)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="424"
+                            class="link-to-prism">src/app/shared/csv-to-json.service.ts:424</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>field</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
+import { Observable } from &#x27;rxjs&#x27;;
+
+import { isValid } from &#x27;date-fns&#x27;;
+
+import CsvHeaders from &#x27;./../shared/csv-headers.json&#x27;;
+import DictionaryJson from &#x27;../../assets/dictionary.json&#x27;;
+import { KinshipRelationship } from &#x27;./kinship-relationship.enum&#x27;;
+
+@Injectable({
+  providedIn: &#x27;root&#x27;
+})
+export class CsvToJsonService {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  constructor() {}
+
+  csvJSON(file: Blob, group: string): Observable&lt;unknown&gt; {
+    const reader: FileReader &#x3D; new FileReader();
+    reader.readAsText(file, &#x27;ISO-8859-1&#x27;);
+
+    return new Observable&lt;unknown&gt;((observer) &#x3D;&gt; {
+      reader.onload &#x3D; () &#x3D;&gt; {
+        const customJson &#x3D; this.transform(reader.result as string, group);
+
+        if (customJson &#x3D;&#x3D;&#x3D; &#x27;quantityError&#x27;) {
+          observer.error(&#x27;Verifique que la cantidad de columnas coincidan con las del archivo esperado.&#x27;);
+        } else if (customJson &#x3D;&#x3D;&#x3D; &#x27;wrongColumns&#x27;) {
+          observer.error(&#x27;Verifique que las columnas ingresadas correspondan a las esperadas.&#x27;);
+        } else {
+          observer.next(customJson);
+        }
+      };
+    });
+  }
+
+  // var csv is the CSV file with headers
+  transform(csv: string, group: string): unknown {
+    /*---------------    Get headers     ---------------*/
+    const availableHeaders &#x3D; CsvHeaders.headers[group];
+    const dictionary &#x3D; DictionaryJson.dictionary[group];
+
+    const lines &#x3D; csv.split(&#x27;\n&#x27;);
+    const result &#x3D; [];
+    const realHeaders &#x3D; new Array&lt;any&gt;();
+    const headers &#x3D; lines[0].split(&#x27;,&#x27;);
+
+    /*---------------    Validate headers     ---------------*/
+    if (group &#x3D;&#x3D;&#x3D; &#x27;students&#x27;) {
+      if (
+        Object.keys(availableHeaders).length !&#x3D;&#x3D; headers.length &amp;&amp;
+        Object.keys(availableHeaders).length - 2 !&#x3D;&#x3D; headers.length
+      ) {
+        return &#x27;quantityError&#x27;;
+      }
+    } else {
+      if (Object.keys(availableHeaders).length !&#x3D;&#x3D; headers.length) {
+        return &#x27;quantityError&#x27;;
+      }
+    }
+
+    headers.forEach((header) &#x3D;&gt; {
+      let next &#x3D; true;
+      Object.keys(availableHeaders).forEach((key) &#x3D;&gt; {
+        if (dictionary.hasOwnProperty(key)) {
+          if (dictionary[key].toLowerCase() &#x3D;&#x3D;&#x3D; header.toLowerCase().trim() &amp;&amp; next) {
+            realHeaders.push(key);
+            availableHeaders[key].check &#x3D; true;
+            next &#x3D; false;
+          }
+        }
+      });
+    });
+
+    for (const header of Object.keys(availableHeaders)) {
+      if (!availableHeaders[header].check &amp;&amp; !availableHeaders[header].optional) {
+        return &#x27;wrongColumns&#x27;;
+        break;
+      }
+    }
+
+    /*--------------- Transform csv to json ---------------*/
+    for (let i &#x3D; 1; i &lt; lines.length; i++) {
+      const obj &#x3D; {};
+      const currentline &#x3D; lines[i].split(&#x27;,&#x27;);
+      obj[&#x27;id&#x27;] &#x3D; i - 1;
+
+      if (currentline.length &#x3D;&#x3D;&#x3D; realHeaders.length) {
+        for (let j &#x3D; 0; j &lt; realHeaders.length; j++) {
+          if (currentline[j] !&#x3D;&#x3D; undefined) {
+            if (currentline[j].includes(&#x27;;&#x27;)) {
+              const field &#x3D; currentline[j].split(&#x27;;&#x27;);
+              const multiple &#x3D; {};
+
+              if (realHeaders[j] &#x3D;&#x3D;&#x3D; &#x27;role&#x27;) {
+                for (let k &#x3D; 0; k &lt; field.length; k++) {
+                  multiple[k] &#x3D; { value: field[k].trim(), isValid: true, message: null, role: null };
+                }
+              } else {
+                for (let k &#x3D; 0; k &lt; field.length; k++) {
+                  multiple[k] &#x3D; { value: field[k].trim(), isValid: true, message: null };
+                }
+              }
+
+              obj[realHeaders[j]] &#x3D; {
+                value: multiple, // The field to be written in the table
+                isValid: true, // Define if the value is valid
+                message: null // Indicate the error message related to the field
+              };
+            } else {
+              if (realHeaders[j] &#x3D;&#x3D;&#x3D; &#x27;role&#x27;) {
+                const role &#x3D; new Array&lt;any&gt;();
+                role.push({
+                  value: currentline[j].trim() ? currentline[j].trim() : null,
+                  message: null,
+                  isValid: true,
+                  role: null
+                });
+
+                obj[realHeaders[j]] &#x3D; {
+                  value: role,
+                  isValid: true,
+                  message: null
+                };
+              } else if (realHeaders[j] &#x3D;&#x3D;&#x3D; &#x27;grade&#x27;) {
+                obj[realHeaders[j]] &#x3D; {
+                  value: currentline[j].trim(),
+                  isValid: true,
+                  message: null,
+                  grade: null
+                };
+              } else {
+                obj[realHeaders[j]] &#x3D; {
+                  value: currentline[j].trim(),
+                  isValid: true,
+                  message: null
+                };
+              }
+            }
+
+            // Validate the field
+            this.validateField(availableHeaders[realHeaders[j]], obj[realHeaders[j]]);
+          }
+        }
+
+        obj[&#x27;inlineError&#x27;] &#x3D; null;
+
+        result.push(obj);
+      }
+    }
+
+    return { headers: realHeaders, data: result }; //JSON
+  }
+
+  /*--------------- Validate fields and rows ---------------*/
+  validateField(header, field): void {
+    let flag &#x3D; true;
+
+    header[&#x27;validations&#x27;].forEach((validate) &#x3D;&gt; {
+      switch (validate.value) {
+        case &#x27;empty&#x27;:
+          if (typeof field.value &#x3D;&#x3D;&#x3D; &#x27;object&#x27;) {
+            Object.keys(field.value).forEach((value) &#x3D;&gt; {
+              if (this.empty(value)) {
+                field.isValid &#x3D; false;
+                field.message &#x3D; validate.message;
+                flag &#x3D; false;
+              } else {
+                if (flag) {
+                  field.isValid &#x3D; true;
+                  field.message &#x3D; null;
+                }
+              }
+            });
+          } else if (typeof field.value &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+            if (this.empty(field.value)) {
+              field.isValid &#x3D; false;
+              field.message &#x3D; validate.message;
+              flag &#x3D; false;
+            } else {
+              if (flag) {
+                field.isValid &#x3D; true;
+                field.message &#x3D; null;
+              }
+            }
+          }
+          break;
+        case &#x27;text&#x27;:
+          if (typeof field.value &#x3D;&#x3D;&#x3D; &#x27;object&#x27;) {
+            Object.keys(field.value).forEach((value) &#x3D;&gt; {
+              if (!this.text(value)) {
+                field.isValid &#x3D; false;
+                field.message &#x3D; validate.message;
+                flag &#x3D; false;
+              } else {
+                if (flag) {
+                  field.isValid &#x3D; true;
+                  field.message &#x3D; null;
+                }
+              }
+            });
+          } else if (typeof field.value &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+            if (!this.text(field.value)) {
+              field.isValid &#x3D; false;
+              field.message &#x3D; validate.message;
+              flag &#x3D; false;
+            } else {
+              if (flag) {
+                field.isValid &#x3D; true;
+                field.message &#x3D; null;
+              }
+            }
+          }
+          break;
+        case &#x27;textnumber&#x27;:
+          if (typeof field.value &#x3D;&#x3D;&#x3D; &#x27;object&#x27;) {
+            Object.keys(field.value).forEach((value) &#x3D;&gt; {
+              if (!this.textnumber(value)) {
+                field.isValid &#x3D; false;
+                field.message &#x3D; validate.message;
+                flag &#x3D; false;
+              } else {
+                if (flag) {
+                  field.isValid &#x3D; true;
+                  field.message &#x3D; null;
+                }
+              }
+            });
+          } else if (typeof field.value &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+            if (!this.textnumber(field.value)) {
+              field.isValid &#x3D; false;
+              field.message &#x3D; validate.message;
+              flag &#x3D; false;
+            } else {
+              if (flag) {
+                field.isValid &#x3D; true;
+                field.message &#x3D; null;
+              }
+            }
+          }
+          break;
+        case &#x27;email&#x27;:
+          if (typeof field.value &#x3D;&#x3D;&#x3D; &#x27;object&#x27;) {
+            Object.keys(field.value).forEach((value) &#x3D;&gt; {
+              if (!this.email(value)) {
+                field.isValid &#x3D; false;
+                field.message &#x3D; validate.message;
+                flag &#x3D; false;
+              } else {
+                if (flag) {
+                  field.isValid &#x3D; true;
+                  field.message &#x3D; null;
+                }
+              }
+            });
+          } else if (typeof field.value &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+            if (!this.email(field.value)) {
+              field.isValid &#x3D; false;
+              field.message &#x3D; validate.message;
+              flag &#x3D; false;
+            } else {
+              if (flag) {
+                field.isValid &#x3D; true;
+                field.message &#x3D; null;
+              }
+            }
+          }
+          break;
+        case &#x27;phoneNumber&#x27;:
+          if (typeof field.value &#x3D;&#x3D;&#x3D; &#x27;object&#x27;) {
+            Object.keys(field.value).forEach((value) &#x3D;&gt; {
+              if (!this.phoneNumber(value)) {
+                field.isValid &#x3D; false;
+                field.message &#x3D; validate.message;
+                flag &#x3D; false;
+              } else {
+                if (flag) {
+                  field.isValid &#x3D; true;
+                  field.message &#x3D; null;
+                }
+              }
+            });
+          } else if (typeof field.value &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+            if (!this.phoneNumber(field.value)) {
+              field.isValid &#x3D; false;
+              field.message &#x3D; validate.message;
+              flag &#x3D; false;
+            } else {
+              if (flag) {
+                field.isValid &#x3D; true;
+                field.message &#x3D; null;
+              }
+            }
+          }
+          break;
+        case &#x27;date&#x27;:
+          if (typeof field.value &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+            if (!field.transformed) {
+              const dateComponents &#x3D; field.value.split(&#x27;/&#x27;);
+              field.value &#x3D; new Date(dateComponents[2], dateComponents[1] - 1, dateComponents[0]);
+              field.transformed &#x3D; true;
+            }
+            if (!this.date(field.value)) {
+              field.isValid &#x3D; false;
+              field.message &#x3D; validate.message;
+              flag &#x3D; false;
+            } else {
+              if (flag) {
+                field.isValid &#x3D; true;
+                field.message &#x3D; null;
+              }
+            }
+          }
+          break;
+        case &#x27;kinship&#x27;:
+          if (typeof field.value &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+            if (!this.kinship(field.value)) {
+              field.isValid &#x3D; false;
+              field.message &#x3D; validate.message;
+              flag &#x3D; false;
+            } else {
+              if (flag) {
+                field.isValid &#x3D; true;
+                field.message &#x3D; null;
+              }
+            }
+          }
+          break;
+        case &#x27;number&#x27;:
+          if (typeof field.value &#x3D;&#x3D;&#x3D; &#x27;object&#x27;) {
+            Object.keys(field.value).forEach((value) &#x3D;&gt; {
+              if (!this.number(value)) {
+                field.isValid &#x3D; false;
+                field.message &#x3D; validate.message;
+                flag &#x3D; false;
+              } else {
+                if (flag) {
+                  field.isValid &#x3D; true;
+                  field.message &#x3D; null;
+                }
+              }
+            });
+          } else if (typeof field.value &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+            if (!this.number(field.value)) {
+              field.isValid &#x3D; false;
+              field.message &#x3D; validate.message;
+              flag &#x3D; false;
+            } else {
+              if (flag) {
+                field.isValid &#x3D; true;
+                field.message &#x3D; null;
+              }
+            }
+          }
+          break;
+        case &#x27;year&#x27;:
+          if (typeof field.value &#x3D;&#x3D;&#x3D; &#x27;object&#x27;) {
+            Object.keys(field.value).forEach((value) &#x3D;&gt; {
+              if (!this.year(value)) {
+                field.isValid &#x3D; false;
+                field.message &#x3D; validate.message;
+                flag &#x3D; false;
+              } else {
+                if (flag) {
+                  field.isValid &#x3D; true;
+                  field.message &#x3D; null;
+                }
+              }
+            });
+          } else if (typeof field.value &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+            if (!this.year(field.value)) {
+              field.isValid &#x3D; false;
+              field.message &#x3D; validate.message;
+              flag &#x3D; false;
+            } else {
+              if (flag) {
+                field.isValid &#x3D; true;
+                field.message &#x3D; null;
+              }
+            }
+          }
+          break;
+      }
+    });
+    return;
+  }
+
+  validateUpdatedRow(group, headers, row): any {
+    const availableHeaders &#x3D; CsvHeaders.headers[group];
+    headers.forEach((h) &#x3D;&gt; {
+      this.validateField(availableHeaders[h], row[h]);
+    });
+
+    return row;
+  }
+
+  text(field): boolean {
+    return /[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$/.test(field);
+  }
+
+  textnumber(field): boolean {
+    return /[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$/.test(field);
+  }
+
+  empty(field): boolean {
+    return field.length &lt;&#x3D; 0;
+  }
+
+  email(field): boolean {
+    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(field);
+  }
+
+  phoneNumber(field): boolean {
+    return /^[267]{1}[0-9]{3}[-]{1}[0-9]{4}$/.test(field);
+  }
+
+  date(field): boolean {
+    return isValid(new Date(field));
+  }
+
+  number(field): boolean {
+    return !!Number(field);
+  }
+
+  year(field): boolean {
+    const year &#x3D; new Date().getFullYear();
+    return !!(field &gt;&#x3D; year - 15 &amp;&amp; field &lt;&#x3D; year + 1);
+  }
+
+  kinship(field): boolean {
+    return !!Object.values(KinshipRelationship).includes(field);
+  }
+  replaceAccents(text: string): string {
+    const chars &#x3D; {
+      á: &#x27;a&#x27;,
+      é: &#x27;e&#x27;,
+      í: &#x27;i&#x27;,
+      ó: &#x27;o&#x27;,
+      ú: &#x27;u&#x27;,
+      à: &#x27;a&#x27;,
+      è: &#x27;e&#x27;,
+      ì: &#x27;i&#x27;,
+      ò: &#x27;o&#x27;,
+      ù: &#x27;u&#x27;,
+      ñ: &#x27;n&#x27;,
+      Á: &#x27;A&#x27;,
+      É: &#x27;E&#x27;,
+      Í: &#x27;I&#x27;,
+      Ó: &#x27;O&#x27;,
+      Ú: &#x27;U&#x27;,
+      À: &#x27;A&#x27;,
+      È: &#x27;E&#x27;,
+      Ì: &#x27;I&#x27;,
+      Ò: &#x27;O&#x27;,
+      Ù: &#x27;U&#x27;,
+      Ñ: &#x27;N&#x27;
+    };
+
+    const expr &#x3D; /[áàéèíìóòúùñ]/gi;
+    const res &#x3D; text.replace(expr, function (e) {
+      return chars[e];
+    });
+
+    return res;
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'CsvToJsonService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

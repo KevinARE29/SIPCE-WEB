@@ -1,0 +1,447 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>sipce-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">sipce-web documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Interfaces</li>
+  <li>ItemData</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/manage-academic-catalogs/components/show-sections/show-sections.component.ts</code>
+        </p>
+
+
+
+        <section>
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#id">id</a>
+                                </li>
+                                <li>
+                                        <a href="#name">name</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section>
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="id"></a>
+                                        <span class="name"><b>id</b><a href="#id"><span class="icon ion-ios-link"></span></a></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>id:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="name"></a>
+                                        <span class="name"><b>name</b><a href="#name"><span class="icon ion-ios-link"></span></a></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>name:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit } from &#x27;@angular/core&#x27;;
+import { NzMessageService } from &#x27;ng-zorro-antd/message&#x27;;
+import { NzModalRef, NzModalService } from &#x27;ng-zorro-antd/modal&#x27;;
+import { NzNotificationService } from &#x27;ng-zorro-antd/notification&#x27;;
+import { SectionService } from &#x27;../../shared/section.service&#x27;;
+import { Catalogue } from &#x27;../../shared/catalogue.model&#x27;;
+import { FormBuilder, FormGroup, Validators } from &#x27;@angular/forms&#x27;;
+import { NzTableQueryParams } from &#x27;ng-zorro-antd/table&#x27;;
+import { Pagination } from &#x27;./../../../shared/pagination.model&#x27;;
+
+interface ItemData {
+  id: number;
+  name: string;
+}
+
+@Component({
+  selector: &#x27;app-show-sections&#x27;,
+  templateUrl: &#x27;./show-sections.component.html&#x27;,
+  styleUrls: [&#x27;./show-sections.component.css&#x27;]
+})
+export class ShowSectionsComponent implements OnInit {
+  isVisible &#x3D; false;
+  sectionJson;
+  sections: Catalogue[];
+  isLoading &#x3D; false;
+  isConfirmLoading &#x3D; false;
+  editCache: { [key: string]: { edit: boolean; data: ItemData } } &#x3D; {};
+  loading &#x3D; false;
+  tableSize &#x3D; &#x27;small&#x27;;
+  confirmModal?: NzModalRef;
+  // table objects
+  pagination: Pagination;
+  listOfData: Catalogue[];
+  data &#x3D; [];
+  createSection: FormGroup;
+
+  constructor(
+    private message: NzMessageService,
+    private notification: NzNotificationService,
+    private modal: NzModalService,
+    private sectionService: SectionService,
+    private fb: FormBuilder
+  ) {}
+
+  ngOnInit(): void {
+    // pagination variables
+    this.pagination &#x3D; new Pagination();
+    this.pagination.perPage &#x3D; 10;
+    this.pagination.page &#x3D; 1;
+    // create section form group
+    this.createSection &#x3D; this.fb.group({
+      name: [
+        &#x27;&#x27;,
+        [Validators.required, Validators.pattern(&#x27;[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$&#x27;), Validators.maxLength(15)]
+      ]
+    });
+  }
+
+  showModal(): void {
+    this.isVisible &#x3D; true;
+    this.resetForm();
+  }
+
+  resetForm(): void {
+    this.createSection.reset();
+    for (const key in this.createSection.controls) {
+      this.createSection.controls[key].markAsPristine();
+      this.createSection.controls[key].updateValueAndValidity();
+    }
+  }
+
+  /* create section function */
+  handleOk(): void {
+    if (this.createSection.valid) {
+      this.isConfirmLoading &#x3D; true;
+      this.sectionService.createSection(this.createSection.value).subscribe(
+        () &#x3D;&gt; {
+          this.isConfirmLoading &#x3D; false;
+          this.isVisible &#x3D; false;
+          this.message.success(&#x27;Sección creada con éxito&#x27;);
+          this.search();
+        },
+        (error) &#x3D;&gt; {
+          this.isConfirmLoading &#x3D; false;
+          this.notification.create(
+            &#x27;error&#x27;,
+            &#x27;Ocurrió un error al crear la sección. Por favor verifique lo siguiente:&#x27;,
+            error.message,
+            { nzDuration: 0 }
+          );
+        }
+      );
+    }
+  }
+
+  handleCancel(): void {
+    this.isVisible &#x3D; false;
+    this.resetForm();
+  }
+
+  UpdateEditCache(): void {
+    this.listOfData.forEach((item) &#x3D;&gt; {
+      this.editCache[item[&#x27;id&#x27;]] &#x3D; {
+        edit: false,
+        data: JSON.parse(JSON.stringify(item))
+      };
+    });
+  }
+
+  startEdit(id: number): void {
+    this.editCache[id].edit &#x3D; true;
+  }
+
+  cancelEdit(id: number): void {
+    const index &#x3D; this.listOfData.findIndex((item) &#x3D;&gt; item.id &#x3D;&#x3D;&#x3D; id);
+    this.editCache[id] &#x3D; {
+      data: { ...this.listOfData[index] },
+      edit: false
+    };
+  }
+
+  /* update section function */
+  saveEdit(id: number, name: string): void {
+    const index &#x3D; this.listOfData.findIndex((item) &#x3D;&gt; item.id &#x3D;&#x3D;&#x3D; id);
+    this.sectionJson &#x3D; {
+      name: this.editCache[id].data.name
+    };
+    // confirm modal
+    this.confirmModal &#x3D; this.modal.confirm({
+      nzTitle: &#x60;¿Desea actualizar la sección &quot;${name}&quot;?&#x60;,
+      nzContent: &#x60;Actualizará la sección con nombre actual ${name} a ${this.editCache[id].data.name}. ¿Desea continuar con la acción? .&#x60;,
+      nzOnOk: () &#x3D;&gt;
+        this.sectionService
+          .updateSection(this.sectionJson, id)
+          .toPromise()
+          .then(() &#x3D;&gt; {
+            this.isLoading &#x3D; false;
+            this.message.success(&#x27;Nombre de la sección actualizada con éxito&#x27;);
+            Object.assign(this.listOfData[index], this.editCache[id].data);
+            this.editCache[id].edit &#x3D; false;
+          })
+          .catch((error) &#x3D;&gt; {
+            this.isLoading &#x3D; false;
+            this.notification.create(
+              &#x27;error&#x27;,
+              &#x27;Ocurrió un error al cambiar el nombre de la sección. Por favor verifique lo siguiente:&#x27;,
+              error.message,
+              { nzDuration: 0 }
+            );
+          })
+    });
+  }
+
+  /* Delete section confirm modal */
+  showConfirm(id: number, name: string): void {
+    this.confirmModal &#x3D; this.modal.confirm({
+      nzTitle: &#x60;¿Desea eliminar la sección &quot;${name}&quot;?&#x60;,
+      nzContent: &#x60;Eliminará la sección &quot;${name}&quot;. La acción no puede deshacerse.&#x60;,
+      nzOnOk: () &#x3D;&gt;
+        this.sectionService
+          .deleteSection(id)
+          .toPromise()
+          .then(() &#x3D;&gt; {
+            this.message.success(&#x60;La sección ${name} ha sido eliminada&#x60;);
+            this.search();
+          })
+          .catch((err) &#x3D;&gt; {
+            const statusCode &#x3D; err.statusCode;
+            const notIn &#x3D; [401, 403];
+
+            if (!notIn.includes(statusCode) &amp;&amp; statusCode &lt; 500) {
+              this.notification.create(&#x27;error&#x27;, &#x27;Ocurrió un error al eliminar la sección.&#x27;, err.message, {
+                nzDuration: 0
+              });
+            }
+          })
+    });
+  }
+
+  search(): void {
+    this.loading &#x3D; true;
+
+    this.sectionService.searchSection(null, false).subscribe(
+      (data) &#x3D;&gt; {
+        this.sections &#x3D; data[&#x27;data&#x27;];
+        this.pagination &#x3D; data[&#x27;pagination&#x27;];
+        this.listOfData &#x3D; [...this.sections];
+        this.loading &#x3D; false;
+        this.UpdateEditCache();
+      },
+      (err) &#x3D;&gt; {
+        this.loading &#x3D; false;
+        const statusCode &#x3D; err.statusCode;
+        const notIn &#x3D; [401, 403];
+
+        if (!notIn.includes(statusCode) &amp;&amp; statusCode &lt; 500) {
+          this.notification.create(&#x27;error&#x27;, &#x27;Ocurrió un error al filtrar secciones.&#x27;, err.message, { nzDuration: 0 });
+        }
+      }
+    );
+  }
+
+  /* ---     sort method      --- */
+  recharge(params: NzTableQueryParams): void {
+    this.loading &#x3D; true;
+    this.sectionService.searchSection(params, params.pageIndex !&#x3D;&#x3D; this.pagination.page).subscribe(
+      (data) &#x3D;&gt; {
+        this.sections &#x3D; data[&#x27;data&#x27;];
+        this.pagination &#x3D; data[&#x27;pagination&#x27;];
+        this.listOfData &#x3D; [...this.sections];
+        this.loading &#x3D; false;
+        this.UpdateEditCache();
+      },
+      (err) &#x3D;&gt; {
+        this.loading &#x3D; false;
+        const statusCode &#x3D; err.statusCode;
+        const notIn &#x3D; [401, 403];
+
+        if (!notIn.includes(statusCode) &amp;&amp; statusCode &lt; 500) {
+          this.notification.create(&#x27;error&#x27;, &#x27;Ocurrió un error al obtener las secciones.&#x27;, err.message, {
+            nzDuration: 0
+          });
+        }
+      }
+    );
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'ItemData-1.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
