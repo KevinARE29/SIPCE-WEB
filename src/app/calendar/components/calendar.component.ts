@@ -111,7 +111,6 @@ export class CalendarComponent implements OnInit {
       Students: [null, [Validators.required]]
     });
 
-    this.student = new Student();
     this.user = new User();
     this.results = new Array<Student>();
     this.resultsUsers = new Array<User>();
@@ -300,7 +299,7 @@ export class CalendarComponent implements OnInit {
         if (this.saveEvent) {
           this.eventService.createAppointment(createEvent).subscribe(
             (r) => {
-              args.cancel = false;
+              // args.cancel = false;
               console.log('--------------');
               console.log('esto devuelve la ruta', r);
 
@@ -312,7 +311,7 @@ export class CalendarComponent implements OnInit {
               // this.ngOnInit();
               console.log(this.data);
               this.event = new Appointment();
-              // this.message.success(`Evento creado con éxito`);
+              this.message.success(`Evento creado con éxito`);
               //  args.cancel = false;
               // this.scheduleObj.addEvent(data);
             },
@@ -416,8 +415,10 @@ export class CalendarComponent implements OnInit {
         new DateTimePicker({ value: new Date(endElement.value) || new Date(), locale: 'es' }, endElement);
       }
       console.log('args.data en popun');
-      console.log(args.data);
-    
+      console.log(<any>args.data['Participants']);
+
+      if (<any>args.data['Student']) this.event.Student = <any>args.data['Student'];
+      if (<any>args.data['Participants']) this.event.Participant = <any>args.data['Participants'];
       /*
       const recurElement: HTMLElement = args.element.querySelector('#RecurrenceEditor');
       if (!recurElement.classList.contains('e-recurrenceeditor')) {
@@ -451,39 +452,39 @@ export class CalendarComponent implements OnInit {
     search.code = this.eventForm.controls['Students'].value;
     this.searching = !this.searching;
 
-    if (search.code !== this.student.code && this.searching) {
+    if (this.searching) {
       this.searchLoader = true;
       this.studentService.getStudents(null, search, true, null).subscribe((r) => {
         this.results = r['data'];
-        this.results = this.results.filter((d) => d['id'] !== this.student.id);
         this.searchLoader = false;
       });
-    } else if (!this.searching) {
+    } else {
       this.results = new Array<Student>();
       this.eventForm.get('Students')?.setValue(null);
     }
   }
 
-  addStudent(SelectedStudent: Student): void {
+  addStudent(selectedStudent: Student): void {
     //add condition to know if the event has students previously
-    this.event.Student = this.student;
-    this.selectedStudent = new Array<Student>();
+    this.event.Student = new Student();
+    // this.selectedStudent = new Array<Student>();
     // if (this.event.Students.length === 0) {
-    this.selectedStudent.push(SelectedStudent);
-    console.log(this.selectedStudent);
+    //this.selectedStudent.push(SelectedStudent);
     //Saving the student to the event object
     this.showAlert = true;
-    console.log('entro');
-    this.event.Student = SelectedStudent;
+    this.event.Student = selectedStudent;
     console.log(this.event.Student);
-    this.results = this.results.filter((d) => d['id'] !== SelectedStudent.id);
+    this.results = this.results.filter((d) => d['id'] !== selectedStudent.id);
   }
 
   confirmDeleteStudent(id: number, student: Student): void {
     this.showAlert = false;
+    console.log(student);
     if (this.results.length !== 0) this.results.push(student);
-    this.event.Student = this.student;
-    this.selectedStudent = this.selectedStudent.filter((d) => d['id'] !== id);
+    this.event.Student = null;
+    console.log(this.event.Student);
+    console.log(this.results);
+    // this.selectedStudent = this.selectedStudent.filter((d) => d['id'] !== id);
   }
 
   searchUser(): void {

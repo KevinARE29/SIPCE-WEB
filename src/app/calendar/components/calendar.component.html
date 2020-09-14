@@ -28,17 +28,17 @@
                     data-name="Location" FormControlName="Location" name="Location" style="width: 100%;" />
             </div>
         
-           <div nz-row> 
-                <div class="dateTimePicker" colspan="4">
+          
+                <div class="dateTimePicker">
                     <label class="e-textlabel">Inicio</label>
                     <input  id="StartTime" class="e-field" type="text" data-name="StartTime" name="StartTime" />
                 </div>
             
-                <div class="dateTimePicker" colspan="4">
+                <div  class="dateTimePicker">
                     <label class="e-textlabel">Fin</label>
                     <input id="EndTime" class="e-field" type="text" data-name="EndTime" name="EndTime" />
                 </div>
-          </div>
+     
     
             <div  class="dateTimePicker" colspan="4">
                 <ejs-recurrenceeditor id="RecurrenceRule" class="e-field" name="RecurrenceRule" value='{{data.RecurrenceRule}}'
@@ -55,7 +55,7 @@
             </div>
             <!-- atendees -->
         
-            <div class="dateTimePicker" colspan="4">
+            <div colspan="4">
                 <label class="e-textlabel"> Participantes del evento</label>
             </div>
 
@@ -64,10 +64,10 @@
                 <br>
                 <div>
                     <div class="addStudent" nz-row>
-                        <div nz-col *ngFor="let student of selectedStudent ">
-                            {{ student.firstname }} {{ student.lastname }}
+                        <div nz-col *ngIf="event.Student">
+                            {{ event.Student.firstname }} {{ event.Student.lastname }}
 
-                            <a (click)="confirmDeleteStudent(student.id, student)">
+                            <a (click)="confirmDeleteStudent(event.Student.id, event.Student)">
                                 <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ff4d4f'"></i>
                             </a>
                         </div>
