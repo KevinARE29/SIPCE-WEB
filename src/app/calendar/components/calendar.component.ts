@@ -16,7 +16,7 @@ import { L10n, loadCldr, isNullOrUndefined } from '@syncfusion/ej2-base';
 import { DateTimePicker } from '@syncfusion/ej2-calendars';
 import { RecurrenceEditorChangeEventArgs, EventRenderedArgs } from '@syncfusion/ej2-angular-schedule';
 
-import { addDays, endOfMonth, getDay, startOfMonth, subDays, compareAsc } from 'date-fns';
+import { addDays, addHours, endOfMonth, getDay, startOfMonth, subDays, compareAsc } from 'date-fns';
 import * as numberingSystems from '../../../../node_modules/cldr-data/supplemental/numberingSystems.json';
 import * as gregorian from '../../../../node_modules/cldr-data/main/es/ca-gregorian.json';
 import * as numbers from 'cldr-data/main/es/numbers.json';
@@ -40,12 +40,15 @@ L10n.load(language);
   styleUrls: ['./calendar.component.css']
 })
 export class CalendarComponent implements OnInit {
+  toolBarItemRendered = false;
+  loading = false;
   recurrenceRule: string;
   eventForm!: FormGroup;
   IsAllDay = true;
   show = true;
   event: Appointment;
   updateEvent: Appointment;
+
   // Search variables
   searchLoader = false;
   searchLoaderUser = false;
@@ -83,8 +86,8 @@ export class CalendarComponent implements OnInit {
   public eventData: EventSettingsModel;
 
   allDayEvent(): void {
-    console.log(this.show);
-    console.log(this.eventForm.value);
+    // console.log(this.show);
+    // console.log(this.eventForm.value);
     this.show = !this.show;
   }
 
@@ -135,22 +138,28 @@ export class CalendarComponent implements OnInit {
 
     switch (args.requestType) {
       case 'dateNavigate':
+      case 'viewNavigate':
         const currentViewDates = this.scheduleObj.getCurrentViewDates();
         startDate = currentViewDates[0];
         endDate = currentViewDates[currentViewDates.length - 1];
 
+        if (startDate === endDate) endDate = addHours(startDate, 24);
+
         this.getEvents(startDate, endDate);
         break;
       case 'toolBarItemRendered':
-        // Get the current month's start and end dates
-        startDate = startOfMonth(this.selectedDate);
-        endDate = endOfMonth(this.selectedDate);
+        // Avoid a second "initial get" if it's not the first load
+        if (!this.toolBarItemRendered) {
+          // Get the current month's start and end dates
+          startDate = startOfMonth(this.selectedDate);
+          endDate = endOfMonth(this.selectedDate);
 
-        // Calculate the dates visible on the calendar
-        startDate = subDays(startDate, getDay(startDate));
-        endDate = addDays(endDate, 6 - getDay(endDate));
+          // Calculate the dates visible on the calendar
+          startDate = subDays(startDate, getDay(startDate));
+          endDate = addDays(endDate, 6 - getDay(endDate));
 
-        this.getEvents(startDate, endDate);
+          this.getEvents(startDate, endDate);
+        }
         break;
       case 'eventRemoved':
         if (args.changedRecords.length) {
@@ -163,7 +172,10 @@ export class CalendarComponent implements OnInit {
   }
 
   getEvents(startDate, endDate): void {
+    this.loading = true;
+
     this.eventService.getEvents(startDate, endDate).subscribe((events) => {
+      this.eventData = null;
       this.eventData = {
         dataSource: events,
         fields: {
@@ -178,6 +190,9 @@ export class CalendarComponent implements OnInit {
           endTime: { validation: { required: [true, 'La fecha de fin del evento es requerida'] } }
         }
       };
+
+      this.loading = false;
+      if (!this.toolBarItemRendered) this.toolBarItemRendered = true;
     });
   }
 
@@ -199,12 +214,11 @@ export class CalendarComponent implements OnInit {
       this.saveEvent = true;
       data.RecurrenceRule = this.recurrenceRule;
 
-
       if (this.event.Participant !== undefined) {
         this.event.Participant.forEach((user) => {
           participantIds.push(user.id);
-          console.log('participants Ids!!!!!!!!!!!!');
-          console.log(participantIds);
+          // console.log('participants Ids!!!!!!!!!!!!');
+          // console.log(participantIds);
         });
       } else {
         this.event.Participant = null;
@@ -212,15 +226,15 @@ export class CalendarComponent implements OnInit {
 
       //initializing the event object that will be send to the json data
       this.event.Id = data.Id;
-      //console.log(data.StartTime);
+      //// console.log(data.StartTime);
       if (args.requestType === 'eventCreate') {
         this.event.StartTime = data.StartTime.toISOString();
         this.event.EndTime = data.EndTime.toISOString();
       } else if (args.requestType === 'eventChange') {
         // data.StartTime = this.startTimeDate;
         //data.StartTime = this.updateEvent.StartTime.toISOString();
-        console.log('actualizar evento FECHA INICIO');
-        console.log('--------------');
+        // console.log('actualizar evento FECHA INICIO');
+        // console.log('--------------');
         this.event.StartTime = data.StartTime.toISOString();
         this.event.EndTime = data.EndTime.toISOString();
       }
@@ -248,9 +262,9 @@ export class CalendarComponent implements OnInit {
       }
 
       if (data.Description === undefined) {
-        console.log('entro al undefined');
+        // console.log('entro al undefined');
         this.event.Description = null;
-        console.log(this.event.Description);
+        // console.log(this.event.Description);
       } else {
         this.event.Description = data.Description;
       }
@@ -265,10 +279,10 @@ export class CalendarComponent implements OnInit {
       createEvent['jsonData'] = this.event;
       createEvent['jsonData']['CategoryColor'] = this.randomItem();
       if (participantIds.length !== 0) createEvent['participantIds'] = participantIds;
-      console.log('event.students.id');
-//      console.log(this.selectedStudent[0]);
-      console.log('selected estudiante');
-      console.log('------this.event.Student.id;---------');
+      // console.log('event.students.id');
+//      // console.log(this.selectedStudent[0]);
+      // console.log('selected estudiante');
+      // console.log('------this.event.Student.id;---------');
 
       if (this.event.Student === null || this.event.Student === undefined) {
 
@@ -279,7 +293,7 @@ export class CalendarComponent implements OnInit {
       if (args.requestType === 'eventCreate') {
         //validating the date
         const result = compareAsc(data.StartTime, data.EndTime);
-        console.log(result);
+        // console.log(result);
         if (result === 1) {
           this.notification.create(
             'error',
@@ -289,63 +303,58 @@ export class CalendarComponent implements OnInit {
           );
           this.saveEvent = false;
           args.cancel = true;
-          console.log('La fecha de inicio debe ser menor a la fecha de fin');
+          // console.log('La fecha de inicio debe ser menor a la fecha de fin');
         }
         args.cancel = true;
         // this.submitForm();
-        console.log('--------------');
-        console.log('esto tiene el createEvent');
-        console.log(createEvent);
+        // console.log('--------------');
+        // console.log('esto tiene el createEvent');
+        // console.log(createEvent);
         if (this.saveEvent) {
           this.eventService.createAppointment(createEvent).subscribe(
-            (r) => {
-              // args.cancel = false;
-              console.log('--------------');
-              console.log('esto devuelve la ruta', r);
+            () => {
+              const nextIndex = Object.entries(this.eventData.dataSource).length;
 
-              data = <any>args.data;
-              this.data.push(data);
+              // Add the new event to the current data source
+              Object.assign(this.eventData.dataSource, { [nextIndex]: data });
 
               // Refresh the calendar after adding a new event
               this.scheduleObj.refresh();
-              // this.ngOnInit();
-              console.log(this.data);
+
               this.event = new Appointment();
               this.message.success(`Evento creado con éxito`);
-              //  args.cancel = false;
-              // this.scheduleObj.addEvent(data);
             },
             (err) => {
               args.cancel = true;
-              console.log(err, this.data);
+              // console.log(err, this.data);
               this.event = new Appointment();
             }
           );
         }
-        console.log('--------------');
-        console.log('esto tiene el eventForm');
-        console.log(this.eventForm.value);
-        console.log('esto tiene el objeto de event !!!!');
-        console.log(this.event);
-        console.log('esto tiene data');
-        console.log(data);
+        // console.log('--------------');
+        // console.log('esto tiene el eventForm');
+        // console.log(this.eventForm.value);
+        // console.log('esto tiene el objeto de event !!!!');
+        // console.log(this.event);
+        // console.log('esto tiene data');
+        // console.log(data);
       } else if (args.requestType === 'eventChange') {
-        console.log('actualizar evento');
-        console.log('--------------');
+        // console.log('actualizar evento');
+        // console.log('--------------');
         if (!args.data.parent) {
           // create event
           args.cancel = true;
-          console.log('parent');
-          console.log(<any>args.data);
-          console.log('esto tiene data');
-          console.log(args.data);
+          // console.log('parent');
+          // console.log(<any>args.data);
+          // console.log('esto tiene data');
+          // console.log(args.data);
           this.eventService.updateEvent(args.data).subscribe(
             (r) => {
               args.cancel = false;
-              console.log('ocurrence');
+              // console.log('ocurrence');
               data = <any>args.data;
               // this.updateEvent = new Events();
-              console.log('esto tiene la ruta', r);
+              // console.log('esto tiene la ruta', r);
               this.message.success('Evento actualizado con éxito');
               this.scheduleObj.refresh();
             },
@@ -356,10 +365,10 @@ export class CalendarComponent implements OnInit {
         } else {
           this.eventService.updateEvent(args.data.occurrence).subscribe(
             (r) => {
-              console.log('ocurrence');
+              // console.log('ocurrence');
               data = <any>args.data;
               this.updateEvent = new Appointment();
-              console.log('esto tiene la ruta', r);
+              // console.log('esto tiene la ruta', r);
               // this.scheduleObj.refresh();
             },
             (err) => {
@@ -368,9 +377,9 @@ export class CalendarComponent implements OnInit {
           );
         }
 
-        console.log(<any>args.data);
-        console.log('esto tiene data');
-        console.log(args.data.occurrence);
+        // console.log(<any>args.data);
+        // console.log('esto tiene data');
+        // console.log(args.data.occurrence);
       }
       //delete event actions
     } else if (args.requestType === 'eventRemove') {
@@ -414,8 +423,8 @@ export class CalendarComponent implements OnInit {
       if (!endElement.classList.contains('e-datetimepicker')) {
         new DateTimePicker({ value: new Date(endElement.value) || new Date(), locale: 'es' }, endElement);
       }
-      console.log('args.data en popun');
-      console.log(<any>args.data['Participants']);
+      // console.log('args.data en popun');
+      // console.log(<any>args.data['Participants']);
 
       if (<any>args.data['Student']) this.event.Student = <any>args.data['Student'];
       if (<any>args.data['Participants']) this.event.Participant = <any>args.data['Participants'];
@@ -425,7 +434,7 @@ export class CalendarComponent implements OnInit {
         this.recurrenceObj.appendTo(recurElement);
         this.scheduleObj.setRecurrenceEditor(this.recurrenceObj);
         (this.scheduleObj.eventWindow as any).recurrenceEditor = this.recurrenceObj;
-        console.log(this.recurrenceObj.value);
+        // console.log(this.recurrenceObj.value);
       }
       */
 
@@ -439,7 +448,7 @@ export class CalendarComponent implements OnInit {
       //  this.scheduleObj.setRecurrenceEditor(recurrObject);
       //    this.scheduleObj.eventWindow.recurrenceEditor = recurrObject;
       //  (this.scheduleObj.eventWindow as any).recurrenceEditor = recurrObject;
-      //  console.log(recurrObject);
+      //  // console.log(recurrObject);
       //  }
       document.getElementById('RecurrenceRule').style.display =
         this.scheduleObj.currentAction === 'EditOccurrence' ? 'none' : 'block';
@@ -473,31 +482,31 @@ export class CalendarComponent implements OnInit {
     //Saving the student to the event object
     this.showAlert = true;
     this.event.Student = selectedStudent;
-    console.log(this.event.Student);
+    // console.log(this.event.Student);
     this.results = this.results.filter((d) => d['id'] !== selectedStudent.id);
   }
 
   confirmDeleteStudent(id: number, student: Student): void {
     this.showAlert = false;
-    console.log(student);
+    // console.log(student);
     if (this.results.length !== 0) this.results.push(student);
     this.event.Student = null;
-    console.log(this.event.Student);
-    console.log(this.results);
+    // console.log(this.event.Student);
+    // console.log(this.results);
     // this.selectedStudent = this.selectedStudent.filter((d) => d['id'] !== id);
   }
 
   searchUser(): void {
     let search = '';
     search = this.eventForm.controls['Users'].value;
-    console.log(search);
+    // console.log(search);
     this.searchingUser = !this.searchingUser;
 
     if (this.searchingUser) {
       this.searchLoaderUser = true;
       this.userService.getUserByUsername(search).subscribe((r) => {
         this.resultsUsers = r['data'];
-        console.log(this.resultsUsers);
+        // console.log(this.resultsUsers);
         this.resultsUsers = this.resultsUsers.filter((d) => d['id'] !== this.user.id);
         this.searchLoaderUser = false;
       });
@@ -510,8 +519,8 @@ export class CalendarComponent implements OnInit {
   addUser(User: User): void {
     //add condition to know if the event has students previously
     this.event.Participant.push(User);
-    console.log('esto guarda user');
-    console.log(this.event.Participant);
+    // console.log('esto guarda user');
+    // console.log(this.event.Participant);
     this.resultsUsers = this.resultsUsers.filter((d) => d['id'] !== User.id);
   }
 
