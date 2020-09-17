@@ -487,7 +487,7 @@ export class SchoolYearComponent implements OnInit {
   academicAssignmentsStep(next: boolean): void {
     let emptyShifts = false;
     this.schoolYear.shifts.forEach((shift) => {
-      if (!shift['shift']['cycles']) emptyShifts = true;
+      if (!shift['shift']['cycles'].length) emptyShifts = true;
     });
     if (!emptyShifts) {
       this.loading = true;
@@ -570,6 +570,7 @@ export class SchoolYearComponent implements OnInit {
           nzDuration: 15000
         }
       );
+      this.loading = false;
     }
   }
 
