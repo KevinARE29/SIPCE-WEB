@@ -109,7 +109,7 @@ export class StudentsComponent implements OnInit {
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
-            nzDuration: 0
+            nzDuration: 30000
           });
         }
       }
@@ -137,7 +137,7 @@ export class StudentsComponent implements OnInit {
 
             if (!notIn.includes(statusCode) && statusCode < 500) {
               this.notification.create('error', 'Ocurrió un error al eliminar al estudiante.', err.message, {
-                nzDuration: 0
+                nzDuration: 30000
               });
             }
           })

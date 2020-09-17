@@ -236,7 +236,7 @@ export class SchoolYearComponent implements OnInit {
 
             if (!notIn.includes(statusCode) && statusCode < 500) {
               this.notification.create('error', 'Ocurrió un error al intentar aperturar el año escolar.', err.message, {
-                nzDuration: 0
+                nzDuration: 30000
               });
             }
           })
@@ -450,14 +450,14 @@ export class SchoolYearComponent implements OnInit {
   
               if (!notIn.includes(statusCode) && statusCode < 500) {
                 this.notification.create('error', 'Ocurrió un error al aperturar el año escolar.', err.message, {
-                  nzDuration: 0
+                  nzDuration: 30000
                 });
               }
             })
       });
     } else {
       this.notification.create('error', 'Ocurrió un error al aperturar el año escolar. Verifique lo siguiente: ', errorMessage, {
-        nzDuration: 0
+        nzDuration: 30000
       });
     }
   }
@@ -512,11 +512,11 @@ export class SchoolYearComponent implements OnInit {
           const notIn = [401, 403];
           if (!notIn.includes(statusCode) && statusCode < 500) {
               this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
-              nzDuration: 0
+              nzDuration: 30000
             });
           } else if (typeof error === 'string') {
             this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
-              nzDuration: 0
+              nzDuration: 30000
             });
           }
           this.loading = false;
@@ -528,7 +528,7 @@ export class SchoolYearComponent implements OnInit {
         'Uno o más turnos vacíos.',
         'Debe asignar al menos un grado a algún ciclo para poder continuar',
         {
-          nzDuration: 15000
+          nzDuration: 30000
         }
       );
     }
@@ -551,11 +551,11 @@ export class SchoolYearComponent implements OnInit {
           const notIn = [401, 403];
           if (!notIn.includes(statusCode) && statusCode < 500) {
             this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
-              nzDuration: 0
+              nzDuration: 30000
             });
           } else if (typeof error === 'string') {
             this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
-              nzDuration: 0
+              nzDuration: 30000
             });
           }
           this.loading = false;
@@ -567,7 +567,7 @@ export class SchoolYearComponent implements OnInit {
         'Error en la asignación de coordinadores.',
         'Verifique que los valores ingresados en todos los turnos son correctos, no se permiten campos vacíos.',
         {
-          nzDuration: 15000
+          nzDuration: 30000
         }
       );
       this.loading = false;
@@ -591,11 +591,11 @@ export class SchoolYearComponent implements OnInit {
           const notIn = [401, 403];
           if (!notIn.includes(statusCode) && statusCode < 500) {
             this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
-              nzDuration: 0
+              nzDuration: 30000
             });
           } else if (typeof error === 'string') {
             this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
-              nzDuration: 0
+              nzDuration: 30000
             });
           }
           this.loading = false;
@@ -607,7 +607,7 @@ export class SchoolYearComponent implements OnInit {
         'Error en la asignación de docentes titulares.',
         'Verifique que los valores ingresados en todos los turnos son correctos, no se permiten campos vacíos.',
         {
-          nzDuration: 15000
+          nzDuration: 30000
         }
       );
     }
@@ -630,11 +630,11 @@ export class SchoolYearComponent implements OnInit {
           const notIn = [401, 403];
           if (!notIn.includes(statusCode) && statusCode < 500) {
             this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
-              nzDuration: 0
+              nzDuration: 30000
             });
           } else if (typeof error === 'string') {
             this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
-              nzDuration: 0
+              nzDuration: 30000
             });
           }
           this.loading = false;
@@ -646,7 +646,7 @@ export class SchoolYearComponent implements OnInit {
         'Error en la asignación de orientadores.',
         'Verifique que todos los grados hayan sido asignados a las orientadoras en todos los turnos.',
         {
-          nzDuration: 15000
+          nzDuration: 30000
         }
       );
     }

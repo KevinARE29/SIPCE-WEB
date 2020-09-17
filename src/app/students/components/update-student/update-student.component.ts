@@ -345,7 +345,7 @@ export class UpdateStudentComponent implements OnInit {
               'error',
               'Ocurrió un error al actualizar al estudiante. Por favor verifique lo siguiente:',
               error.message,
-              { nzDuration: 0 }
+              { nzDuration: 30000 }
             );
           }
         }
@@ -455,7 +455,7 @@ export class UpdateStudentComponent implements OnInit {
 
               if (!notIn.includes(statusCode) && statusCode < 500) {
                 this.notification.create('error', 'Ocurrió un error al eliminar al responsable.', err.message, {
-                  nzDuration: 0
+                  nzDuration: 30000
                 });
               }
             })
@@ -465,7 +465,7 @@ export class UpdateStudentComponent implements OnInit {
         'warning',
         'Un estudiante no puede quedar sin un adulto responsable.',
         'Para poder eliminar este registro debe crear un nuevo responsable.',
-        { nzDuration: 0 }
+        { nzDuration: 30000 }
       );
     }
   }
@@ -503,7 +503,7 @@ export class UpdateStudentComponent implements OnInit {
             'error',
             'Ocurrió un error al actualizar al responsable Por favor verifique lo siguiente:',
             error.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
       }
@@ -526,7 +526,7 @@ export class UpdateStudentComponent implements OnInit {
             'Formato incorrecto.',
             'Los nombres y apellidos pueden contener letras únicamente',
             {
-              nzDuration: 0
+              nzDuration: 30000
             }
           );
         }
@@ -536,12 +536,12 @@ export class UpdateStudentComponent implements OnInit {
           'Formato incorrecto.',
           'Ingrese un número de teléfono valido (ej.2222-2222)',
           {
-            nzDuration: 0
+            nzDuration: 30000
           }
         );
       }
     } else {
-      this.notification.create('warning', 'Campos vacíos.', 'Todos los campos son obligatorios.', { nzDuration: 0 });
+      this.notification.create('warning', 'Campos vacíos.', 'Todos los campos son obligatorios.', { nzDuration: 30000 });
     }
   }
 
@@ -575,7 +575,7 @@ export class UpdateStudentComponent implements OnInit {
         'warning',
         'Límite de responsables alcanzado',
         'Solo se permiten dos responsables por estudiante.',
-        { nzDuration: 0 }
+        { nzDuration: 30000 }
       );
     }
   }
@@ -601,7 +601,7 @@ export class UpdateStudentComponent implements OnInit {
             'error',
             'Ocurrió un error al actualizar al responsable Por favor verifique lo siguiente:',
             error.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
       }

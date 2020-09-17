@@ -41,7 +41,7 @@ export class ShowPeriodsComponent implements OnInit {
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create('error', 'Ocurrió un error al obtener los periodos.', err.message, {
-            nzDuration: 0
+            nzDuration: 30000
           });
         }
       }
@@ -70,7 +70,7 @@ export class ShowPeriodsComponent implements OnInit {
         const notIn = [401, 403];
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create('error', 'Ocurrió un error al ' + this.status + ' el periodo.', err.message, {
-            nzDuration: 0
+            nzDuration: 30000
           });
         }
       }

@@ -41,7 +41,7 @@ export class ShowShiftComponent implements OnInit {
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create('error', 'Ocurrió un error al obtener los turnos.', err.message, {
-            nzDuration: 0
+            nzDuration: 30000
           });
         }
       }
@@ -69,7 +69,7 @@ export class ShowShiftComponent implements OnInit {
         const notIn = [401, 403];
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create('error', 'Ocurrió un error al ' + this.status + ' el turno.', err.message, {
-            nzDuration: 0
+            nzDuration: 30000
           });
         }
       }

@@ -178,7 +178,7 @@ export class UserComponent implements OnInit {
             'error',
             'Ocurrió un error al obtener al usuario. Por favor verifique lo siguiente:',
             err.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
       }
@@ -228,7 +228,7 @@ export class UserComponent implements OnInit {
             'error',
             'Ocurrió un error al crear el usuario. Por favor verifique lo siguiente:',
             err.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
 
@@ -259,7 +259,7 @@ export class UserComponent implements OnInit {
             'error',
             'Ocurrió un error al actualizar al usuario. Por favor verifique lo siguiente:',
             err.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
 

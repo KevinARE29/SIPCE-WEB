@@ -83,7 +83,7 @@ export class ShowCyclesComponent implements OnInit {
             'error',
             'Ocurrió un error al crear el ciclo. Por favor verifique lo siguiente:',
             error.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
       );
@@ -142,7 +142,7 @@ export class ShowCyclesComponent implements OnInit {
               'error',
               'Ocurrió un error al cambiar el nombre del ciclo. Por favor verifique lo siguiente:',
               error.message,
-              { nzDuration: 0 }
+              { nzDuration: 30000 }
             );
           })
     });
@@ -167,7 +167,7 @@ export class ShowCyclesComponent implements OnInit {
 
             if (!notIn.includes(statusCode) && statusCode < 500) {
               this.notification.create('error', 'Ocurrió un error al eliminar el ciclo.', err.message, {
-                nzDuration: 0
+                nzDuration: 30000
               });
             }
           })
@@ -192,7 +192,7 @@ export class ShowCyclesComponent implements OnInit {
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create('error', 'Ocurrió un error al obtener los ciclos.', err.message, {
-            nzDuration: 0
+            nzDuration: 30000
           });
         }
       }
@@ -216,7 +216,7 @@ export class ShowCyclesComponent implements OnInit {
         const notIn = [401, 403];
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al filtrar ciclos.', err.message, { nzDuration: 0 });
+          this.notification.create('error', 'Ocurrió un error al filtrar ciclos.', err.message, { nzDuration: 30000 });
         }
       }
     );
