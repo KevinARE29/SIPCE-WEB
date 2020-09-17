@@ -22,6 +22,38 @@ body {
   color: #ef6c00;
 }
 
+/* Override all buttons and inputs */
+a.ant-btn:not(.ant-btn-icon-only), .ant-btn:not(.ant-btn-icon-only) {
+  border-radius: 7px;
+  letter-spacing: 0.5px;
+  padding: 3px 10px;
+  min-width: 105px;
+  height: auto;
+  font-weight: lighter;
+  line-height: 1.5715;
+}
+
+.ant-input-affix-wrapper, .ant-input {
+  border-radius: 7px;
+}
+
+.ant-select-selector {
+  border-radius: 7px !important;
+}
+
+/* Override table header color, and adds round borders on the header */
+.ant-table .ant-table-thead > tr > th{
+  background-color: #dddddd;
+}
+
+.ant-table-container table > thead > tr:first-child th:first-child {
+  border-radius:10px 0 0 10px;
+}
+
+.ant-table-container table > thead > tr:first-child th:last-child {
+  border-radius:0 10px 10px 0;
+}
+
 /* Override input style on login, forgot password, etc. */
 
 /* Override spacing between elements */
@@ -46,6 +78,7 @@ body {
   background-color: transparent;
   border: none;
   border-bottom: white 1px solid;
+  border-radius: 0px;
   color: white;
   transition: none;
 }
