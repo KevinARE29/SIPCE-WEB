@@ -64,14 +64,14 @@ export class NewStudentComponent implements OnInit {
     const phonePattern = new RegExp(/^[267]{1}[0-9]{3}[-]{1}[0-9]{4}$/);
 
     this.studentForm = this.fb.group({
-      code: ['', [Validators.required, Validators.maxLength(32), Validators.pattern('[0-9]+$')]],
+      code: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
       firstname: [
         '',
-        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
       ],
       lastname: [
         '',
-        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
       ],
       email: ['', [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]],
       dateOfBirth: ['', [Validators.required]],
@@ -81,11 +81,11 @@ export class NewStudentComponent implements OnInit {
       registrationYear: [''],
       responsibleFirstname: [
         '',
-        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
       ],
       responsibleLastname: [
         '',
-        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
       ],
       responsibleEmail: ['', [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]],
       responsiblePhone: ['', [Validators.required, Validators.pattern(phonePattern)]],

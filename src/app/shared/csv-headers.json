@@ -160,7 +160,7 @@
                         "message": "La fecha de nacimiento es requerida"
                     }, {
                         "value": "date",
-                        "message": "La fecha de nacimiento debe tener un formato de fecha valido (dd/mm/aaaa)"
+                        "message": "La fecha de nacimiento debe tener un formato de fecha válido (dd/mm/aaaa)"
                     }
                 ]
             },

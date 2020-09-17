@@ -11,9 +11,8 @@
                 <nz-form-control [nzErrorTip]="codeErrors">
                     <input nz-input formControlName="code" placeholder="NIE" />
                     <ng-template #codeErrors let-control>
-                        <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 32 caracteres<br></ng-container>
                         <ng-container *ngIf="control.hasError('required')">El NIE es requerido<br></ng-container>
-                        <ng-container *ngIf="control.hasError('pattern')">El NIE solo puede contener números<br></ng-container>
+                        <ng-container *ngIf="control.hasError('pattern')">El NIE se compone de 8 dígitos<br></ng-container>
                     </ng-template>
                 </nz-form-control>
             </nz-form-item>
@@ -26,7 +25,7 @@
                 <nz-form-control [nzErrorTip]="firstnameErrors">
                     <input nz-input formControlName="firstname" placeholder="Nombre" />
                     <ng-template #firstnameErrors let-control>
-                        <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres<br></ng-container>
+                        <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 64 caracteres<br></ng-container>
                         <ng-container *ngIf="control.hasError('required')">El nombre es requerido<br></ng-container>
                         <ng-container *ngIf="control.hasError('pattern')">El nombre solo puede contener letras<br></ng-container>
                     </ng-template>
@@ -41,7 +40,7 @@
                 <nz-form-control [nzErrorTip]="lastnameErrors">
                     <input nz-input formControlName="lastname" placeholder="Apellido" />
                     <ng-template #lastnameErrors let-control>
-                        <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres<br></ng-container>
+                        <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 64 caracteres<br></ng-container>
                         <ng-container *ngIf="control.hasError('required')">El apellido es requerido<br></ng-container>
                         <ng-container *ngIf="control.hasError('pattern')">El apellido solo puede contener letras<br></ng-container>
                     </ng-template>
@@ -58,7 +57,7 @@
                     <ng-template #emailErrors let-control>
                         <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres<br></ng-container>
                         <ng-container *ngIf="control.hasError('required')">El correo electrónico es requerido<br></ng-container>
-                        <ng-container *ngIf="control.hasError('pattern')">Ingrese un correo electrónico valido<br></ng-container>
+                        <ng-container *ngIf="control.hasError('pattern')">Ingrese un correo electrónico válido<br></ng-container>
                     </ng-template>
                 </nz-form-control>
             </nz-form-item>
@@ -147,7 +146,7 @@
                 <nz-form-control [nzErrorTip]="responsibleFirstnameErrors">
                     <input nz-input formControlName="responsibleFirstname" placeholder="Nombre" />
                     <ng-template #responsibleFirstnameErrors let-control>
-                        <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres<br></ng-container>
+                        <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 64 caracteres<br></ng-container>
                         <ng-container *ngIf="control.hasError('required')">El nombre es requerido<br></ng-container>
                         <ng-container *ngIf="control.hasError('pattern')">El nombre solo puede contener letras<br></ng-container>
                     </ng-template>
@@ -162,7 +161,7 @@
                 <nz-form-control [nzErrorTip]="responsibleLastnameErrors">
                     <input nz-input formControlName="responsibleLastname" placeholder="Apellido" />
                     <ng-template #responsibleLastnameErrors let-control>
-                        <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres<br></ng-container>
+                        <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 64 caracteres<br></ng-container>
                         <ng-container *ngIf="control.hasError('required')">El apellido es requerido<br></ng-container>
                         <ng-container *ngIf="control.hasError('pattern')">El apellido solo puede contener letras<br></ng-container>
                     </ng-template>
@@ -179,7 +178,7 @@
                     <ng-template #responsibleEmailErrors let-control>
                         <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres<br></ng-container>
                         <ng-container *ngIf="control.hasError('required')">El correo electrónico es requerido<br></ng-container>
-                        <ng-container *ngIf="control.hasError('pattern')">Ingrese un correo electrónico valido<br></ng-container>
+                        <ng-container *ngIf="control.hasError('pattern')">Ingrese un correo electrónico válido<br></ng-container>
                     </ng-template>
                 </nz-form-control>
             </nz-form-item>
@@ -193,7 +192,7 @@
                     <input nz-input formControlName="responsiblePhone" placeholder="Número teléfonico" type="email" />
                     <ng-template #responsiblePhoneErrors let-control>
                         <ng-container *ngIf="control.hasError('required')">El número de teléfono es requerido<br></ng-container>
-                        <ng-container *ngIf="control.hasError('pattern')">Ingrese un número de teléfono valido (ej.2222-2222)<br></ng-container>
+                        <ng-container *ngIf="control.hasError('pattern')">Ingrese un número de teléfono válido (ej.2222-2222)<br></ng-container>
                     </ng-template>
                 </nz-form-control>
             </nz-form-item>
