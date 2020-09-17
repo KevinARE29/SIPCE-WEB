@@ -287,6 +287,10 @@ export class SchoolYearComponent implements OnInit {
             });
 
             shift['shift']['cycles'].push(newCycle);
+          } else if (actualCycle) {
+            if (!actualCycle['gradeDetails'].length) {
+              shift['shift']['cycles'] = shift['shift']['cycles'].filter((x) => x['cycle']['id'] !== actualCycle['cycle'].id);
+            }
           }
         } else {
           if (content['field'] && !newCycle) {
