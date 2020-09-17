@@ -1,15 +1,16 @@
-<div nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
-    <div nz-col nzXs="24" nzMd="18" nzXl="21">
+<div nz-row nzJustify="space-around">
+    <div nz-col nzFlex="auto">
         <h1>Usuarios</h1>
     </div>
-    <div nz-col nzXs="24" nzMd="6" nzXl="3">
+    <div nz-col nzFlex="110px">
         <a nz-button nzType="primary" routerLink="/usuarios/0">Crear usuario</a>
     </div>
 </div>
 
-<div class="search" nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
+<div nz-row [nzGutter]="[10, 10]">
     <!-- Username -->
-    <div class="username" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="4" class="gutter-row">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="4">
+        <label>Usuario: </label>
         <nz-input-group [nzSuffix]="inputClearUsername">
             <input nz-input [(ngModel)]="searchParams.username" placeholder="Buscar usuario" />
         </nz-input-group>
@@ -19,7 +20,8 @@
     </div>
 
     <!-- Name -->
-    <div class="name" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="4" class="gutter-row">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5">
+        <label>Nombre: </label>
         <nz-input-group [nzSuffix]="inputClearName">
             <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Buscar nombre" />
         </nz-input-group>
@@ -29,7 +31,8 @@
     </div>
 
     <!-- Lastname -->
-    <div class="lastname" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="4" class="gutter-row">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5">
+        <label>Apellido: </label>
         <nz-input-group [nzSuffix]="inputClearLastname">
             <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Buscar apellido" />
         </nz-input-group>
@@ -39,7 +42,8 @@
     </div>
 
     <!-- Email -->
-    <div class="email" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="4" class="gutter-row">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5">
+        <label>Correo electrónico: </label>
         <nz-input-group [nzSuffix]="inputClearEmail">
             <input nz-input [(ngModel)]="searchParams.email" placeholder="Buscar correo electrónico" />
         </nz-input-group>
@@ -49,50 +53,53 @@
     </div>
 
     <!-- Roles -->
-    <div class="role" nz-col nzXs="24" nzSm="10" nzMd="8" nzLg="8" nzXl="5" class="gutter-row">
+    <div nz-col nzXs="24" nzSm="10" nzMd="8" nzLg="8" nzXl="5">
         <label>Rol: </label>
         <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="roleSearch" (ngModelChange)="search()">
             <nz-option *ngFor="let rol of roles" [nzLabel]="rol.name" [nzValue]="rol.id"></nz-option>
         </nz-select>
     </div>
+</div>
 
-    <!-- Status & search button-->
-    <div class="status" nz-col nzXs="24" nzSm="14" nzMd="14" nzLg="12" nzXl="7" class="gutter-row">
-        <label>Mostrar inactivos </label>
-        <nz-switch [(ngModel)]="searchParams.active" [nzCheckedChildren]="checkedTemplate" [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
-        <ng-template #checkedTemplate><i nz-icon nzType="check"></i></ng-template>
-        <ng-template #unCheckedTemplate><i nz-icon nzType="close"></i></ng-template>
-        <button nz-button nzType="primary" (click)="search()">Buscar</button>
-    </div>
+<br>
+
+<div nz-row nzJustify="end">
+  <!-- Status & search button-->
+  <div nz-col>
+    <label>Mostrar inactivos </label>
+    <nz-switch [(ngModel)]="searchParams.active" [nzCheckedChildren]="checkedTemplate" [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
+    <ng-template #checkedTemplate><i nz-icon nzType="check"></i></ng-template>
+    <ng-template #unCheckedTemplate><i nz-icon nzType="close"></i></ng-template>
+    <button nz-button nzType="primary" (click)="search()">Buscar</button>
+  </div>
 </div>
 
 <div class="users" nz-row>
-    <div nz-col [nzXs]="24" [nzXl]="{ span: 20, offset: 2 }">
+    <div nz-col nzSpan="24">
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-            <nz-table #filterTable 
-                [nzData]="listOfDisplayData" 
+            <nz-table #filterTable
+                [nzData]="listOfDisplayData"
                 nzTableLayout="fixed"
                 [nzFrontPagination]="false"
                 [nzTotal]="pagination.totalItems"
                 [nzPageSize]="pagination.perPage"
                 [nzPageIndex]="pagination.page"
-                nzSize="small"
                 (nzQueryParams)="getUsers($event)"
             >
                 <thead>
                     <tr>
-                        <th nzColumnKey="username" [nzSortFn]="true" [nzSortPriority]="1">Usuario</th>
+                        <th nzColumnKey="username" [nzSortFn]="true" [nzSortPriority]="1" nzLeft>Usuario</th>
                         <th nzColumnKey="firstname" [nzSortFn]="true" [nzSortPriority]="2">Nombres</th>
                         <th nzColumnKey="lastname" [nzSortFn]="true" [nzSortPriority]="3">Apellidos</th>
                         <th nzColumnKey="email" [nzSortFn]="true" [nzSortPriority]="4">Correo electrónico</th>
                         <th nzColumnKey="role">Roles</th>
-                        <th [nzAlign]="'center'">Acción</th>
+                        <th [nzAlign]="'center'" nzRight>Acción</th>
                     </tr>
                 </thead>
-                
+
                 <tbody>
                     <tr *ngFor="let data of filterTable.data">
-                        <td>
+                        <td nzLeft>
                             <i nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="data.active ? '#52c41a' : '#bdbdbd'"></i>
                             {{ data.username }}
                         </td>
@@ -107,7 +114,7 @@
                                 </ng-container>
                             </ng-container>
                         </td>
-                        <td [nzAlign]="'center'">
+                        <td [nzAlign]="'center'" nzRight>
                             <a routerLink="/usuarios/{{data.id}}">
                                 <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
                             </a>

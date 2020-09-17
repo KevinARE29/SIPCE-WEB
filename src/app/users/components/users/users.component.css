@@ -7,5 +7,5 @@ nz-table {
 }
 
 nz-select {
-    min-width: 175px;
+    width: 100%;
 }
