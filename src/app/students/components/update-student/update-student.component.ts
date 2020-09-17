@@ -174,6 +174,10 @@ export class UpdateStudentComponent implements OnInit {
 
         // Sections data
         this.sections = data['sections'].data;
+        this.sections.sort((a, b) => a.id - b.id);
+        this.sections = this.sections
+          .filter((x) => x.name.length === 1)
+          .concat(this.sections.filter((x) => x.name.length > 1));
 
         // Grades data
         this.activeGrades = data['grades'].data.filter((x) => x.active === true);
@@ -307,10 +311,16 @@ export class UpdateStudentComponent implements OnInit {
   }
 
   updateStudent(): void {
-    this.btnLoading = true;
     const update = this.isEquivalent(this.student, this.editStudentCache);
 
     if (update['update']) {
+      this.btnLoading = true;
+      if (update['fields'].shift || update['fields'].grade || update['fields'].section) {
+        update['fields'].shift = { ...this.student.shift };
+        update['fields'].grade = { ...this.student.grade };
+        update['fields'].section = { ...this.student.section };
+      }
+
       this.studentService.updateStudent(update['fields']).subscribe(
         () => {
           this.organizeImages();

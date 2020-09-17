@@ -287,6 +287,10 @@ export class SchoolYearComponent implements OnInit {
             });
 
             shift['shift']['cycles'].push(newCycle);
+          } else if (actualCycle) {
+            if (!actualCycle['gradeDetails'].length) {
+              shift['shift']['cycles'] = shift['shift']['cycles'].filter((x) => x['cycle']['id'] !== actualCycle['cycle'].id);
+            }
           }
         } else {
           if (content['field'] && !newCycle) {
@@ -483,7 +487,7 @@ export class SchoolYearComponent implements OnInit {
   academicAssignmentsStep(next: boolean): void {
     let emptyShifts = false;
     this.schoolYear.shifts.forEach((shift) => {
-      if (!shift['shift']['cycles']) emptyShifts = true;
+      if (!shift['shift']['cycles'].length) emptyShifts = true;
     });
     if (!emptyShifts) {
       this.loading = true;
@@ -566,6 +570,7 @@ export class SchoolYearComponent implements OnInit {
           nzDuration: 15000
         }
       );
+      this.loading = false;
     }
   }
 

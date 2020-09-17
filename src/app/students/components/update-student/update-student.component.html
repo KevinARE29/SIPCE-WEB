@@ -124,7 +124,7 @@
                         <nz-form-item nzJustify="space-around">
                             <nz-form-label nzFor="section">Sección</nz-form-label>
                             <nz-form-control nzErrorTip="La sección es requerida">
-                                <nz-select id="section" nzShowSearch nzAllowClear formControlName="section"
+                                <nz-select id="section" nzShowSearch formControlName="section"
                                     nzPlaceHolder="Seleccionar">
                                     <nz-option *ngFor="let section of sections" [nzValue]="section.id"
                                         [nzLabel]="section.name"></nz-option>
@@ -141,9 +141,13 @@
                     <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="11">
                         <nz-form-item nzJustify="space-around">
                             <nz-form-label nzFor="registrationYear">Año de ingreso</nz-form-label>
-                            <nz-form-control>
+                            <nz-form-control nzDisableAutoTips [nzErrorTip]="registrationYearError">
                                 <nz-year-picker id="registrationYear" formControlName="registrationYear"
-                                    nzPlaceHolder="Seleccionar año" [nzDisabledDate]="disabledYear"></nz-year-picker>
+                                    nzPlaceHolder="Seleccionar año" [nzDisabledDate]="disabledYear">
+                                </nz-year-picker>
+                                <ng-template #registrationYearError let-control>
+                                    <ng-container *ngIf="control.hasError('required')">El año de ingreso es requerido</ng-container>
+                                </ng-template>
                             </nz-form-control>
                         </nz-form-item>
                     </div>
@@ -152,18 +156,24 @@
                     <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="11">
                         <nz-form-item nzJustify="space-around">
                             <nz-form-label nzFor="registrationGrade">Grado</nz-form-label>
-                            <nz-form-control>
+                            <nz-form-control nzDisableAutoTips [nzErrorTip]="registrationGradeError">
                                 <nz-select id="registrationGrade" nzShowSearch nzAllowClear
                                     formControlName="registrationGrade" nzPlaceHolder="Seleccionar">
                                     <nz-option *ngFor="let grade of allGrades" [nzValue]="grade.id" [nzLabel]="grade.name">
                                     </nz-option>
                                 </nz-select>
+                                <ng-template #registrationGradeError let-control>
+                                    <ng-container *ngIf="control.hasError('required')">El grado de ingreso es requerido</ng-container>
+                                    <!-- <ng-container *ngIf="control.hasError('higherthan')">
+                                      El grado de registro no puede ser mayor al grado actual.
+                                    </ng-container> -->
+                                </ng-template>
                             </nz-form-control>
                         </nz-form-item>
                     </div>
                 </div>
     
-                <!----------       Hermanos        ---------->
+                <!----------       Siblings        ---------->
                 <div>
                     <nz-divider nzText="Hermanos" nzOrientation="left"></nz-divider>
                     <!-- Current siblings -->
@@ -213,7 +223,7 @@
                 </div>
                 <div nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
                     <div nz-col>
-                        <button class="btnTabs" nz-button nzType="primary" (click)="save = true" [disabled]="!checkPermission(20)">Actualizar</button>
+                        <button class="btnTabs" nz-button nzType="primary" [nzLoading]="btnLoading" (click)="save = true" [disabled]="!checkPermission(20)">Actualizar</button>
                     </div>
                 </div>
             </form>
