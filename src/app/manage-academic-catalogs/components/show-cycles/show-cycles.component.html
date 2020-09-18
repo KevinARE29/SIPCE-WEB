@@ -17,13 +17,13 @@
                     <input nz-input formControlName="name" placeholder="Nombre del ciclo" />
                     <ng-template #errorTpl let-control>
                         <ng-container *ngIf="control.hasError('required')">
-                            El nombre del ciclo es requerido
+                            El nombre es requerido
                         </ng-container>
                         <ng-container *ngIf="control.hasError('pattern')">
-                            El nombre del ciclo debe contener solo caracteres
+                            El nombre debe contener solo caracteres
                         </ng-container>
                         <ng-container *ngIf="control.hasError('maxlength')">
-                            El nombre del ciclo debe contener máximo 32 caracteres
+                            El nombre debe contener máximo 32 caracteres
                         </ng-container>
                     </ng-template>
                 </nz-form-control>

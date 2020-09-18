@@ -110,11 +110,11 @@ export class UpdateStudentComponent implements OnInit {
     this.studentForm = this.fb.group({
       firstname: [
         '',
-        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
       ],
       lastname: [
         '',
-        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
       ],
       email: ['', [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]],
       dateOfBirth: ['', [Validators.required]],
@@ -513,7 +513,7 @@ export class UpdateStudentComponent implements OnInit {
   saveEdit(id: number): void {
     const textValidation = RegExp(/[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]$/);
     if (this.validateNotNulls(this.editCache[id].data)) {
-      if (/^[267]{1}[0-9]{3}[0-9]{4}$/.test(this.editCache[id].data.phone)) {
+      if (/^[267]{1}[0-9]{3}[-]{1}[0-9]{4}$/.test(this.editCache[id].data.phone)) {
         if (
           textValidation.test(this.editCache[id].data.firstname) &&
           textValidation.test(this.editCache[id].data.lastname)
@@ -534,7 +534,7 @@ export class UpdateStudentComponent implements OnInit {
         this.notification.create(
           'warning',
           'Formato incorrecto.',
-          'Ingrese un número de teléfono valido (ej.2222-2222)',
+          'Ingrese un número de teléfono válido (ej.2222-2222)',
           {
             nzDuration: 30000
           }
