@@ -1,7 +1,7 @@
 /*
   Path: app/security-policies/components/security-policies.component.css
   Objective: Define security policies style
-  Author: Esme López 
+  Author: Esme López
 */
 
 .policies {
@@ -13,14 +13,14 @@
   padding: 5px;
 }
 
-h1 {
-  text-align: center;
-}
-
 nz-input-number {
   width: 75px;
 }
 
 button {
   margin-top: 10px;
+}
+
+.align-center {
+  text-align: center;
 }
