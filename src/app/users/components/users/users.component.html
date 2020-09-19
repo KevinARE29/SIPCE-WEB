@@ -74,7 +74,7 @@
   </div>
 </div>
 
-<div class="users" nz-row>
+<div nz-row>
     <div nz-col nzSpan="24">
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
             <nz-table #filterTable
@@ -88,18 +88,18 @@
             >
                 <thead>
                     <tr>
-                        <th nzColumnKey="username" [nzSortFn]="true" [nzSortPriority]="1" nzLeft>Usuario</th>
+                        <th nzColumnKey="username" [nzSortFn]="true" [nzSortPriority]="1">Usuario</th>
                         <th nzColumnKey="firstname" [nzSortFn]="true" [nzSortPriority]="2">Nombres</th>
                         <th nzColumnKey="lastname" [nzSortFn]="true" [nzSortPriority]="3">Apellidos</th>
                         <th nzColumnKey="email" [nzSortFn]="true" [nzSortPriority]="4">Correo electrónico</th>
                         <th nzColumnKey="role">Roles</th>
-                        <th [nzAlign]="'center'" nzRight>Acción</th>
+                        <th [nzAlign]="'center'">Acción</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <tr *ngFor="let data of filterTable.data">
-                        <td nzLeft>
+                        <td>
                             <i nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="data.active ? '#52c41a' : '#bdbdbd'"></i>
                             {{ data.username }}
                         </td>
@@ -114,7 +114,7 @@
                                 </ng-container>
                             </ng-container>
                         </td>
-                        <td [nzAlign]="'center'" nzRight>
+                        <td [nzAlign]="'center'">
                             <a routerLink="/usuarios/{{data.id}}">
                                 <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
                             </a>
