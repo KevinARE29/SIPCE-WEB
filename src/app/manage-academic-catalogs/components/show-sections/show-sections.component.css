@@ -4,11 +4,15 @@
      margin-right: 15px;
   }
 }
-  
+
 .save {
    margin-right: 8px;
 }
 
 .action-style {
   padding: 2px;
+}
+
+.sections {
+  margin-top: 25px;
 }

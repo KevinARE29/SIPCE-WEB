@@ -1,7 +1,6 @@
 <h1>Periodos</h1>
-<div nz-row>
-    <div nz-col [nzXs]="{ span: 20, offset: 2 }" [nzSm]="{ span: 20, offset: 2 }"
-        [nzMd]="{ span: 20, offset: 2 }" [nzLg]="{ span: 8, offset: 8 }">
+<div nz-row nzJustify="center">
+    <div id="new-shift" nz-col nzXs="24" nzSm="22" nzMd="20" nzLg="10" nzXl="8">
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
             <ul nz-list [nzDataSource]="periods" nzBordered nzSize="small">
 
