@@ -28,6 +28,10 @@ body {
   border-left: 6px solid #ef6c00;
 }
 
+.ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected a {
+  margin-left: -6px;
+}
+
 .ant-menu-dark .ant-menu-submenu-selected {
   background-color: #153149;
 }
