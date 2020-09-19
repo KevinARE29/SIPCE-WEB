@@ -22,6 +22,16 @@ body {
   color: #ef6c00;
 }
 
+/* Overrides menu selected option */
+.ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: inherit;
+  border-left: 6px solid #ef6c00;
+}
+
+.ant-menu-dark .ant-menu-submenu-selected {
+  background-color: #153149;
+}
+
 /* Override all buttons and inputs */
 a.ant-btn:not(.ant-btn-icon-only), .ant-btn:not(.ant-btn-icon-only) {
   border-radius: 7px;
