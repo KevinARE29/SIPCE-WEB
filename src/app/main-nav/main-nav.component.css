@@ -80,8 +80,9 @@ nz-avatar {
 }
 
 .ant-layout-footer {
-  padding: 0%;
+  padding: 0;
   background-color: white;
+  color: black;
 }
 
 /* Change footer style on login, forgot password, etc. */
