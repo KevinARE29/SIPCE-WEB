@@ -21,3 +21,96 @@ body {
 .principal {
   color: #ef6c00;
 }
+
+/* Overrides menu selected option */
+.ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: inherit;
+  border-left: 6px solid #ef6c00;
+}
+
+.ant-menu-dark .ant-menu-submenu-selected {
+  background-color: #153149;
+}
+
+/* Override all buttons and inputs */
+a.ant-btn:not(.ant-btn-icon-only), .ant-btn:not(.ant-btn-icon-only) {
+  border-radius: 7px;
+  letter-spacing: 0.5px;
+  padding: 5px 10px;
+  min-width: 105px;
+  height: auto;
+  font-weight: lighter;
+  line-height: 1.5715;
+}
+
+.ant-input-affix-wrapper, .ant-input {
+  border-radius: 7px;
+}
+
+.ant-select-selector {
+  border-radius: 7px !important;
+}
+
+/* Override table header color, and adds round borders on the header */
+.ant-table .ant-table-thead > tr > th{
+  background-color: #dddddd;
+}
+
+.ant-table-container table > thead > tr:first-child th:first-child {
+  border-radius:10px 0 0 10px;
+}
+
+.ant-table-container table > thead > tr:first-child th:last-child {
+  border-radius:0 10px 10px 0;
+}
+
+/* Override input style on login, forgot password, etc. */
+
+/* Override spacing between elements */
+.auth-form .ant-form-item:not(:last-of-type) {
+  margin-bottom: 45px;
+}
+
+/* Override not-focused inputs */
+.auth-form input {
+  background-color: transparent;
+  border: none;
+  color: white;
+  transition: none;
+}
+
+.auth-form input::placeholder {
+  color: white;
+  font-weight: lighter;
+}
+
+.auth-form .ant-input-affix-wrapper{
+  background-color: transparent;
+  border: none;
+  border-bottom: white 1px solid;
+  border-radius: 0px;
+  color: white;
+  transition: none;
+}
+
+/* Override focused inputs */
+.auth-form .ant-input-affix-wrapper-focused{
+  box-shadow: none;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: black;
+}
+
+.auth-form .ant-input-affix-wrapper-focused input {
+  color: black;
+}
+
+.auth-form .ant-input-affix-wrapper-focused input::placeholder {
+  color: black;
+}
+
+/* Avoids white background */
+.auth-form .ant-form-item-has-error input,
+.auth-form .ant-form-item-has-error .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-focused),
+.auth-form .ant-form-item-has-error .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-focused) input{
+  background-color: transparent;
+}

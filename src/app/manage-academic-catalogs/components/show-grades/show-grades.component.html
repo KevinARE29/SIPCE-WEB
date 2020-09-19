@@ -1,8 +1,7 @@
 <h1>Grados</h1>
 
-<div nz-row>
-    <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }" [nzMd]="{ span: 24 }" [nzLg]="{ span: 20, offset: 2 }"
-        [nzXl]="{ span: 16, offset: 4 }">
+<div nz-row nzJustify="center">
+    <div id="new-shift" nz-col nzXs="24" nzSm="22" nzMd="20" nzLg="10" nzXl="8">
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
             <nz-table #filterTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzFrontPagination]="false"
                 [nzTotal]="pagination.totalItems" [nzPageSize]="pagination.perPage" [nzPageIndex]="pagination.page"
@@ -17,7 +16,7 @@
                 <tbody>
                     <tr *ngFor="let data of filterTable.data">
                         <td>{{ data.name }}</td>
-                        <td>
+                        <td nzAlign="right">
                             <span>
                                 <nz-switch [ngModel]="data.active" [nzCheckedChildren]="checkedTemplate"
                                     [nzControl]="true" (click)="showConfirm(data.id)"

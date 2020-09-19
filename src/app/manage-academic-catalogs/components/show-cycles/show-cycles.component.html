@@ -1,10 +1,5 @@
 <h1>Ciclos</h1>
-<!-- header -->
-<nz-page-header [nzGhost]="true">
-    <nz-page-header-extra>
-        <button nz-button nzType="primary" (click)="showModal()">Crear ciclo</button>
-    </nz-page-header-extra>
-</nz-page-header>
+
 <!-- Create cycle modal -->
 <nz-modal [(nzVisible)]="isVisible" nzTitle="Crear ciclo" [nzContent]="modalContent" nzOkText="Guardar"
     nzCancelText="Cancelar" [nzFooter]="modalFooter" (nzOnOk)="handleOk()" (nzOnCancel)="handleCancel()">
@@ -38,9 +33,15 @@
 </nz-modal>
 
 <!-- Table -->
-<div nz-row>
-    <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }" [nzMd]="{ span: 24 }" [nzLg]="{ span: 20, offset: 2 }"
-        [nzXl]="{ span: 16, offset: 4 }">
+<div nz-row nzJustify="center">
+  <div nz-col nzXs="24" nzSm="24" nzMd="20" nzLg="16" nzXl="12">
+
+    <div nz-row nzJustify="end">
+      <button nz-button nzType="primary" (click)="showModal()">Crear ciclo</button>
+    </div>
+
+    <div class="cycles" nz-row>
+      <div nz-col>
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
             <nz-table #editRowTable [nzData]="listOfData" nzTableLayout="fixed" [nzSize]="tableSize"
                 (nzQueryParams)="recharge($event)" [nzFrontPagination]="false" [nzTotal]="pagination.totalItems"
@@ -81,5 +82,7 @@
                 </tbody>
             </nz-table>
         </nz-spin>
+      </div>
     </div>
+  </div>
 </div>
