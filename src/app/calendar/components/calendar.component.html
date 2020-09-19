@@ -1,70 +1,66 @@
-<ejs-schedule #scheduleObj heigth="500px" (popupOpen)="onPopupOpen($event)" [currentView]="newViewMode"
+<ejs-schedule #scheduleObj (popupOpen)="onPopupOpen($event)" [currentView]="newViewMode"
     (actionBegin)="onBegin($event)" [views]="views" [selectedDate]="selectedDate" timezone="America/El_Salvador"
     locale="es" [eventSettings]="eventData" (eventRendered)="applyCategoryColor($event)"
     (actionComplete)="onActionComplete($event)">
     <ng-template #editorTemplate let-data>
         <form class="custom-event-editor" [formGroup]="eventForm">
-            <div colspan="4" cellpadding="5">
+            <div class="dateTimePicker">
                 <label class="e-textlabel">Asunto</label>
-
                 <input id="Subject" class="e-field e-input" type="text" data-name="Subject" FormControlName="Subject"
                     name="Subject" style="width: 100%;" />
             </div>
-            <br>
-            <div  class="dateTimePicker" class="form-group" colspan="4">
+            <div class="dateTimePicker">
                 <label class="e-textlabel">Tipo de entrevista</label>
 
-                <ejs-dropdownlist id="EventType" class="e-field" data-name="EventType" 
-                    placeholder="Seleccione el tipo de entrevista" [dataSource]="EventData"  value='{{ data.EventType }}'
+                <ejs-dropdownlist id="EventType" class="e-field" data-name="EventType"
+                    placeholder="Seleccione el tipo de entrevista" [dataSource]="EventData" value='{{ data.EventType }}'
                     [fields]="eventFields" required>
                 </ejs-dropdownlist>
-
             </div>
-        
-            <div  class="dateTimePicker" colspan="4">
+
+            <div class="dateTimePicker">
                 <label class="e-textlabel">Lugar</label>
-                <!-- -->
+
                 <input id="Location" class="e-field e-input" value="{{ data.Location }}" type="text"
                     data-name="Location" FormControlName="Location" name="Location" style="width: 100%;" />
             </div>
-        
-          
-                <div class="dateTimePicker">
-                    <label class="e-textlabel">Inicio</label>
-                    <input  id="StartTime" class="e-field" type="text" data-name="StartTime" name="StartTime" />
-                </div>
-            
-                <div  class="dateTimePicker">
-                    <label class="e-textlabel">Fin</label>
-                    <input id="EndTime" class="e-field" type="text" data-name="EndTime" name="EndTime" />
-                </div>
-     
-    
-            <div  class="dateTimePicker" colspan="4">
-                <ejs-recurrenceeditor id="RecurrenceRule" class="e-field" name="RecurrenceRule" value='{{data.RecurrenceRule}}'
-                    data-name="RecurrenceRule" FormControlName="RecurrenceRule" locale="es" #recurrenceObj
-                    (change)="onChange($event)">
+
+            <div class="dateTimePicker">
+                <label class="e-textlabel">Inicio</label>
+                <input id="StartTime" class="e-field" type="text" data-name="StartTime" name="StartTime" />
+            </div>
+
+            <div class="dateTimePicker">
+                <label class="e-textlabel">Fin</label>
+                <input id="EndTime" class="e-field" type="text" data-name="EndTime" name="EndTime" />
+            </div>
+
+            <div colspan="4">
+                <ejs-recurrenceeditor id="RecurrenceRule" class="e-field" name="RecurrenceRule"
+                    value='{{data.RecurrenceRule}}' data-name="RecurrenceRule" FormControlName="RecurrenceRule"
+                    locale="es" #recurrenceObj (change)="onChange($event)">
                 </ejs-recurrenceeditor>
             </div>
 
-            <div  class="dateTimePicker" colspan="4">
+            <div class="dateTimePicker">
                 <label class="e-textlabel">Descripcion</label>
                 <textarea id="Description" class="e-field e-input" FormControlName="Description" data-name="Description"
                     name="Description" rows="3" cols="50"
                     style="width: 100%; height: 60px !important; resize: vertical;"></textarea>
             </div>
             <!-- atendees -->
-        
-            <div colspan="4">
+
+            <div class="dateTimePicker" colspan="4">
                 <label class="e-textlabel"> Participantes del evento</label>
             </div>
 
             <div nz-row>
-                <div *ngIf="showAlert" class="error">Se permite seleccionar solo un estudiante, para agregar otro cancele el seleccionado.</div>
+                <div *ngIf="showAlert" class="error">Se permite seleccionar solo un estudiante, para agregar otro
+                    cancele el seleccionado.</div>
                 <br>
                 <div>
                     <div class="addStudent" nz-row>
-                        <div nz-col *ngIf="event.Student">
+                        <div class="searchSelection" nz-col *ngIf="event.Student">
                             {{ event.Student.firstname }} {{ event.Student.lastname }}
 
                             <a (click)="confirmDeleteStudent(event.Student.id, event.Student)">

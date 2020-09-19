@@ -9,6 +9,13 @@
 .dateTimePicker {
   padding-top: 5px;
   padding-right: 3px;
-  padding-bottom: 15px;
+  padding-bottom: 10px;
+  padding-left: 3px;
+}
+
+.searchSelection {
+  padding-top: 5px;
+  padding-right: 3px;
+  padding-bottom: 5px;
   padding-left: 3px;
 }
