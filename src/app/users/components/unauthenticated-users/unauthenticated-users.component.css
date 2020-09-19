@@ -9,3 +9,7 @@ nz-select, nz-range-picker {
 .btn-container {
   height: 100%;
 }
+
+nz-range-picker {
+  border-radius: 7px;
+}
