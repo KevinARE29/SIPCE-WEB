@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 
 import { environment } from './../../../environments/environment';
 import { ErrorMessageService } from '../../shared/error-message.service';
+import { ShiftPeriodGrade } from './shiftPeriodGrade.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +17,12 @@ export class PeriodService {
     this.baseUrl = environment.apiURL;
   }
 
-  deletePeriod(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}academics/periods/${id}`).pipe(catchError(this.handleError()));
+  togglePeriodStatus(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}academics/periods/${id}`).pipe(catchError(this.handleError()));
   }
 
-  getPeriod(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}academics/periods`).pipe(catchError(this.handleError()));
+  getPeriod(): Observable<ShiftPeriodGrade[]> {
+    return this.http.get<ShiftPeriodGrade[]>(`${this.baseUrl}academics/periods`).pipe(catchError(this.handleError()));
   }
 
   /**
