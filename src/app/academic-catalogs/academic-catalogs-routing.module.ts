@@ -10,7 +10,7 @@ import { ShowSectionsComponent } from './components/show-sections/show-sections.
 import { ShowGradesComponent } from './components/show-grades/show-grades.component';
 import { ShowShiftComponent } from './components/show-shift/show-shift.component';
 import { ShowPeriodsComponent } from './components/show-periods/show-periods.component';
-import { ShowCyclesComponent } from './components/show-cycles/show-cycles.component';
+import { CyclesComponent } from './components/cycles/cycles.component';
 import { AuthGuard } from '../login/guards/auth.guard';
 
 const routes: Routes = [
@@ -40,7 +40,7 @@ const routes: Routes = [
   },
   {
     path: 'ciclos',
-    component: ShowCyclesComponent,
+    component: CyclesComponent,
     canActivate: [AuthGuard],
     data: { permission: 13 }
   },
