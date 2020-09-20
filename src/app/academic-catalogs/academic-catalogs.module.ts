@@ -5,7 +5,7 @@ import { AntDesignModule } from '../ant-design/ant-design.module';
 import { HttpClientModule } from '@angular/common/http';
 
 import { ShowSectionsComponent } from './components/show-sections/show-sections.component';
-import { ShowGradesComponent } from './components/show-grades/show-grades.component';
+import { GradesComponent } from './components/grades/grades.component';
 import { ShowShiftComponent } from './components/show-shift/show-shift.component';
 import { ShowPeriodsComponent } from './components/show-periods/show-periods.component';
 import { CyclesComponent } from './components/cycles/cycles.component';
@@ -13,7 +13,7 @@ import { CyclesComponent } from './components/cycles/cycles.component';
 import { AcademicCatalogsRoutingModule } from './academic-catalogs-routing.module';
 
 @NgModule({
-  declarations: [ShowSectionsComponent, CyclesComponent, ShowPeriodsComponent, ShowShiftComponent, ShowGradesComponent],
+  declarations: [ShowSectionsComponent, CyclesComponent, ShowPeriodsComponent, ShowShiftComponent, GradesComponent],
   imports: [
     CommonModule,
     AcademicCatalogsRoutingModule,
