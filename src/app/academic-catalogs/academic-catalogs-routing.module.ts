@@ -6,7 +6,7 @@
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ShowSectionsComponent } from './components/show-sections/show-sections.component';
+import { SectionsComponent } from './components/sections/sections.component';
 import { GradesComponent } from './components/grades/grades.component';
 import { ShowShiftComponent } from './components/show-shift/show-shift.component';
 import { PeriodsComponent } from './components/periods/periods.component';
@@ -16,7 +16,7 @@ import { AuthGuard } from '../login/guards/auth.guard';
 const routes: Routes = [
   {
     path: 'secciones',
-    component: ShowSectionsComponent,
+    component: SectionsComponent,
     canActivate: [AuthGuard],
     data: { permission: 13 }
   },

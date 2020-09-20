@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AntDesignModule } from '../ant-design/ant-design.module';
 import { HttpClientModule } from '@angular/common/http';
 
-import { ShowSectionsComponent } from './components/show-sections/show-sections.component';
+import { SectionsComponent } from './components/sections/sections.component';
 import { GradesComponent } from './components/grades/grades.component';
 import { ShowShiftComponent } from './components/show-shift/show-shift.component';
 import { PeriodsComponent } from './components/periods/periods.component';
@@ -13,7 +13,7 @@ import { CyclesComponent } from './components/cycles/cycles.component';
 import { AcademicCatalogsRoutingModule } from './academic-catalogs-routing.module';
 
 @NgModule({
-  declarations: [ShowSectionsComponent, CyclesComponent, PeriodsComponent, ShowShiftComponent, GradesComponent],
+  declarations: [SectionsComponent, CyclesComponent, PeriodsComponent, ShowShiftComponent, GradesComponent],
   imports: [
     CommonModule,
     AcademicCatalogsRoutingModule,

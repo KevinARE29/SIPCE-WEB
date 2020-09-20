@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
+
 import { SectionService } from '../../shared/section.service';
 import { Catalogue } from '../../shared/catalogue.model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
-import { Pagination } from './../../../shared/pagination.model';
+import { Pagination } from '../../../shared/pagination.model';
 
 interface ItemData {
   id: number;
@@ -14,11 +16,11 @@ interface ItemData {
 }
 
 @Component({
-  selector: 'app-show-sections',
-  templateUrl: './show-sections.component.html',
-  styleUrls: ['./show-sections.component.css']
+  selector: 'app-sections',
+  templateUrl: './sections.component.html',
+  styleUrls: ['./sections.component.css']
 })
-export class ShowSectionsComponent implements OnInit {
+export class SectionsComponent implements OnInit {
   isVisible = false;
   sectionJson;
   sections: Catalogue[];
@@ -28,7 +30,7 @@ export class ShowSectionsComponent implements OnInit {
   loading = false;
   tableSize = 'small';
   confirmModal?: NzModalRef;
-  // table objects
+  // Table objects
   pagination: Pagination;
   listOfData: Catalogue[];
   data = [];
