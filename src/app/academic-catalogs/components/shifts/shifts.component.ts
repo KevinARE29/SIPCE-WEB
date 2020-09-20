@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
+
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+
 import { ShiftService } from '../../shared/shift.service';
 import { ShiftPeriodGrade } from '../../shared/shiftPeriodGrade.model';
 
 @Component({
-  selector: 'app-show-shift',
-  templateUrl: './show-shift.component.html',
-  styleUrls: ['./show-shift.component.css']
+  selector: 'app-shifts',
+  templateUrl: './shifts.component.html',
+  styleUrls: ['./shifts.component.css']
 })
-export class ShowShiftComponent implements OnInit {
+export class ShiftsComponent implements OnInit {
   shifts: ShiftPeriodGrade[];
   loading = false;
   status: string;
@@ -50,6 +52,7 @@ export class ShowShiftComponent implements OnInit {
 
   /* Deactivate/activate shift confirm modal */
   showConfirm(id: number): void {
+    this.loading = true;
     const element = this.shifts.find((x) => x.id === id);
     if (element.active === true) {
       this.status = 'desactivar';
@@ -59,10 +62,11 @@ export class ShowShiftComponent implements OnInit {
       this.successMessage = 'activado';
     }
 
-    this.shiftService.deleteShift(id).subscribe(
+    this.shiftService.toggleShiftStatus(id).subscribe(
       () => {
         this.message.success(`El turno ${element.name} ha sido ${this.successMessage}`);
         element.active = !element.active;
+        this.loading = false;
       },
       (err) => {
         const statusCode = err.statusCode;
@@ -72,6 +76,8 @@ export class ShowShiftComponent implements OnInit {
             nzDuration: 30000
           });
         }
+
+        this.loading = false;
       }
     );
   }

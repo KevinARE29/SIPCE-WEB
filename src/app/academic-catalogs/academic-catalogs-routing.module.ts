@@ -8,7 +8,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { SectionsComponent } from './components/sections/sections.component';
 import { GradesComponent } from './components/grades/grades.component';
-import { ShowShiftComponent } from './components/show-shift/show-shift.component';
+import { ShiftsComponent } from './components/shifts/shifts.component';
 import { PeriodsComponent } from './components/periods/periods.component';
 import { CyclesComponent } from './components/cycles/cycles.component';
 import { AuthGuard } from '../login/guards/auth.guard';
@@ -28,7 +28,7 @@ const routes: Routes = [
   },
   {
     path: 'turnos',
-    component: ShowShiftComponent,
+    component: ShiftsComponent,
     canActivate: [AuthGuard],
     data: { permission: 13 }
   },

@@ -17,8 +17,8 @@ export class ShiftService {
     this.baseUrl = environment.apiURL;
   }
 
-  deleteShift(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}academics/shifts/${id}`).pipe(catchError(this.handleError()));
+  toggleShiftStatus(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}academics/shifts/${id}`).pipe(catchError(this.handleError()));
   }
 
   getShifts(): Observable<ShiftPeriodGrade[]> {
