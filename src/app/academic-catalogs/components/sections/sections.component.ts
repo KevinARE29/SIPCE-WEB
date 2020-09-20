@@ -129,7 +129,7 @@ export class SectionsComponent implements OnInit {
       // confirm modal
       this.confirmModal = this.modal.confirm({
         nzTitle: `¿Desea actualizar la sección "${name}"?`,
-        nzContent: `Actualizará la sección con nombre actual ${name} a ${this.editCache[id].data.name}. ¿Desea continuar con la acción? .`,
+        nzContent: `Actualizará la sección con nombre actual ${name} a ${this.editCache[id].data.name}. ¿Desea continuar con la acción?`,
         nzOnOk: () =>
           this.sectionService
             .updateSection(this.editCache[id].data)

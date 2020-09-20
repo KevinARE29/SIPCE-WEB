@@ -1,7 +1,7 @@
 <h1>Secciones</h1>
 
 <!-- Create section modal -->
-<nz-modal [(nzVisible)]="isVisible" nzTitle="Crear seccción" [nzContent]="modalContent" nzOkText="Guardar"
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Crear sección" [nzContent]="modalContent" nzOkText="Guardar"
   nzCancelText="Cancelar" [nzFooter]="modalFooter" (nzOnOk)="handleOk()" (nzOnCancel)="handleCancel()">
   <!-- Modal content -->
   <form nz-form [formGroup]="createSection">
@@ -9,17 +9,13 @@
       <nz-form-item nzJustify="space-around">
         <nz-form-label nzRequired>Nombre</nz-form-label>
         <nz-form-control [nzSpan]="16" [nzErrorTip]="errorTpl">
-          <input nz-input formControlName="name" placeholder="Nombre de la seccción" />
+          <input nz-input formControlName="name" placeholder="Nombre de la sección" />
           <ng-template #errorTpl let-control>
             <ng-container *ngIf="control.hasError('required')">
               El nombre es requerido. <br>
             </ng-container>
             <ng-container *ngIf="control.hasError('pattern')">
-<<<<<<< HEAD:src/app/academic-catalogs/components/sections/sections.component.html
               El nombre puede contener letras y números. <br>
-=======
-              El nombre debe contener solo letras
->>>>>>> improveUI&UX:src/app/academic-catalogs/components/show-sections/show-sections.component.html
             </ng-container>
             <ng-container *ngIf="control.hasError('maxlength')">
               El nombre debe contener máximo 16 caracteres.

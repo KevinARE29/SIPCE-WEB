@@ -123,7 +123,7 @@ export class CyclesComponent implements OnInit {
       // Confirm modal
       this.confirmModal = this.modal.confirm({
         nzTitle: `¿Desea actualizar el ciclo "${name}"?`,
-        nzContent: `Actualizará el ciclo con nombre actual ${name} a ${this.editCache[id].data.name}. ¿Desea continuar con la acción? .`,
+        nzContent: `Actualizará el ciclo con nombre actual ${name} a ${this.editCache[id].data.name}. ¿Desea continuar con la acción?`,
         nzOnOk: () =>
           this.cycleService
             .updateCycle(this.editCache[id].data)
