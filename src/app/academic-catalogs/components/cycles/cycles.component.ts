@@ -20,7 +20,6 @@ interface ItemData {
 })
 export class CyclesComponent implements OnInit {
   isVisible = false;
-  cycleJson;
   cycles: Catalogue[];
   isLoading = false;
   isConfirmLoading = false;
@@ -66,7 +65,7 @@ export class CyclesComponent implements OnInit {
     }
   }
 
-  /* create cycle function */
+  // Create cycle
   handleOk(): void {
     if (this.createCycle.valid) {
       this.isConfirmLoading = true;
@@ -116,36 +115,71 @@ export class CyclesComponent implements OnInit {
     };
   }
 
-  /* update cycle function */
+  // Update cycle
   saveEdit(id: number, name: string): void {
-    const index = this.listOfData.findIndex((item) => item.id === id);
-    this.cycleJson = {
-      name: this.editCache[id].data.name
-    };
-    // confirm modal
-    this.confirmModal = this.modal.confirm({
-      nzTitle: `¿Desea actualizar el ciclo "${name}"?`,
-      nzContent: `Actualizará el ciclo con nombre actual ${name} a ${this.editCache[id].data.name}. ¿Desea continuar con la acción? .`,
-      nzOnOk: () =>
-        this.cycleService
-          .updateCycle(this.cycleJson, id)
-          .toPromise()
-          .then(() => {
-            this.isLoading = false;
-            this.message.success('Nombre del ciclo actualizado con éxito');
-            Object.assign(this.listOfData[index], this.editCache[id].data);
-            this.editCache[id].edit = false;
-          })
-          .catch((error) => {
-            this.isLoading = false;
-            this.notification.create(
-              'error',
-              'Ocurrió un error al cambiar el nombre del ciclo. Por favor verifique lo siguiente:',
-              error.message,
-              { nzDuration: 30000 }
-            );
-          })
-    });
+    if (this.validateCycleName(this.editCache[id].data.name)) {
+      const index = this.listOfData.findIndex((item) => item.id === id);
+
+      // Confirm modal
+      this.confirmModal = this.modal.confirm({
+        nzTitle: `¿Desea actualizar el ciclo "${name}"?`,
+        nzContent: `Actualizará el ciclo con nombre actual ${name} a ${this.editCache[id].data.name}. ¿Desea continuar con la acción? .`,
+        nzOnOk: () =>
+          this.cycleService
+            .updateCycle(this.editCache[id].data)
+            .toPromise()
+            .then(() => {
+              this.message.success('Nombre del ciclo actualizado con éxito');
+              Object.assign(this.listOfData[index], this.editCache[id].data);
+              this.editCache[id].edit = false;
+              this.isLoading = false;
+            })
+            .catch((error) => {
+              this.isLoading = false;
+              this.notification.create(
+                'error',
+                'Ocurrió un error al cambiar el nombre del ciclo. Por favor verifique lo siguiente:',
+                error.message,
+                { nzDuration: 30000 }
+              );
+            })
+      });
+    }
+  }
+
+  validateCycleName(name: string): boolean {
+    const textValidation = RegExp(/[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]$/);
+
+    if (!name.length) {
+      this.notification.create(
+        'error',
+        'Ocurrió un error al cambiar el nombre del ciclo. Por favor verifique lo siguiente:',
+        'El nombre es requerido.',
+        { nzDuration: 30000 }
+      );
+
+      return false;
+    } else if (!textValidation.test(name)) {
+      this.notification.create(
+        'error',
+        'Ocurrió un error al cambiar el nombre del ciclo. Por favor verifique lo siguiente:',
+        'El nombre debe contener solo letras.',
+        { nzDuration: 30000 }
+      );
+
+      return false;
+    } else if (name.length > 32) {
+      this.notification.create(
+        'error',
+        'Ocurrió un error al cambiar el nombre del ciclo. Por favor verifique lo siguiente:',
+        'El nombre debe contener máximo 32 caracteres.',
+        { nzDuration: 30000 }
+      );
+
+      return false;
+    }
+
+    return true;
   }
 
   /* Delete cycle confirm modal */
@@ -174,7 +208,7 @@ export class CyclesComponent implements OnInit {
     });
   }
 
-  /* ---     sort method      --- */
+  /* ---     Sort method      --- */
   recharge(params: NzTableQueryParams): void {
     this.loading = true;
     this.cycleService.searchCycle(params, params.pageIndex !== this.pagination.page).subscribe(
