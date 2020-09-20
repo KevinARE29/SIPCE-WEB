@@ -15,7 +15,7 @@
     </div>
 
     <!-- Grade -->
-    <div class="grade" nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="9" nzXl="10" class="gutter-row"
+    <div class="gutter-row grade" nz-col nzXs="16" nzSm="12" nzMd="10" nzLg="8" nzXl="6"
         *ngIf="teacherAssignation.length > 1">
         <label>Grado: </label>
         <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar grado" [(ngModel)]="currentGrade"
@@ -30,13 +30,12 @@
         <!-- Students without assignation -->
         <nz-tab nzTitle="Estudiantes sin asignar" (nzClick)="cleanTab('availables')">
             <!-- Filters -->
-            <div nz-col nzXs="24" nzLg="22">
-                <div nz-row class="filter" nzJustify="space-around" [nzGutter]="[10, 10]">
-                    <div nz-col nzXs="22" nzSm="5" nzMd="5" nzLg="4" class="gutter-row text-filter">
-                        <span>Filtrar por: </span>
-                    </div>
+            <div nz-col nzSpan="24">
+                <div nz-row class="filter" [nzGutter]="[10, 10]">
+
                     <!-- NIE -->
-                    <div class="code" nz-col nzXs="22" nzSm="5" nzMd="5" nzLg="5" class="gutter-row">
+                    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="6">
+                        <label>NIE:</label>
                         <nz-input-group [nzSuffix]="inputClearCode">
                             <input nz-input [(ngModel)]="searchParams.code" placeholder="NIE" />
                         </nz-input-group>
@@ -47,7 +46,8 @@
                     </div>
 
                     <!-- Name -->
-                    <div class="name" nz-col nzXs="22" nzSm="5" nzMd="5" nzLg="5" class="gutter-row">
+                    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="7">
+                        <label>Nombre:</label>
                         <nz-input-group [nzSuffix]="inputClearName">
                             <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Nombre" />
                         </nz-input-group>
@@ -59,7 +59,8 @@
                     </div>
 
                     <!-- Lastname -->
-                    <div class="lastname" nz-col nzXs="22" nzSm="5" nzMd="5" nzLg="5" class="gutter-row">
+                    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="7">
+                        <label>Apellido:</label>
                         <nz-input-group [nzSuffix]="inputClearLastname">
                             <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Apellido" />
                         </nz-input-group>
@@ -71,18 +72,18 @@
                     </div>
 
                     <!-- Search button-->
-                    <div class="status" nz-col nzXs="4" nzSm="3" nzMd="3" nzLg="1" class="gutter-row">
+                    <div nz-col nzXs="24" nzSm="12" nzMd="24" nzLg="4">
+                      <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
                         <button nz-button nzType="primary" (click)="search('availables')"
-                            [disabled]="!studentsWithoutAssignation.length"><i nz-icon nzType="search"
-                                nzTheme="outline"></i></button>
+                            [disabled]="!studentsWithoutAssignation.length">Buscar</button>
+                      </div>
                     </div>
                 </div>
             </div>
 
             <!-- Table -->
             <div nz-row>
-                <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }" [nzMd]="{ span: 24 }" [nzLg]="{ span: 24 }"
-                    [nzXl]="{ span: 22, offset: 1 }">
+                <div nz-col nzSpan="24">
                     <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
                         <nz-table #filterTable [nzData]="studentsWithoutAssignation" nzTableLayout="auto"
                             nzSize="small" nzShowPagination nzShowSizeChanger
@@ -107,7 +108,7 @@
                                         </ng-container>
                                         <ng-template #avatar>
                                             <nz-avatar nzIcon="user" [nzSize]="40"></nz-avatar>
-                                        </ng-template>                                        
+                                        </ng-template>
                                     </td>
                                     <td>{{ data.student.code }}</td>
                                     <td>{{ data.student.firstname }}</td>
@@ -131,13 +132,12 @@
         <!-- Assigned students -->
         <nz-tab nzTitle="Estudiantes asignados" (nzClick)="cleanTab('assigned')">
             <!-- Filters -->
-            <div nz-col nzXs="24" nzLg="22">
-                <div nz-row class="filter" nzJustify="space-around" [nzGutter]="[10, 10]">
-                    <div nz-col nzXs="22" nzSm="10" nzMd="12" nzLg="3" class="gutter-row text-filter">
-                        <span>Filtrar por: </span>
-                    </div>
+            <div nz-col nzSpan="24">
+                <div nz-row class="filter" [nzGutter]="[10, 10]">
+
                     <!-- NIE -->
-                    <div nz-col nzXs="22" nzSm="9" nzMd="6" nzLg="4" class="gutter-row">
+                    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="6">
+                        <label>NIE:</label>
                         <nz-input-group [nzSuffix]="inputClearCodeA">
                             <input nz-input [(ngModel)]="searchParams.code" placeholder="NIE" />
                         </nz-input-group>
@@ -148,7 +148,8 @@
                     </div>
 
                     <!-- Name -->
-                    <div nz-col nzXs="22" nzSm="7" nzMd="6" nzLg="5" class="gutter-row">
+                    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="6">
+                        <label>Nombre:</label>
                         <nz-input-group [nzSuffix]="inputClearNameA">
                             <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Nombre" />
                         </nz-input-group>
@@ -160,7 +161,8 @@
                     </div>
 
                     <!-- Lastname -->
-                    <div nz-col nzXs="22" nzSm="7" nzMd="6" nzLg="5" class="gutter-row">
+                    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="6">
+                        <label>Apellido:</label>
                         <nz-input-group [nzSuffix]="inputClearLastnameA">
                             <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Apellido" />
                         </nz-input-group>
@@ -172,7 +174,8 @@
                     </div>
 
                     <!-- Section -->
-                    <div nz-col nzXs="5" nzSm="6" nzMd="5" nzLg="4" class="gutter-row">
+                    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="6">
+                        <label>Sección:</label>
                         <nz-select class="section" nzShowSearch nzAllowClear nzPlaceHolder="Sección"
                             [(ngModel)]="searchParams.section.id" (ngModelChange)="search('assigned')">
                             <nz-option *ngFor="let section of sections" [nzLabel]="section.name" [nzValue]="section.id">
@@ -181,18 +184,18 @@
                     </div>
 
                     <!-- Search button-->
-                    <div nz-col nzXs="3" nzSm="4" nzMd="3" nzLg="2" class="gutter-row">
+                    <div nz-col nzXs="24" nzSm="24" nzMd="16" nzLg="24">
+                      <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
                         <button nz-button nzType="primary" (click)="search('assigned')"
-                            [disabled]="!studentsWithoutAssignation.length"><i nz-icon nzType="search"
-                                nzTheme="outline"></i></button>
+                            [disabled]="!studentsWithoutAssignation.length">Buscar</button>
+                      </div>
                     </div>
                 </div>
             </div>
 
             <!-- Table -->
             <div nz-row>
-                <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }" [nzMd]="{ span: 24 }" [nzLg]="{ span: 24 }"
-                    [nzXl]="{ span: 22, offset: 1 }">
+                <div nz-col nzSpan="24">
                     <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
                         <nz-table #assignedStudentsTable [nzData]="assignedStudents" nzTableLayout="auto"
                             nzSize="small" nzShowPagination nzShowSizeChanger>
@@ -212,7 +215,7 @@
                                         </ng-container>
                                         <ng-template #avatar>
                                             <nz-avatar nzIcon="user" [nzSize]="40"></nz-avatar>
-                                        </ng-template> 
+                                        </ng-template>
                                     </td>
                                     <td>{{ data.student.code }}</td>
                                     <td>{{ data.student.firstname }}</td>
@@ -229,13 +232,11 @@
         <!-- My students -->
         <nz-tab nzTitle="Mis estudiantes" (nzClick)="cleanTab('my students')">
             <!-- Filters -->
-            <div nz-col nzXs="24" nzLg="22">
-                <div nz-row class="filter" nzJustify="space-around" [nzGutter]="[10, 10]">
-                    <div nz-col nzXs="22" nzSm="5" nzMd="5" nzLg="4" class="gutter-row text-filter">
-                        <span>Filtrar por: </span>
-                    </div>
+            <div nz-col nzSpan="24">
+                <div nz-row class="filter" [nzGutter]="[10, 10]">
                     <!-- NIE -->
-                    <div class="code" nz-col nzXs="22" nzSm="5" nzMd="5" nzLg="5" class="gutter-row">
+                    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="6">
+                        <label>NIE:</label>
                         <nz-input-group [nzSuffix]="inputClearCodeM">
                             <input nz-input [(ngModel)]="searchParams.code" placeholder="NIE" />
                         </nz-input-group>
@@ -246,7 +247,8 @@
                     </div>
 
                     <!-- Name -->
-                    <div class="name" nz-col nzXs="22" nzSm="5" nzMd="5" nzLg="5" class="gutter-row">
+                    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="7">
+                        <label>Nombre:</label>
                         <nz-input-group [nzSuffix]="inputClearNameM">
                             <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Nombre" />
                         </nz-input-group>
@@ -258,7 +260,8 @@
                     </div>
 
                     <!-- Lastname -->
-                    <div class="lastname" nz-col nzXs="22" nzSm="5" nzMd="5" nzLg="5" class="gutter-row">
+                    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="7">
+                        <label>Apellido:</label>
                         <nz-input-group [nzSuffix]="inputClearLastnameM">
                             <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Apellido" />
                         </nz-input-group>
@@ -270,18 +273,18 @@
                     </div>
 
                     <!-- Search button-->
-                    <div class="status" nz-col nzXs="4" nzSm="3" nzMd="3" nzLg="1" class="gutter-row">
+                    <div nz-col nzXs="24" nzSm="12" nzMd="24" nzLg="4">
+                      <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
                         <button nz-button nzType="primary" (click)="search('my students')"
-                            [disabled]="!studentsWithoutAssignation.length"><i nz-icon nzType="search"
-                                nzTheme="outline"></i></button>
+                            [disabled]="!studentsWithoutAssignation.length">Buscar</button>
+                      </div>
                     </div>
                 </div>
             </div>
 
             <!-- Table -->
             <div nz-row>
-                <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }" [nzMd]="{ span: 24 }" [nzLg]="{ span: 24 }"
-                    [nzXl]="{ span: 22, offset: 1 }">
+                <div nz-col nzSpan="24">
                     <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
                         <nz-table #myStudentsTable [nzData]="myStudents" nzTableLayout="auto" nzSize="small"
                             nzShowPagination nzShowSizeChanger
@@ -307,7 +310,7 @@
                                         </ng-container>
                                         <ng-template #avatar>
                                             <nz-avatar nzIcon="user" [nzSize]="40"></nz-avatar>
-                                        </ng-template> 
+                                        </ng-template>
                                     </td>
                                     <td>{{ data.student.code }}</td>
                                     <td>{{ data.student.firstname }}</td>

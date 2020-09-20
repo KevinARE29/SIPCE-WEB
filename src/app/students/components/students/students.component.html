@@ -1,15 +1,16 @@
-<div nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
-    <div nz-col nzXs="24" nzMd="14" nzLg="16" nzXl="19">
+<div nz-row nzJustify="space-between">
+    <div nz-col>
         <h1>Estudiantes</h1>
     </div>
-    <div nz-col nzXs="24" nzMd="8" nzLg="6" nzXl="3" *ngIf="checkPermission(17)">
+    <div nz-col>
         <a nz-button nzType="primary" routerLink="/estudiantes/nuevo">Crear estudiante</a>
     </div>
 </div>
 
-<div class="search" nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
+<div nz-row [nzGutter]="[10, 10]">
     <!-- Code -->
-    <div class="code" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5" class="gutter-row">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>Código: </label>
         <nz-input-group [nzSuffix]="inputClearCode">
             <input nz-input [(ngModel)]="searchParams.code" placeholder="Buscar código" />
         </nz-input-group>
@@ -19,7 +20,8 @@
     </div>
 
     <!-- Name -->
-    <div class="name" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5" class="gutter-row">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>Nombre: </label>
         <nz-input-group [nzSuffix]="inputClearName">
             <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Buscar nombre" />
         </nz-input-group>
@@ -29,7 +31,8 @@
     </div>
 
     <!-- Lastname -->
-    <div class="lastname" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5" class="gutter-row">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>Apellido: </label>
         <nz-input-group [nzSuffix]="inputClearLastname">
             <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Buscar apellido" />
         </nz-input-group>
@@ -39,7 +42,8 @@
     </div>
 
     <!-- Email -->
-    <div class="email" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5" class="gutter-row">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>Correo electrónico: </label>
         <nz-input-group [nzSuffix]="inputClearEmail">
             <input nz-input [(ngModel)]="searchParams.email" placeholder="Buscar correo electrónico" />
         </nz-input-group>
@@ -49,7 +53,7 @@
     </div>
 
     <!-- Status -->
-    <div class="status" nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="11" nzXl="10" class="gutter-row">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="10">
         <label>Estado: </label>
         <nz-switch [(ngModel)]="statusSwitch" [nzCheckedChildren]="'Activos'" [nzUnCheckedChildren]="'Inactivos'" (ngModelChange)="statusToggle()"></nz-switch>
         <nz-select class="status" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.status" (ngModelChange)="getStudents(null)">
@@ -58,7 +62,7 @@
     </div>
 
     <!-- Grade -->
-    <div class="grade" nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="9" nzXl="10" class="gutter-row">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="10">
         <label>Grado: </label>
         <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.grade.id" (ngModelChange)="getStudents(null)">
             <nz-option *ngFor="let grade of grades" [nzLabel]="grade.name" [nzValue]="grade.id"></nz-option>
@@ -66,16 +70,18 @@
     </div>
 
     <!-- Search button-->
-    <div class="status" nz-col nzXs="24" nzSm="4" nzMd="4" nzLg="2" nzXl="2" class="gutter-row">
+    <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="4" nzXl="4">
+      <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
         <button nz-button nzType="primary" (click)="getStudents(null)">Buscar</button>
+      </div>
     </div>
 </div>
 
-<div class="students" nz-row>
-    <div nz-col [nzXs]="24" [nzXl]="{ span: 20, offset: 2 }">
+<div nz-row>
+    <div nz-col nzSpan="24">
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-            <nz-table #filterTable 
-                [nzData]="listOfDisplayData" 
+            <nz-table #filterTable
+                [nzData]="listOfDisplayData"
                 nzTableLayout="fixed"
                 [nzFrontPagination]="false"
                 [nzTotal]="pagination.totalItems"
@@ -95,7 +101,7 @@
                         <th [nzAlign]="'center'" *ngIf="actions.length">Acción</th>
                     </tr>
                 </thead>
-                
+
                 <tbody>
                     <tr *ngFor="let data of filterTable.data">
                         <td>{{ data.code }}</td>
@@ -106,7 +112,7 @@
                         <td>{{ data.status }}</td>
                         <td [nzAlign]="'center'" *ngIf="actions.length">
                             <ng-container *ngFor="let action of actions">
-                                <ng-container <div [ngSwitch]="action.text">
+                                <ng-container [ngSwitch]="action.text">
                                     <ng-container *ngSwitchCase="'eye'">
                                         <a [routerLink]="['/estudiantes', data.id, 'detalle']">
                                             <i nz-icon [nzType]="action.text" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>

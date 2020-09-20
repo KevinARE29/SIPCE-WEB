@@ -6,8 +6,8 @@
         <nz-divider nzText="Datos personales" nzOrientation="left"></nz-divider>
         <!-- Code -->
         <div nz-col nzXs="24" nzLg="11">
-            <nz-form-item nzJustify="space-around">
-                <nz-form-label>NIE</nz-form-label>
+            <nz-form-item>
+                <nz-form-label nzLg="10">NIE</nz-form-label>
                 <nz-form-control [nzErrorTip]="codeErrors">
                     <input nz-input formControlName="code" placeholder="NIE" />
                     <ng-template #codeErrors let-control>
@@ -20,8 +20,8 @@
 
         <!-- Firstname -->
         <div nz-col nzXs="24" nzLg="11">
-            <nz-form-item nzJustify="space-around">
-                <nz-form-label>Nombre</nz-form-label>
+            <nz-form-item>
+                <nz-form-label nzLg="9">Nombre</nz-form-label>
                 <nz-form-control [nzErrorTip]="firstnameErrors">
                     <input nz-input formControlName="firstname" placeholder="Nombre" />
                     <ng-template #firstnameErrors let-control>
@@ -35,8 +35,8 @@
 
         <!-- Lastname -->
         <div nz-col nzXs="24" nzLg="11">
-            <nz-form-item nzJustify="space-around">
-                <nz-form-label>Apellido</nz-form-label>
+            <nz-form-item>
+                <nz-form-label nzLg="10">Apellido</nz-form-label>
                 <nz-form-control [nzErrorTip]="lastnameErrors">
                     <input nz-input formControlName="lastname" placeholder="Apellido" />
                     <ng-template #lastnameErrors let-control>
@@ -50,8 +50,8 @@
 
         <!-- Email -->
         <div nz-col nzXs="24" nzLg="11">
-            <nz-form-item nzJustify="space-around">
-                <nz-form-label>Correo electrónico</nz-form-label>
+            <nz-form-item>
+                <nz-form-label nzLg="9">Correo electrónico</nz-form-label>
                 <nz-form-control [nzErrorTip]="emailErrors">
                     <input nz-input formControlName="email" placeholder="Correo electrónico" type="email" />
                     <ng-template #emailErrors let-control>
@@ -65,8 +65,8 @@
 
         <!-- Date of birth -->
         <div nz-col nzXs="24" nzLg="11">
-            <nz-form-item nzJustify="space-around">
-                <nz-form-label>Fecha de nacimiento</nz-form-label>
+            <nz-form-item>
+                <nz-form-label nzLg="10">Fecha de nacimiento</nz-form-label>
                 <nz-form-control [nzErrorTip]="dateOfBirthErrors">
                     <nz-date-picker formControlName="dateOfBirth" nzFormat="dd/MM/yyyy" [nzDisabledDate]="disabledDate">
                     </nz-date-picker>
@@ -83,9 +83,9 @@
         <nz-divider nzText="Asignación" nzOrientation="left"></nz-divider>
         <!-- Shift -->
         <div nz-col nzXs="24" nzLg="11">
-            <nz-form-item nzJustify="space-around">
-                <nz-form-label [nzSpan]="5" nzFor="shift">Turno</nz-form-label>
-                <nz-form-control [nzSpan]="12" nzErrorTip="El turno es requerido">
+            <nz-form-item>
+                <nz-form-label nzLg="10" nzFor="shift">Turno</nz-form-label>
+                <nz-form-control nzErrorTip="El turno es requerido">
                     <nz-select id="shift" nzShowSearch nzAllowClear formControlName="shift" nzPlaceHolder="Seleccionar">
                         <nz-option *ngFor="let shift of shifts" [nzValue]="shift.id" [nzLabel]="shift.name"></nz-option>
                     </nz-select>
@@ -95,9 +95,9 @@
 
         <!-- Grade -->
         <div nz-col nzXs="24" nzLg="11">
-            <nz-form-item nzJustify="space-around">
-                <nz-form-label [nzSpan]="5" nzFor="currentGrade">Grado</nz-form-label>
-                <nz-form-control [nzSpan]="12" nzErrorTip="El grado es requerido">
+            <nz-form-item>
+                <nz-form-label nzLg="9" nzFor="currentGrade">Grado</nz-form-label>
+                <nz-form-control nzErrorTip="El grado es requerido">
                     <nz-select id="grade" nzShowSearch nzAllowClear formControlName="currentGrade"
                         nzPlaceHolder="Seleccionar">
                         <nz-option *ngFor="let grade of activeGrades" [nzValue]="grade.id" [nzLabel]="grade.name"></nz-option>
@@ -112,8 +112,8 @@
         <nz-divider nzText="¿Estudiante de antiguo ingreso?" nzOrientation="left"></nz-divider>
         <!-- Registration Year -->
         <div nz-col nzXs="24" nzLg="11">
-            <nz-form-item nzJustify="space-around">
-                <nz-form-label nzFor="registrationYear">Año de ingreso</nz-form-label>
+            <nz-form-item>
+                <nz-form-label nzLg="10" nzFor="registrationYear">Año de ingreso</nz-form-label>
                 <nz-form-control>
                     <nz-year-picker id="registrationYear" formControlName="registrationYear"
                         nzPlaceHolder="Seleccionar año" [nzDisabledDate]="disabledYear"></nz-year-picker>
@@ -123,8 +123,8 @@
 
         <!-- Registration Grade -->
         <div nz-col nzXs="24" nzLg="11">
-            <nz-form-item nzJustify="space-around">
-                <nz-form-label nzFor="registrationGrade">Grado</nz-form-label>
+            <nz-form-item>
+                <nz-form-label nzLg="9" nzFor="registrationGrade">Grado</nz-form-label>
                 <nz-form-control>
                     <nz-select id="registrationGrade" nzShowSearch nzAllowClear formControlName="registrationGrade"
                         nzPlaceHolder="Seleccionar">
@@ -141,8 +141,8 @@
         <nz-divider nzText="Responsable" nzOrientation="left"></nz-divider>
         <!-- Firstname -->
         <div nz-col nzXs="24" nzLg="11">
-            <nz-form-item nzJustify="space-around">
-                <nz-form-label>Nombre</nz-form-label>
+            <nz-form-item>
+                <nz-form-label nzLg="10">Nombre</nz-form-label>
                 <nz-form-control [nzErrorTip]="responsibleFirstnameErrors">
                     <input nz-input formControlName="responsibleFirstname" placeholder="Nombre" />
                     <ng-template #responsibleFirstnameErrors let-control>
@@ -156,8 +156,8 @@
 
         <!-- Lastname -->
         <div nz-col nzXs="24" nzLg="11">
-            <nz-form-item nzJustify="space-around">
-                <nz-form-label>Apellido</nz-form-label>
+            <nz-form-item>
+                <nz-form-label nzLg="9">Apellido</nz-form-label>
                 <nz-form-control [nzErrorTip]="responsibleLastnameErrors">
                     <input nz-input formControlName="responsibleLastname" placeholder="Apellido" />
                     <ng-template #responsibleLastnameErrors let-control>
@@ -171,8 +171,8 @@
 
         <!-- Email -->
         <div nz-col nzXs="24" nzLg="11">
-            <nz-form-item nzJustify="space-around">
-                <nz-form-label>Correo electrónico</nz-form-label>
+            <nz-form-item>
+                <nz-form-label nzLg="10">Correo electrónico</nz-form-label>
                 <nz-form-control [nzErrorTip]="responsibleEmailErrors">
                     <input nz-input formControlName="responsibleEmail" placeholder="Correo electrónico" type="email" />
                     <ng-template #responsibleEmailErrors let-control>
@@ -186,8 +186,8 @@
 
         <!-- Phone number -->
         <div nz-col nzXs="24" nzLg="11">
-            <nz-form-item nzJustify="space-around">
-                <nz-form-label>Número de teléfono</nz-form-label>
+            <nz-form-item>
+                <nz-form-label nzLg="9">Número de teléfono</nz-form-label>
                 <nz-form-control [nzErrorTip]="responsiblePhoneErrors">
                     <input nz-input formControlName="responsiblePhone" placeholder="Número teléfonico" type="email" />
                     <ng-template #responsiblePhoneErrors let-control>
@@ -200,9 +200,9 @@
 
         <!-- Kinship relationship -->
         <div nz-col nzXs="24" nzLg="11">
-            <nz-form-item nzJustify="space-around">
-                <nz-form-label [nzSpan]="5" nzFor="responsibleRelationship">Parentesco</nz-form-label>
-                <nz-form-control [nzSpan]="12" nzErrorTip="El parentesco es requerido">
+            <nz-form-item>
+                <nz-form-label nzLg="10" nzFor="responsibleRelationship">Parentesco</nz-form-label>
+                <nz-form-control nzErrorTip="El parentesco es requerido">
                     <nz-select id="responsibleRelationship" nzShowSearch nzAllowClear
                         formControlName="responsibleRelationship" nzPlaceHolder="Seleccionar">
                         <nz-option *ngFor="let relation of kinshipRelationships" [nzValue]="relation"
