@@ -90,8 +90,7 @@ export class UpdatePasswordComponent implements OnInit {
         this.length = 6;
         this.availablePolitics = this.availablePolitics + 'al menos 6 caracteres.';
       } else {
-        this.availablePolitics =
-          this.availablePolitics + 'al menos ' + this.securityPolicy.minLength + ' caracteres.';
+        this.availablePolitics = this.availablePolitics + 'al menos ' + this.securityPolicy.minLength + ' caracteres.';
         this.length = this.securityPolicy.minLength;
       }
     });
