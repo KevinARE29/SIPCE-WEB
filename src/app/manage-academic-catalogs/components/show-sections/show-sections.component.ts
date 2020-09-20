@@ -86,7 +86,7 @@ export class ShowSectionsComponent implements OnInit {
             'error',
             'Ocurrió un error al crear la sección. Por favor verifique lo siguiente:',
             error.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
       );
@@ -145,7 +145,7 @@ export class ShowSectionsComponent implements OnInit {
               'error',
               'Ocurrió un error al cambiar el nombre de la sección. Por favor verifique lo siguiente:',
               error.message,
-              { nzDuration: 0 }
+              { nzDuration: 30000 }
             );
           })
     });
@@ -170,7 +170,7 @@ export class ShowSectionsComponent implements OnInit {
 
             if (!notIn.includes(statusCode) && statusCode < 500) {
               this.notification.create('error', 'Ocurrió un error al eliminar la sección.', err.message, {
-                nzDuration: 0
+                nzDuration: 30000
               });
             }
           })
@@ -194,7 +194,7 @@ export class ShowSectionsComponent implements OnInit {
         const notIn = [401, 403];
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al filtrar secciones.', err.message, { nzDuration: 0 });
+          this.notification.create('error', 'Ocurrió un error al filtrar secciones.', err.message, { nzDuration: 30000 });
         }
       }
     );
@@ -218,7 +218,7 @@ export class ShowSectionsComponent implements OnInit {
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create('error', 'Ocurrió un error al obtener las secciones.', err.message, {
-            nzDuration: 0
+            nzDuration: 30000
           });
         }
       }

@@ -323,10 +323,10 @@ export class StudentsAssignmentComponent implements OnInit {
           if (!notIn.includes(statusCode) && statusCode < 500) {
             vinculate
               ? this.notification.create('error', 'Ocurrió un error al vincular a los estudiantes.', error.message, {
-                  nzDuration: 0
+                  nzDuration: 30000
                 })
               : this.notification.create('error', 'Ocurrió un error al desvincular a los estudiantes.', error.message, {
-                  nzDuration: 0
+                  nzDuration: 30000
                 });
           }
         }

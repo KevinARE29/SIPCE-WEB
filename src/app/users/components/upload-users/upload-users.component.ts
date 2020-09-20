@@ -95,7 +95,7 @@ export class UploadUsersComponent implements OnInit {
               'Ocurrió un error al intentar cargar el archivo.',
               'Verifique que las columnas ingresadas correspondan a las esperadas. O que el archivo tenga datos.',
               {
-                nzDuration: 0
+                nzDuration: 30000
               }
             );
 
@@ -107,7 +107,7 @@ export class UploadUsersComponent implements OnInit {
         },
         (error) => {
           this.notification.create('error', 'Ocurrió un error al intentar cargar el archivo.', error, {
-            nzDuration: 0
+            nzDuration: 30000
           });
         }
       );
@@ -235,7 +235,7 @@ export class UploadUsersComponent implements OnInit {
         'No se puede proceder con la carga de datos.',
         'Se han detectado errores dentro del contenido de la tabla. Por favor corríjalos para continuar.',
         {
-          nzDuration: 0
+          nzDuration: 30000
         }
       );
     } else {
@@ -257,7 +257,7 @@ export class UploadUsersComponent implements OnInit {
         if (!notIn.includes(error.statusCode) && error.statusCode < 500) {
           this.message.warning(
             'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
-            { nzDuration: 4500 }
+            { nzDuration: 30000 }
           );
         }
 

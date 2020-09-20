@@ -146,7 +146,7 @@ export class RoleComponent implements OnInit {
             'error',
             'Ocurrió un error al crear el rol. Por favor verifique lo siguiente:',
             err.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
 
@@ -177,7 +177,7 @@ export class RoleComponent implements OnInit {
             'error',
             'Ocurrió un error al obtener el rol. Por favor verifique lo siguiente:',
             err.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
       }
@@ -205,7 +205,7 @@ export class RoleComponent implements OnInit {
             'error',
             'Ocurrió un error al actualizar el rol. Por favor verifique lo siguiente:',
             err.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
         this.btnLoading = false;
