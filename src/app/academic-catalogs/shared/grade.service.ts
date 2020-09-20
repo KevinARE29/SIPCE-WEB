@@ -6,6 +6,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 import { environment } from './../../../environments/environment';
 import { ErrorMessageService } from '../../shared/error-message.service';
+import { ShiftPeriodGrade } from './shiftPeriodGrade.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,11 +18,13 @@ export class GradeService {
     this.baseUrl = environment.apiURL;
   }
 
-  getAllGrades(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}academics/grades?paginate=false`).pipe(catchError(this.handleError()));
+  getAllGrades(): Observable<ShiftPeriodGrade[]> {
+    return this.http
+      .get<ShiftPeriodGrade[]>(`${this.baseUrl}academics/grades?paginate=false`)
+      .pipe(catchError(this.handleError()));
   }
 
-  searchGrade(params: NzTableQueryParams, paginate: boolean): Observable<any[]> {
+  searchGrade(params: NzTableQueryParams, paginate: boolean): Observable<ShiftPeriodGrade[]> {
     let url = this.baseUrl + 'academics/grades';
     let queryParams = '';
 
@@ -30,11 +33,11 @@ export class GradeService {
 
     url += queryParams;
 
-    return this.http.get<any[]>(url).pipe(catchError(this.handleError()));
+    return this.http.get<ShiftPeriodGrade[]>(url).pipe(catchError(this.handleError()));
   }
 
-  deleteGrade(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}academics/grades/${id}`).pipe(catchError(this.handleError()));
+  toggleGradeStatus(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}academics/grades/${id}`).pipe(catchError(this.handleError()));
   }
 
   /**

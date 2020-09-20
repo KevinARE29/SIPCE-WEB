@@ -14,7 +14,7 @@ interface ItemData {
 }
 
 @Component({
-  selector: 'app-show-cycles',
+  selector: 'app-cycles',
   templateUrl: './cycles.component.html',
   styleUrls: ['./cycles.component.css']
 })

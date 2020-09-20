@@ -1,20 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ShowGradesComponent } from './show-grades.component';
+import { GradesComponent } from './grades.component';
 
 describe('ShowGradesComponent', () => {
-  let component: ShowGradesComponent;
-  let fixture: ComponentFixture<ShowGradesComponent>;
+  let component: GradesComponent;
+  let fixture: ComponentFixture<GradesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ShowGradesComponent ]
-    })
-    .compileComponents();
+      declarations: [GradesComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ShowGradesComponent);
+    fixture = TestBed.createComponent(GradesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

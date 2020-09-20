@@ -7,7 +7,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ShowSectionsComponent } from './components/show-sections/show-sections.component';
-import { ShowGradesComponent } from './components/show-grades/show-grades.component';
+import { GradesComponent } from './components/grades/grades.component';
 import { ShowShiftComponent } from './components/show-shift/show-shift.component';
 import { ShowPeriodsComponent } from './components/show-periods/show-periods.component';
 import { CyclesComponent } from './components/cycles/cycles.component';
@@ -22,7 +22,7 @@ const routes: Routes = [
   },
   {
     path: 'grados',
-    component: ShowGradesComponent,
+    component: GradesComponent,
     canActivate: [AuthGuard],
     data: { permission: 13 }
   },
