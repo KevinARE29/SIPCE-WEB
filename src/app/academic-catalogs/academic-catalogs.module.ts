@@ -8,18 +8,12 @@ import { ShowSectionsComponent } from './components/show-sections/show-sections.
 import { ShowGradesComponent } from './components/show-grades/show-grades.component';
 import { ShowShiftComponent } from './components/show-shift/show-shift.component';
 import { ShowPeriodsComponent } from './components/show-periods/show-periods.component';
-import { ShowCyclesComponent } from './components/show-cycles/show-cycles.component';
+import { CyclesComponent } from './components/cycles/cycles.component';
 
 import { AcademicCatalogsRoutingModule } from './academic-catalogs-routing.module';
 
 @NgModule({
-  declarations: [
-    ShowSectionsComponent,
-    ShowCyclesComponent,
-    ShowPeriodsComponent,
-    ShowShiftComponent,
-    ShowGradesComponent
-  ],
+  declarations: [ShowSectionsComponent, CyclesComponent, ShowPeriodsComponent, ShowShiftComponent, ShowGradesComponent],
   imports: [
     CommonModule,
     AcademicCatalogsRoutingModule,

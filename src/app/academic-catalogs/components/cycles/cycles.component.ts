@@ -6,7 +6,7 @@ import { CycleService } from '../../shared/cycle.service';
 import { Catalogue } from '../../shared/catalogue.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
-import { Pagination } from './../../../shared/pagination.model';
+import { Pagination } from '../../../shared/pagination.model';
 
 interface ItemData {
   id: number;
@@ -15,10 +15,10 @@ interface ItemData {
 
 @Component({
   selector: 'app-show-cycles',
-  templateUrl: './show-cycles.component.html',
-  styleUrls: ['./show-cycles.component.css']
+  templateUrl: './cycles.component.html',
+  styleUrls: ['./cycles.component.css']
 })
-export class ShowCyclesComponent implements OnInit {
+export class CyclesComponent implements OnInit {
   isVisible = false;
   cycleJson;
   cycles: Catalogue[];
