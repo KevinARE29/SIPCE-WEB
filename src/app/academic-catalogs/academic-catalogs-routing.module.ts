@@ -1,5 +1,5 @@
 /*
-  Path: app/manage-academic-catalogs/sections-routing.module.ts
+  Path: app/academic-catalogs/sections-routing.module.ts
   Objetive: Contain the manage academics catalogs routes
   Author: Veronica Reyes
 */

@@ -10,7 +10,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 
 import { AuthService } from '../../../login/shared/auth.service';
 import { Permission } from '../../../shared/permission.model';
-import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
+import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 import { Student } from '../../shared/student.model';
 import { UploadFile } from 'ng-zorro-antd/upload';
 import { Responsible } from '../../shared/responsible.model';

@@ -8,8 +8,8 @@ import { UploadFile } from 'ng-zorro-antd/upload';
 
 import DictionaryJson from './../../../../assets/dictionary.json';
 import { CsvToJsonService } from 'src/app/shared/csv-to-json.service';
-import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
-import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
+import { GradeService } from 'src/app/academic-catalogs/shared/grade.service';
+import { ShiftService } from 'src/app/academic-catalogs/shared/shift.service';
 import { StudentService } from '../../shared/student.service';
 
 @Component({

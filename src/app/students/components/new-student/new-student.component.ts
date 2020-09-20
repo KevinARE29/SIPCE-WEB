@@ -9,9 +9,9 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { Student } from '../../shared/student.model';
 import { Responsible } from '../../shared/responsible.model';
 import { KinshipRelationship } from './../../../shared/kinship-relationship.enum';
-import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
-import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
-import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
+import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
+import { ShiftService } from 'src/app/academic-catalogs/shared/shift.service';
+import { GradeService } from 'src/app/academic-catalogs/shared/grade.service';
 import { StudentService } from '../../shared/student.service';
 
 @Component({

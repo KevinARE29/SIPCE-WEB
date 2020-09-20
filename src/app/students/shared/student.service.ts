@@ -10,10 +10,10 @@ import { differenceInMonths, differenceInYears, getYear } from 'date-fns';
 import { Student } from './student.model';
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { Responsible } from './responsible.model';
-import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
-import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
-import { SectionService } from 'src/app/manage-academic-catalogs/shared/section.service';
-import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
+import { GradeService } from 'src/app/academic-catalogs/shared/grade.service';
+import { ShiftService } from 'src/app/academic-catalogs/shared/shift.service';
+import { SectionService } from 'src/app/academic-catalogs/shared/section.service';
+import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 
 @Injectable({
   providedIn: 'root'

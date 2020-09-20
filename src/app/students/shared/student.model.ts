@@ -1,4 +1,4 @@
-import { ShiftPeriodGrade } from './../../manage-academic-catalogs/shared/shiftPeriodGrade.model';
+import { ShiftPeriodGrade } from './../../academic-catalogs/shared/shiftPeriodGrade.model';
 import { Responsible } from './responsible.model';
 
 export class Student {

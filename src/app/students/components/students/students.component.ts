@@ -10,8 +10,8 @@ import { Permission } from 'src/app/shared/permission.model';
 import { Pagination } from 'src/app/shared/pagination.model';
 import { StudentService } from '../../shared/student.service';
 import { AuthService } from 'src/app/login/shared/auth.service';
-import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
-import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
+import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
+import { GradeService } from 'src/app/academic-catalogs/shared/grade.service';
 import { StudentStatus } from 'src/app/shared/student-status.enum';
 
 @Component({
