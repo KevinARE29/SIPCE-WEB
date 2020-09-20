@@ -6,11 +6,11 @@ import { PeriodService } from '../../shared/period.service';
 import { ShiftPeriodGrade } from '../../shared/shiftPeriodGrade.model';
 
 @Component({
-  selector: 'app-show-periods',
-  templateUrl: './show-periods.component.html',
-  styleUrls: ['./show-periods.component.css']
+  selector: 'app-periods',
+  templateUrl: './periods.component.html',
+  styleUrls: ['./periods.component.css']
 })
-export class ShowPeriodsComponent implements OnInit {
+export class PeriodsComponent implements OnInit {
   periods: ShiftPeriodGrade[];
   loading = false;
   status: string;

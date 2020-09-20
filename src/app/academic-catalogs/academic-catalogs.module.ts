@@ -7,13 +7,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { ShowSectionsComponent } from './components/show-sections/show-sections.component';
 import { GradesComponent } from './components/grades/grades.component';
 import { ShowShiftComponent } from './components/show-shift/show-shift.component';
-import { ShowPeriodsComponent } from './components/show-periods/show-periods.component';
+import { PeriodsComponent } from './components/periods/periods.component';
 import { CyclesComponent } from './components/cycles/cycles.component';
 
 import { AcademicCatalogsRoutingModule } from './academic-catalogs-routing.module';
 
 @NgModule({
-  declarations: [ShowSectionsComponent, CyclesComponent, ShowPeriodsComponent, ShowShiftComponent, GradesComponent],
+  declarations: [ShowSectionsComponent, CyclesComponent, PeriodsComponent, ShowShiftComponent, GradesComponent],
   imports: [
     CommonModule,
     AcademicCatalogsRoutingModule,
