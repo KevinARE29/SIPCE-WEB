@@ -1,18 +1,18 @@
 <nz-tabset nzTabPosition="left" [nzType]="'line'">
     <nz-tab *ngFor="let item of lists" [nzTitle]="item.shift.name">
-        <div nz-col nzXs="23">
-            <nz-table #fixedTable [nzData]="item.items" nzSize="middle" nzTableLayout="fixed" [nzFrontPagination]="false">
+        <div nz-col nzSpan="23">
+            <nz-table #fixedTable [nzData]="item.items" nzSize="small" nzTableLayout="auto" [nzFrontPagination]="false" [nzScroll]="{ x: '0vw', y: null }" [nzVirtualForTrackBy]="trackByIndex">
                 <thead>
                     <tr>
                         <th nzLeft nzWidth="150px" nzAlign="center">Ciclo</th>
                         <th nzLeft nzWidth="100px" nzAlign="center">Grado</th>
                         <ng-container *ngIf="!isActive;else showAvailables">
-                            <th nzAlign="center" *ngFor="let section of sections" [nzWidth]="section.name.length > 1 ? '100px' : '50px'">
+                            <th nzAlign="center" [nzEllipsis]="true" *ngFor="let section of sections" [nzWidth]="section.name.length > 2 ? '120px' : '50px'">
                                 {{ section.name }}
                             </th>
                         </ng-container>
                         <ng-template #showAvailables>
-                            <th nzAlign="center" *ngFor="let section of item.sections" [nzWidth]="section.name.length > 1 ? '100px' : '50px'">
+                            <th nzAlign="center" [nzEllipsis]="true" *ngFor="let section of item.sections" [nzWidth]="section.name.length > 2 ? '120px' : '50px'">
                                 {{ section.name }}
                             </th>
                         </ng-template>
