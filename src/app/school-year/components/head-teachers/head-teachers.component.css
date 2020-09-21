@@ -10,3 +10,12 @@ nz-tabset {
     background-color: #fff;
     color: rgba(0, 0, 0, 0.85);
 }
+
+nz-collapse {
+    background-color: #fff;
+}
+
+.label {
+    color: #ef6c00;
+    font-weight: 500;
+}
