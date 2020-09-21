@@ -46,7 +46,7 @@
             ]
         },
         {
-            "title": "Catálogos Académicos",
+            "title": "Catálogos académicos",
             "icon": "ordered-list",
             "permissions": [13],
             "allowed": null,

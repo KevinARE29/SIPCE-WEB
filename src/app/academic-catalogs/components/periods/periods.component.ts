@@ -6,11 +6,11 @@ import { PeriodService } from '../../shared/period.service';
 import { ShiftPeriodGrade } from '../../shared/shiftPeriodGrade.model';
 
 @Component({
-  selector: 'app-show-periods',
-  templateUrl: './show-periods.component.html',
-  styleUrls: ['./show-periods.component.css']
+  selector: 'app-periods',
+  templateUrl: './periods.component.html',
+  styleUrls: ['./periods.component.css']
 })
-export class ShowPeriodsComponent implements OnInit {
+export class PeriodsComponent implements OnInit {
   periods: ShiftPeriodGrade[];
   loading = false;
   status: string;
@@ -50,6 +50,7 @@ export class ShowPeriodsComponent implements OnInit {
 
   /* Deactivate/activate period confirm modal */
   showConfirm(id: number): void {
+    this.loading = true;
     const element = this.periods.find((x) => x.id === id);
 
     if (element.active === true) {
@@ -60,10 +61,11 @@ export class ShowPeriodsComponent implements OnInit {
       this.successMessage = 'activado';
     }
 
-    this.periodService.deletePeriod(id).subscribe(
+    this.periodService.togglePeriodStatus(id).subscribe(
       () => {
         this.message.success(`El periodo ${element.name} ha sido ${this.successMessage}`);
         element.active = !element.active;
+        this.loading = false;
       },
       (err) => {
         const statusCode = err.statusCode;
@@ -73,6 +75,8 @@ export class ShowPeriodsComponent implements OnInit {
             nzDuration: 30000
           });
         }
+
+        this.loading = false;
       }
     );
   }

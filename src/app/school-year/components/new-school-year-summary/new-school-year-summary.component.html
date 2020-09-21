@@ -1,17 +1,17 @@
-<div nz-row nzJustify="space-around">
-    <nz-collapse nz-col nzXs="24" nzMd="14">
-        <!-- Cycles, grades and sections -->
-        <nz-collapse-panel nzHeader="Ciclos, grados y secciones" [nzActive]="true">
-            <dl *ngFor="let shift of assignation['shifts']">
-                <dt>{{ shift.shift.name }}</dt>
-                <dd>Ciclos: </dd>
+<nz-tabset nzTabPosition="left" [nzType]="'line'">
+    <!-- Cycles, grades and sections -->
+    <nz-tab nzTitle="Ciclos, grados y secciones">
+        <div nz-row nzJustify="center">
+            <div class="shift" *ngFor="let shift of assignation['shifts']" nz-col nzXs="23" nzSm="23" nzMd="11" nzXl="7"
+                nzOffset="1">
+                <h3>{{ shift.shift.name }}</h3>
                 <ul>
-                    <li *ngFor="let cycle of shift.shift.cycles"> 
-                        {{ cycle.cycle.name }}
+                    <li *ngFor="let cycle of shift.shift.cycles">
+                        <h4>{{ cycle.cycle.name }}</h4>
                         <ul>
                             <li *ngFor="let grade of cycle.gradeDetails">
-                                {{ grade.grade.name }}: 
-                                <span *ngFor="let section of grade.sectionDetails; last as isLast ">
+                                {{ grade.grade.name }}:
+                                <span class="principal" *ngFor="let section of grade.sectionDetails; last as isLast ">
                                     {{ section.section.name }}
                                     <span *ngIf="!isLast">, </span>
                                 </span>
@@ -19,56 +19,66 @@
                         </ul>
                     </li>
                 </ul>
-              </dl>
-        </nz-collapse-panel>
-    
-        <!-- Cycle coordinators -->
-        <nz-collapse-panel nzHeader="Coordinadores de ciclo" [nzActive]="true">
-            <dl *ngFor="let shift of assignation['shifts']">
-                <dt>{{ shift.shift.name }}</dt>
+            </div>
+        </div>
+    </nz-tab>
+
+    <!-- Cycle coordinators -->
+    <nz-tab nzTitle="Coordinadores de ciclo">
+        <div nz-row nzJustify="center">
+            <div class="shift" *ngFor="let shift of assignation['shifts']" nz-col nzXs="23" nzSm="23" nzMd="11" nzXl="7" nzOffset="1">
+                <h3>{{ shift.shift.name }}</h3>
                 <ng-container *ngFor="let cycle of shift.shift.cycles">
-                    <dd>{{ cycle.cycle.name }}: {{ cycle.cycleCoordinator.firstname }} {{ cycle.cycleCoordinator.lastname }}</dd>
-                </ng-container>
-            </dl>
-        </nz-collapse-panel>
-    
-        <!-- Head teachers -->
-        <nz-collapse-panel nzHeader="Docentes" [nzActive]="true">
-            <nz-collapse class="headteachers" [nzBordered]="false">
-                <nz-collapse-panel *ngFor="let shift of assignation['shifts']" [nzHeader]="shift.shift.name">
-                  <dl *ngFor="let cycle of shift.shift.cycles">
-                      <dt>{{ cycle.cycle.name }}</dt>
-                      <dd>
-                          <ul>
-                              <li *ngFor="let grade of cycle.gradeDetails">
-                                  {{ grade.grade.name }}:
-                                  <ul>
-                                      <li *ngFor="let section of grade.sectionDetails">
-                                          {{ section.section.name }} : {{ section.teacher?.firstname }} {{ section.teacher?.lastname }}
-                                      </li>
-                                  </ul>
-                              </li>
-                          </ul>
-                      </dd>
-                  </dl>
-                </nz-collapse-panel>
-              </nz-collapse>
-        </nz-collapse-panel>
-    
-        <!-- Counselors -->
-        <nz-collapse-panel nzHeader="Orientadores" [nzActive]="true">
-            <dl *ngFor="let item of shiftCounselors">
-                <dt>{{ item.shift.name }}</dt>
-                <ng-container *ngFor="let counselor of item.counselors">
-                    <dd>{{ counselor.firstname }} {{ counselor.lastname }}:
-                        <ul>
-                            <li *ngFor="let grade of counselor.grades">
-                                {{ grade.name }}
-                            </li>
-                        </ul>
+                    <dd class="cycle">
+                        <h4>{{ cycle.cycle.name }}:</h4>
+                        {{ cycle.cycleCoordinator.firstname }} {{ cycle.cycleCoordinator.lastname }}
                     </dd>
                 </ng-container>
-            </dl>
-        </nz-collapse-panel>
-    </nz-collapse>
-</div>
+            </div>
+        </div>
+    </nz-tab>
+
+    <!-- Head teachers -->
+    <nz-tab nzTitle="Docentes titulares">
+        <div nz-row nzJustify="center">
+            <div *ngFor="let shift of assignation['shifts']" nz-col nzXs="23" nzSm="23" nzMd="11" nzXl="7" nzOffset="1">
+                <nz-collapse [nzBordered]="false">
+                    <nz-collapse-panel class="head-teachers" [nzHeader]="shift.shift.name" nzActive="true">
+                        <nz-collapse [nzBordered]="false">
+                            <nz-collapse-panel *ngFor="let cycle of shift.shift.cycles" [nzHeader]="cycle.cycle.name">
+                                <div *ngFor="let grade of cycle.gradeDetails">
+                                    <h4>{{ grade.grade.name }}:</h4>
+                                    <p *ngFor="let section of grade.sectionDetails">
+                                        <span class="principal">{{ section.section.name }}: </span>
+                                        {{ section.teacher?.firstname }} {{ section.teacher?.lastname }}
+                                    </p>
+                                </div>
+                            </nz-collapse-panel>
+                        </nz-collapse>
+                    </nz-collapse-panel>
+                </nz-collapse>
+            </div>
+        </div>
+    </nz-tab>
+
+    <!-- Counselors -->
+    <nz-tab nzTitle="Orientadores">
+        <div nz-row nzJustify="center">
+            <div class="shift" *ngFor="let item of shiftCounselors" nz-col nzXs="23" nzSm="23" nzMd="11" nzXl="7" nzOffset="1">
+                <h3>{{ item.shift.name }}</h3>
+                <ng-container *ngFor="let counselor of item.counselors">
+                    <dd class="cycle">
+                        <!-- <dd> -->
+                            <h4>{{ counselor.firstname }} {{ counselor.lastname }}:</h4>
+                            <ul>
+                                <li *ngFor="let grade of counselor.grades">
+                                    {{ grade.name }}
+                                </li>
+                            </ul>
+                        <!-- </dd> -->
+                    </dd>
+                </ng-container>
+            </div>
+        </div>
+    </nz-tab>
+</nz-tabset>

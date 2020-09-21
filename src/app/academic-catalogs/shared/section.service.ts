@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { ErrorMessageService } from '../../shared/error-message.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { ShiftPeriodGrade } from './shiftPeriodGrade.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,19 +17,21 @@ export class SectionService {
     this.baseUrl = environment.apiURL;
   }
 
-  updateSection(name: any, id: number): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}academics/sections/${id}`, name).pipe(catchError(this.handleError()));
+  updateSection(section: unknown): Observable<void> {
+    return this.http
+      .put<void>(`${this.baseUrl}academics/sections/${section['id']}`, JSON.stringify({ name: section['name'] }))
+      .pipe(catchError(this.handleError()));
   }
 
-  deleteSection(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}academics/sections/${id}`).pipe(catchError(this.handleError()));
+  deleteSection(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}academics/sections/${id}`).pipe(catchError(this.handleError()));
   }
 
-  createSection(name: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}academics/sections`, name).pipe(catchError(this.handleError()));
+  createSection(name: string): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}academics/sections`, name).pipe(catchError(this.handleError()));
   }
 
-  searchSection(params: NzTableQueryParams, paginate: boolean): Observable<any[]> {
+  searchSection(params: NzTableQueryParams, paginate: boolean): Observable<ShiftPeriodGrade[]> {
     let url = this.baseUrl + 'academics/sections';
     let queryParams = '';
 
@@ -51,12 +54,12 @@ export class SectionService {
     if (queryParams.charAt(0) === '&') queryParams = queryParams.replace('&', '?');
     url += queryParams;
 
-    return this.http.get<any[]>(url).pipe(catchError(this.handleError()));
+    return this.http.get<ShiftPeriodGrade[]>(url).pipe(catchError(this.handleError()));
   }
 
-  getAllSections(): Observable<unknown[]> {
+  getAllSections(): Observable<ShiftPeriodGrade[]> {
     return this.http
-      .get<unknown[]>(`${this.baseUrl}academics/sections?paginate=false`)
+      .get<ShiftPeriodGrade[]>(`${this.baseUrl}academics/sections?paginate=false`)
       .pipe(catchError(this.handleError()));
   }
 

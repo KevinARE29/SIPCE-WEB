@@ -6,7 +6,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Student } from '../../shared/student.model';
 import { StudentService } from '../../shared/student.service';
 import { UserService } from 'src/app/users/shared/user.service';
-import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
+import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 
 export interface Data {
   student: Student;

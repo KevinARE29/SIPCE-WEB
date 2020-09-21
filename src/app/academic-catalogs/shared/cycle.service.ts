@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { ErrorMessageService } from '../../shared/error-message.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { ShiftPeriodGrade } from './shiftPeriodGrade.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,19 +17,23 @@ export class CycleService {
     this.baseUrl = environment.apiURL;
   }
 
-  updateCycle(name: any, id: number): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}academics/cycles/${id}`, name).pipe(catchError(this.handleError()));
+  updateCycle(cycle: unknown): Observable<void> {
+    return this.http
+      .put<void>(`${this.baseUrl}academics/cycles/${cycle['id']}`, JSON.stringify({ name: cycle['name'] }))
+      .pipe(catchError(this.handleError()));
   }
 
-  deleteCycle(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}academics/cycles/${id}`).pipe(catchError(this.handleError()));
+  deleteCycle(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}academics/cycles/${id}`).pipe(catchError(this.handleError()));
   }
 
-  createCycle(name: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}academics/cycles`, name).pipe(catchError(this.handleError()));
+  createCycle(name: string): Observable<ShiftPeriodGrade> {
+    return this.http
+      .post<ShiftPeriodGrade>(`${this.baseUrl}academics/cycles`, JSON.stringify(name))
+      .pipe(catchError(this.handleError()));
   }
 
-  searchCycle(params: NzTableQueryParams, paginate: boolean): Observable<any[]> {
+  searchCycle(params: NzTableQueryParams, paginate: boolean): Observable<ShiftPeriodGrade[]> {
     let url = this.baseUrl + 'academics/cycles';
     let queryParams = '';
 
@@ -51,7 +56,7 @@ export class CycleService {
     if (queryParams.charAt(0) === '&') queryParams = queryParams.replace('&', '?');
     url += queryParams;
 
-    return this.http.get<any[]>(url).pipe(catchError(this.handleError()));
+    return this.http.get<ShiftPeriodGrade[]>(url).pipe(catchError(this.handleError()));
   }
 
   /**

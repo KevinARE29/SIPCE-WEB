@@ -1,0 +1,17 @@
+<h1>Grados</h1>
+
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+    <div nz-row nzJustify="center">
+        <div class="grade" *ngFor="let grade of allGrades" nz-col nzXs="24" nzSm="11" nzMd="9" nzLg="7" nzXl="6" nzXxl="5">
+            <nz-card [nzActions]="[actionSetting]">
+                <nz-card-meta [nzTitle]="grade.name"></nz-card-meta>
+            </nz-card>
+            <ng-template #actionSetting>
+                <nz-switch [ngModel]="grade.active" [nzCheckedChildren]="checkedTemplate" [nzControl]="true"
+                    (click)="showConfirm(grade.id)" [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
+                <ng-template #checkedTemplate>Activo</ng-template>
+                <ng-template #unCheckedTemplate>Inactivo</ng-template>
+            </ng-template>
+        </div>
+    </div>
+</nz-spin>

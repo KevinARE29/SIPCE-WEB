@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
+
 import { SectionService } from '../../shared/section.service';
 import { Catalogue } from '../../shared/catalogue.model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
-import { Pagination } from './../../../shared/pagination.model';
+import { Pagination } from '../../../shared/pagination.model';
 
 interface ItemData {
   id: number;
@@ -14,11 +16,11 @@ interface ItemData {
 }
 
 @Component({
-  selector: 'app-show-sections',
-  templateUrl: './show-sections.component.html',
-  styleUrls: ['./show-sections.component.css']
+  selector: 'app-sections',
+  templateUrl: './sections.component.html',
+  styleUrls: ['./sections.component.css']
 })
-export class ShowSectionsComponent implements OnInit {
+export class SectionsComponent implements OnInit {
   isVisible = false;
   sectionJson;
   sections: Catalogue[];
@@ -28,7 +30,7 @@ export class ShowSectionsComponent implements OnInit {
   loading = false;
   tableSize = 'small';
   confirmModal?: NzModalRef;
-  // table objects
+  // Table objects
   pagination: Pagination;
   listOfData: Catalogue[];
   data = [];
@@ -51,7 +53,7 @@ export class ShowSectionsComponent implements OnInit {
     this.createSection = this.fb.group({
       name: [
         '',
-        [Validators.required, Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$'), Validators.maxLength(16)]
+        [Validators.required, Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ0-9 ]+$'), Validators.maxLength(32)]
       ]
     });
   }
@@ -69,7 +71,7 @@ export class ShowSectionsComponent implements OnInit {
     }
   }
 
-  /* create section function */
+  // Create section
   handleOk(): void {
     if (this.createSection.valid) {
       this.isConfirmLoading = true;
@@ -81,13 +83,19 @@ export class ShowSectionsComponent implements OnInit {
           this.search();
         },
         (error) => {
-          this.isConfirmLoading = false;
-          this.notification.create(
-            'error',
-            'Ocurrió un error al crear la sección. Por favor verifique lo siguiente:',
-            error.message,
-            { nzDuration: 30000 }
-          );
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
+
+          this.isLoading = false;
+
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create(
+              'error',
+              'Ocurrió un error al crear sección. Por favor verifique lo siguiente:',
+              error.message,
+              { nzDuration: 30000 }
+            );
+          }
         }
       );
     }
@@ -119,39 +127,80 @@ export class ShowSectionsComponent implements OnInit {
     };
   }
 
-  /* update section function */
+  // Update section
   saveEdit(id: number, name: string): void {
-    const index = this.listOfData.findIndex((item) => item.id === id);
-    this.sectionJson = {
-      name: this.editCache[id].data.name
-    };
-    // confirm modal
-    this.confirmModal = this.modal.confirm({
-      nzTitle: `¿Desea actualizar la sección "${name}"?`,
-      nzContent: `Actualizará la sección con nombre actual ${name} a ${this.editCache[id].data.name}. ¿Desea continuar con la acción? .`,
-      nzOnOk: () =>
-        this.sectionService
-          .updateSection(this.sectionJson, id)
-          .toPromise()
-          .then(() => {
-            this.isLoading = false;
-            this.message.success('Nombre de la sección actualizada con éxito');
-            Object.assign(this.listOfData[index], this.editCache[id].data);
-            this.editCache[id].edit = false;
-          })
-          .catch((error) => {
-            this.isLoading = false;
-            this.notification.create(
-              'error',
-              'Ocurrió un error al cambiar el nombre de la sección. Por favor verifique lo siguiente:',
-              error.message,
-              { nzDuration: 30000 }
-            );
-          })
-    });
+    if (this.validateSectionName(this.editCache[id].data.name)) {
+      const index = this.listOfData.findIndex((item) => item.id === id);
+
+      // confirm modal
+      this.confirmModal = this.modal.confirm({
+        nzTitle: `¿Desea actualizar la sección "${name}"?`,
+        nzContent: `Actualizará la sección con nombre actual ${name} a ${this.editCache[id].data.name}. ¿Desea continuar con la acción?`,
+        nzOnOk: () =>
+          this.sectionService
+            .updateSection(this.editCache[id].data)
+            .toPromise()
+            .then(() => {
+              this.isLoading = false;
+              this.message.success('Nombre de la sección actualizada con éxito');
+              Object.assign(this.listOfData[index], this.editCache[id].data);
+              this.editCache[id].edit = false;
+            })
+            .catch((error) => {
+              const statusCode = error.statusCode;
+              const notIn = [401, 403];
+
+              this.isLoading = false;
+
+              if (!notIn.includes(statusCode) && statusCode < 500) {
+                this.notification.create(
+                  'error',
+                  'Ocurrió un error al cambiar el nombre de la sección. Por favor verifique lo siguiente:',
+                  error.message,
+                  { nzDuration: 30000 }
+                );
+              }
+            })
+      });
+    }
   }
 
-  /* Delete section confirm modal */
+  validateSectionName(name: string): boolean {
+    const textValidation = RegExp(/[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ0-9 ]$/);
+
+    if (!name.length) {
+      this.notification.create(
+        'error',
+        'Ocurrió un error al cambiar el nombre de la sección. Por favor verifique lo siguiente:',
+        'El nombre es requerido.',
+        { nzDuration: 30000 }
+      );
+
+      return false;
+    } else if (!textValidation.test(name)) {
+      this.notification.create(
+        'error',
+        'Ocurrió un error al cambiar el nombre de la sección. Por favor verifique lo siguiente:',
+        'El nombre puede contener letras y números.',
+        { nzDuration: 30000 }
+      );
+
+      return false;
+    } else if (name.length > 32) {
+      this.notification.create(
+        'error',
+        'Ocurrió un error al cambiar el nombre de la sección. Por favor verifique lo siguiente:',
+        'El nombre debe contener máximo 32 caracteres.',
+        { nzDuration: 30000 }
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  // Delete section confirm modal
   showConfirm(id: number, name: string): void {
     this.confirmModal = this.modal.confirm({
       nzTitle: `¿Desea eliminar la sección "${name}"?`,
@@ -194,13 +243,15 @@ export class ShowSectionsComponent implements OnInit {
         const notIn = [401, 403];
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al filtrar secciones.', err.message, { nzDuration: 30000 });
+          this.notification.create('error', 'Ocurrió un error al filtrar secciones.', err.message, {
+            nzDuration: 30000
+          });
         }
       }
     );
   }
 
-  /* ---     sort method      --- */
+  /* ---     Sort method      --- */
   recharge(params: NzTableQueryParams): void {
     this.loading = true;
     this.sectionService.searchSection(params, params.pageIndex !== this.pagination.page).subscribe(

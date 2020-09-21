@@ -3,7 +3,8 @@ nz-tabset {
 }
 
 nz-select {
-    width: 650px;
+    /* max-width: 650px; */
+    width: 100%;
 }
 
 .counselor {

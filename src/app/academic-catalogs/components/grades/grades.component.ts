@@ -1,28 +1,23 @@
 import { Component, OnInit } from '@angular/core';
+
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { GradeService } from '../../shared/grade.service';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
-import { Pagination } from './../../../shared/pagination.model';
+import { GradeService } from '../../shared/grade.service';
 import { ShiftPeriodGrade } from '../../shared/shiftPeriodGrade.model';
 
 @Component({
-  selector: 'app-show-grades',
-  templateUrl: './show-grades.component.html',
-  styleUrls: ['./show-grades.component.css']
+  selector: 'app-grades',
+  templateUrl: './grades.component.html',
+  styleUrls: ['./grades.component.css']
 })
-export class ShowGradesComponent implements OnInit {
-  grades: ShiftPeriodGrade[];
+export class GradesComponent implements OnInit {
   allGrades: ShiftPeriodGrade[];
-  pagination: Pagination;
   loading = false;
   status: string;
   successMessage: string;
   warningMessage: string;
-  listOfDisplayData: ShiftPeriodGrade[];
-  tableSize = 'small';
   confirmModal?: NzModalRef;
   nextGrade: ShiftPeriodGrade;
   previusGrade: ShiftPeriodGrade;
@@ -36,10 +31,8 @@ export class ShowGradesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.pagination = new Pagination();
-    this.pagination.perPage = 10;
-    this.pagination.page = 1;
     this.enabled = false;
+    this.getGrades();
   }
 
   /* Deactivate/activate grade confirm modal */
@@ -47,7 +40,7 @@ export class ShowGradesComponent implements OnInit {
     // cleanning variables
     this.inactiveCounter = 0;
     // setting the values of the select grade object
-    const element = this.grades.find((x) => x.id === id);
+    const element = this.allGrades.find((x) => x.id === id);
     const idCurrentGrade = element.id;
     //setting the values for the messages
     if (element.active === true) {
@@ -122,11 +115,13 @@ export class ShowGradesComponent implements OnInit {
 
     // consuming the route if the change of status is valid
     if (this.enabled) {
-      this.gradeService.deleteGrade(id).subscribe(
+      this.loading = true;
+      this.gradeService.toggleGradeStatus(id).subscribe(
         () => {
           this.message.success(`El grado ${element.name} ha sido ${this.successMessage}`);
           element.active = !element.active;
-          this.getGrades(); //getting the new json of all grades with updated status
+
+          this.loading = false;
         },
         (err) => {
           const statusCode = err.statusCode;
@@ -136,6 +131,8 @@ export class ShowGradesComponent implements OnInit {
               nzDuration: 30000
             });
           }
+
+          this.loading = false;
         }
       );
     } else {
@@ -145,41 +142,16 @@ export class ShowGradesComponent implements OnInit {
         'Ocurrió un error al ' + this.status + ' el grado:',
         'El grado actual no puede ser ' +
           this.successMessage +
-          ' ya que los grados deben activarse o desactivarse secuencialmente'
+          ' ya que los grados deben activarse o desactivarse secuencialmente.'
       );
     }
   }
 
   getGrades(): void {
+    this.loading = true;
     this.gradeService.getAllGrades().subscribe((data) => {
       this.allGrades = data['data'];
+      this.loading = false;
     });
-  }
-
-  recharge(params: NzTableQueryParams): void {
-    // getting all the grades
-    this.loading = true;
-    this.getGrades();
-
-    //getting the grades paginated
-    this.gradeService.searchGrade(params, params.pageIndex !== this.pagination.page).subscribe(
-      (data) => {
-        this.grades = data['data'];
-        this.pagination = data['pagination'];
-        this.listOfDisplayData = [...this.grades];
-        this.loading = false;
-      },
-      (err) => {
-        this.loading = false;
-        const statusCode = err.statusCode;
-        const notIn = [401, 403];
-
-        if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al obtener los grados.', err.message, {
-            nzDuration: 30000
-          });
-        }
-      }
-    );
   }
 }

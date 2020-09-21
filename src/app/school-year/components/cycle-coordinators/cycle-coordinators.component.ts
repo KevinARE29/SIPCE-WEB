@@ -3,7 +3,7 @@ import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 import { UserService } from 'src/app/users/shared/user.service';
 import { User } from 'src/app/users/shared/user.model';
 import { Catalogs } from '../../shared/catalogs.model';
-import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
+import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 
 interface ItemData {
   cycle: ShiftPeriodGrade;

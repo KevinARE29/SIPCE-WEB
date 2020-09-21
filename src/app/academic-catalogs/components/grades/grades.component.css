@@ -1,0 +1,11 @@
+.grade {
+    margin: 5px;
+}
+
+nz-card {
+    border-radius: 15px 15px 0 0;
+}
+
+nz-card-meta {
+    text-align: center;
+}

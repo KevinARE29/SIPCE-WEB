@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Student } from '../../shared/student.model';
 import { Responsible } from '../../shared/responsible.model';
 import { StudentService } from '../../shared/student.service';
-import { ShiftPeriodGrade } from '../../../manage-academic-catalogs/shared/shiftPeriodGrade.model';
+import { ShiftPeriodGrade } from '../../../academic-catalogs/shared/shiftPeriodGrade.model';
 
 @Component({
   selector: 'app-student',

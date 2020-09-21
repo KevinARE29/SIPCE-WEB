@@ -1,15 +1,15 @@
 <h1>Cargar estudiantes</h1>
 
 <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-    <div nz-row nzJustify="space-around" [nzGutter]="[0, 10]">
-        <div nz-col nzSm="24" nzMd="24" nzLg="6" nzXl="5" class="gutter-row">
+    <div nz-row nzJustify="space-between" [nzGutter]="[0, 10]">
+        <div nz-col>
             <nz-upload [nzFileList]="fileList" [nzBeforeUpload]="beforeUpload" [nzCustomRequest]="customReq" [nzRemove]="handleChange">
                 <button nz-button>Seleccionar archivo</button>
                 <i class="question" nz-icon nzType="question-circle"  nz-tooltip [nzTooltipTitle]="filesHelp" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ef6c00'"></i>
             </nz-upload>
             <span class="error">{{uploadMsg}}</span>
         </div>
-        <div nz-col nzSm="24" nzMd="10" nzLg="7" nzXl="6" class="gutter-row">
+        <div nz-col>
             <span>Turno: </span>
             <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="shift"
                 (ngModelChange)="toggleMessage()">
@@ -17,13 +17,15 @@
             </nz-select>
             <p class="error">{{shiftMsg}}</p>
         </div>
-        <div nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
+        <div nz-col>
+          <div nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
             <div nz-col>
-                <button nz-button nzType="primary" (click)="uploadCsv()">Iniciar carga de usuarios</button>
+              <button nz-button nzType="primary" (click)="uploadCsv()">Iniciar carga de usuarios</button>
             </div>
             <div nz-col>
-                <a nz-button nz-popconfirm nzTitle="¿Desea limpiar la pantalla?" (nzOnConfirm)="clearScreen()">Limpiar pantalla</a>
+              <a nz-button nz-popconfirm nzTitle="¿Desea limpiar la pantalla?" (nzOnConfirm)="clearScreen()">Limpiar pantalla</a>
             </div>
+          </div>
         </div>
     </div>
 
@@ -127,12 +129,12 @@
                                 <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
                             </a>
                             <ng-container *ngIf="data.inlineError">
-                                <nz-divider nzType="vertical"></nz-divider>   
+                                <nz-divider nzType="vertical"></nz-divider>
                                 <i nz-icon nzType="warning" nzTheme="outline" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ff4d4f'" nz-tooltip [nzTooltipTitle]="data.inlineError"></i>
                             </ng-container>
                         </td>
                     </ng-container>
-    
+
                     <!-- Editable row -->
                     <ng-template #editTemplate>
                         <!-- Code -->
@@ -213,7 +215,7 @@
                 </tr>
             </tbody>
         </nz-table>
-        
+
         <div nz-row nzJustify="space-around" *ngIf="_listOfColumns.length === 11">
             <label nz-checkbox [(ngModel)]="nextYear">Crear estudiantes para el año {{ year }}</label>
         </div>
@@ -221,5 +223,5 @@
         <div nz-row nzJustify="space-around">
             <button nz-button nzType="primary" (click)="createStudents()">Crear estudiantes</button>
         </div>
-    </ng-container>    
+    </ng-container>
 </nz-spin>

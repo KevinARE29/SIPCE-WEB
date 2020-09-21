@@ -3,8 +3,9 @@
   margin: 10px 10px 0px 0px;
 }
 
-nz-select {
-  max-width: 175px;
+nz-date-picker, nz-year-picker, nz-select {
+  width: 100%;
+  border-radius: 7px;
 }
 
 .relation {
@@ -23,4 +24,8 @@ nz-select {
   margin-top: 15px;
   margin-left: 10px;
   font-weight: 500;
+}
+
+.search-sibling {
+  margin-top: 20px;
 }

@@ -3,14 +3,14 @@ nz-switch {
   padding-right: 10px;
 }
 
-.students {
-    margin-top: 25px;
+nz-table {
+  margin-top: 30px;
 }
 
-nz-select.grade {
-    min-width: 180px;
+nz-select {
+  width: 100%;
 }
 
-nz-select.status {
-    min-width: 125px;
+.btn-container {
+  height: 100%;
 }
