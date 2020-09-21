@@ -10,9 +10,9 @@
 <div nz-row [nzGutter]="[10, 10]">
     <!-- Code -->
     <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
-        <label>Código: </label>
+        <label>NIE: </label>
         <nz-input-group [nzSuffix]="inputClearCode">
-            <input nz-input [(ngModel)]="searchParams.code" placeholder="Buscar código" />
+            <input nz-input [(ngModel)]="searchParams.code" placeholder="Buscar NIE" />
         </nz-input-group>
         <ng-template #inputClearCode>
             <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.code" (click)="searchParams.code = null; getStudents(null)"></i>
@@ -92,7 +92,7 @@
             >
                 <thead>
                     <tr>
-                        <th nzColumnKey="code" [nzSortFn]="true" [nzSortPriority]="1">Código</th>
+                        <th nzColumnKey="code" [nzSortFn]="true" [nzSortPriority]="1">NIE</th>
                         <th nzColumnKey="firstname" [nzSortFn]="true" [nzSortPriority]="2">Nombres</th>
                         <th nzColumnKey="lastname" [nzSortFn]="true" [nzSortPriority]="3">Apellidos</th>
                         <th nzColumnKey="email" [nzSortFn]="true" [nzSortPriority]="4">Correo electrónico</th>
