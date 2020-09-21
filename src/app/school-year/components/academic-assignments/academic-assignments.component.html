@@ -1,7 +1,7 @@
 <nz-tabset nzTabPosition="left" [nzType]="'line'">
     <nz-tab *ngFor="let item of lists" [nzTitle]="item.shift.name">
         <div nz-col nzXs="23">
-            <nz-table #fixedTable [nzData]="item.items" nzSize="middle" nzTableLayout="auto" [nzFrontPagination]="false">
+            <nz-table #fixedTable [nzData]="item.items" nzSize="middle" nzTableLayout="fixed" [nzFrontPagination]="false">
                 <thead>
                     <tr>
                         <th nzLeft nzWidth="150px" nzAlign="center">Ciclo</th>
