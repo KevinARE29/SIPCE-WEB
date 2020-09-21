@@ -1,4 +1,4 @@
-nz-tabset { 
+nz-tabset {
     margin-top: 25px;
 }
 
@@ -13,6 +13,7 @@ nz-tabset {
 
 nz-collapse {
     background-color: #fff;
+    margin-bottom: 20px;
 }
 
 .label {
