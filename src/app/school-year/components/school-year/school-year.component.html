@@ -37,8 +37,6 @@
             <!-- Steps content -->
             <div class="steps-content">
                 <div class="shifts">
-                    <!-- <nz-tabset nzTabPosition="left" [nzType]="'line'"> -->
-                    <!-- <nz-tab *ngFor="let shift of catalogs.shifts" [nzTitle]="shift.name"> -->
                     <div class="step-content" [ngSwitch]="currentStep">
                         <ng-container *ngSwitchCase="0">
                             <app-academic-assignments [catalogs]="catalogs" [assignation]="schoolYear"
@@ -63,8 +61,6 @@
                             <app-new-school-year-summary [assignation]="schoolYear"></app-new-school-year-summary>
                         </ng-container>
                     </div>
-                    <!-- </nz-tab> -->
-                    <!-- </nz-tabset> -->
                 </div>
             </div>
 
