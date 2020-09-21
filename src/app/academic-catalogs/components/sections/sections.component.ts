@@ -53,7 +53,7 @@ export class SectionsComponent implements OnInit {
     this.createSection = this.fb.group({
       name: [
         '',
-        [Validators.required, Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ0-9 ]+$'), Validators.maxLength(16)]
+        [Validators.required, Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ0-9 ]+$'), Validators.maxLength(32)]
       ]
     });
   }
@@ -83,13 +83,19 @@ export class SectionsComponent implements OnInit {
           this.search();
         },
         (error) => {
-          this.isConfirmLoading = false;
-          this.notification.create(
-            'error',
-            'Ocurrió un error al crear la sección. Por favor verifique lo siguiente:',
-            error.message,
-            { nzDuration: 30000 }
-          );
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
+
+          this.isLoading = false;
+
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create(
+              'error',
+              'Ocurrió un error al crear sección. Por favor verifique lo siguiente:',
+              error.message,
+              { nzDuration: 30000 }
+            );
+          }
         }
       );
     }
@@ -141,13 +147,19 @@ export class SectionsComponent implements OnInit {
               this.editCache[id].edit = false;
             })
             .catch((error) => {
+              const statusCode = error.statusCode;
+              const notIn = [401, 403];
+
               this.isLoading = false;
-              this.notification.create(
-                'error',
-                'Ocurrió un error al cambiar el nombre de la sección. Por favor verifique lo siguiente:',
-                error.message,
-                { nzDuration: 30000 }
-              );
+
+              if (!notIn.includes(statusCode) && statusCode < 500) {
+                this.notification.create(
+                  'error',
+                  'Ocurrió un error al cambiar el nombre de la sección. Por favor verifique lo siguiente:',
+                  error.message,
+                  { nzDuration: 30000 }
+                );
+              }
             })
       });
     }
@@ -174,11 +186,11 @@ export class SectionsComponent implements OnInit {
       );
 
       return false;
-    } else if (name.length > 16) {
+    } else if (name.length > 32) {
       this.notification.create(
         'error',
         'Ocurrió un error al cambiar el nombre de la sección. Por favor verifique lo siguiente:',
-        'El nombre debe contener máximo 16 caracteres.',
+        'El nombre debe contener máximo 32 caracteres.',
         { nzDuration: 30000 }
       );
 
