@@ -53,12 +53,17 @@ const routes: Routes = [
   {
     path: 'catalogos',
     loadChildren: () =>
-      import('./manage-academic-catalogs/academic-catalogs.module').then((m) => m.AcademicCatalogsModule),
+      import('./academic-catalogs/academic-catalogs.module').then((m) => m.AcademicCatalogsModule),
     canLoad: [AuthGuard]
   },
   {
     path: 'estudiantes',
     loadChildren: () => import('./students/students.module').then((m) => m.StudentsModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'asignaciones',
+    loadChildren: () => import('./school-year/school-year.module').then((m) => m.SchoolYearModule),
     canLoad: [AuthGuard]
   },
   {

@@ -11,6 +11,9 @@
                     }, {
                         "value": "text",
                         "message": "Los nombres deben ser texto"
+                    }, {
+                        "value": "maxlength,64",
+                        "message": "La longitud máxima es de 64 caracteres"
                     }
                 ]
             },
@@ -24,6 +27,9 @@
                     }, {
                         "value": "text",
                         "message": "Los apellidos deben ser texto"
+                    }, {
+                        "value": "maxlength,64",
+                        "message": "La longitud máxima es de 64 caracteres"
                     }
                 ]
             },
@@ -35,11 +41,14 @@
                         "value": "empty",
                         "message": "El nombre de usuario es requerido"
                     }, {
-                        "value": "text",
-                        "message": "El nombre de usuario debe ser texto"
+                        "value": "textnumber",
+                        "message": "El nombre de usuario puede contener letras no acentuadas, números y guiones sin espacios"
                     }, {
                         "value": "unique",
                         "message": "El nombre de usuario debe ser único"
+                    }, {
+                        "value": "maxlength,32",
+                        "message": "La longitud máxima es de 32 caracteres"
                     }
                 ]
             },
@@ -56,6 +65,9 @@
                     }, {
                         "value": "unique",
                         "message": "El correo electrónico debe ser único"
+                    }, {
+                        "value": "maxlength,128",
+                        "message": "La longitud máxima es de 128 caracteres"
                     }
                 ]
             }, 
@@ -67,8 +79,14 @@
                         "value": "empty",
                         "message": "El código es requerido"
                     }, {
+                        "value": "textnumber",
+                        "message": "El código de usuario puede contener letras no acentuadas, números y guiones sin espacios"
+                    }, {
                         "value": "unique",
                         "message": "El código debe ser único"
+                    }, {
+                        "value": "maxlength,32",
+                        "message": "La longitud máxima es de 32 caracteres"
                     }
                 ]
             }, 
@@ -89,6 +107,9 @@
                     }, {
                         "value": "text",
                         "message": "Los nombres deben ser texto"
+                    }, {
+                        "value": "maxlength,64",
+                        "message": "La longitud máxima es de 64 caracteres"
                     }
                 ]
             },
@@ -102,6 +123,9 @@
                     }, {
                         "value": "text",
                         "message": "Los apellidos deben ser texto"
+                    }, {
+                        "value": "maxlength,64",
+                        "message": "La longitud máxima es de 64 caracteres"
                     }
                 ]
             },
@@ -118,6 +142,9 @@
                     }, {
                         "value": "unique",
                         "message": "El correo electrónico debe ser único"
+                    }, {
+                        "value": "maxlength,128",
+                        "message": "La longitud máxima es de 128 caracteres"
                     }
                 ]
             }, 
@@ -128,6 +155,12 @@
                     {
                         "value": "empty",
                         "message": "El NIE es requerido"
+                    }, {
+                        "value": "number",
+                        "message": "El NIE debe ser un número"
+                    }, {
+                        "value": "maxlength,8",
+                        "message": "La longitud máxima es de 8 caracteres"
                     }
                 ]
             },
@@ -154,7 +187,7 @@
                         "message": "La fecha de nacimiento es requerida"
                     }, {
                         "value": "date",
-                        "message": "La fecha de nacimiento debe tener un formato de fecha valido (dd/mm/aaaa)"
+                        "message": "La fecha de nacimiento debe tener un formato de fecha válido (dd/mm/aaaa)"
                     }
                 ]
             },
@@ -213,6 +246,9 @@
                     }, {
                         "value": "text",
                         "message": "Los nombres deben ser texto"
+                    }, {
+                        "value": "maxlength,64",
+                        "message": "La longitud máxima es de 64 caracteres"
                     }
                 ]
             },
@@ -226,6 +262,9 @@
                     }, {
                         "value": "text",
                         "message": "Los apellidos deben ser texto"
+                    }, {
+                        "value": "maxlength,64",
+                        "message": "La longitud máxima es de 64 caracteres"
                     }
                 ]
             },
@@ -239,6 +278,9 @@
                     }, {
                         "value": "email",
                         "message": "Formato incorrecto (ej. usuario@ejemplo.com)"
+                    }, {
+                        "value": "maxlength,128",
+                        "message": "La longitud máxima es de 128 caracteres"
                     }
                 ]
             },

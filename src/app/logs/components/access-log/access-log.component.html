@@ -1,8 +1,9 @@
 <h1>Bitácora de accesos</h1>
 
-<div class="search" nz-row nzJustify="space-around">
+<div nz-row [nzGutter]="[10, 10]">
     <!-- Username -->
-    <div class="user" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="4">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8" nzXl="5">
+        <label>Usuario: </label>
         <nz-input-group [nzSuffix]="inputClearUser">
             <input nz-input [(ngModel)]="searchParams.username" placeholder="Buscar usuario" />
         </nz-input-group>
@@ -12,7 +13,8 @@
     </div>
 
     <!-- IP -->
-    <div class="ip" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="4">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8" nzXl="4">
+        <label>IP: </label>
         <nz-input-group [nzSuffix]="inputClearIP">
             <input nz-input [(ngModel)]="searchParams.ip" placeholder="Buscar IP" />
         </nz-input-group>
@@ -22,7 +24,7 @@
     </div>
 
     <!-- Status Code -->
-    <div class="status-code" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="5">
+    <div nz-col nzXs="24" nzSm="24" nzMd="8" nzLg="8" nzXl="5">
         <label>Código de respuesta: </label>
         <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.statusCode" (ngModelChange)="search()">
             <nz-option nzLabel="201" nzValue="201"></nz-option>
@@ -31,26 +33,28 @@
     </div>
 
     <!-- Date range -->
-    <div class="date" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="6">
+    <div nz-col nzXs="24" nzSm="24" nzMd="16" nzLg="16" nzXl="7">
         <label>Fecha: </label>
-        <nz-range-picker 
-            nzFormat="dd/MM/yyyy" 
+        <nz-range-picker
+            nzFormat="dd/MM/yyyy"
             [ngModel]="searchParams.attemptTime"
             [nzDisabledDate]="disabledDate"
             (ngModelChange)="onChangeDatePicker($event)"
         ></nz-range-picker>
     </div>
 
-    <div nz-col nzXs="24" nzSm="24" nzMd="2" nzLg="4" nzXl="1">
+    <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="8" nzXl="3">
+      <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
         <button nz-button nzType="primary" (click)="search()">Buscar</button>
+      </div>
     </div>
 </div>
 
 <div class="access-log" nz-row>
-    <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 24 }" [nzXl]="{ span: 20, offset: 2 }">
+    <div nz-col nzSpan="24">
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-            <nz-table #filterTable 
-                [nzData]="listOfDisplayData" 
+            <nz-table #filterTable
+                [nzData]="listOfDisplayData"
                 nzTableLayout="fixed"
                 [nzFrontPagination]="false"
                 [nzTotal]="pagination.totalItems"
@@ -67,7 +71,7 @@
                         <th nzColumnKey="attemptTime" [nzSortFn]="true" [nzSortPriority]="4">Fecha y hora</th>
                     </tr>
                 </thead>
-                
+
                 <tbody>
                     <tr *ngFor="let data of filterTable.data">
                         <td>{{ data.username }}</td>
@@ -81,7 +85,7 @@
     </div>
 </div>
 
-<div class="status-codes" nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 12 }">
+<div class="status-codes" nz-col nzMd="24" nzLg="16">
     <nz-table nzTemplateMode [nzSize]="tableSize">
         <thead>
           <tr>

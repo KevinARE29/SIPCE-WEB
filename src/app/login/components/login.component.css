@@ -1,15 +1,54 @@
-.imageBackToSchool {
+/* Background */
+.auth-background-image {
   background-image: url("../../../assets/back-to-school-wallpaper.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center center;
-  /* Background image is fixed in the viewport so that it doesn't move when 
-    the content's height is greater than the image's height */
-  background-attachment: fixed;
-  padding-top: 100px;
-  height: 80vh;
+  background-position: bottom;
+  height: 100vh;
+  color: white;
 }
 
-.loginBackground {
-  height: 260px;
+.auth-background-color {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 21, 41, 0.80);
+}
+
+.auth-background {
+  background-color: transparent;
+  border: none;
+  text-align: center;
+}
+
+.auth-logo {
+  max-width: 100px;
+}
+
+/* Buttons */
+.auth-form-button {
+  border-radius: 15px;
+  min-width: 50%;
+  padding: 8px;
+  height: auto;
+  letter-spacing: 0.5px;
+}
+
+/* Title and subtitle */
+.auth-title {
+  color: white;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  letter-spacing: 0.5px;
+}
+
+.auth-subtitle {
+  color: white;
+  font-size: 16px;
+  margin-bottom: 30px;
+  letter-spacing: 0.5px;
+}
+
+a {
+  margin-bottom: 10px;
 }

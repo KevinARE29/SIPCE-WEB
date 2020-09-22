@@ -1,7 +1,7 @@
 /*
   Path: app/main-nav/main-nav.component.css
   Objective: Define main navigation style
-  Author: Esme López 
+  Author: Esme López
 */
 
 :host {
@@ -69,26 +69,54 @@
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 }
 
-nz-content {
-  margin: 24px;
-  overflow: initial;
-}
-
 nz-avatar {
   margin-left: 5px;
 }
 
 .inner-content {
-  padding: 24px;
+  padding: 24px 50px;
   background: #fff;
   height: 100%;
 }
 
 .ant-layout-footer {
-  padding: 0%;
+  padding: 0;
+  background-color: white;
+  color: black;
+}
+
+/* Change footer style on login, forgot password, etc. */
+.fixed-footer {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  background-color: transparent;
+  color: white;
 }
 
 nz-footer img {
   height: 50px;
   margin-right: 5px;
+}
+
+/* User dropdown */
+.user-dropdown-item{
+  background-color: white;
+  border: #ef6c00 0.5px solid;
+  border-radius: 30px;
+  margin-bottom: 10px;
+  box-shadow: none;
+}
+
+.user-dropdown-item:first-of-type {
+  border-top-right-radius: 0px;
+}
+
+.user-dropdown-item li{
+  border-radius: 30px;
+  text-align: center;
+}
+
+.user-dropdown-item:first-of-type li {
+  border-top-right-radius: 0px;
 }

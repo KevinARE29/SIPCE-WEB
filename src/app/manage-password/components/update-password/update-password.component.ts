@@ -175,7 +175,7 @@ export class UpdatePasswordComponent implements OnInit {
               'error',
               'Ocurrió un error al cambiar la contraseña. Por favor verifique lo siguiente:',
               error.message,
-              { nzDuration: 0 }
+              { nzDuration: 30000 }
             );
           }
 

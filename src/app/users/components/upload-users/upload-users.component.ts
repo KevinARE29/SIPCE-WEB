@@ -21,6 +21,8 @@ export class UploadUsersComponent implements OnInit {
   fileList: UploadFile[];
   loading = false;
   appRoles: Role[];
+  filesHelp: string;
+
   // Pre upload users errors
   uploadMsg: string;
 
@@ -41,6 +43,8 @@ export class UploadUsersComponent implements OnInit {
   ngOnInit(): void {
     this.uploadMsg = '';
     this.getRoles();
+
+    this.filesHelp = 'Encabezados esperados: NIM, Nombres, Apellidos, Correo electrónico, Rol y Nombre de usuario';
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -81,12 +85,29 @@ export class UploadUsersComponent implements OnInit {
     if (this.csv) {
       this.csvToJsonService.csvJSON(this.csv, 'users').subscribe(
         (r) => {
-          this._listOfColumns = JSON.parse(JSON.stringify(r['headers']));
-          this.generateTable(r);
+          if (r['data'].length > 0) {
+            this._listOfColumns = JSON.parse(JSON.stringify(r['headers']));
+            this.generateTable(r);
+          } else {
+            // TODO: Improve this code
+            this.notification.create(
+              'error',
+              'Ocurrió un error al intentar cargar el archivo.',
+              'Verifique que las columnas ingresadas correspondan a las esperadas. O que el archivo tenga datos.',
+              {
+                nzDuration: 30000
+              }
+            );
+
+            this.listOfColumns = {};
+            this._listOfColumns = null;
+            this.listOfData = [];
+            this.editCache = {};
+          }
         },
         (error) => {
           this.notification.create('error', 'Ocurrió un error al intentar cargar el archivo.', error, {
-            nzDuration: 0
+            nzDuration: 30000
           });
         }
       );
@@ -214,7 +235,7 @@ export class UploadUsersComponent implements OnInit {
         'No se puede proceder con la carga de datos.',
         'Se han detectado errores dentro del contenido de la tabla. Por favor corríjalos para continuar.',
         {
-          nzDuration: 0
+          nzDuration: 30000
         }
       );
     } else {
@@ -236,7 +257,7 @@ export class UploadUsersComponent implements OnInit {
         if (!notIn.includes(error.statusCode) && error.statusCode < 500) {
           this.message.warning(
             'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
-            { nzDuration: 4500 }
+            { nzDuration: 30000 }
           );
         }
 

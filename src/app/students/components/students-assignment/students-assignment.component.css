@@ -1,0 +1,20 @@
+.filter {
+  padding-bottom: 5px;
+}
+
+nz-table {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+nz-select {
+  width: 100%;
+}
+
+.grade-name {
+  margin-top: 15px;
+}
+
+.btn-container {
+  height: 100%;
+}
