@@ -254,16 +254,7 @@
                             <td>{{ data.lastname }}</td>
                             <td>{{ data.relationship }}</td>
                             <td>{{ data.email }}</td>
-                            <td>
-                                <ng-container *ngIf="data.phone.length === 8;else phoneTemplate">
-                                    {{ data.phone  | slice:0:4 }}-{{ data.phone | slice:4:8 }}
-                                </ng-container>
-                                <ng-template #phoneTemplate>
-                                    {{ data.phone }}
-                                </ng-template>
-
-                            </td>
-
+                            <td>{{ data.phone }}</td>
                             <td [nzAlign]="'center'" *ngIf="checkPermission(20)">
                                 <a (click)="startEdit(data.id)">
                                     <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
