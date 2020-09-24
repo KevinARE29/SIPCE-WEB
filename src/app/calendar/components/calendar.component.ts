@@ -14,7 +14,7 @@ import { L10n, loadCldr, isNullOrUndefined } from '@syncfusion/ej2-base';
 import { DateTimePicker } from '@syncfusion/ej2-calendars';
 import { RecurrenceEditorChangeEventArgs, EventRenderedArgs } from '@syncfusion/ej2-angular-schedule';
 
-import { addDays, addHours, endOfMonth, getDay, startOfMonth, subDays, compareAsc } from 'date-fns';
+import { addDays, addHours, endOfMonth, getDay, startOfMonth, subDays, compareAsc, compareDesc } from 'date-fns';
 import * as numberingSystems from '../../../../node_modules/cldr-data/supplemental/numberingSystems.json';
 import * as gregorian from '../../../../node_modules/cldr-data/main/es/ca-gregorian.json';
 import * as numbers from 'cldr-data/main/es/numbers.json';
@@ -63,6 +63,9 @@ export class CalendarComponent implements OnInit {
   startTimeDate: string; // quitar
   startDate: string;
   endDate: string;
+  // Used in the custom validation
+  formStartDate: Date;
+  formEndDate: Date;
 
   @ViewChild('scheduleObj')
   public scheduleObj: ScheduleComponent;
@@ -81,8 +84,71 @@ export class CalendarComponent implements OnInit {
     { eventTypeText: 'Otro', Id: 4 }
   ];
 
+  customFn: (args: { [key: string]: string }) => boolean = (args: { [key: string]: any }) => {
+    const dateComponents = args.element.value.split('/');
+    const yearTime = dateComponents[2].split(' ');
+    const timeComponents = yearTime[1].split(':');
+
+    dateComponents[2] = yearTime[0]; // Year
+
+    if (args.element.name === 'StartTime') {
+      this.formStartDate = new Date(
+        dateComponents[2],
+        dateComponents[1] - 1,
+        dateComponents[0],
+        timeComponents[0],
+        timeComponents[1]
+      );
+      this.formEndDate = null;
+    } else if (args.element.name === 'EndTime')
+      this.formEndDate = new Date(
+        dateComponents[2],
+        dateComponents[1] - 1,
+        dateComponents[0],
+        timeComponents[0],
+        timeComponents[1]
+      );
+
+    if (
+      (args.element.name === 'StartTime' || args.element.name === 'EndTime') &&
+      this.formStartDate &&
+      this.formEndDate != null
+    ) {
+      return compareDesc(this.formStartDate, this.formEndDate) >= 0;
+    } else {
+      return true;
+    }
+  };
+
+  // IMPROVE CODE
+  public eventFormFields = {
+    id: 'Id',
+    subject: {
+      validation: {
+        required: [true, 'El título del evento es requerido'],
+        regex: ['^[a-zA-Z0-9- ]*', 'El título debe contener unicamente letras y números']
+      }
+    },
+    startTime: {
+      validation: {
+        required: [true, 'La fecha de inicio del evento es requerida'],
+        range: [this.customFn, 'El inicio del evento debe darse antes de la fecha de fin']
+      }
+    },
+    endTime: {
+      validation: {
+        required: [true, 'La fecha de fin del evento es requerida'],
+        range: [this.customFn, 'La fecha de fin debe ser posterior a la fecha de inicio']
+      }
+    }
+  };
+  // END OF IMPROVE CODE
+
   public data: object[] = [];
-  public eventData: EventSettingsModel;
+  public eventData: EventSettingsModel = {
+    dataSource: null,
+    fields: this.eventFormFields
+  };
 
   allDayEvent(): void {
     // console.log(this.IsAllDay);
@@ -184,6 +250,7 @@ export class CalendarComponent implements OnInit {
         fields: {
           id: 'Id',
           subject: {
+            name: 'Subject',
             validation: {
               required: [true, 'El título del evento es requerido'],
               regex: ['^[a-zA-Z0-9- ]*', 'El título debe contener unicamente letras y números']
@@ -255,9 +322,9 @@ export class CalendarComponent implements OnInit {
 
       this.event.Subject = data.Subject;
       if (data.IsAllDay === true) {
-         this.event.IsAllDay = true;
+        this.event.IsAllDay = true;
       } else {
-         this.event.IsAllDay = false;
+        this.event.IsAllDay = false;
       }
 
       if (data.RecurrenceRule === undefined || data.RecurrenceRule === null) {
@@ -299,7 +366,7 @@ export class CalendarComponent implements OnInit {
       createEvent['jsonData']['CategoryColor'] = this.randomItem();
       if (participantIds.length !== 0) createEvent['participantIds'] = participantIds;
       // console.log('event.students.id');
-//      // console.log(this.selectedStudent[0]);
+      //      // console.log(this.selectedStudent[0]);
       // console.log('selected estudiante');
       // console.log('------this.event.Student.id;---------');
 
@@ -355,8 +422,8 @@ export class CalendarComponent implements OnInit {
           console.log(<any>args.data);
           console.log('esto tiene data');
           console.log(args.data);
-          this.message.success('Evento actualizado con éxito');
-         /* this.eventService.updateEvent(args.data).subscribe(
+          // this.message.success('Evento actualizado con éxito');
+          /* this.eventService.updateEvent(args.data).subscribe(
             (r) => {
               args.cancel = false;
               console.log('ocurrence');
@@ -435,7 +502,7 @@ export class CalendarComponent implements OnInit {
 
       if (<any>args.data['Student']) this.event.Student = <any>args.data['Student'];
       if (<any>args.data['Participants']) this.event.Participant = <any>args.data['Participants'];
-     
+
       document.getElementById('RecurrenceRule').style.display =
         this.scheduleObj.currentAction === 'EditOccurrence' ? 'none' : 'block';
     }
