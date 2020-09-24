@@ -247,18 +247,7 @@ export class CalendarComponent implements OnInit {
       this.eventData = null;
       this.eventData = {
         dataSource: events,
-        fields: {
-          id: 'Id',
-          subject: {
-            name: 'Subject',
-            validation: {
-              required: [true, 'El título del evento es requerido'],
-              regex: ['^[a-zA-Z0-9- ]*', 'El título debe contener unicamente letras y números']
-            }
-          },
-          startTime: { validation: { required: [true, 'La fecha de inicio del evento es requerida'] } },
-          endTime: { validation: { required: [true, 'La fecha de fin del evento es requerida'] } }
-        }
+        fields: this.eventFormFields
       };
 
       this.loading = false;
