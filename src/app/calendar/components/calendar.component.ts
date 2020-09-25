@@ -151,8 +151,6 @@ export class CalendarComponent implements OnInit {
   };
 
   allDayEvent(): void {
-    // console.log(this.IsAllDay);
-    console.log(this.getIsAllDay.value);
     this.show = !this.show;
   }
 
@@ -275,7 +273,7 @@ export class CalendarComponent implements OnInit {
 
       //validating the date
       const result = compareAsc(data.StartTime, data.EndTime);
-      console.log(result);
+
       if (result === 1) {
         this.notification.create(
           'error',
@@ -285,10 +283,7 @@ export class CalendarComponent implements OnInit {
         );
         this.saveEvent = false;
         args.cancel = true;
-        console.log('La fecha de inicio debe ser menor a la fecha de fin');
       }
-
-      console.log(this.getIsAllDay.value);
 
       if (this.event.Participant !== undefined) {
         this.event.Participant.forEach((user) => {
@@ -300,7 +295,7 @@ export class CalendarComponent implements OnInit {
 
       //initializing the event object that will be send to the json data
       this.event.Id = data.Id;
-      //// console.log(data.StartTime);
+
       if (args.requestType === 'eventCreate') {
         this.event.StartTime = data.StartTime.toISOString();
         this.event.EndTime = data.EndTime.toISOString();
@@ -337,9 +332,7 @@ export class CalendarComponent implements OnInit {
       }
 
       if (data.Description === undefined) {
-        // console.log('entro al undefined');
         this.event.Description = null;
-        // console.log(this.event.Description);
       } else {
         this.event.Description = data.Description;
       }
@@ -354,10 +347,6 @@ export class CalendarComponent implements OnInit {
       createEvent['jsonData'] = this.event;
       createEvent['jsonData']['CategoryColor'] = this.randomItem();
       if (participantIds.length !== 0) createEvent['participantIds'] = participantIds;
-      // console.log('event.students.id');
-      //      // console.log(this.selectedStudent[0]);
-      // console.log('selected estudiante');
-      // console.log('------this.event.Student.id;---------');
 
       if (this.event.Student === null || this.event.Student === undefined) {
       } else {
@@ -369,9 +358,7 @@ export class CalendarComponent implements OnInit {
         const result = compareAsc(data.StartTime, data.EndTime);
         args.cancel = true;
         // this.submitForm();
-        // console.log('--------------');
-        // console.log('esto tiene el createEvent');
-        // console.log(createEvent);
+
         if (this.saveEvent) {
           this.eventService.createAppointment(createEvent).subscribe(
             () => {
@@ -388,34 +375,20 @@ export class CalendarComponent implements OnInit {
             },
             (err) => {
               args.cancel = true;
-              // console.log(err, this.data);
               this.event = new Appointment();
             }
           );
         }
-        // console.log('--------------');
-        // console.log('esto tiene el eventForm');
-        // console.log(this.eventForm.value);
-        // console.log('esto tiene el objeto de event !!!!');
-        // console.log(this.event);
-        // console.log('esto tiene data');
-        // console.log(data);
       } else if (args.requestType === 'eventChange') {
-        console.log('actualizar evento');
-        console.log('--------------');
         // quitar este if
         if (!args.data.parent) {
           // create event  args.cancel = true;
           data = <any>args.data;
-          console.log('parent');
-          console.log(<any>args.data);
-          console.log('esto tiene data');
-          console.log(args.data);
+
           // this.message.success('Evento actualizado con éxito');
           /* this.eventService.updateEvent(args.data).subscribe(
             (r) => {
               args.cancel = false;
-              console.log('ocurrence');
            
               // this.updateEvent = new Events();
               // console.log('esto tiene la ruta', r);
@@ -429,10 +402,8 @@ export class CalendarComponent implements OnInit {
         } else {
           this.eventService.updateEvent(args.data.occurrence).subscribe(
             (r) => {
-              // console.log('ocurrence');
               data = <any>args.data;
               this.updateEvent = new Appointment();
-              // console.log('esto tiene la ruta', r);
               // this.scheduleObj.refresh();
             },
             (err) => {
@@ -440,10 +411,6 @@ export class CalendarComponent implements OnInit {
             }
           );
         }
-
-        // console.log(<any>args.data);
-        // console.log('esto tiene data');
-        // console.log(args.data.occurrence);
       }
       //delete event actions
     } else if (args.requestType === 'eventRemove') {
@@ -486,8 +453,6 @@ export class CalendarComponent implements OnInit {
       if (!endElement.classList.contains('e-datetimepicker')) {
         new DateTimePicker({ value: new Date(endElement.value) || new Date(), locale: 'es' }, endElement);
       }
-      // console.log('args.data en popun');
-      // console.log(<any>args.data['Participants']);
 
       if (<any>args.data['Student']) this.event.Student = <any>args.data['Student'];
       if (<any>args.data['Participants']) this.event.Participant = <any>args.data['Participants'];
@@ -525,8 +490,6 @@ export class CalendarComponent implements OnInit {
     this.showAlert = false;
     if (this.results.length !== 0) this.results.push(student);
     this.event.Student = null;
-    console.log(this.event.Student);
-    console.log(this.results);
   }
 
   searchUser(): void {

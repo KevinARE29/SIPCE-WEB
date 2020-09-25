@@ -55,7 +55,7 @@ export class EventService {
       eventType: event.EventType,
       jsonData: event,
       participantIds: participants,
-      studentId: event.Student ? event.Student.id : null // Set the Student id (not from an array)
+      studentId: event.Student ? event.Student.id : null
     });
 
     return this.http
