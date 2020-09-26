@@ -202,7 +202,7 @@ export class CalendarComponent implements OnInit {
 
   onActionComplete(args): void {
     let startDate, endDate;
-
+    console.log(args);
     switch (args.requestType) {
       case 'dateNavigate':
       case 'viewNavigate':
@@ -230,9 +230,18 @@ export class CalendarComponent implements OnInit {
         break;
       case 'eventRemoved':
         if (args.changedRecords.length) {
-          this.eventService.updateEvent(args.changedRecords[0]).subscribe(() => {
+          this.eventService.updateEventAfterDelete(args.changedRecords[0]).subscribe(() => {
             this.message.success(`El evento ha sido eliminado`);
           });
+        }
+        break;
+      case 'eventChanged':
+        if (args.changedRecords.length && args.addedRecords.length) {
+          this.eventService.updateEvent(args.changedRecords[0], this.event).subscribe(() => {
+            this.message.success(`La serie de eventos ha sido actualizada`);
+          });
+
+          this.eventService.createEvent(args.addedRecords[0], this.event).subscribe(() => {});
         }
         break;
     }
@@ -264,7 +273,7 @@ export class CalendarComponent implements OnInit {
   }
 
   public onBegin(args: any): void {
-    if (args.requestType === 'eventChange' || args.requestType === 'eventCreate') {
+    if (args.requestType === 'eventCreate') {
       let data = !isNullOrUndefined(args.data[0]) ? args.data[0] : args.data;
       const createEvent = {};
       const participantIds = new Array<number>();
@@ -285,12 +294,12 @@ export class CalendarComponent implements OnInit {
         args.cancel = true;
       }
 
-      if (this.event.Participant !== undefined) {
-        this.event.Participant.forEach((user) => {
+      if (this.event.Participants !== undefined) {
+        this.event.Participants.forEach((user) => {
           participantIds.push(user.id);
         });
       } else {
-        this.event.Participant = null;
+        this.event.Participants = null;
       }
 
       //initializing the event object that will be send to the json data
@@ -399,7 +408,7 @@ export class CalendarComponent implements OnInit {
               args.cancel = true;
             } 
           );*/
-        } else {
+        } /*else {
           this.eventService.updateEvent(args.data.occurrence).subscribe(
             (r) => {
               data = <any>args.data;
@@ -410,9 +419,16 @@ export class CalendarComponent implements OnInit {
               args.cancel = true;
             }
           );
-        }
+        }*/
       }
-      //delete event actions
+    } else if (args.requestType === 'eventChange') {
+      console.log(args, args.data.hasOwnProperty('parent'));
+      if (!args.data.hasOwnProperty('parent')) {
+        console.log('evento individual o serie completa');
+        this.eventService.updateEvent(args.changedRecords[0], this.event).subscribe(() => {
+          this.message.success(`El evento ha sido actualizado`);
+        });
+      }
     } else if (args.requestType === 'eventRemove') {
       if (!args.data[0].parent) {
         this.eventService.deleteEvent(args.data[0].Id).subscribe(() => {
@@ -425,7 +441,7 @@ export class CalendarComponent implements OnInit {
   onPopupOpen(args: PopupOpenEventArgs): void {
     this.eventForm.reset;
     // cleanning variables of atendees
-    this.event.Participant = new Array<User>();
+    this.event.Participants = new Array<User>();
     this.updateEvent = new Appointment();
     this.selectedStudent = new Array<Student>();
 
@@ -455,7 +471,7 @@ export class CalendarComponent implements OnInit {
       }
 
       if (<any>args.data['Student']) this.event.Student = <any>args.data['Student'];
-      if (<any>args.data['Participants']) this.event.Participant = <any>args.data['Participants'];
+      if (<any>args.data['Participants']) this.event.Participants = <any>args.data['Participants'];
 
       document.getElementById('RecurrenceRule').style.display =
         this.scheduleObj.currentAction === 'EditOccurrence' ? 'none' : 'block';
@@ -512,12 +528,12 @@ export class CalendarComponent implements OnInit {
 
   addUser(User: User): void {
     //add condition to know if the event has students previously
-    this.event.Participant.push(User);
+    this.event.Participants.push(User);
     this.resultsUsers = this.resultsUsers.filter((d) => d['id'] !== User.id);
   }
 
   confirmDeleteUser(id: number, user: User): void {
     if (this.resultsUsers.length !== 0) this.resultsUsers.push(user);
-    this.event.Participant = this.event.Participant.filter((d) => d['id'] !== id);
+    this.event.Participants = this.event.Participants.filter((d) => d['id'] !== id);
   }
 }

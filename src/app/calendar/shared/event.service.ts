@@ -44,7 +44,24 @@ export class EventService {
     );
   }
 
-  updateEvent(event: Appointment): Observable<Appointment> {
+  createEvent(calendarEvent: Appointment, event: Appointment): Observable<Appointment> {
+    const participants = new Array<number>();
+
+    event.Participants.forEach((participant) => {
+      participants.push(participant.id);
+    });
+
+    const data = JSON.stringify({
+      eventType: calendarEvent.EventType,
+      jsonData: calendarEvent,
+      participantIds: participants,
+      studentId: event.Student ? event.Student.id : null
+    });
+    console.log(data);
+    return this.http.post<Appointment>(`${this.baseUrl}me/schedules`, data).pipe(catchError(this.handleError()));
+  } 
+
+  updateEventAfterDelete(event: Appointment): Observable<Appointment> {
     const participants = new Array<number>();
 
     event['Participants'].forEach((user) => {
@@ -60,6 +77,28 @@ export class EventService {
 
     return this.http
       .put<Appointment>(`${this.baseUrl}me/schedules/${event.Id}`, data)
+      .pipe(catchError(this.handleError()));
+  }
+
+  updateEvent(calendarEvent: Appointment, event: Appointment): Observable<Appointment> {
+    const participants = new Array<number>();
+    // TODO: Is the Guid required?
+
+    event.Participants.forEach((participant) => {
+      participants.push(participant.id);
+    });
+
+    if (calendarEvent.hasOwnProperty('parent')) calendarEvent = calendarEvent['parent'];
+    console.log(calendarEvent);
+    const data = JSON.stringify({
+      eventType: calendarEvent.EventType,
+      jsonData: calendarEvent,
+      participantIds: participants,
+      studentId: event.Student ? event.Student.id : null
+    });
+    console.log(data);
+    return this.http
+      .put<Appointment>(`${this.baseUrl}me/schedules/${calendarEvent.Id}`, data)
       .pipe(catchError(this.handleError()));
   }
 

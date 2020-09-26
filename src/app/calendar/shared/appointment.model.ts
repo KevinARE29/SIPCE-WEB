@@ -13,6 +13,6 @@ export class Appointment {
   RecurrenceRule: string;
   RecurrenceException: string;
   Description: string;
-  Participant: User[];
+  Participants: User[];
   Student: Student;
 }
