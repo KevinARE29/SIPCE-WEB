@@ -43,13 +43,11 @@ export class CalendarComponent implements OnInit {
   recurrenceRule: string;
   show = true;
   event: Appointment;
-  updateEvent: Appointment;
 
   // Search variables
   searchLoader = false;
   searchLoaderUser = false;
   student: Student;
-  selectedStudent: Student[]; //BORRAR
   user: User;
   studentNie: string;
   username: string;
@@ -170,7 +168,6 @@ export class CalendarComponent implements OnInit {
     this.results = new Array<Student>();
     this.resultsUsers = new Array<User>();
     this.event = new Appointment();
-    this.updateEvent = new Appointment();
   }
 
   get getIsAllDay(): any {
@@ -306,12 +303,12 @@ export class CalendarComponent implements OnInit {
 
   onPopupOpen(args: PopupOpenEventArgs): void {
     this.event.Participants = new Array<User>();
-    this.updateEvent = new Appointment();
-    this.selectedStudent = new Array<Student>();
+    this.event.Student = null;
+    this.studentNie = '';
+    this.username = '';
 
     this.results = new Array<Student>();
     this.resultsUsers = new Array<User>();
-    this.event.Student = null;
     this.showAlert = false;
 
     if (args.type === 'Editor') {
@@ -357,12 +354,17 @@ export class CalendarComponent implements OnInit {
   }
 
   addStudent(selectedStudent: Student): void {
+    if (this.event.Student) {
+      this.showAlert = true;
+      return;
+    }
+
     this.event.Student = new Student();
     this.event.Student = selectedStudent;
     this.results = this.results.filter((d) => d['id'] !== selectedStudent.id);
   }
 
-  confirmDeleteStudent(id: number, student: Student): void {
+  confirmDeleteStudent(student: Student): void {
     this.showAlert = false;
     if (this.results.length !== 0) this.results.push(student);
     this.event.Student = null;
@@ -385,7 +387,6 @@ export class CalendarComponent implements OnInit {
   }
 
   addUser(User: User): void {
-    //add condition to know if the event has students previously
     this.event.Participants.push(User);
     this.resultsUsers = this.resultsUsers.filter((d) => d['id'] !== User.id);
   }

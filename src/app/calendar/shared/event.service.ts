@@ -21,10 +21,6 @@ export class EventService {
     this.baseUrl = environment.apiURL;
   }
 
-  createAppointment(data: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}me/schedules`, data).pipe(catchError(this.handleError()));
-  }
-
   getEvents(fromDate: Date, toDate: Date): Observable<Appointment[]> {
     const startDate = fromDate.toISOString();
     const endDate = toDate.toISOString();
@@ -97,7 +93,7 @@ export class EventService {
       participantIds: participants,
       studentId: event.Student ? event.Student.id : null
     });
-    console.log(data);
+
     return this.http
       .put<Appointment>(`${this.baseUrl}me/schedules/${calendarEvent.Id}`, data)
       .pipe(catchError(this.handleError()));

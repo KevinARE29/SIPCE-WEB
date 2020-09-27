@@ -55,17 +55,14 @@
                 </div>
 
                 <div nz-row>
-                    <div *ngIf="showAlert" class="error">Se permite seleccionar solo un estudiante, para agregar otro
-                        cancele el seleccionado.</div>
-                    <br>
-
                     <div class="addStudent" nz-row>
                         <div class="searchSelection" nz-col *ngIf="event.Student">
                             {{ event.Student.firstname }} {{ event.Student.lastname }}
 
-                            <a (click)="confirmDeleteStudent(event.Student.id, event.Student)">
+                            <a (click)="confirmDeleteStudent(event.Student)">
                                 <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ff4d4f'"></i>
                             </a>
+                            <div *ngIf="showAlert" class="error">Solo puede agregarse un estudiante al evento. Para cambiarlo primero debe remover al estudiante actual.</div>
                         </div>
 
                         <nz-spin nzTip="Cargando ..." [nzSpinning]="searchLoader">
