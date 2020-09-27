@@ -202,7 +202,7 @@ export class CalendarComponent implements OnInit {
 
   onActionComplete(args): void {
     let startDate, endDate;
-    console.log(args);
+    // console.log(args);
     switch (args.requestType) {
       case 'dateNavigate':
       case 'viewNavigate':
@@ -274,153 +274,32 @@ export class CalendarComponent implements OnInit {
 
   public onBegin(args: any): void {
     if (args.requestType === 'eventCreate') {
-      let data = !isNullOrUndefined(args.data[0]) ? args.data[0] : args.data;
-      const createEvent = {};
-      const participantIds = new Array<number>();
-      this.saveEvent = true;
+      const data = !isNullOrUndefined(args.data[0]) ? args.data[0] : args.data;
       data.RecurrenceRule = this.recurrenceRule;
+      args.cancel = true;
+      console.log(data.Id);
+      if (data.EventType === undefined || data.EventType === null || data.EventType === '') data.EventType = 'Otro';
 
-      //validating the date
-      const result = compareAsc(data.StartTime, data.EndTime);
+      this.eventService.createEvent(data, this.event).subscribe(
+        (r) => {
+          const nextIndex = Object.entries(this.eventData.dataSource).length;
+          data.Id = r['data'].id;
+          data.CategoryColor = this.randomItem();
 
-      if (result === 1) {
-        this.notification.create(
-          'error',
-          'Ocurrió un error al crear el evento. Por favor verifique lo siguiente:',
-          'La fecha y hora de finalizacíon debe ser mayor a la fecha y hora de inicio',
-          { nzDuration: 4500 }
-        );
-        this.saveEvent = false;
-        args.cancel = true;
-      }
+          // Add the new event to the current data source
+          Object.assign(this.eventData.dataSource, { [nextIndex]: data });
 
-      if (this.event.Participants !== undefined) {
-        this.event.Participants.forEach((user) => {
-          participantIds.push(user.id);
-        });
-      } else {
-        this.event.Participants = null;
-      }
+          // Refresh the calendar after adding a new event
+          this.scheduleObj.refresh();
 
-      //initializing the event object that will be send to the json data
-      this.event.Id = data.Id;
-
-      if (args.requestType === 'eventCreate') {
-        this.event.StartTime = data.StartTime.toISOString();
-        this.event.EndTime = data.EndTime.toISOString();
-      } else if (args.requestType === 'eventChange') {
-        this.event.StartTime = data.StartTime.toISOString();
-        this.event.EndTime = data.EndTime.toISOString();
-      }
-
-      this.event.Subject = data.Subject;
-      if (data.IsAllDay === true) {
-        this.event.IsAllDay = true;
-      } else {
-        this.event.IsAllDay = false;
-      }
-
-      if (data.RecurrenceRule === undefined || data.RecurrenceRule === null) {
-        this.event.RecurrenceRule = null;
-        createEvent['recurrent'] = false;
-      } else {
-        this.event.RecurrenceRule = data.RecurrenceRule;
-        createEvent['recurrent'] = true;
-      }
-
-      if (data.EventType === undefined || data.EventType === null || data.EventType === '') {
-        this.event.EventType = 'Otro';
-      } else {
-        this.event.EventType = data.EventType;
-      }
-
-      if (data.Location === undefined) {
-        this.event.Location = null;
-      } else {
-        this.event.Location = data.Location;
-      }
-
-      if (data.Description === undefined) {
-        this.event.Description = null;
-      } else {
-        this.event.Description = data.Description;
-      }
-
-      //initializing the event object that will be send to the backend
-      createEvent['eventType'] = this.event.EventType;
-      createEvent['day'] = this.event.StartTime;
-      createEvent['startTime'] = this.event.StartTime;
-      createEvent['endTime'] = this.event.EndTime;
-      createEvent['subject'] = this.event.Subject;
-      createEvent['description'] = this.event.Description;
-      createEvent['jsonData'] = this.event;
-      createEvent['jsonData']['CategoryColor'] = this.randomItem();
-      if (participantIds.length !== 0) createEvent['participantIds'] = participantIds;
-
-      if (this.event.Student === null || this.event.Student === undefined) {
-      } else {
-        createEvent['studentId'] = this.event.Student.id;
-      }
-
-      if (args.requestType === 'eventCreate') {
-        //validating the date
-        const result = compareAsc(data.StartTime, data.EndTime);
-        args.cancel = true;
-        // this.submitForm();
-
-        if (this.saveEvent) {
-          this.eventService.createAppointment(createEvent).subscribe(
-            () => {
-              const nextIndex = Object.entries(this.eventData.dataSource).length;
-
-              // Add the new event to the current data source
-              Object.assign(this.eventData.dataSource, { [nextIndex]: data });
-
-              // Refresh the calendar after adding a new event
-              this.scheduleObj.refresh();
-
-              this.event = new Appointment();
-              this.message.success(`Evento creado con éxito`);
-            },
-            (err) => {
-              args.cancel = true;
-              this.event = new Appointment();
-            }
-          );
+          this.event = new Appointment();
+          this.message.success(`Evento creado con éxito`);
+        },
+        () => {
+          args.cancel = true;
+          this.event = new Appointment();
         }
-      } else if (args.requestType === 'eventChange') {
-        // quitar este if
-        if (!args.data.parent) {
-          // create event  args.cancel = true;
-          data = <any>args.data;
-
-          // this.message.success('Evento actualizado con éxito');
-          /* this.eventService.updateEvent(args.data).subscribe(
-            (r) => {
-              args.cancel = false;
-           
-              // this.updateEvent = new Events();
-              // console.log('esto tiene la ruta', r);
-              this.message.success('Evento actualizado con éxito');
-              this.scheduleObj.refresh();
-            },
-            (err) => {
-              args.cancel = true;
-            } 
-          );*/
-        } /*else {
-          this.eventService.updateEvent(args.data.occurrence).subscribe(
-            (r) => {
-              data = <any>args.data;
-              this.updateEvent = new Appointment();
-              // this.scheduleObj.refresh();
-            },
-            (err) => {
-              args.cancel = true;
-            }
-          );
-        }*/
-      }
+      );
     } else if (args.requestType === 'eventChange') {
       console.log(args, args.data.hasOwnProperty('parent'));
       if (!args.data.hasOwnProperty('parent')) {

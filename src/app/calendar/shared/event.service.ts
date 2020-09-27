@@ -22,7 +22,6 @@ export class EventService {
   }
 
   createAppointment(data: any): Observable<any> {
-    console.log(data);
     return this.http.post<any>(`${this.baseUrl}me/schedules`, data).pipe(catchError(this.handleError()));
   }
 
@@ -47,6 +46,7 @@ export class EventService {
   createEvent(calendarEvent: Appointment, event: Appointment): Observable<Appointment> {
     const participants = new Array<number>();
 
+    calendarEvent.Student = event.Student;
     event.Participants.forEach((participant) => {
       participants.push(participant.id);
     });
@@ -57,9 +57,9 @@ export class EventService {
       participantIds: participants,
       studentId: event.Student ? event.Student.id : null
     });
-    console.log(data);
+
     return this.http.post<Appointment>(`${this.baseUrl}me/schedules`, data).pipe(catchError(this.handleError()));
-  } 
+  }
 
   updateEventAfterDelete(event: Appointment): Observable<Appointment> {
     const participants = new Array<number>();
@@ -82,8 +82,8 @@ export class EventService {
 
   updateEvent(calendarEvent: Appointment, event: Appointment): Observable<Appointment> {
     const participants = new Array<number>();
-    // TODO: Is the Guid required?
-
+    console.log(event);
+    calendarEvent.Student = event.Student;
     event.Participants.forEach((participant) => {
       participants.push(participant.id);
     });
