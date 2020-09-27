@@ -1,14 +1,14 @@
 <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-    <ejs-schedule #scheduleObj (popupOpen)="onPopupOpen($event)" [currentView]="newViewMode"
+    <ejs-schedule #scheduleObj (popupOpen)="onPopupOpen($event)" [currentView]="currentViewMode"
         (actionBegin)="onBegin($event)" [views]="views" [selectedDate]="selectedDate" timezone="America/El_Salvador"
         locale="es" [eventSettings]="eventData" (eventRendered)="applyCategoryColor($event)"
         (actionComplete)="onActionComplete($event)">
         <ng-template #editorTemplate let-data>
-            <form class="custom-event-editor" [formGroup]="eventForm">
+            <form class="custom-event-editor">
                 <div class="dateTimePicker">
                     <label class="e-textlabel">Asunto</label>
-                    <input id="Subject" class="e-field e-input" type="text" data-name="Subject"
-                        FormControlName="Subject" name="Subject" style="width: 100%;" />
+                    <input id="Subject" class="e-field e-input" type="text" data-name="Subject" name="Subject"
+                        style="width: 100%;" />
                 </div>
                 <div class="dateTimePicker">
                     <label class="e-textlabel">Tipo de entrevista</label>
@@ -23,7 +23,7 @@
                     <label class="e-textlabel">Lugar</label>
 
                     <input id="Location" class="e-field e-input" value="{{ data.Location }}" type="text"
-                        data-name="Location" FormControlName="Location" name="Location" style="width: 100%;" />
+                        data-name="Location" name="Location" style="width: 100%;" />
                 </div>
 
                 <div class="dateTimePicker">
@@ -38,19 +38,18 @@
 
                 <div colspan="4">
                     <ejs-recurrenceeditor id="RecurrenceRule" class="e-field" name="RecurrenceRule"
-                        value='{{data.RecurrenceRule}}' data-name="RecurrenceRule" FormControlName="RecurrenceRule"
-                        locale="es" #recurrenceObj (change)="onChange($event)">
+                        value='{{data.RecurrenceRule}}' data-name="RecurrenceRule" locale="es" #recurrenceObj
+                        (change)="onChange($event)">
                     </ejs-recurrenceeditor>
                 </div>
 
                 <div class="dateTimePicker">
                     <label class="e-textlabel">Descripcion</label>
-                    <textarea id="Description" class="e-field e-input" FormControlName="Description"
-                        data-name="Description" name="Description" rows="3" cols="50"
-                        style="width: 100%; height: 60px !important; resize: vertical;"></textarea>
+                    <textarea id="Description" class="e-field e-input" data-name="Description" name="Description"
+                        rows="3" cols="50" style="width: 100%; height: 60px !important; resize: vertical;"></textarea>
                 </div>
-                <!-- atendees -->
 
+                <!-- Participants -->
                 <div class="dateTimePicker" colspan="4">
                     <label class="e-textlabel"> Participantes del evento</label>
                 </div>
@@ -73,8 +72,7 @@
                             <label> Estudiantes</label>
                             <div nz-col nzXs="24" nzSm="24" nzMd="20">
                                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                                    <input type="text" nz-input formControlName="Students"
-                                        placeholder="Buscar por NIE" />
+                                    <input type="text" nz-input placeholder="Buscar por NIE" [(ngModel)]="studentNie" [ngModelOptions]="{standalone: true}"/>
                                 </nz-input-group>
                                 <ng-template #suffixIconButton>
                                     <button nz-button [nzType]="searching ? '' : 'primary'" nzSearch
@@ -115,8 +113,7 @@
                             <label> Empleados</label>
                             <div nz-col nzXs="24" nzSm="24" nzMd="26">
                                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButtonUser">
-                                    <input type="text" nz-input formControlName="Users"
-                                        placeholder="Buscar nombre de usuario" />
+                                    <input type="text" nz-input placeholder="Buscar nombre de usuario"  [(ngModel)]="username" [ngModelOptions]="{standalone: true}"/>
                                 </nz-input-group>
                                 <ng-template #suffixIconButtonUser>
                                     <button nz-button [nzType]="searchingUser ? '' : 'primary'" nzSearch
@@ -145,11 +142,5 @@
                 </div>
             </form>
         </ng-template>
-        <!-- <e-views>
-            <e-view option="Day"></e-view>
-            <e-view option="Week"></e-view>
-            <e-view option="Month"></e-view>
-            <e-view option="Angenda"></e-view>
-        </e-views>  -->
     </ejs-schedule>
 </nz-spin>

@@ -47,6 +47,7 @@ export class EventService {
     const participants = new Array<number>();
 
     calendarEvent.Student = event.Student;
+    calendarEvent.Participants = event.Participants;
     event.Participants.forEach((participant) => {
       participants.push(participant.id);
     });
@@ -82,14 +83,14 @@ export class EventService {
 
   updateEvent(calendarEvent: Appointment, event: Appointment): Observable<Appointment> {
     const participants = new Array<number>();
-    console.log(event);
+
+    if (calendarEvent.hasOwnProperty('parent')) calendarEvent = calendarEvent['parent'];
     calendarEvent.Student = event.Student;
+    calendarEvent.Participants = event.Participants;
     event.Participants.forEach((participant) => {
       participants.push(participant.id);
     });
 
-    if (calendarEvent.hasOwnProperty('parent')) calendarEvent = calendarEvent['parent'];
-    console.log(calendarEvent);
     const data = JSON.stringify({
       eventType: calendarEvent.EventType,
       jsonData: calendarEvent,

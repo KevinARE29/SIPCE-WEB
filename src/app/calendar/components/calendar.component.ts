@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import {
   EventSettingsModel,
   ScheduleComponent,
@@ -14,7 +14,7 @@ import { L10n, loadCldr, isNullOrUndefined } from '@syncfusion/ej2-base';
 import { DateTimePicker } from '@syncfusion/ej2-calendars';
 import { RecurrenceEditorChangeEventArgs, EventRenderedArgs } from '@syncfusion/ej2-angular-schedule';
 
-import { addDays, addHours, endOfMonth, getDay, startOfMonth, subDays, compareAsc, compareDesc } from 'date-fns';
+import { addDays, addHours, endOfMonth, getDay, startOfMonth, subDays, compareDesc } from 'date-fns';
 import * as numberingSystems from '../../../../node_modules/cldr-data/supplemental/numberingSystems.json';
 import * as gregorian from '../../../../node_modules/cldr-data/main/es/ca-gregorian.json';
 import * as numbers from 'cldr-data/main/es/numbers.json';
@@ -41,7 +41,6 @@ export class CalendarComponent implements OnInit {
   toolBarItemRendered = false;
   loading = false;
   recurrenceRule: string;
-  eventForm!: FormGroup;
   show = true;
   event: Appointment;
   updateEvent: Appointment;
@@ -52,6 +51,8 @@ export class CalendarComponent implements OnInit {
   student: Student;
   selectedStudent: Student[]; //BORRAR
   user: User;
+  studentNie: string;
+  username: string;
   results: Student[];
   resultsUsers: User[];
   noResults: string;
@@ -73,7 +74,7 @@ export class CalendarComponent implements OnInit {
   public recurrenceObj: RecurrenceEditor;
   public views: Array<string> = ['Day', 'Week', 'Month'];
   public selectedDate: Date = new Date();
-  public newViewMode: View = 'Month';
+  public currentViewMode: View = 'Month';
 
   public eventFields: Object = { text: 'eventTypeText', value: 'eventTypeText' };
   public EventData: Object[] = [
@@ -120,7 +121,6 @@ export class CalendarComponent implements OnInit {
     }
   };
 
-  // IMPROVE CODE
   public eventFormFields = {
     id: 'Id',
     subject: {
@@ -142,7 +142,6 @@ export class CalendarComponent implements OnInit {
       }
     }
   };
-  // END OF IMPROVE CODE
 
   public data: object[] = [];
   public eventData: EventSettingsModel = {
@@ -159,7 +158,6 @@ export class CalendarComponent implements OnInit {
   }
 
   constructor(
-    private fb: FormBuilder,
     private eventService: EventService,
     private studentService: StudentService,
     private userService: UserService,
@@ -168,15 +166,6 @@ export class CalendarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.eventForm = this.fb.group({
-      IsAllDay: [false, [Validators.required]],
-      //  RecurrenceID: [null, [Validators.required]],
-      RecurrenceRule: [null, [Validators.required]],
-      //  RecurrenceException: [null, [Validators.required]],
-      Users: [null, [Validators.required]],
-      Students: [null, [Validators.required]]
-    });
-
     this.user = new User();
     this.results = new Array<Student>();
     this.resultsUsers = new Array<User>();
@@ -185,7 +174,7 @@ export class CalendarComponent implements OnInit {
   }
 
   get getIsAllDay(): any {
-    return this.eventForm.get('IsAllDay');
+    return true;
   }
 
   applyCategoryColor(args: EventRenderedArgs): void {
@@ -202,7 +191,7 @@ export class CalendarComponent implements OnInit {
 
   onActionComplete(args): void {
     let startDate, endDate;
-    // console.log(args);
+
     switch (args.requestType) {
       case 'dateNavigate':
       case 'viewNavigate':
@@ -277,7 +266,7 @@ export class CalendarComponent implements OnInit {
       const data = !isNullOrUndefined(args.data[0]) ? args.data[0] : args.data;
       data.RecurrenceRule = this.recurrenceRule;
       args.cancel = true;
-      console.log(data.Id);
+
       if (data.EventType === undefined || data.EventType === null || data.EventType === '') data.EventType = 'Otro';
 
       this.eventService.createEvent(data, this.event).subscribe(
@@ -301,9 +290,7 @@ export class CalendarComponent implements OnInit {
         }
       );
     } else if (args.requestType === 'eventChange') {
-      console.log(args, args.data.hasOwnProperty('parent'));
       if (!args.data.hasOwnProperty('parent')) {
-        console.log('evento individual o serie completa');
         this.eventService.updateEvent(args.changedRecords[0], this.event).subscribe(() => {
           this.message.success(`El evento ha sido actualizado`);
         });
@@ -318,21 +305,15 @@ export class CalendarComponent implements OnInit {
   }
 
   onPopupOpen(args: PopupOpenEventArgs): void {
-    this.eventForm.reset;
-    // cleanning variables of atendees
     this.event.Participants = new Array<User>();
     this.updateEvent = new Appointment();
     this.selectedStudent = new Array<Student>();
 
-    for (const i in this.eventForm.controls) {
-      this.eventForm.controls[i].markAsDirty();
-      this.eventForm.controls[i].updateValueAndValidity();
-    }
     this.results = new Array<Student>();
     this.resultsUsers = new Array<User>();
     this.event.Student = null;
     this.showAlert = false;
-    //initializing event object
+
     if (args.type === 'Editor') {
       const startElement: HTMLInputElement = args.element.querySelector('#StartTime') as HTMLInputElement;
       if (!startElement.classList.contains('e-datetimepicker')) {
@@ -359,8 +340,8 @@ export class CalendarComponent implements OnInit {
 
   searchStudent(): void {
     const search = new Student();
-    search.code = '';
-    search.code = this.eventForm.controls['Students'].value;
+    search.code = this.studentNie;
+
     this.searching = !this.searching;
 
     if (this.searching) {
@@ -371,7 +352,7 @@ export class CalendarComponent implements OnInit {
       });
     } else {
       this.results = new Array<Student>();
-      this.eventForm.get('Students')?.setValue(null);
+      this.studentNie = '';
     }
   }
 
@@ -388,20 +369,18 @@ export class CalendarComponent implements OnInit {
   }
 
   searchUser(): void {
-    let search = '';
-    search = this.eventForm.controls['Users'].value;
     this.searchingUser = !this.searchingUser;
 
     if (this.searchingUser) {
       this.searchLoaderUser = true;
-      this.userService.getUserByUsername(search).subscribe((r) => {
+      this.userService.getUserByUsername(this.username).subscribe((r) => {
         this.resultsUsers = r['data'];
         this.resultsUsers = this.resultsUsers.filter((d) => d['id'] !== this.user.id);
         this.searchLoaderUser = false;
       });
     } else if (!this.searchingUser) {
       this.resultsUsers = new Array<User>();
-      this.eventForm.get('Users')?.setValue(null);
+      this.username = '';
     }
   }
 
