@@ -77,8 +77,7 @@ export class EventService {
     const participants = new Array<number>();
 
     // A series of events doesn't need a RecurrenceID
-    if (calendarEvent.RecurrenceID === calendarEvent.Id && !!calendarEvent.RecurrenceException)
-      delete calendarEvent.RecurrenceID;
+    if (calendarEvent.RecurrenceID === calendarEvent.Id) delete calendarEvent.RecurrenceID;
 
     // Add the event's participants
     calendarEvent.Student = event.Student;
