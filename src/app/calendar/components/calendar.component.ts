@@ -213,7 +213,9 @@ export class CalendarComponent implements OnInit {
         break;
       case 'eventRemoved':
         if (args.changedRecords.length) {
+          this.loading = true;
           this.eventService.updateEventAfterDelete(args.changedRecords[0]).subscribe(() => {
+            this.loading = false;
             this.message.success(`El evento ha sido eliminado`);
           });
         }
@@ -224,6 +226,7 @@ export class CalendarComponent implements OnInit {
           const updatedEvent = args.changedRecords[0];
           updatedEvent.RecurrenceRule = this.recurrenceRule;
 
+          this.loading = true;
           this.eventService.updateEvent(updatedEvent, this.event).subscribe(() => {
             const elements = Object.entries(this.eventData.dataSource).length;
 
@@ -234,8 +237,10 @@ export class CalendarComponent implements OnInit {
               }
             }
             this.scheduleObj.refresh();
+            this.loading = false;
             this.message.success(`La serie de eventos ha sido actualizada`);
           });
+
           this.eventService.createEvent(args.addedRecords[0], this.event).subscribe();
         }
         break;
@@ -272,6 +277,7 @@ export class CalendarComponent implements OnInit {
       const data = !isNullOrUndefined(args.data[0]) ? args.data[0] : args.data;
       data.RecurrenceRule = this.recurrenceRule;
       args.cancel = true;
+      this.loading = true;
 
       if (data.EventType === undefined || data.EventType === null || data.EventType === '') data.EventType = 'Otro';
 
@@ -288,11 +294,13 @@ export class CalendarComponent implements OnInit {
           this.scheduleObj.refresh();
 
           this.event = new Appointment();
+          this.loading = false;
           this.message.success(`Evento creado con éxito`);
         },
         () => {
           args.cancel = true;
           this.event = new Appointment();
+          this.loading = false;
         }
       );
     } else if (args.requestType === 'eventChange') {
@@ -300,8 +308,10 @@ export class CalendarComponent implements OnInit {
       if (!args.data.hasOwnProperty('parent')) {
         args.cancel = true;
         const updatedEvent = args.changedRecords[0];
-
         updatedEvent.RecurrenceRule = this.recurrenceRule;
+
+        this.loading = true;
+
         this.eventService.updateEvent(updatedEvent, this.event).subscribe(() => {
           const elements = Object.entries(this.eventData.dataSource).length;
 
@@ -312,14 +322,32 @@ export class CalendarComponent implements OnInit {
             }
           }
           this.scheduleObj.refresh();
+          this.loading = false;
           this.message.success(`El evento ha sido actualizado`);
         });
       }
     } else if (args.requestType === 'eventRemove') {
       if (!args.data[0].parent) {
-        // Delete reccurrent and individual events
-        this.eventService.deleteEvent(args.data[0].Id).subscribe(() => {
-          this.message.success(`El evento ha sido eliminado`);
+        const elements = Object.entries(this.eventData.dataSource).length;
+        const relatedEvents = new Array<number>();
+        this.loading = true;
+
+        // Get the related events from a serie
+        for (let index = 0; index < elements; index++) {
+          if (this.eventData.dataSource[index].RecurrenceID === args.data[0].Id) {
+            relatedEvents.push(this.eventData.dataSource[index].Id);
+          }
+        }
+
+        relatedEvents.push(args.data[0].Id);
+
+        relatedEvents.forEach((eventId) => {
+          this.eventService.deleteEvent(eventId).subscribe(() => {
+            if (eventId === args.data[0].Id)  { 
+              this.message.success(`El evento ha sido eliminado`);
+              this.loading = false;
+            }
+          });
         });
       }
     }
