@@ -8,11 +8,9 @@ import {
   PopupOpenEventArgs,
   View
 } from '@syncfusion/ej2-angular-schedule';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-
 import { L10n, loadCldr, isNullOrUndefined } from '@syncfusion/ej2-base';
 import { DateTimePicker } from '@syncfusion/ej2-calendars';
-import { RecurrenceEditorChangeEventArgs, EventRenderedArgs } from '@syncfusion/ej2-angular-schedule';
+import { EventRenderedArgs } from '@syncfusion/ej2-angular-schedule';
 
 import { addDays, addHours, endOfMonth, getDay, startOfMonth, subDays, compareDesc } from 'date-fns';
 import * as numberingSystems from '../../../../node_modules/cldr-data/supplemental/numberingSystems.json';
@@ -159,7 +157,6 @@ export class CalendarComponent implements OnInit {
     private eventService: EventService,
     private studentService: StudentService,
     private userService: UserService,
-    private notification: NzNotificationService,
     private message: NzMessageService
   ) {}
 
@@ -222,12 +219,23 @@ export class CalendarComponent implements OnInit {
         }
         break;
       case 'eventChanged':
+        // Update an event from a recurrent event
         if (args.changedRecords.length && args.addedRecords.length) {
-          args.changedRecords[0].RecurrenceRule = this.recurrenceRule;
-          this.eventService.updateEvent(args.changedRecords[0], this.event).subscribe(() => {
+          const updatedEvent = args.changedRecords[0];
+          updatedEvent.RecurrenceRule = this.recurrenceRule;
+
+          this.eventService.updateEvent(updatedEvent, this.event).subscribe(() => {
+            const elements = Object.entries(this.eventData.dataSource).length;
+
+            for (let index = 0; index < elements; index++) {
+              if (this.eventData.dataSource[index].Id === updatedEvent.Id) {
+                this.eventData.dataSource[index] = updatedEvent;
+                break;
+              }
+            }
+            this.scheduleObj.refresh();
             this.message.success(`La serie de eventos ha sido actualizada`);
           });
-
           this.eventService.createEvent(args.addedRecords[0], this.event).subscribe();
         }
         break;
@@ -288,14 +296,28 @@ export class CalendarComponent implements OnInit {
         }
       );
     } else if (args.requestType === 'eventChange') {
+      // Update reccurrent and individual events
       if (!args.data.hasOwnProperty('parent')) {
-        args.changedRecords[0].RecurrenceRule = this.recurrenceRule;
-        this.eventService.updateEvent(args.changedRecords[0], this.event).subscribe(() => {
+        args.cancel = true;
+        const updatedEvent = args.changedRecords[0];
+
+        updatedEvent.RecurrenceRule = this.recurrenceRule;
+        this.eventService.updateEvent(updatedEvent, this.event).subscribe(() => {
+          const elements = Object.entries(this.eventData.dataSource).length;
+
+          for (let index = 0; index < elements; index++) {
+            if (this.eventData.dataSource[index].Id === updatedEvent.Id) {
+              this.eventData.dataSource[index] = updatedEvent;
+              break;
+            }
+          }
+          this.scheduleObj.refresh();
           this.message.success(`El evento ha sido actualizado`);
         });
       }
     } else if (args.requestType === 'eventRemove') {
       if (!args.data[0].parent) {
+        // Delete reccurrent and individual events
         this.eventService.deleteEvent(args.data[0].Id).subscribe(() => {
           this.message.success(`El evento ha sido eliminado`);
         });
