@@ -223,11 +223,12 @@ export class CalendarComponent implements OnInit {
         break;
       case 'eventChanged':
         if (args.changedRecords.length && args.addedRecords.length) {
+          args.changedRecords[0].RecurrenceRule = this.recurrenceRule;
           this.eventService.updateEvent(args.changedRecords[0], this.event).subscribe(() => {
             this.message.success(`La serie de eventos ha sido actualizada`);
           });
 
-          this.eventService.createEvent(args.addedRecords[0], this.event).subscribe(() => {});
+          this.eventService.createEvent(args.addedRecords[0], this.event).subscribe();
         }
         break;
     }
@@ -288,6 +289,7 @@ export class CalendarComponent implements OnInit {
       );
     } else if (args.requestType === 'eventChange') {
       if (!args.data.hasOwnProperty('parent')) {
+        args.changedRecords[0].RecurrenceRule = this.recurrenceRule;
         this.eventService.updateEvent(args.changedRecords[0], this.event).subscribe(() => {
           this.message.success(`El evento ha sido actualizado`);
         });

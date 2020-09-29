@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError, forkJoin } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
-
-import { Student } from '../../students/shared/student.model';
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
-import { User } from 'src/app/users/shared/user.model';
 import { Appointment } from './appointment.model';
 
 @Injectable({
@@ -80,7 +76,11 @@ export class EventService {
   updateEvent(calendarEvent: Appointment, event: Appointment): Observable<Appointment> {
     const participants = new Array<number>();
 
-    if (calendarEvent.hasOwnProperty('parent')) calendarEvent = calendarEvent['parent'];
+    // A series of events doesn't need a RecurrenceID
+    if (calendarEvent.RecurrenceID === calendarEvent.Id && !!calendarEvent.RecurrenceException)
+      delete calendarEvent.RecurrenceID;
+
+    // Add the event's participants
     calendarEvent.Student = event.Student;
     calendarEvent.Participants = event.Participants;
     event.Participants.forEach((participant) => {
