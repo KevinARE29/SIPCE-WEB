@@ -36,7 +36,7 @@ export class ResponsibleService {
       firstname: responsible.firstname,
       lastname: responsible.lastname,
       email: responsible.email,
-      phone: responsible.phone
+      phone: responsible.phone.replace('-', '')
     });
 
     return this.http

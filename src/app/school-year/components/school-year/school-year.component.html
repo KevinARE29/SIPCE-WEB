@@ -1,0 +1,129 @@
+<h1>Año escolar</h1>
+
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+    <ng-container [ngSwitch]="schoolYear.status">
+        <ng-container *ngSwitchCase="'Histórico'">
+            <!-- #region No active or draft school year -->
+            <form nz-form [formGroup]="classPeriodForm" (ngSubmit)="submitClassPeriod()">
+                <div nz-col nzXs="24" nzSm="24" nzMd="20" nzLg="11">
+                    <nz-form-item nzJustify="space-around">
+                        <nz-form-label>Periodo de clases</nz-form-label>
+                        <nz-form-control [nzErrorTip]="classPeriodErrors">
+                            <nz-range-picker formControlName="classPeriod" nzFormat="dd/MM/yyyy"></nz-range-picker>
+                            <ng-template #classPeriodErrors let-control>
+                                <ng-container *ngIf="control.hasError('required')">
+                                    El periodo de clases es obligatorio
+                                </ng-container>
+                            </ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <button nz-button nzType="primary">Iniciar apertura del año escolar</button>
+                </div>
+            </form>
+            <!-- #endregion -->
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'En proceso de apertura'">
+            <!-- #region Draft school year -->
+            <!-- Steps -->
+            <nz-steps [nzCurrent]="currentStep" nzProgressDot>
+                <nz-step nzTitle="Ciclos, grados y secciones"></nz-step>
+                <nz-step nzTitle="Coordinadores de ciclo"></nz-step>
+                <nz-step nzTitle="Docentes titulares"></nz-step>
+                <nz-step nzTitle="Orientadores"></nz-step>
+                <nz-step nzTitle="Finalizar"></nz-step>
+            </nz-steps>
+
+            <!-- Steps content -->
+            <div class="steps-content">
+                <div class="shifts">
+                    <div class="step-content" [ngSwitch]="currentStep">
+                        <ng-container *ngSwitchCase="0">
+                            <app-academic-assignments [catalogs]="catalogs" [assignation]="schoolYear"
+                                [isActive]="false" (academicEvent)="updateItem($event)">
+                            </app-academic-assignments>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="1">
+                            <app-cycle-coordinators [catalogs]="catalogs" [assignation]="schoolYear"
+                                [isValid]="emptyUsers.valid" (coordinatorsEvent)="updateCycleCoordinators($event)">
+                            </app-cycle-coordinators>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="2">
+                            <app-head-teachers [catalogs]="catalogs" [assignation]="schoolYear"
+                                [isValid]="emptyUsers.valid" (headTeachersEvent)="updateHeadTeachers($event)">
+                            </app-head-teachers>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="3">
+                            <app-counselors [catalogs]="catalogs" [assignation]="schoolYear"
+                            [isValid]="emptyUsers.valid" (counselorsEvent)="updateCounselors($event)"></app-counselors>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="4">
+                            <app-new-school-year-summary [assignation]="schoolYear"></app-new-school-year-summary>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Steps actions -->
+            <div class="steps-action">
+                <button nz-button nzType="default" (click)="pre()" *ngIf="currentStep > 0">
+                    <span>Previo</span>
+                </button>
+                <button nz-button nzType="default" (click)="next()" *ngIf="currentStep < 4">
+                    <span>Siguiente</span>
+                </button>
+                <button nz-button nzType="primary" (click)="done()" *ngIf="currentStep === 4">
+                    <span>Finalizar</span>
+                </button>
+            </div>
+            <!-- #endregion -->
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'En curso'">
+            <!-- #region Active school year -->
+            <nz-tabset>
+                <nz-tab nzTitle="Ciclos, grados y secciones">
+                    <div class="shifts">
+                        <app-academic-assignments [catalogs]="catalogs" [assignation]="schoolYear" [isActive]="true">
+                        </app-academic-assignments>
+                    </div>
+                </nz-tab>
+                <nz-tab nzTitle="Coordinadores de ciclo">
+                    <div class="shifts">
+                        <app-cycle-coordinators [catalogs]="catalogs" [assignation]="schoolYear"
+                            [isValid]="emptyUsers.valid" (coordinatorsEvent)="updateCycleCoordinators($event)">
+                        </app-cycle-coordinators>
+                        <div nz-row nzJustify="space-around">
+                            <button nz-button nzType="primary" (click)="cycleCoordinatorsStep(null)">Actualizar</button>
+                        </div>
+                    </div>
+                </nz-tab>
+                <nz-tab nzTitle="Docentes">
+                    <div class="shifts">
+                        <app-head-teachers [catalogs]="catalogs" [assignation]="schoolYear" [isValid]="emptyUsers.valid"
+                            (headTeachersEvent)="updateHeadTeachers($event)">
+                        </app-head-teachers>
+                        
+                        <div nz-row nzJustify="space-around">
+                            <button nz-button nzType="primary" (click)="headTeachersStep(null)">Actualizar</button>
+                        </div>
+                    </div>
+                </nz-tab>
+                <nz-tab nzTitle="Orientadores">
+                    <div class="shifts">
+                        <app-counselors [catalogs]="catalogs" [assignation]="schoolYear"
+                            [isValid]="emptyUsers.valid" (counselorsEvent)="updateCounselors($event)">
+                        </app-counselors>
+
+                        <div nz-row nzJustify="space-around">
+                            <button nz-button nzType="primary" (click)="counselorsStep(null)">Actualizar</button>
+                        </div>
+                    </div>
+                </nz-tab>
+                <!-- <nz-tab nzTitle="Cerrar año escolar">
+                </nz-tab> -->
+            </nz-tabset>
+            <!-- #endregion -->
+        </ng-container>
+    </ng-container>
+</nz-spin>

@@ -46,41 +46,37 @@
             ]
         },
         {
-            "title": "Catálogos Académicos",
+            "title": "Catálogos académicos",
             "icon": "ordered-list",
             "permissions": [13],
             "allowed": null,
-            "children": [
-                {
-                    "route": "/catalogos/grados",
-                    "name": "Grados",
-                    "permission": 13,
-                    "allowed": false
-                },   
-                {
-                    "route": "/catalogos/secciones",
-                    "name": "Secciones",
-                    "permission": 13,
-                    "allowed": false
-                },
-                {
-                    "route": "/catalogos/ciclos",
-                    "name": "Ciclos",
-                    "permission": 13,
-                    "allowed": false
-                }, 
+            "children": [ 
                 {
                     "route": "/catalogos/turnos",
                     "name": "Turnos",
                     "permission": 13,
                     "allowed": false
-                },
-                {
+                }, {
+                    "route": "/catalogos/ciclos",
+                    "name": "Ciclos",
+                    "permission": 13,
+                    "allowed": false
+                }, {
+                    "route": "/catalogos/grados",
+                    "name": "Grados",
+                    "permission": 13,
+                    "allowed": false
+                }, {
+                    "route": "/catalogos/secciones",
+                    "name": "Secciones",
+                    "permission": 13,
+                    "allowed": false
+                }, {
                     "route": "/catalogos/periodos",
                     "name": "Periodos",
                     "permission": 13,
                     "allowed": false
-                }             
+                }
             ]
         },
         {
@@ -110,7 +106,7 @@
         {
             "title": "Estudiantes",
             "icon": "solution",
-            "permissions": [18, 17],
+            "permissions": [18, 17, 23],
             "allowed": null,
             "children": [
                 {
@@ -122,6 +118,25 @@
                     "route": "/estudiantes/carga-masiva",
                     "name": "Cargar estudiantes",
                     "permission": 17,
+                    "allowed": false
+                }, {
+                    "route": "/estudiantes/asignar",
+                    "name": "Asignar estudiantes",
+                    "permission": 23,
+                    "allowed": false
+                }
+            ]
+        },
+        {
+            "title": "Año escolar",
+            "icon": "contacts",
+            "permissions": [19],
+            "allowed": null,
+            "children": [
+                {
+                    "route": "/asignaciones",
+                    "name": "Año escolar",
+                    "permission": 19,
                     "allowed": false
                 }
             ]

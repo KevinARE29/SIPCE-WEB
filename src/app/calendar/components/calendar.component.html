@@ -1,154 +1,147 @@
-<ejs-schedule #scheduleObj (popupOpen)="onPopupOpen($event)" [currentView]="newViewMode" (actionBegin)="onBegin($event)"
-    [views]="views" [selectedDate]="selectedDate" timezone="America/El_Salvador" locale="es" [eventSettings]="eventData"
-    (eventRendered)="applyCategoryColor($event)" (actionComplete)="onActionComplete($event)">
-    <ng-template #editorTemplate let-data>
-        <form class="custom-event-editor" [formGroup]="eventForm">
-            <div class="dateTimePicker">
-                <label class="e-textlabel">Asunto</label>
-                <input id="Subject" class="e-field e-input" type="text" data-name="Subject" FormControlName="Subject"
-                    name="Subject" style="width: 100%;" />
-            </div>
-            <div class="dateTimePicker">
-                <label class="e-textlabel">Tipo de entrevista</label>
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+    <ejs-schedule #scheduleObj (popupOpen)="onPopupOpen($event)" [currentView]="currentViewMode"
+        (actionBegin)="onBegin($event)" [views]="views" [selectedDate]="selectedDate" timezone="America/El_Salvador"
+        locale="es" [eventSettings]="eventData" (eventRendered)="applyCategoryColor($event)"
+        (actionComplete)="onActionComplete($event)">
+        <ng-template #editorTemplate let-data>
+            <form class="custom-event-editor">
+                <div class="dateTimePicker">
+                    <label class="e-textlabel">Asunto</label>
+                    <input id="Subject" class="e-field e-input" type="text" data-name="Subject" name="Subject"
+                        style="width: 100%;" />
+                </div>
+                <div class="dateTimePicker">
+                    <label class="e-textlabel">Tipo de entrevista</label>
 
-                <ejs-dropdownlist id="EventType" class="e-field" data-name="EventType"
-                    placeholder="Seleccione el tipo de entrevista" [dataSource]="EventData" value='{{ data.EventType }}'
-                    [fields]="eventFields" required>
-                </ejs-dropdownlist>
-            </div>
+                    <ejs-dropdownlist id="EventType" class="e-field" data-name="EventType"
+                        placeholder="Seleccione el tipo de entrevista" [dataSource]="EventData"
+                        value='{{ data.EventType }}' [fields]="eventFields" required>
+                    </ejs-dropdownlist>
+                </div>
 
-            <div class="dateTimePicker">
-                <label class="e-textlabel">Lugar</label>
+                <div class="dateTimePicker">
+                    <label class="e-textlabel">Lugar</label>
 
-                <input id="Location" class="e-field e-input" value="{{ data.Location }}" type="text"
-                    data-name="Location" FormControlName="Location" name="Location" style="width: 100%;" />
-            </div>
+                    <input id="Location" class="e-field e-input" value="{{ data.Location }}" type="text"
+                        data-name="Location" name="Location" style="width: 100%;" />
+                </div>
 
-            <div class="dateTimePicker">
-                <label class="e-textlabel">Inicio</label>
-                <input id="StartTime" class="e-field" type="text" data-name="StartTime" name="StartTime" />
-            </div>
+                <div class="dateTimePicker">
+                    <label class="e-textlabel">Inicio</label>
+                    <input id="StartTime" class="e-field" type="text" data-name="StartTime" name="StartTime" />
+                </div>
 
-            <div class="dateTimePicker">
-                <label class="e-textlabel">Fin</label>
-                <input id="EndTime" class="e-field" type="text" data-name="EndTime" name="EndTime" />
-            </div>
+                <div class="dateTimePicker">
+                    <label class="e-textlabel">Fin</label>
+                    <input id="EndTime" class="e-field" type="text" data-name="EndTime" name="EndTime" />
+                </div>
 
-            <div colspan="4">
-                <ejs-recurrenceeditor id="RecurrenceRule" class="e-field" name="RecurrenceRule"
-                    value='{{data.RecurrenceRule}}' data-name="RecurrenceRule" FormControlName="RecurrenceRule"
-                    locale="es" #recurrenceObj (change)="onChange($event)">
-                </ejs-recurrenceeditor>
-            </div>
+                <div colspan="4">
+                    <ejs-recurrenceeditor id="RecurrenceRule" class="e-field" name="RecurrenceRule"
+                        value='{{data.RecurrenceRule}}' data-name="RecurrenceRule" locale="es" #recurrenceObj
+                        (change)="onChange($event)">
+                    </ejs-recurrenceeditor>
+                </div>
 
-            <div class="dateTimePicker">
-                <label class="e-textlabel">Descripcion</label>
-                <textarea id="Description" class="e-field e-input" FormControlName="Description" data-name="Description"
-                    name="Description" rows="3" cols="50"
-                    style="width: 100%; height: 60px !important; resize: vertical;"></textarea>
-            </div>
-            <!-- atendees -->
+                <div class="dateTimePicker">
+                    <label class="e-textlabel">Descripcion</label>
+                    <textarea id="Description" class="e-field e-input" data-name="Description" name="Description"
+                        rows="3" cols="50" style="width: 100%; height: 60px !important; resize: vertical;"></textarea>
+                </div>
 
-            <div class="dateTimePicker" colspan="4">
-                <label class="e-textlabel"> Participantes del evento</label>
-            </div>
+                <!-- Participants -->
+                <div class="dateTimePicker" colspan="4">
+                    <label class="e-textlabel"> Participantes del evento</label>
+                </div>
 
-            <div nz-row>
-            <!--   <div *ngIf="showAlert" class="error">Se permite seleccionar solo un estudiante, para agregar otro
-                    cancele el seleccionado.</div>--> 
-                <br>
-                <div nz-col>
+                <div nz-row> 
+                    <div *ngIf="showAlert" class="error">Solo puede agregarse un estudiante al evento. Para cambiarlo primero debe remover al estudiante actual.</div>               
                     <div class="addStudent" nz-col>
                         <div class="searchSelection" nz-col *ngIf="event.Student">
                             {{ event.Student.firstname }} {{ event.Student.lastname }}
-                            <a (click)="confirmDeleteStudent(event.Student.id, event.Student)">
+
+                            <a (click)="confirmDeleteStudent(event.Student)">
                                 <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ff4d4f'"></i>
                             </a>
+                          
                         </div>
+                        <nz-spin nzTip="Cargando ..." [nzSpinning]="searchLoader">
+                            <div  class="addEmployee"> 
+                                <label> Estudiantes</label>
+                           </div>   
+                            <div nz-col nzXs="24" nzSm="24" nzMd="20">
+                                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                    <input type="text" nz-input placeholder="Buscar por NIE" [(ngModel)]="studentNie" [ngModelOptions]="{standalone: true}"/>
+                                </nz-input-group>
+                                <ng-template #suffixIconButton>
+                                    <button nz-button [nzType]="searching ? '' : 'primary'" nzSearch
+                                        (click)="searchStudent()">
+                                        <i nz-icon [nzType]="searching ? 'close' : 'search'"></i>
+                                    </button>
+                                </ng-template>
+                            </div>
+                            <!-- Students result-->
+                            <div nz-col nzXs="24" nzSm="24" nzMd="24">
+                                <ng-container *ngIf="results.length; else noResults">
+                                    <div class="addStudent" *ngFor="let result of results">
+                                        <span>{{ result.firstname }} {{ result.lastname }}</span>
+                                        <a (click)="addStudent(result)">
+                                            <i nz-icon nzType="plus-circle" [nzTheme]="'twotone'"
+                                                [nzTwotoneColor]="'#ef6c00'"></i>
+                                        </a>
+                                    </div>
+                                </ng-container>
+                                <ng-template #noResults>
+                                    <ng-container *ngIf="searching">No se encontraron resultados.</ng-container>
+                                </ng-template>
+                            </div>
+                        </nz-spin>
                     </div>
-                    <nz-spin nzTip="Cargando ..." [nzSpinning]="searchLoader">
-                        <div  class="addEmployee"> 
-                             <label> Estudiantes</label>
+                    <br />
+                    <div nz-col>
+                        <div class="addStudent" nz-col>
+                            <div nz-col  class="searchSelection" *ngFor="let user of event.Participants">
+                                {{ user.firstname }} {{ user.lastname }}
+                                <a (click)="confirmDeleteUser(user.id, user)">
+                                    <i nz-icon nzType="close-circle" [nzTheme]="'twotone'"
+                                        [nzTwotoneColor]="'#ff4d4f'"></i>
+                                </a>
+                            </div>
                         </div>
-                       
-                        <div nz-col nzXs="24" nzSm="24" nzMd="20">
-                            <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                                <input type="text" nz-input formControlName="Students" placeholder="Buscar por NIE" />
-                            </nz-input-group>
-                            <ng-template #suffixIconButton>
-                                <button nz-button [nzType]="searching ? '' : 'primary'" nzSearch
-                                    (click)="searchStudent()">
-                                    <i nz-icon [nzType]="searching ? 'close' : 'search'"></i>
-                                </button>
-                            </ng-template>
-                        </div>
-                        <!-- Students result-->
-                        <div nz-col nzXs="24" nzSm="24" nzMd="24">
-                            <ng-container *ngIf="results.length; else noResults">
-                                <div class="addStudent" *ngFor="let result of results">
-                                    <span>{{ result.firstname }} {{ result.lastname }}</span>
-                                    <a (click)="addStudent(result)">
-                                        <i nz-icon nzType="plus-circle" [nzTheme]="'twotone'"
-                                            [nzTwotoneColor]="'#ef6c00'"></i>
-                                    </a>
-                                </div>
-                            </ng-container>
-                            <ng-template #noResults>
-                                <ng-container *ngIf="searching">No se encontraron resultados.</ng-container>
-                            </ng-template>
-                        </div>
-                    </nz-spin>
-                </div>
-                <br />
-                <div nz-col>
-                    <div class="addStudent" nz-col>
-                        <div nz-col  class="searchSelection" *ngFor="let user of event.Participant">
-                            {{ user.firstname }} {{ user.lastname }}
-                            <a (click)="confirmDeleteUser(user.id, user)">
-                                <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ff4d4f'"></i>
-                            </a>
-                        </div>
+                        <nz-spin nzTip="Cargando ..." [nzSpinning]="searchLoaderUser">
+                            <div  class="addEmployee"> 
+                                <label> Empleados</label>
+                            </div>    
+                            <div nz-col nzXs="24" nzSm="24" nzMd="26">
+                                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButtonUser">
+                                    <input type="text" nz-input placeholder="Buscar nombre de usuario"  [(ngModel)]="username" [ngModelOptions]="{standalone: true}"/>
+                                </nz-input-group>
+                                <ng-template #suffixIconButtonUser>
+                                    <button nz-button [nzType]="searchingUser ? '' : 'primary'" nzSearch
+                                        (click)="searchUser()">
+                                        <i nz-icon [nzType]="searchingUser ? 'close' : 'search'"></i>
+                                    </button>
+                                </ng-template>
+                            </div>
+                            <!-- Students result-->
+                            <div nz-col nzXs="24" nzSm="24" nzMd="24">
+                                <ng-container *ngIf="resultsUsers.length; else noResultsUser">
+                                    <div class="addStudent" *ngFor="let result of resultsUsers">
+                                        <span>{{ result.firstname }} {{ result.lastname }}</span>
+                                        <a (click)="addUser(result)">
+                                            <i nz-icon nzType="plus-circle" [nzTheme]="'twotone'"
+                                                [nzTwotoneColor]="'#ef6c00'"></i>
+                                        </a>
+                                    </div>
+                                </ng-container>
+                                <ng-template #noResultsUser>
+                                    <ng-container *ngIf="searchingUser">No se encontraron resultados.</ng-container>
+                                </ng-template>
+                            </div>
+                        </nz-spin>
                     </div>
-                    <nz-spin nzTip="Cargando ..." [nzSpinning]="searchLoaderUser">
-                        <div  class="addEmployee"> 
-                            <label> Empleados</label>
-                        </div>
-                       
-                        <div nz-col nzXs="24" nzSm="24" nzMd="26">
-                            <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButtonUser">
-                                <input type="text" nz-input formControlName="Users" placeholder="Buscar nombre de usuario" />
-                            </nz-input-group>
-                            <ng-template #suffixIconButtonUser>
-                                <button nz-button [nzType]="searchingUser ? '' : 'primary'" nzSearch
-                                    (click)="searchUser()">
-                                    <i nz-icon [nzType]="searchingUser ? 'close' : 'search'"></i>
-                                </button>
-                            </ng-template>
-                        </div>
-                        <!-- Students result-->
-                        <div nz-col nzXs="24" nzSm="24" nzMd="24">
-                            <ng-container *ngIf="resultsUsers.length; else noResultsUser">
-                                <div class="addStudent" *ngFor="let result of resultsUsers">
-                                    <span>{{ result.firstname }} {{ result.lastname }}</span>
-                                    <a (click)="addUser(result)">
-                                        <i nz-icon nzType="plus-circle" [nzTheme]="'twotone'"
-                                            [nzTwotoneColor]="'#ef6c00'"></i>
-                                    </a>
-                                </div>
-                            </ng-container>
-                            <ng-template #noResultsUser>
-                                <ng-container *ngIf="searchingUser">No se encontraron resultados.</ng-container>
-                            </ng-template>
-                        </div>
-                    </nz-spin>
                 </div>
-            </div>
-        </form>
-    </ng-template>
-    <!-- <e-views>
-            <e-view option="Day"></e-view>
-            <e-view option="Week"></e-view>
-            <e-view option="Month"></e-view>
-            <e-view option="Angenda"></e-view>
-        </e-views>  -->
-</ejs-schedule>
+            </form>
+        </ng-template>
+    </ejs-schedule>
+</nz-spin>

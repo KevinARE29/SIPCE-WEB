@@ -59,11 +59,13 @@ export class CsvToJsonService {
     }
 
     headers.forEach((header) => {
+      let next = true;
       Object.keys(availableHeaders).forEach((key) => {
         if (dictionary.hasOwnProperty(key)) {
-          if (dictionary[key].toLowerCase() == header.toLowerCase().trim()) {
+          if (dictionary[key].toLowerCase() === header.toLowerCase().trim() && next) {
             realHeaders.push(key);
             availableHeaders[key].check = true;
+            next = false;
           }
         }
       });
@@ -156,20 +158,7 @@ export class CsvToJsonService {
     header['validations'].forEach((validate) => {
       switch (validate.value) {
         case 'empty':
-          if (typeof field.value === 'object') {
-            Object.keys(field.value).forEach((value) => {
-              if (this.empty(value)) {
-                field.isValid = false;
-                field.message = validate.message;
-                flag = false;
-              } else {
-                if (flag) {
-                  field.isValid = true;
-                  field.message = null;
-                }
-              }
-            });
-          } else if (typeof field.value === 'string') {
+          if (typeof field.value === 'string') {
             if (this.empty(field.value)) {
               field.isValid = false;
               field.message = validate.message;
@@ -183,20 +172,7 @@ export class CsvToJsonService {
           }
           break;
         case 'text':
-          if (typeof field.value === 'object') {
-            Object.keys(field.value).forEach((value) => {
-              if (!this.text(value)) {
-                field.isValid = false;
-                field.message = validate.message;
-                flag = false;
-              } else {
-                if (flag) {
-                  field.isValid = true;
-                  field.message = null;
-                }
-              }
-            });
-          } else if (typeof field.value === 'string') {
+          if (typeof field.value === 'string') {
             if (!this.text(field.value)) {
               field.isValid = false;
               field.message = validate.message;
@@ -209,21 +185,22 @@ export class CsvToJsonService {
             }
           }
           break;
-        case 'email':
-          if (typeof field.value === 'object') {
-            Object.keys(field.value).forEach((value) => {
-              if (!this.email(value)) {
-                field.isValid = false;
-                field.message = validate.message;
-                flag = false;
-              } else {
-                if (flag) {
-                  field.isValid = true;
-                  field.message = null;
-                }
+        case 'textnumber':
+          if (typeof field.value === 'string') {
+            if (!this.textnumber(field.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
+                field.isValid = true;
+                field.message = null;
               }
-            });
-          } else if (typeof field.value === 'string') {
+            }
+          }
+          break;
+        case 'email':
+          if (typeof field.value === 'string') {
             if (!this.email(field.value)) {
               field.isValid = false;
               field.message = validate.message;
@@ -237,20 +214,7 @@ export class CsvToJsonService {
           }
           break;
         case 'phoneNumber':
-          if (typeof field.value === 'object') {
-            Object.keys(field.value).forEach((value) => {
-              if (!this.phoneNumber(value)) {
-                field.isValid = false;
-                field.message = validate.message;
-                flag = false;
-              } else {
-                if (flag) {
-                  field.isValid = true;
-                  field.message = null;
-                }
-              }
-            });
-          } else if (typeof field.value === 'string') {
+          if (typeof field.value === 'string') {
             if (!this.phoneNumber(field.value)) {
               field.isValid = false;
               field.message = validate.message;
@@ -297,20 +261,7 @@ export class CsvToJsonService {
           }
           break;
         case 'number':
-          if (typeof field.value === 'object') {
-            Object.keys(field.value).forEach((value) => {
-              if (!this.number(value)) {
-                field.isValid = false;
-                field.message = validate.message;
-                flag = false;
-              } else {
-                if (flag) {
-                  field.isValid = true;
-                  field.message = null;
-                }
-              }
-            });
-          } else if (typeof field.value === 'string') {
+          if (typeof field.value === 'string') {
             if (!this.number(field.value)) {
               field.isValid = false;
               field.message = validate.message;
@@ -324,21 +275,22 @@ export class CsvToJsonService {
           }
           break;
         case 'year':
-          if (typeof field.value === 'object') {
-            Object.keys(field.value).forEach((value) => {
-              if (!this.year(value)) {
-                field.isValid = false;
-                field.message = validate.message;
-                flag = false;
-              } else {
-                if (flag) {
-                  field.isValid = true;
-                  field.message = null;
-                }
-              }
-            });
-          } else if (typeof field.value === 'string') {
+          if (typeof field.value === 'string') {
             if (!this.year(field.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
+                field.isValid = true;
+                field.message = null;
+              }
+            }
+          }
+          break;
+        default:
+          if (validate.value.includes('maxlength')) {
+            if (!this.maxlength(field.value, validate.value)) {
               field.isValid = false;
               field.message = validate.message;
               flag = false;
@@ -365,7 +317,11 @@ export class CsvToJsonService {
   }
 
   text(field): boolean {
-    return typeof field === 'string' || field instanceof String;
+    return /[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$/.test(field);
+  }
+
+  textnumber(field): boolean {
+    return /[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$/.test(field);
   }
 
   empty(field): boolean {
@@ -377,7 +333,7 @@ export class CsvToJsonService {
   }
 
   phoneNumber(field): boolean {
-    return /^[0-9]{4}[-]{1}[0-9]{4}$/.test(field);
+    return /^[267]{1}[0-9]{3}[-]{1}[0-9]{4}$/.test(field);
   }
 
   date(field): boolean {
@@ -396,6 +352,12 @@ export class CsvToJsonService {
   kinship(field): boolean {
     return !!Object.values(KinshipRelationship).includes(field);
   }
+
+  maxlength(field, limit) {
+    const max = limit.split(',');
+    return field.length <= max[1];
+  }
+
   replaceAccents(text: string): string {
     const chars = {
       á: 'a',

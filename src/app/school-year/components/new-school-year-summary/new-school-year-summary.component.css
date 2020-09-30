@@ -1,0 +1,30 @@
+.headteachers, nz-collapse {
+    background-color: #fff;
+    color: #000029;
+}
+
+div {
+    margin-top: 25px;
+}
+
+h3 {
+    color: #ef6c00;
+}
+
+h4 {
+    margin-bottom: 0em;
+}
+
+ul, li, .cycle {
+    list-style: none;
+    color: #000029;
+}
+
+nz-collapse-panel.head-teachers {
+    border-bottom: none;
+}
+
+p {
+    margin-bottom: 0.5em;
+    color: #000029;
+}

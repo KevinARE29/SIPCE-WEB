@@ -1,4 +1,4 @@
-import { ShiftPeriodGrade } from './../../manage-academic-catalogs/shared/shiftPeriodGrade.model';
+import { ShiftPeriodGrade } from './../../academic-catalogs/shared/shiftPeriodGrade.model';
 import { Responsible } from './responsible.model';
 
 export class Student {
@@ -19,4 +19,5 @@ export class Student {
   responsibles: Responsible[];
   images: unknown[];
   siblings: Student[];
+  canBeDeleted: boolean;
 }

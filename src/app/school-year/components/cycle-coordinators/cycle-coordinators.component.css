@@ -1,0 +1,12 @@
+nz-tabset { 
+    margin-top: 25px;
+}
+
+.error {
+    color: #ff4d4f;
+}
+
+.ant-input[disabled] {
+    background-color: #fff;
+    color: rgba(0, 0, 0, 0.85);
+}

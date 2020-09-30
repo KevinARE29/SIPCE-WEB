@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Component, OnInit } from '@angular/core';
 import { PermissionService } from 'src/app/roles/shared/permission.service';
 import { RoleService } from 'src/app/roles/shared/role.service';
@@ -79,14 +80,36 @@ export class UserComponent implements OnInit {
   gateway(): void {
     this.route.paramMap.subscribe((params) => {
       const param: string = params.get('user');
+      const emailPattern = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 
-      this.userForm = this.fb.group({
-        code: [null, [Validators.required, Validators.maxLength(32)]],
-        username: [null, [Validators.required, Validators.maxLength(64)]],
-        firstname: [null, [Validators.required, Validators.maxLength(128)]],
-        lastname: [null, [Validators.required, Validators.maxLength(128)]],
-        email: [null, [Validators.required, Validators.maxLength(128), Validators.email]]
+      const newUserForm = this.fb.group({
+        code: [null, [Validators.required, Validators.maxLength(32), Validators.pattern('[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$')]],
+        username: [null, [Validators.required, Validators.maxLength(32), Validators.pattern('[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$')]],
+        firstname: [
+          null,
+          [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        ],
+        lastname: [
+          null,
+          [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        ],
+        email: [null, [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]]
       });
+
+      const updateUserForm = this.fb.group({
+        code: [null, [Validators.required]],
+        username: [null, [Validators.required, Validators.maxLength(32), Validators.pattern('[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$')]],
+        firstname: [
+          null,
+          [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        ],
+        lastname: [
+          null,
+          [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        ],
+        email: [null, [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]]
+      });
+
 
       if (typeof param === 'string' && !Number.isNaN(Number(param))) {
         this.id = Number(param);
@@ -97,6 +120,9 @@ export class UserComponent implements OnInit {
         } else if (this.id > 0) {
           this.getUser();
         }
+
+        this.userForm = this.id > 0 ? updateUserForm : newUserForm;
+
       } else {
         this.router.navigateByUrl('/usuario/' + param, { skipLocationChange: true });
       }
@@ -152,7 +178,7 @@ export class UserComponent implements OnInit {
             'error',
             'Ocurrió un error al obtener al usuario. Por favor verifique lo siguiente:',
             err.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
       }
@@ -202,7 +228,7 @@ export class UserComponent implements OnInit {
             'error',
             'Ocurrió un error al crear el usuario. Por favor verifique lo siguiente:',
             err.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
 
@@ -233,7 +259,7 @@ export class UserComponent implements OnInit {
             'error',
             'Ocurrió un error al actualizar al usuario. Por favor verifique lo siguiente:',
             err.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
 

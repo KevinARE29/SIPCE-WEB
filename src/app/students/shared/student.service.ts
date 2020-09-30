@@ -5,14 +5,15 @@ import { Observable, throwError, forkJoin } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
-import { getYear, differenceInYears } from 'date-fns';
+import { differenceInMonths, differenceInYears, getYear } from 'date-fns';
 
 import { Student } from './student.model';
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { Responsible } from './responsible.model';
-import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
-import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
-import { SectionService } from 'src/app/manage-academic-catalogs/shared/section.service';
+import { GradeService } from 'src/app/academic-catalogs/shared/grade.service';
+import { ShiftService } from 'src/app/academic-catalogs/shared/shift.service';
+import { SectionService } from 'src/app/academic-catalogs/shared/section.service';
+import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 
 @Injectable({
   providedIn: 'root'
@@ -86,10 +87,22 @@ export class StudentService {
 
     url += queryParams;
 
-    return this.http.get<Student[]>(url).pipe(catchError(this.handleError()));
+    return this.http.get<Student[]>(url).pipe(
+      map((response) => {
+        response['data'].forEach((student) => {
+          const months = differenceInMonths(new Date(), new Date(student.createdAt));
+          const years = differenceInYears(new Date(), new Date(student.createdAt));
+
+          student.canBeDeleted = student.status === 'Egresado' || months < 3 || years > 15;
+        });
+
+        return response;
+      }),
+      catchError(this.handleError())
+    );
   }
 
-  bulkStudents(students: any, shift: number, currentYear: boolean): Observable<any> {
+  bulkStudents(students: any, shift: number, currentYear: boolean): Observable<unknown> {
     const newStudents = new Array<any>();
     const data = {};
     students.forEach((element) => {
@@ -209,24 +222,77 @@ export class StudentService {
     const data = {};
     const siblingsIds = new Array<number>();
 
-    student.siblings.forEach((sibling) => {
-      siblingsIds.push(sibling.id);
-    });
+    if (student.siblings) {
+      data['siblings'] = siblingsIds;
+      student.siblings.forEach((sibling) => {
+        siblingsIds.push(sibling.id);
+      });
+    }
 
-    data['status'] = student.status;
-    data['firstname'] = student.firstname;
-    data['lastname'] = student.lastname;
-    data['email'] = student.email;
-    data['birthdate'] = student.birthdate;
-    data['shiftId'] = student.shift.id;
-    data['gradeId'] = student.grade.id;
-    data['sectionId'] = student.section ? student.section.id : null;
-    data['startedGradeId'] = student.startedGrade.id;
-    data['registrationYear'] = getYear(student.registrationYear);
-    data['siblings'] = siblingsIds;
+    if (student.status) data['status'] = student.status;
+    if (student.firstname) data['firstname'] = student.firstname;
+    if (student.lastname) data['lastname'] = student.lastname;
+    if (student.email) data['email'] = student.email;
+    if (student.birthdate) data['birthdate'] = student.birthdate;
+    if (student.shift) data['shiftId'] = student.shift.id;
+    if (student.grade) data['gradeId'] = student.grade.id;
+    if (student.section) data['sectionId'] = student.section ? student.section.id : null;
+    if (student.startedGrade) data['startedGradeId'] = student.startedGrade.id;
+    if (student.registrationYear) data['registrationYear'] = getYear(student.registrationYear);
 
     return this.http
       .put<Student>(`${this.baseUrl}students/${student.id}`, JSON.stringify(data))
+      .pipe(catchError(this.handleError()));
+  }
+
+  deleteStudent(studentId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}students/${studentId}`);
+  }
+
+  getStudentsAssignation(shiftId: number, gradeId: number): Observable<unknown> {
+    return this.http
+      .get<unknown>(`${this.baseUrl}students-assignation?currentGradeId=${gradeId}&currentShiftId=${shiftId}`)
+      .pipe(
+        map((response) => {
+          const myStudents = new Array<unknown>();
+          let assignedStudents = new Array<unknown>();
+          const studentsWithoutAssignation = new Array<unknown>();
+          let availableSections = new Array<ShiftPeriodGrade>();
+
+          for (let i = 0; i < response['assignedStudents'].length; i++) {
+            const student = response['assignedStudents'][i];
+            const section = availableSections.find((x) => x.id === student.section.id);
+
+            if (!section) availableSections.push(student.section);
+            assignedStudents[i] = { student, disabled: false };
+          }
+
+          for (let i = 0; i < response['studentsWithoutAssignation'].length; i++) {
+            studentsWithoutAssignation[i] = { student: response['studentsWithoutAssignation'][i], disabled: false };
+          }
+
+          for (let i = 0; i < response['myStudents'].length; i++) {
+            myStudents[i] = { student: response['myStudents'][i], disabled: false };
+          }
+
+          availableSections = availableSections.sort((a, b) => a.id - b.id);
+          assignedStudents = assignedStudents.sort((a, b) => a['student'].section.id - b['student'].section.id);
+
+          return { assignedStudents, studentsWithoutAssignation, myStudents, availableSections };
+        }),
+        catchError(this.handleError())
+      );
+  }
+
+  updateStudentsAssignation(
+    shiftId: number,
+    gradeId: number,
+    students: number[],
+    vinculate: boolean
+  ): Observable<unknown> {
+    const data = JSON.stringify({ studentIds: students, vinculate });
+    return this.http
+      .patch<unknown>(`${this.baseUrl}students-assignation?currentGradeId=${gradeId}&currentShiftId=${shiftId}`, data)
       .pipe(catchError(this.handleError()));
   }
 

@@ -2,15 +2,21 @@
     <h1>Rol</h1>
 
     <form nz-form [formGroup]="roleForm" (ngSubmit)="submitForm()">
-        <nz-form-item nzJustify="space-around">
-            <nz-form-control nzXs="24" nzSm="24" nzMd="12" nzLg="10" [nzErrorTip]="nameErrors">
-                <input nz-input formControlName="name" placeholder="Nombre"/>
-                <ng-template #nameErrors let-control>
-                    <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 32 caracteres</ng-container>
-                    <ng-container *ngIf="control.hasError('required')">El nombre es requerido</ng-container>
-                </ng-template>
+      <div nz-row nzJustify="center">
+        <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10">
+          <nz-form-item>
+            <nz-form-label>Nombre</nz-form-label>
+            <nz-form-control [nzErrorTip]="nameErrors">
+              <input nz-input formControlName="name" placeholder="Nombre"/>
+              <ng-template #nameErrors let-control>
+                <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 32 caracteres</ng-container>
+                <ng-container *ngIf="control.hasError('required')">El nombre es requerido</ng-container>
+                <ng-container *ngIf="control.hasError('pattern')">El nombre debe contener solo letras</ng-container>
+              </ng-template>
             </nz-form-control>
-        </nz-form-item>
+          </nz-form-item>
+        </div>
+      </div>
 
         <nz-form-item nzJustify="space-around">
             <div nz-row id="permissions" nzJustify="space-around">
@@ -32,7 +38,7 @@
                 <div *ngIf="checkPermission(6) && id==0" id="new-role">
                     <button nz-button nzType="primary" [nzLoading]="btnLoading">Crear rol</button>
                 </div>
-                
+
                 <div *ngIf="checkPermission(8) && id > 5" id="update-role">
                     <button nz-button nzType="primary" [nzLoading]="btnLoading">Actualizar rol</button>
                 </div>

@@ -3,14 +3,14 @@ import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { differenceInCalendarDays } from 'date-fns';
+import { differenceInCalendarDays, getYear } from 'date-fns';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzModalService, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 import { AuthService } from '../../../login/shared/auth.service';
 import { Permission } from '../../../shared/permission.model';
-import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
+import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 import { Student } from '../../shared/student.model';
 import { UploadFile } from 'ng-zorro-antd/upload';
 import { Responsible } from '../../shared/responsible.model';
@@ -36,6 +36,7 @@ export class UpdateStudentComponent implements OnInit {
   // Form variables
   btnLoading = false;
   student: Student;
+  editStudentCache: Student;
   studentForm!: FormGroup;
   responsibleForm!: FormGroup;
   results: Student[];
@@ -72,6 +73,7 @@ export class UpdateStudentComponent implements OnInit {
   ngOnInit(): void {
     this.init();
     this.student = new Student();
+    this.editStudentCache = new Student();
     this.results = new Array<Student>();
     this.kinshipRelationships = Object.keys(KinshipRelationship).filter((k) => isNaN(Number(k)));
     this.status = Object.keys(StudentStatus).filter((k) => isNaN(Number(k)));
@@ -106,8 +108,14 @@ export class UpdateStudentComponent implements OnInit {
     const emailPattern = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 
     this.studentForm = this.fb.group({
-      firstname: ['', [Validators.required, Validators.maxLength(128)]],
-      lastname: ['', [Validators.required, Validators.maxLength(128)]],
+      firstname: [
+        '',
+        [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+      ],
+      lastname: [
+        '',
+        [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+      ],
       email: ['', [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]],
       dateOfBirth: ['', [Validators.required]],
       status: ['', [Validators.required]],
@@ -156,8 +164,20 @@ export class UpdateStudentComponent implements OnInit {
       (data) => {
         this.student = data['student'];
         if (!this.student.section) this.student.section = new ShiftPeriodGrade();
+        // Student copy
+        this.editStudentCache = { ...this.student };
+        this.editStudentCache.shift = { ...this.student.shift };
+        this.editStudentCache.grade = { ...this.student.grade };
+        this.editStudentCache.section = { ...this.student.section };
+        this.editStudentCache.startedGrade = { ...this.student.startedGrade };
+        this.editStudentCache.siblings = { ...this.student.siblings };
+
         // Sections data
         this.sections = data['sections'].data;
+        this.sections.sort((a, b) => a.id - b.id);
+        this.sections = this.sections
+          .filter((x) => x.name.length === 1)
+          .concat(this.sections.filter((x) => x.name.length > 1));
 
         // Grades data
         this.activeGrades = data['grades'].data.filter((x) => x.active === true);
@@ -248,6 +268,7 @@ export class UpdateStudentComponent implements OnInit {
 
     if (this.studentForm.valid && this.save) {
       // Student
+      this.student.status = this.studentForm.controls['status'].value;
       this.student.firstname = this.studentForm.controls['firstname'].value;
       this.student.lastname = this.studentForm.controls['lastname'].value;
       this.student.email = this.studentForm.controls['email'].value;
@@ -290,29 +311,123 @@ export class UpdateStudentComponent implements OnInit {
   }
 
   updateStudent(): void {
-    this.btnLoading = true;
-    this.studentService.updateStudent(this.student).subscribe(
-      () => {
-        this.organizeImages();
-        this.message.success('Estudiante actualizado con éxito');
-        this.btnLoading = false;
-      },
-      (error) => {
-        const statusCode = error.statusCode;
-        const notIn = [401, 403];
+    const update = this.isEquivalent(this.student, this.editStudentCache);
 
-        this.btnLoading = false;
+    if (update['update']) {
+      this.btnLoading = true;
+      if (update['fields'].shift || update['fields'].grade || update['fields'].section) {
+        update['fields'].shift = { ...this.student.shift };
+        update['fields'].grade = { ...this.student.grade };
+        update['fields'].section = { ...this.student.section };
+      }
 
-        if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create(
-            'error',
-            'Ocurrió un error al actualizar al estudiante. Por favor verifique lo siguiente:',
-            error.message,
-            { nzDuration: 0 }
-          );
+      this.studentService.updateStudent(update['fields']).subscribe(
+        () => {
+          this.organizeImages();
+          this.message.success('Estudiante actualizado con éxito');
+          // Student copy
+          this.editStudentCache = { ...this.student };
+          this.editStudentCache.shift = { ...this.student.shift };
+          this.editStudentCache.grade = { ...this.student.grade };
+          this.editStudentCache.section = { ...this.student.section };
+          this.editStudentCache.startedGrade = { ...this.student.startedGrade };
+          this.editStudentCache.siblings = { ...this.student.siblings };
+          this.btnLoading = false;
+        },
+        (error) => {
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
+
+          this.btnLoading = false;
+
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create(
+              'error',
+              'Ocurrió un error al actualizar al estudiante. Por favor verifique lo siguiente:',
+              error.message,
+              { nzDuration: 30000 }
+            );
+          }
+        }
+      );
+    } else {
+      this.message.warning('No se detectaron cambios para actualizar.');
+    }
+  }
+
+  isEquivalent(actual: unknown, objCopy: unknown): unknown {
+    const aProps = Object.getOwnPropertyNames(actual);
+    const bProps = Object.getOwnPropertyNames(objCopy);
+    const updateStudent = new Student();
+    const propertiesToUpdate = [
+      'status',
+      'firstname',
+      'lastname',
+      'email',
+      'birthdate',
+      'shift',
+      'grade',
+      'section',
+      'startedGrade',
+      'registrationYear',
+      'siblings'
+    ];
+
+    if (aProps.length != bProps.length) {
+      return { update: false, fields: updateStudent };
+    }
+
+    let count = 0;
+    updateStudent['id'] = actual['id'];
+    propertiesToUpdate.forEach((property) => {
+      if (actual[property] !== objCopy[property]) {
+        switch (property) {
+          case 'status':
+          case 'firstname':
+          case 'lastname':
+          case 'email':
+            updateStudent[property] = actual[property];
+            count++;
+            break;
+          case 'birthdate':
+          case 'registrationYear':
+            if (objCopy[property] !== getYear(actual[property])) {
+              updateStudent[property] = actual[property];
+              count++;
+            }
+            break;
+          case 'shift':
+          case 'grade':
+          case 'section':
+          case 'startedGrade':
+            if (actual[property]['id'] !== objCopy[property].id) {
+              updateStudent[property] = actual[property];
+              count++;
+            }
+            break;
+          case 'siblings':
+            if (actual[property].length !== Object.keys(objCopy[property]).length) {
+              updateStudent[property] = actual[property];
+              count++;
+            } else {
+              const result = Object.values(objCopy[property]);
+              let exists = 0;
+              actual[property].forEach((sibling) => {
+                const element = result.find((x) => x['id'] === sibling.id);
+                if (element) exists++;
+              });
+
+              if (exists !== actual[property].length) {
+                updateStudent[property] = actual[property];
+                count++;
+              }
+            }
+            break;
         }
       }
-    );
+    });
+
+    return count > 0 ? { update: true, fields: updateStudent } : { update: false, fields: updateStudent };
   }
   //#endregion Update general information
 
@@ -323,7 +438,7 @@ export class UpdateStudentComponent implements OnInit {
       const element = this.student.responsibles.find((x) => x.id === id);
 
       this.confirmModal = this.modal.confirm({
-        nzTitle: `¿Desea eliminar al responsable"?`,
+        nzTitle: `¿Desea eliminar al responsable?`,
         nzContent: `Eliminará de los responsables a ${element.firstname} ${element.lastname}, ${element.relationship} del alumno ${this.student.firstname} ${this.student.lastname}. La acción no puede deshacerse.`,
 
         nzOnOk: () =>
@@ -339,8 +454,8 @@ export class UpdateStudentComponent implements OnInit {
               const notIn = [401, 403];
 
               if (!notIn.includes(statusCode) && statusCode < 500) {
-                this.notification.create('error', 'Ocurrió un error al eliminar al resposnsable.', err.message, {
-                  nzDuration: 0
+                this.notification.create('error', 'Ocurrió un error al eliminar al responsable.', err.message, {
+                  nzDuration: 30000
                 });
               }
             })
@@ -350,7 +465,7 @@ export class UpdateStudentComponent implements OnInit {
         'warning',
         'Un estudiante no puede quedar sin un adulto responsable.',
         'Para poder eliminar este registro debe crear un nuevo responsable.',
-        { nzDuration: 0 }
+        { nzDuration: 30000 }
       );
     }
   }
@@ -388,7 +503,7 @@ export class UpdateStudentComponent implements OnInit {
             'error',
             'Ocurrió un error al actualizar al responsable Por favor verifique lo siguiente:',
             error.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
       }
@@ -396,17 +511,37 @@ export class UpdateStudentComponent implements OnInit {
   }
 
   saveEdit(id: number): void {
+    const textValidation = RegExp(/[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]$/);
     if (this.validateNotNulls(this.editCache[id].data)) {
-      if (/^[0-9]{8}$/.test(this.editCache[id].data.phone)) {
-        if (id > 0) this.updateResponsible(id);
-        else this.createResponsible();
+      if (/^[267]{1}[0-9]{3}[-]{1}[0-9]{4}$/.test(this.editCache[id].data.phone)) {
+        if (
+          textValidation.test(this.editCache[id].data.firstname) &&
+          textValidation.test(this.editCache[id].data.lastname)
+        ) {
+          if (id > 0) this.updateResponsible(id);
+          else this.createResponsible();
+        } else {
+          this.notification.create(
+            'warning',
+            'Formato incorrecto.',
+            'Los nombres y apellidos pueden contener letras únicamente',
+            {
+              nzDuration: 30000
+            }
+          );
+        }
       } else {
-        this.notification.create('warning', 'Formato incorrecto.', 'El número de teléfono debe contener 8 dígitos.', {
-          nzDuration: 0
-        });
+        this.notification.create(
+          'warning',
+          'Formato incorrecto.',
+          'Ingrese un número de teléfono válido (ej.2222-2222)',
+          {
+            nzDuration: 30000
+          }
+        );
       }
     } else {
-      this.notification.create('warning', 'Campos vacíos.', 'Todos los campos son obligatorios.', { nzDuration: 0 });
+      this.notification.create('warning', 'Campos vacíos.', 'Todos los campos son obligatorios.', { nzDuration: 30000 });
     }
   }
 
@@ -440,7 +575,7 @@ export class UpdateStudentComponent implements OnInit {
         'warning',
         'Límite de responsables alcanzado',
         'Solo se permiten dos responsables por estudiante.',
-        { nzDuration: 0 }
+        { nzDuration: 30000 }
       );
     }
   }
@@ -466,7 +601,7 @@ export class UpdateStudentComponent implements OnInit {
             'error',
             'Ocurrió un error al actualizar al responsable Por favor verifique lo siguiente:',
             error.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
       }

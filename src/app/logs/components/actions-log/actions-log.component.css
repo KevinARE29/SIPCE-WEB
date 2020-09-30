@@ -10,43 +10,18 @@
   color: #0050b3;
 }
 
-.search {
-  margin-bottom: 25px;
+.actions-log {
+  margin-top: 25px;
 }
 
-@media (max-width: 767px) {
-  .search div {
-    margin-top: 5px;
-  }
+.btn-container {
+  height: 100%;
 }
 
-@media (min-width: 768px) and (max-width: 991px) {
-  .date,
-  .status-code,
-  .action,
-  button {
-    margin-top: 5px;
-  }
+nz-select, nz-range-picker {
+  width: 100%;
 }
 
-@media (min-width: 992px) and (max-width: 1147px) {
-  .action,
-  .date,
-  button {
-    margin-top: 5px;
-  }
-}
-
-@media (min-width: 992px) and (max-width: 1077px) {
-  button {
-    margin-top: 27px;
-  }
-}
-
-@media (min-width: 1148px) {
-  .action,
-  .date,
-  button {
-    margin-top: 5px;
-  }
+nz-range-picker {
+  border-radius: 7px;
 }

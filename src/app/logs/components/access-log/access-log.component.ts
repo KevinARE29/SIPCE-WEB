@@ -58,7 +58,7 @@ export class AccessLogComponent implements OnInit {
 
           if (!notIn.includes(statusCode) && statusCode < 500) {
             this.notification.create('error', 'Ocurrió un error al recargar la bitácora de accesos.', err.message, {
-              nzDuration: 0
+              nzDuration: 30000
             });
           }
         }
@@ -79,7 +79,7 @@ export class AccessLogComponent implements OnInit {
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create('error', 'Ocurrió un error al filtrar la bitácora de accesos.', err.message, {
-            nzDuration: 0
+            nzDuration: 30000
           });
         }
       }

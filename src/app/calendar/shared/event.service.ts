@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError, forkJoin } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
-
-import { Student } from '../../students/shared/student.model';
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
-import { User } from 'src/app/users/shared/user.model';
 import { Appointment } from './appointment.model';
 
 @Injectable({
@@ -19,11 +15,6 @@ export class EventService {
 
   constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
     this.baseUrl = environment.apiURL;
-  }
-
-  createAppointment(data: any): Observable<any> {
-    console.log(data);
-    return this.http.post<any>(`${this.baseUrl}me/schedules`, data).pipe(catchError(this.handleError()));
   }
 
   getEvents(fromDate: Date, toDate: Date): Observable<Appointment[]> {
@@ -44,7 +35,26 @@ export class EventService {
     );
   }
 
-  updateEvent(event: Appointment): Observable<Appointment> {
+  createEvent(calendarEvent: Appointment, event: Appointment): Observable<Appointment> {
+    const participants = new Array<number>();
+
+    calendarEvent.Student = event.Student;
+    calendarEvent.Participants = event.Participants;
+    event.Participants.forEach((participant) => {
+      participants.push(participant.id);
+    });
+
+    const data = JSON.stringify({
+      eventType: calendarEvent.EventType,
+      jsonData: calendarEvent,
+      participantIds: participants,
+      studentId: event.Student ? event.Student.id : null
+    });
+
+    return this.http.post<Appointment>(`${this.baseUrl}me/schedules`, data).pipe(catchError(this.handleError()));
+  }
+
+  updateEventAfterDelete(event: Appointment): Observable<Appointment> {
     const participants = new Array<number>();
 
     event['Participants'].forEach((user) => {
@@ -55,11 +65,36 @@ export class EventService {
       eventType: event.EventType,
       jsonData: event,
       participantIds: participants,
-      studentId: event.Student ? event.Student.id : null // Set the Student id (not from an array)
+      studentId: event.Student ? event.Student.id : null
     });
 
     return this.http
       .put<Appointment>(`${this.baseUrl}me/schedules/${event.Id}`, data)
+      .pipe(catchError(this.handleError()));
+  }
+
+  updateEvent(calendarEvent: Appointment, event: Appointment): Observable<Appointment> {
+    const participants = new Array<number>();
+
+    // A series of events doesn't need a RecurrenceID
+    if (calendarEvent.RecurrenceID === calendarEvent.Id) delete calendarEvent.RecurrenceID;
+
+    // Add the event's participants
+    calendarEvent.Student = event.Student;
+    calendarEvent.Participants = event.Participants;
+    event.Participants.forEach((participant) => {
+      participants.push(participant.id);
+    });
+
+    const data = JSON.stringify({
+      eventType: calendarEvent.EventType,
+      jsonData: calendarEvent,
+      participantIds: participants,
+      studentId: event.Student ? event.Student.id : null
+    });
+
+    return this.http
+      .put<Appointment>(`${this.baseUrl}me/schedules/${calendarEvent.Id}`, data)
       .pipe(catchError(this.handleError()));
   }
 

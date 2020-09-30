@@ -54,8 +54,13 @@
             "responsibleLastname": "Apellido del responsable",
             "contact": "Contacto",
             "responsibleEmail": "Correo electrónico del responsable",
-            "responsiblePhone": "Número de celular del responsable",
-            "phone": "Número de celular del responsable"
+            "responsiblePhone": "Número de teléfono del responsable",
+            "phone": "Número de teléfono del responsable",
+            "status": "Estado"
+        },
+        "school-year": {
+            "year": "Año",
+            "status": "Estado"
         }
     }
 }

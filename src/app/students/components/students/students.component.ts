@@ -10,8 +10,8 @@ import { Permission } from 'src/app/shared/permission.model';
 import { Pagination } from 'src/app/shared/pagination.model';
 import { StudentService } from '../../shared/student.service';
 import { AuthService } from 'src/app/login/shared/auth.service';
-import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
-import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
+import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
+import { GradeService } from 'src/app/academic-catalogs/shared/grade.service';
 import { StudentStatus } from 'src/app/shared/student-status.enum';
 
 @Component({
@@ -20,8 +20,9 @@ import { StudentStatus } from 'src/app/shared/student-status.enum';
   styleUrls: ['./students.component.css']
 })
 export class StudentsComponent implements OnInit {
-  permissions: Array<Permission> = [];
+  permissions: Permission[] = [];
   confirmModal?: NzModalRef;
+  actions: unknown[] = [];
 
   // Search params
   searchParams: Student;
@@ -71,13 +72,16 @@ export class StudentsComponent implements OnInit {
     const permissions = content.permissions;
 
     this.permissions.push(new Permission(17, 'Create student'));
-    this.permissions.push(new Permission(20, 'Update student'));
-    this.permissions.push(new Permission(21, 'Get student'));
+    this.permissions.push(new Permission(21, 'eye'));
+    this.permissions.push(new Permission(20, 'edit'));
+    this.permissions.push(new Permission(24, 'delete'));
 
     this.permissions.forEach((p) => {
       const index = permissions.indexOf(p.id);
-
       p.allow = index == -1 ? false : true;
+
+      // Determine which actions are allowed in the table
+      if (p.allow && p.id !== 17) this.actions.push(p);
     });
   }
 
@@ -88,35 +92,10 @@ export class StudentsComponent implements OnInit {
 
   /* ------      Main actions      ------ */
   getStudents(params: NzTableQueryParams): void {
+    const paginate = params ? params.pageIndex !== this.pagination.page : false;
     this.loading = true;
 
-    this.studentService
-      .getStudents(params, this.searchParams, this.statusSwitch, params.pageIndex !== this.pagination.page)
-      .subscribe(
-        (data) => {
-          this.pagination = data['pagination'];
-          this.listOfDisplayData = data['data'];
-
-          this.loading = false;
-        },
-        (error) => {
-          this.loading = false;
-          const statusCode = error.statusCode;
-          const notIn = [401, 403];
-
-          if (!notIn.includes(statusCode) && statusCode < 500) {
-            this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
-              nzDuration: 0
-            });
-          }
-        }
-      );
-  }
-
-  search(): void {
-    this.loading = true;
-
-    this.studentService.getStudents(null, this.searchParams, this.statusSwitch, false).subscribe(
+    this.studentService.getStudents(params, this.searchParams, this.statusSwitch, paginate).subscribe(
       (data) => {
         this.pagination = data['pagination'];
         this.listOfDisplayData = data['data'];
@@ -130,11 +109,39 @@ export class StudentsComponent implements OnInit {
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
-            nzDuration: 0
+            nzDuration: 30000
           });
         }
       }
     );
+  }
+
+  showConfirm(id: number): void {
+    const element = this.listOfDisplayData.find((x) => x.id === id);
+
+    this.confirmModal = this.modal.confirm({
+      nzTitle: `¿Desea eliminar al estudiante ${element.firstname} ${element.lastname}?`,
+      nzContent: `Eliminará al estudiante ${element.firstname} ${element.lastname} del sistema. La acción no puede deshacerse.`,
+
+      nzOnOk: () =>
+        this.studentService
+          .deleteStudent(id)
+          .toPromise()
+          .then(() => {
+            this.message.success(`El estudiante ${element.firstname} ${element.lastname} ha sido eliminado`);
+            this.getStudents(null);
+          })
+          .catch((err) => {
+            const statusCode = err.statusCode;
+            const notIn = [401, 403];
+
+            if (!notIn.includes(statusCode) && statusCode < 500) {
+              this.notification.create('error', 'Ocurrió un error al eliminar al estudiante.', err.message, {
+                nzDuration: 30000
+              });
+            }
+          })
+    });
   }
 
   /* ------      Complementary methods      ------ */
@@ -160,6 +167,6 @@ export class StudentsComponent implements OnInit {
 
   statusToggle(): void {
     this.setStatuses();
-    this.search();
+    this.getStudents(null);
   }
 }
