@@ -63,6 +63,8 @@ export class CalendarComponent implements OnInit {
   startTimeDate: string; // quitar
   startDate: string;
   endDate: string;
+  // error message variable
+  errorMessage: string;
 
   @ViewChild('scheduleObj')
   public scheduleObj: ScheduleComponent;
@@ -112,7 +114,7 @@ export class CalendarComponent implements OnInit {
       Users: [null, [Validators.required]],
       Students: [null, [Validators.required]]
     });
-
+    this.errorMessage = '';
     this.user = new User();
     this.results = new Array<Student>();
     this.resultsUsers = new Array<User>();
@@ -213,6 +215,7 @@ export class CalendarComponent implements OnInit {
     if (args.requestType === 'eventChange' || args.requestType === 'eventCreate') {
       let data = !isNullOrUndefined(args.data[0]) ? args.data[0] : args.data;
       const createEvent = {};
+      this.errorMessage = '';
       const participantIds = new Array<number>();
       this.saveEvent = true;
       data.RecurrenceRule = this.recurrenceRule;
@@ -221,16 +224,12 @@ export class CalendarComponent implements OnInit {
       const result = compareAsc(data.StartTime, data.EndTime);
       console.log(result);
       if (result === 1) {
-        this.notification.create(
-          'error',
-          'Ocurrió un error al crear el evento. Por favor verifique lo siguiente:',
-          'La fecha y hora de finalizacíon debe ser mayor a la fecha y hora de inicio',
-          { nzDuration: 4500 }
-        );
         this.saveEvent = false;
         args.cancel = true;
         console.log('La fecha de inicio debe ser menor a la fecha de fin');
       }
+
+
 
       console.log(this.getIsAllDay.value);
 
@@ -253,7 +252,20 @@ export class CalendarComponent implements OnInit {
         this.event.EndTime = data.EndTime.toISOString();
       }
 
-      this.event.Subject = data.Subject;
+      // validating the date
+      if (data.Subject === 'Agregar título' || data.Subject === null || data.Subject === '') {
+        this.notification.create(
+          'error',
+          'Ocurrió un error al crear el evento. Por favor verifique lo siguiente:',
+          'El evento debe tener un título',
+          { nzDuration: 4500 }
+        );
+        this.saveEvent = false;
+        args.cancel = true;
+      } else {
+        this.event.Subject = data.Subject;
+      }
+
       if (data.IsAllDay === true) {
          this.event.IsAllDay = true;
       } else {
@@ -288,6 +300,7 @@ export class CalendarComponent implements OnInit {
         this.event.Description = data.Description;
       }
 
+      
       //initializing the event object that will be send to the backend
       createEvent['eventType'] = this.event.EventType;
       createEvent['day'] = this.event.StartTime;
@@ -435,7 +448,7 @@ export class CalendarComponent implements OnInit {
 
       if (<any>args.data['Student']) this.event.Student = <any>args.data['Student'];
       if (<any>args.data['Participants']) this.event.Participant = <any>args.data['Participants'];
-     
+
       document.getElementById('RecurrenceRule').style.display =
         this.scheduleObj.currentAction === 'EditOccurrence' ? 'none' : 'block';
     }

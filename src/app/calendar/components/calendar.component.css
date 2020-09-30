@@ -1,6 +1,9 @@
-.addStudent span {
-    margin: 5px;
-  }
+.addStudent {
+  padding-top: 5px;
+  padding-right: 3px;
+  padding-bottom: 5px;
+  padding-left: 3px;
+}
 
 .error {
     color: #f5222d;
@@ -12,6 +15,14 @@
   padding-bottom: 10px;
   padding-left: 3px;
 }
+
+.addEmployee {
+  padding-top: 3px;
+  padding-right: 3px;
+  padding-bottom: 3px;
+  padding-left: 3px;
+}
+
 
 .searchSelection {
   padding-top: 5px;
