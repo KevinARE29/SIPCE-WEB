@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* 
   Path: app/main-nav/main-nav.component.ts
   Objective: Define main navigation behavior
@@ -21,13 +22,9 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   menuOptions: any;
   isCollapsed = false;
   jwt: any;
-  inicial: string;
   avatar: string;
-  username: any;
-  responseLogIn: any;
-  data: any;
+  username: string;
   year: number;
-  checked = false;
 
   constructor(private router: Router, private authService: AuthService) {}
 
@@ -57,8 +54,7 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   getUsername(): void {
     this.jwt = this.authService.jwtDecoder(localStorage.getItem('accessToken'));
     this.username = this.jwt.sub;
-    this.inicial = this.username.charAt(0);
-    this.avatar = this.inicial.toUpperCase();
+    this.avatar = this.username.charAt(0).toUpperCase();
   }
 
   getToken(): string {

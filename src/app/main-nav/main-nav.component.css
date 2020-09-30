@@ -120,3 +120,9 @@ nz-footer img {
 .user-dropdown-item:first-of-type li {
   border-top-right-radius: 0px;
 }
+
+@media (max-height: 650px) {
+  .fixed-footer {
+    display: none;
+  }
+}
