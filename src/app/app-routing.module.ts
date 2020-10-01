@@ -16,8 +16,8 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
-    path: 'welcome',
-    loadChildren: () => import('./pages/welcome/welcome.module').then((m) => m.WelcomeModule),
+    path: 'inicio',
+    loadChildren: () => import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
     canLoad: [AuthGuard]
   },
   {
@@ -52,8 +52,7 @@ const routes: Routes = [
   },
   {
     path: 'catalogos',
-    loadChildren: () =>
-      import('./academic-catalogs/academic-catalogs.module').then((m) => m.AcademicCatalogsModule),
+    loadChildren: () => import('./academic-catalogs/academic-catalogs.module').then((m) => m.AcademicCatalogsModule),
     canLoad: [AuthGuard]
   },
   {

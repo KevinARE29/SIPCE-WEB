@@ -48,7 +48,7 @@ export class AuthGuard implements CanActivate, CanLoad {
     } else {
       const content = this.authService.jwtDecoder(token);
 
-      if (url === '/contrasena/cambiar' || url === '/welcome') {
+      if (url === '/contrasena/cambiar' || url === '/inicio') {
         res = true;
       } else if (url !== '/login' && url !== '/contrasena/recuperar' && !url.includes('reset-psw')) {
         if (content) {
