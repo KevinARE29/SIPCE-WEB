@@ -55,15 +55,14 @@
                 </div>
 
                 <div nz-row> 
-                    <div *ngIf="showAlert" class="error">Solo puede agregarse un estudiante al evento. Para cambiarlo primero debe remover al estudiante actual.</div>               
-                    <div class="addStudent" nz-col>
-                        <div class="searchSelection" nz-col *ngIf="event.Student">
+                    <div nz-col>
+                        <div class="addStudent" nz-col *ngIf="event.Student">
                             {{ event.Student.firstname }} {{ event.Student.lastname }}
 
                             <a (click)="confirmDeleteStudent(event.Student)">
                                 <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ff4d4f'"></i>
                             </a>
-                          
+                             <p class="error" *ngIf="showAlert">Solo puede agregarse un estudiante al evento. Para cambiarlo primero debe remover al estudiante actual.</p>
                         </div>
                         <nz-spin nzTip="Cargando ..." [nzSpinning]="searchLoader">
                             <div  class="addEmployee"> 
@@ -83,7 +82,7 @@
                             <!-- Students result-->
                             <div nz-col nzXs="24" nzSm="24" nzMd="24">
                                 <ng-container *ngIf="results.length; else noResults">
-                                    <div class="addStudent" *ngFor="let result of results">
+                                    <div class="results" *ngFor="let result of results">
                                         <span>{{ result.firstname }} {{ result.lastname }}</span>
                                         <a (click)="addStudent(result)">
                                             <i nz-icon nzType="plus-circle" [nzTheme]="'twotone'"
@@ -99,8 +98,8 @@
                     </div>
                     <br />
                     <div nz-col>
-                        <div class="addStudent" nz-col>
-                            <div nz-col  class="searchSelection" *ngFor="let user of event.Participants">
+                        <div nz-col>
+                            <div class="addStudent" nz-col class="searchSelection" *ngFor="let user of event.Participants">
                                 {{ user.firstname }} {{ user.lastname }}
                                 <a (click)="confirmDeleteUser(user.id, user)">
                                     <i nz-icon nzType="close-circle" [nzTheme]="'twotone'"
@@ -123,10 +122,10 @@
                                     </button>
                                 </ng-template>
                             </div>
-                            <!-- Students result-->
+                            <!-- Employees result-->
                             <div nz-col nzXs="24" nzSm="24" nzMd="24">
                                 <ng-container *ngIf="resultsUsers.length; else noResultsUser">
-                                    <div class="addStudent" *ngFor="let result of resultsUsers">
+                                    <div class="results" *ngFor="let result of resultsUsers">
                                         <span>{{ result.firstname }} {{ result.lastname }}</span>
                                         <a (click)="addUser(result)">
                                             <i nz-icon nzType="plus-circle" [nzTheme]="'twotone'"

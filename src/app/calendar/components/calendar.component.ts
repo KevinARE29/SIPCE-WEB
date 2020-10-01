@@ -57,7 +57,6 @@ export class CalendarComponent implements OnInit {
   showAlert = false;
   //flag to know if the event can be saved
   saveEvent: boolean;
-  startTimeDate: string; // quitar
   startDate: string;
   endDate: string;
   // Used in the custom validation

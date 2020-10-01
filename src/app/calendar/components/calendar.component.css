@@ -6,7 +6,11 @@
 }
 
 .error {
-    color: #f5222d;
+  color: #f5222d;
+}
+
+.results {
+  margin: 5px;
 }
 
 .dateTimePicker {
