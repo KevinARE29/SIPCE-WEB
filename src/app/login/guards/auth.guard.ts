@@ -62,7 +62,7 @@ export class AuthGuard implements CanActivate, CanLoad {
           }
         }
       } else {
-        this.router.navigate(['welcome']);
+        this.router.navigate(['inicio']);
       }
     }
 

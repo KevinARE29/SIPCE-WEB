@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { AuthService } from '../shared/auth.service';
 
 @Component({
@@ -26,7 +27,7 @@ export class LoginComponent implements OnInit {
     this.btnLoading = true;
     this.authService.login(this.userLogin.value).subscribe(
       () => {
-        this.router.navigate(['welcome']);
+        this.router.navigate(['inicio']);
         this.btnLoading = false;
       },
       () => {
