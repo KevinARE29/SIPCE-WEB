@@ -1,16 +1,24 @@
-.addStudent {
+.addParticipant {
   padding-top: 5px;
   padding-right: 3px;
   padding-bottom: 5px;
   padding-left: 3px;
 }
 
-.error {
-  color: #f5222d;
+.addParticipant a {
+  margin-right: 5px;
+}
+
+nz-alert {
+  margin-top: 5px;
 }
 
 .results {
   margin: 5px;
+}
+
+.search {
+  padding-right: 5px;
 }
 
 .dateTimePicker {

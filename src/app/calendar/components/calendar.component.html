@@ -54,23 +54,26 @@
                     <label class="e-textlabel"> Participantes del evento</label>
                 </div>
 
-                <div nz-row> 
-                    <div nz-col>
-                        <div class="addStudent" nz-col *ngIf="event.Student">
-                            {{ event.Student.firstname }} {{ event.Student.lastname }}
+                <div nz-row>
+                    <div nz-col nzSpan="12" class="search">
+                        <div class="addParticipant" nz-col *ngIf="event.Student">
+                            <span>{{ event.Student.firstname }} {{ event.Student.lastname }} </span>
 
                             <a (click)="confirmDeleteStudent(event.Student)">
                                 <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ff4d4f'"></i>
                             </a>
-                             <p class="error" *ngIf="showAlert">Solo puede agregarse un estudiante al evento. Para cambiarlo primero debe remover al estudiante actual.</p>
+                            <nz-alert *ngIf="showAlert" nzType="error" nzCloseable
+                                nzMessage="Solo puede agregarse un estudiante al evento. Para cambiarlo primero debe remover al estudiante actual." (nzOnClose)="showAlert=false">
+                            </nz-alert>
                         </div>
                         <nz-spin nzTip="Cargando ..." [nzSpinning]="searchLoader">
-                            <div  class="addEmployee"> 
+                            <div class="addEmployee">
                                 <label> Estudiantes</label>
-                           </div>   
-                            <div nz-col nzXs="24" nzSm="24" nzMd="20">
+                            </div>
+                            <div>
                                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                                    <input type="text" nz-input placeholder="Buscar por NIE" [(ngModel)]="studentNie" [ngModelOptions]="{standalone: true}"/>
+                                    <input type="text" nz-input placeholder="Buscar por NIE" [(ngModel)]="studentNie"
+                                        [ngModelOptions]="{standalone: true}" />
                                 </nz-input-group>
                                 <ng-template #suffixIconButton>
                                     <button nz-button [nzType]="searching ? '' : 'primary'" nzSearch
@@ -80,7 +83,7 @@
                                 </ng-template>
                             </div>
                             <!-- Students result-->
-                            <div nz-col nzXs="24" nzSm="24" nzMd="24">
+                            <div>
                                 <ng-container *ngIf="results.length; else noResults">
                                     <div class="results" *ngFor="let result of results">
                                         <span>{{ result.firstname }} {{ result.lastname }}</span>
@@ -96,11 +99,12 @@
                             </div>
                         </nz-spin>
                     </div>
-                    <br />
-                    <div nz-col>
+
+                    <div nz-col nzSpan="12">
                         <div nz-col>
-                            <div class="addStudent" nz-col class="searchSelection" *ngFor="let user of event.Participants">
-                                {{ user.firstname }} {{ user.lastname }}
+                            <div class="addParticipant" nz-col class="searchSelection"
+                                *ngFor="let user of event.Participants">
+                                <span>{{ user.firstname }} {{ user.lastname }} </span>
                                 <a (click)="confirmDeleteUser(user.id, user)">
                                     <i nz-icon nzType="close-circle" [nzTheme]="'twotone'"
                                         [nzTwotoneColor]="'#ff4d4f'"></i>
@@ -108,12 +112,13 @@
                             </div>
                         </div>
                         <nz-spin nzTip="Cargando ..." [nzSpinning]="searchLoaderUser">
-                            <div  class="addEmployee"> 
+                            <div class="addEmployee">
                                 <label> Empleados</label>
-                            </div>    
-                            <div nz-col nzXs="24" nzSm="24" nzMd="26">
+                            </div>
+                            <div>
                                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButtonUser">
-                                    <input type="text" nz-input placeholder="Buscar nombre de usuario"  [(ngModel)]="username" [ngModelOptions]="{standalone: true}"/>
+                                    <input type="text" nz-input placeholder="Buscar nombre de usuario"
+                                        [(ngModel)]="username" [ngModelOptions]="{standalone: true}" />
                                 </nz-input-group>
                                 <ng-template #suffixIconButtonUser>
                                     <button nz-button [nzType]="searchingUser ? '' : 'primary'" nzSearch
@@ -123,7 +128,7 @@
                                 </ng-template>
                             </div>
                             <!-- Employees result-->
-                            <div nz-col nzXs="24" nzSm="24" nzMd="24">
+                            <div>
                                 <ng-container *ngIf="resultsUsers.length; else noResultsUser">
                                     <div class="results" *ngFor="let result of resultsUsers">
                                         <span>{{ result.firstname }} {{ result.lastname }}</span>
