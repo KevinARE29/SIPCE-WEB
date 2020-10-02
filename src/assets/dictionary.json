@@ -21,7 +21,8 @@
         },
         "ShiftPeriodGrades": {
             "name": "Nombre",
-            "active": "activo"
+            "active": "activo",
+            "gradeId": "Grado"
         },
         "users": {
             "firstname": "Nombres",

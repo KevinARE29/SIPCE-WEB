@@ -25,6 +25,8 @@ export class ResponsibleService {
   }
 
   createResponsible(id: number, responsible: Responsible): Observable<Responsible> {
+    responsible['phone'] = responsible.phone.replace('-', '');
+
     return this.http
       .post<Responsible>(`${this.baseUrl}students/${id}/responsibles`, responsible)
       .pipe(catchError(this.handleError()));

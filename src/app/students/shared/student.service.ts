@@ -201,13 +201,14 @@ export class StudentService {
         result['data'].responsibleStudents.forEach((responsible) => {
           if (responsible.responsible.id) {
             const studentResponsible = new Responsible();
+            const phone = responsible['responsible'].phone;
 
             studentResponsible.id = responsible['responsible'].id;
             studentResponsible.email = responsible['responsible'].email;
             studentResponsible.firstname = responsible['responsible'].firstname;
             studentResponsible.lastname = responsible['responsible'].lastname;
-            studentResponsible.phone = responsible['responsible'].phone;
             studentResponsible.relationship = responsible['relationship'];
+            studentResponsible.phone = phone.substring(0, 4).concat('-', phone.substring(4, 8));
 
             student.responsibles.push(studentResponsible);
           }
