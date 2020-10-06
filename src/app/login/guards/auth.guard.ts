@@ -40,15 +40,17 @@ export class AuthGuard implements CanActivate, CanLoad {
     const token = this.authService.getToken();
 
     if (!token) {
-      if (url !== '/login' && url !== '/contrasena/recuperar' && !url.includes('reset-psw')) {
+      if (url !== '/login' && url !== '/contrasena/recuperar' && !url.includes('reset-psw') && url !== '/') {
         this.router.navigate(['login']);
       } else {
         res = true;
       }
     } else {
       const content = this.authService.jwtDecoder(token);
-
-      if (url === '/contrasena/cambiar' || url === '/inicio') {
+      // TODO: Refactor exceptions
+      if (url === '/') {
+        this.router.navigate(['inicio']);
+      } else if (url === '/contrasena/cambiar' || url === '/inicio') {
         res = true;
       } else if (url !== '/login' && url !== '/contrasena/recuperar' && !url.includes('reset-psw')) {
         if (content) {

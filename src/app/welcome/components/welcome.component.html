@@ -1,0 +1,69 @@
+<div class="welcome-background-image">
+    <div nz-row nzAlign="middle" class="welcome-background-color">
+        <div class="welcome-background" nz-col nzSpan="12">
+            <div nz-row nzJustify="center">
+                <img class="welcome-logo" src="assets/logo-maristas.png" alt="Logo">
+            </div>
+            <div>
+                <strong>¿Ya tiene una cuenta en SIAPCE?</strong>
+                <p>Inicia sesión en tu cuenta <a class="primary" [routerLink]="['/login']">aquí</a></p>
+                <button nz-button [nzType]="'primary'">
+                    Iniciar sesión
+                </button>
+            </div>
+            <div>
+                <strong>¿Tienes una prueba sociométrica agendada?</strong>
+                <p>Accede a la prueba <a class="primary">aquí</a></p>
+                <button nz-button [nzType]="'primary'">
+                    Realizar prueba
+                </button>
+            </div>
+        </div>
+
+        <div class="welcome-background" nz-col nzSpan="12">
+            <h2>Solicitar consulta de consejería</h2>
+            <p>Recuerda que si eres estudiante a partir de séptimo grado puedes solicitar tu consulta de consejería
+                aquí.</p>
+            <form nz-form [formGroup]="counselingConsultationForm" (submit)="requestConsulation()">
+                <nz-form-item>
+                    <nz-form-label>Correo electrónico</nz-form-label>
+                    <nz-form-control [nzErrorTip]="emailErrors">
+                        <input type="email" nz-input placeholder="Correo electrónico institucional"
+                            formControlName="email" />
+                            <ng-template #emailErrors let-control>
+                                <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres<br></ng-container>
+                                <ng-container *ngIf="control.hasError('required')">El correo electrónico es requerido<br></ng-container>
+                                <ng-container *ngIf="control.hasError('pattern')">Ingrese un correo electrónico válido<br></ng-container>
+                            </ng-template>
+                        </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label>Asunto</nz-form-label>
+                    <nz-form-control [nzErrorTip]="subjectErrors">
+                        <input type="text" nz-input placeholder="Asunto de la consulta" formControlName="subject" />
+                        <ng-template #subjectErrors let-control>
+                            <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 64 caracteres<br></ng-container>
+                            <ng-container *ngIf="control.hasError('required')">El asunto es requerido<br></ng-container>
+                            <ng-container *ngIf="control.hasError('pattern')">El asunto solo puede contener letras y números<br></ng-container>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label>Comment</nz-form-label>
+                    <nz-form-control [nzErrorTip]="commentErrors">
+                        <textarea formControlName="comment" nz-input rows=""></textarea>
+                        <ng-template #commentErrors let-control>
+                            <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 256 caracteres<br></ng-container>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <button nz-button [nzLoading]="btnLoading" [nzType]="'primary'">
+                    Solicitar consulta
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

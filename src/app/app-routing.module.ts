@@ -9,7 +9,12 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './login/guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: '/inicio' },
+  // { path: '', pathMatch: 'full', redirectTo: '/inicio' },
+  {
+    path: '',
+    loadChildren: () => import('./welcome/welcome.module').then((m) => m.WelcomeModule),
+    canLoad: [AuthGuard]
+  },
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then((m) => m.LoginModule),

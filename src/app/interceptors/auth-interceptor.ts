@@ -15,7 +15,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const url = request.url;
-
+    // TODO: Refactor else-if statements
     if (url.includes('images')) {
       const newRequest = this.appendformData(request);
       return next.handle(newRequest);

@@ -1,0 +1,55 @@
+/* Background */
+.welcome-background-image {
+    background-image: url("../../../assets/back-to-school-wallpaper.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    height: 100vh;
+    color: white;
+  }
+  
+  .welcome-background-color {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 21, 41, 0.80);
+  }
+  
+  .welcome-background {
+    background-color: transparent;
+    border: none;
+    text-align: center;
+  }
+  
+  .welcome-logo {
+    max-width: 100px;
+  }
+  
+  /* Buttons */
+  .welcome-form-button {
+    border-radius: 15px;
+    min-width: 50%;
+    padding: 8px;
+    height: auto;
+    letter-spacing: 0.5px;
+  }
+  
+  /* Title and subtitle */
+  .welcome-title {
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+  }
+  
+  .welcome-subtitle {
+    color: white;
+    font-size: 16px;
+    margin-bottom: 30px;
+    letter-spacing: 0.5px;
+  }
+  
+  a {
+    margin-bottom: 10px;
+  }
+  
