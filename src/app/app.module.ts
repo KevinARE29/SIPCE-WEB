@@ -5,6 +5,14 @@
 */
 
 import { BrowserModule } from '@angular/platform-browser';
+import {
+  ScheduleModule,
+  AgendaService,
+  DayService,
+  WeekService,
+  WorkWeekService,
+  MonthService
+} from '@syncfusion/ej2-angular-schedule';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -35,9 +43,15 @@ import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptor,
       multi: true
-    }
+    },
+    AgendaService,
+    DayService,
+    WeekService,
+    WorkWeekService,
+    MonthService
   ],
   imports: [
+    ScheduleModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,

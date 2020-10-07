@@ -2,7 +2,10 @@
     Path: styles.css
     Objective: Define the general style for the app
     Author: Esme López
+
+
 */
+@import "./assets/material.css";
 
 html,
 body {
@@ -11,7 +14,7 @@ body {
 
 body {
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 #main {

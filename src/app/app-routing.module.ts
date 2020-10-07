@@ -66,6 +66,11 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'calendario',
+    loadChildren: () => import('./calendar/calendar.module').then((m) => m.CalendarModule),
+    canLoad: [AuthGuard]
+  },
+  {
     path: '**',
     redirectTo: '/error404',
     pathMatch: 'full'
