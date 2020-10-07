@@ -24,8 +24,7 @@ export class AuthInterceptor implements HttpInterceptor {
       url.includes('politics') ||
       url.includes('users') ||
       url.includes('roles') ||
-      url.includes('permissions') ||
-      url.includes('schedules')
+      url.includes('permissions')
     ) {
       const newRequest = this.appendAccessToken(request);
       return next.handle(newRequest).pipe(

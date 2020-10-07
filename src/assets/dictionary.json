@@ -62,6 +62,16 @@
         "school-year": {
             "year": "Año",
             "status": "Estado"
+        },
+        "schedule": {
+            "Subject": "Asunto",
+            "EventType": "Tipo de evento",
+            "Location": "lugar",
+            "StartTime": "Fecha de inicio",
+            "EndTime": "Fecha de fin",
+            "Description": "Descripcion",
+            "Participants": "Empleados",
+            "Student": "Estudiantes"
         }
     }
 }

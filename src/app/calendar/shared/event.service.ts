@@ -108,7 +108,7 @@ export class EventService {
    */
   private handleError() {
     return (error: any) => {
-      error.error.message = this.errorMessageService.transformMessage('students', error.error.message);
+      error.error.message = this.errorMessageService.transformMessage('schedule', error.error.message);
       return throwError(error.error);
     };
   }
