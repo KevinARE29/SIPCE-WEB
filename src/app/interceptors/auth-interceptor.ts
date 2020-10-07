@@ -15,18 +15,28 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const url = request.url;
-    // TODO: Refactor else-if statements
+
     if (url.includes('images')) {
       const newRequest = this.appendformData(request);
+      return next.handle(newRequest);
+    } else if (
+      url.includes('login') ||
+      url.includes('reset-password') ||
+      url.includes('forgot-password') ||
+      url.includes('counseling/requests')
+    ) {
+      const newRequest = this.appendContentType(request);
       return next.handle(newRequest);
     } else if (
       !url.includes('auth') ||
       url.includes('politics') ||
       url.includes('users') ||
       url.includes('roles') ||
-      url.includes('permissions')
+      url.includes('permissions') ||
+      url.includes('logout')
     ) {
       const newRequest = this.appendAccessToken(request);
+
       return next.handle(newRequest).pipe(
         catchError((error) => {
           if (error instanceof HttpErrorResponse && error.status === 401) {
@@ -35,19 +45,8 @@ export class AuthInterceptor implements HttpInterceptor {
           return throwError(error);
         })
       );
-    } else if (url.includes('logout')) {
-      const newRequest = this.appendAccessToken(request);
-      return next.handle(newRequest);
-    } else if (url.includes('login')) {
-      const newRequest = this.appendContentType(request);
-      return next.handle(newRequest);
-    } else if (url.includes('reset-password')) {
-      const newRequest = this.appendContentType(request);
-      return next.handle(newRequest);
-    } else if (url.includes('forgot-password')) {
-      const newRequest = this.appendContentType(request);
-      return next.handle(newRequest);
     }
+
     return next.handle(request);
   }
 
@@ -79,10 +78,11 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private appendContentType(request: HttpRequest<any>): HttpRequest<any> {
-    request.clone({
-      headers: request.headers.set('Content-Type', 'application/json')
+    return request.clone({
+      setHeaders: {
+        'Content-Type': 'application/json'
+      }
     });
-    return request;
   }
 
   handleSessionExpiredError(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -115,7 +115,6 @@ export class AuthInterceptor implements HttpInterceptor {
       }
     } else {
       localStorage.clear();
-      // this.router.navigate(['/login']);
       this.router.navigate(['login/error401']);
       return next.handle(request);
     }

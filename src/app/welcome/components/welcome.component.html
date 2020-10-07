@@ -9,16 +9,12 @@
             <div class="welcome-link">
                 <strong class="hide-on-small">¿Ya tiene una cuenta en SIAPCE?</strong>
                 <p class="hide-on-small">Inicie sesión en tu cuenta <a class="primary" [routerLink]="['/login']">aquí</a></p>
-                <button nz-button [nzType]="'primary'">
-                    Iniciar sesión
-                </button>
+                <a nz-button nzType="primary" [routerLink]="['/login']">Iniciar sesión</a>
             </div>
             <div class="welcome-link">
                 <strong class="hide-on-small">¿Tiene una prueba sociométrica agendada?</strong>
                 <p class="hide-on-small">Acceda a la prueba <a class="primary">aquí</a></p>
-                <button nz-button [nzType]="'primary'">
-                    Realizar prueba
-                </button>
+                <a nz-button nzType="primary"> Realizar prueba </a>
             </div>
         </div>
         <!-- / Logo and links -->
@@ -48,9 +44,9 @@
                         <nz-form-control [nzErrorTip]="subjectErrors">
                             <input type="text" nz-input placeholder="Asunto de la consulta" formControlName="subject" />
                             <ng-template #subjectErrors let-control>
-                                <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 64 caracteres<br></ng-container>
+                                <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres<br></ng-container>
                                 <ng-container *ngIf="control.hasError('required')">El asunto es requerido<br></ng-container>
-                                <ng-container *ngIf="control.hasError('pattern')">El asunto solo puede contener letras y números<br></ng-container>
+                                <ng-container *ngIf="control.hasError('pattern')">El asunto solo puede contener letras<br></ng-container>
                             </ng-template>
                         </nz-form-control>
                     </nz-form-item>
@@ -60,7 +56,7 @@
                         <nz-form-control [nzErrorTip]="commentErrors">
                             <textarea formControlName="comment" nz-input rows=""></textarea>
                             <ng-template #commentErrors let-control>
-                                <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 256 caracteres<br></ng-container>
+                                <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 512 caracteres<br></ng-container>
                             </ng-template>
                         </nz-form-control>
                     </nz-form-item>
