@@ -267,13 +267,13 @@ export class CalendarComponent implements OnInit {
   }
 
   public onChange(args: any): void {
-    this.recurrenceRule = '';
     this.recurrenceRule = args.value;
   }
 
   public onBegin(args: any): void {
     if (args.requestType === 'eventCreate') {
       const data = !isNullOrUndefined(args.data[0]) ? args.data[0] : args.data;
+
       data.RecurrenceRule = this.recurrenceRule;
       args.cancel = true;
       this.loading = true;
@@ -294,6 +294,7 @@ export class CalendarComponent implements OnInit {
 
           this.event = new Appointment();
           this.loading = false;
+          this.recurrenceRule = '';
           this.message.success(`Evento creado con éxito`);
         },
         () => {
