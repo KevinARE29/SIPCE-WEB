@@ -59,7 +59,7 @@
       "repeats": "Repite",
       "alert": "Alerta",
       "startEndError": "La fecha de finalización seleccionada se produce antes de la fecha de inicio",
-      "invalidDateError": "La fecha ingresada es invalida",
+      "invalidDateError": "La fecha ingresada no es válida",
       "blockAlert": "Espacio bloqueado",
       "ok": "ok",
       "yes": "sí",
