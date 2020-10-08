@@ -1,0 +1,161 @@
+<h1>Usuarios sin credenciales</h1>
+
+<div nz-row [nzGutter]="[10, 10]">
+    <!-- Name -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+      <label>Nombre: </label>
+        <nz-input-group [nzSuffix]="inputClearName">
+            <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Buscar nombre" />
+        </nz-input-group>
+        <ng-template #inputClearName>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.firstname" (click)="searchParams.firstname = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Lastname -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>Apellido: </label>
+        <nz-input-group [nzSuffix]="inputClearLastname">
+            <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Buscar apellido" />
+        </nz-input-group>
+        <ng-template #inputClearLastname>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.lastname" (click)="searchParams.lastname = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Email -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>Correo electrónico: </label>
+        <nz-input-group [nzSuffix]="inputClearEmail">
+            <input nz-input [(ngModel)]="searchParams.email" placeholder="Buscar correo electrónico" />
+        </nz-input-group>
+        <ng-template #inputClearEmail>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.email" (click)="searchParams.email = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Roles -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>Rol: </label>
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="roleSearch" (ngModelChange)="search()">
+            <nz-option *ngFor="let rol of roles" [nzLabel]="rol.name" [nzValue]="rol.id"></nz-option>
+        </nz-select>
+    </div>
+
+    <!-- Date range -->
+    <div class="date" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="12" nzXl="12">
+      <label>Fecha de creación: </label>
+      <nz-range-picker
+        nzFormat="dd/MM/yyyy"
+        [ngModel]="searchParams.createdAt"
+        [nzDisabledDate]="disabledDate"
+        (ngModelChange)="onChangeDatePicker($event)"
+      ></nz-range-picker>
+    </div>
+
+    <!-- Search button-->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="12" nzXl="12">
+      <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+        <button nz-col nz-button nzType="primary" (click)="search()">Buscar</button>
+      </div>
+    </div>
+</div>
+
+
+<div class="unauthorized-users" nz-row>
+    <div nz-col nzSpan="24">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <nz-table #filterTable
+                [nzData]="listOfData"
+                nzTableLayout="fixed"
+                nzSize="small"
+                [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems"
+                [nzPageSize]="pagination.perPage"
+                [nzPageIndex]="pagination.page"
+                nzShowSizeChanger
+                [nzPageSizeOptions]="[5, 10, 25]"
+                (nzQueryParams)="getUsers($event)"
+                (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+            >
+                <thead>
+                    <tr>
+                        <th [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
+                        <th nzColumnKey="firstname" [nzSortFn]="true" [nzSortPriority]="1">Nombre</th>
+                        <th nzColumnKey="lastname" [nzSortFn]="true" [nzSortPriority]="2">Apellido</th>
+                        <th nzColumnKey="email" [nzSortFn]="true" [nzSortPriority]="3">Correo electrónico</th>
+                        <th nzColumnKey="role">Roles</th>
+                        <th nzColumnKey="createdAt" [nzSortFn]="true" [nzSortPriority]="4">Fecha de creación</th>
+                        <th [nzAlign]="'center'" *ngIf="checkPermission(14)">Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let data of filterTable.data">
+                        <td
+                            [nzChecked]="setOfCheckedId.has(data.user.id)"
+                            [nzDisabled]="data.disabled"
+                            (nzCheckedChange)="onItemChecked(data.user.id, $event)"
+                        ></td>
+                        <td>{{ data.user.firstname }}</td>
+                        <td>{{ data.user.lastname }}</td>
+                        <td>{{ data.user.email }}</td>
+                        <td>
+                            <ng-container *ngFor="let rol of data.user.roles; last as isLast">
+                                {{ rol.name }}
+                                <ng-container *ngIf="!isLast">
+                                    <nz-divider nzType="vertical"></nz-divider>
+                                </ng-container>
+                            </ng-container>
+                        </td>
+                        <td>{{ data.user.createdAt | date:"dd/MM/yyyy hh:mm aa" }}</td>
+                        <td [nzAlign]="'center'" *ngIf="checkPermission(14)">
+                            <a (click)="showConfirm(data.user.id)">
+                                <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>
+
+<div class="send-request" *ngIf="checkPermission(12)">
+    <button nz-button nzType="primary" [disabled]="setOfCheckedId.size === 0" [nzLoading]="loading" (click)="showModal()">
+      Generar credenciales
+    </button>
+    <span> {{ setOfCheckedId.size }} usuarios seleccionados</span>
+</div>
+
+<nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]="modalTitle"
+    [nzContent]="modalContent"
+    [nzFooter]="modalFooter"
+    (nzOnCancel)="handleCancel()"
+>
+    <ng-template #modalTitle> Generar credenciales </ng-template>
+
+    <ng-template #modalContent>
+        <p *ngFor="let data of filteredList">
+            {{ data.user.firstname}} {{ data.user.lastname }},
+            <ng-container *ngFor="let item of data.user.roles; last as isLast">
+                {{ item.name }}
+                <ng-container *ngIf="!isLast">
+                    <nz-divider nzType="vertical"></nz-divider>
+                </ng-container>
+            </ng-container>
+        </p>
+        <br>
+        <i>Se generarán credenciales y se habilitará el acceso a  {{ setOfCheckedId.size }}
+            <ng-container *ngIf="setOfCheckedId.size === 1;else plural">usuario nuevo.</ng-container>
+            <ng-template #plural>usuarios nuevos.</ng-template>
+        </i>
+    </ng-template>
+
+    <ng-template #modalFooter>
+        <button nz-button nzType="default" (click)="handleCancel()">Cancelar</button>
+        <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">Aceptar</button>
+    </ng-template>
+</nz-modal>

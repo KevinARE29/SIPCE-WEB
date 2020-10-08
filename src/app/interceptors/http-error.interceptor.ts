@@ -18,11 +18,12 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error instanceof HttpErrorResponse) {
-          if (error.error.StatusCode === 401) {
+          /*if (error.error.statusCode === 401) {
             this.router.navigate(['login/error401']);
-          } else if (error.error.StatusCode === 403) {
+          } else*/
+          if (error.error.statusCode === 403) {
             this.router.navigate(['login/error403']);
-          } else if (error.error.StatusCode >= 500 && error.error.StatusCode <= 599) {
+          } else if (error.error.statusCode >= 500 && error.error.statusCode <= 599) {
             this.router.navigate(['login/error500']);
           }
           return throwError(error); // server-side error

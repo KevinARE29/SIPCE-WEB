@@ -1,0 +1,14 @@
+img.logo {
+    min-height: 200px;
+    max-height: 500px;
+}
+
+img.construction {
+    height: 60px;
+    margin-top: -15px;
+    margin-left: 10px;
+}
+
+h1, h3 {
+    text-align: center;
+}

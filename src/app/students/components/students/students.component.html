@@ -1,0 +1,145 @@
+<div nz-row nzJustify="space-between">
+    <div nz-col>
+        <h1>Estudiantes</h1>
+    </div>
+    <div nz-col>
+        <a nz-button nzType="primary" routerLink="/estudiantes/nuevo">Crear estudiante</a>
+    </div>
+</div>
+
+<div nz-row [nzGutter]="[10, 10]">
+    <!-- Code -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>NIE: </label>
+        <nz-input-group [nzSuffix]="inputClearCode">
+            <input nz-input [(ngModel)]="searchParams.code" placeholder="Buscar NIE" />
+        </nz-input-group>
+        <ng-template #inputClearCode>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.code" (click)="searchParams.code = null; getStudents(null)"></i>
+        </ng-template>
+    </div>
+
+    <!-- Name -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>Nombre: </label>
+        <nz-input-group [nzSuffix]="inputClearName">
+            <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Buscar nombre" />
+        </nz-input-group>
+        <ng-template #inputClearName>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.firstname" (click)="searchParams.firstname = null; getStudents(null)"></i>
+        </ng-template>
+    </div>
+
+    <!-- Lastname -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>Apellido: </label>
+        <nz-input-group [nzSuffix]="inputClearLastname">
+            <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Buscar apellido" />
+        </nz-input-group>
+        <ng-template #inputClearLastname>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.lastname" (click)="searchParams.lastname = null; getStudents(null)"></i>
+        </ng-template>
+    </div>
+
+    <!-- Email -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>Correo electrónico: </label>
+        <nz-input-group [nzSuffix]="inputClearEmail">
+            <input nz-input [(ngModel)]="searchParams.email" placeholder="Buscar correo electrónico" />
+        </nz-input-group>
+        <ng-template #inputClearEmail>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.email" (click)="searchParams.email = null; getStudents(null)"></i>
+        </ng-template>
+    </div>
+
+    <!-- Status -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="10">
+        <label>Estado: </label>
+        <nz-switch [(ngModel)]="statusSwitch" [nzCheckedChildren]="'Activos'" [nzUnCheckedChildren]="'Inactivos'" (ngModelChange)="statusToggle()"></nz-switch>
+        <nz-select class="status" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.status" (ngModelChange)="getStudents(null)">
+            <nz-option *ngFor="let state of statuses" [nzLabel]="state" [nzValue]="state"></nz-option>
+        </nz-select>
+    </div>
+
+    <!-- Grade -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="10">
+        <label>Grado: </label>
+        <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.grade.id" (ngModelChange)="getStudents(null)">
+            <nz-option *ngFor="let grade of grades" [nzLabel]="grade.name" [nzValue]="grade.id"></nz-option>
+        </nz-select>
+    </div>
+
+    <!-- Search button-->
+    <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="4" nzXl="4">
+      <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+        <button nz-button nzType="primary" (click)="getStudents(null)">Buscar</button>
+      </div>
+    </div>
+</div>
+
+<div nz-row>
+    <div nz-col nzSpan="24">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <nz-table #filterTable
+                [nzData]="listOfDisplayData"
+                nzTableLayout="fixed"
+                [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems"
+                [nzPageSize]="pagination.perPage"
+                [nzPageIndex]="pagination.page"
+                nzSize="small"
+                (nzQueryParams)="getStudents($event)"
+            >
+                <thead>
+                    <tr>
+                        <th nzColumnKey="code" [nzSortFn]="true" [nzSortPriority]="1">NIE</th>
+                        <th nzColumnKey="firstname" [nzSortFn]="true" [nzSortPriority]="2">Nombres</th>
+                        <th nzColumnKey="lastname" [nzSortFn]="true" [nzSortPriority]="3">Apellidos</th>
+                        <th nzColumnKey="email" [nzSortFn]="true" [nzSortPriority]="4">Correo electrónico</th>
+                        <th nzColumnKey="currentGrade" [nzSortFn]="true" [nzSortPriority]="5">Grado</th>
+                        <th nzColumnKey="status" [nzSortFn]="true" [nzSortPriority]="6">Estado</th>
+                        <th [nzAlign]="'center'" *ngIf="actions.length">Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let data of filterTable.data">
+                        <td>{{ data.code }}</td>
+                        <td>{{ data.firstname }}</td>
+                        <td>{{ data.lastname }}</td>
+                        <td>{{ data.email }}</td>
+                        <td>{{ data.currentGrade.name }}</td>
+                        <td>{{ data.status }}</td>
+                        <td [nzAlign]="'center'" *ngIf="actions.length">
+                            <ng-container *ngFor="let action of actions">
+                                <ng-container [ngSwitch]="action.text">
+                                    <ng-container *ngSwitchCase="'eye'">
+                                        <a [routerLink]="['/estudiantes', data.id, 'detalle']">
+                                            <i nz-icon [nzType]="action.text" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
+                                        </a>
+                                    </ng-container>
+
+                                    <ng-container *ngSwitchCase="'edit'">
+                                        <nz-divider nzType="vertical" *ngIf="checkPermission(21)"></nz-divider>
+                                        <a [routerLink]="['/estudiantes', data.id, 'editar']">
+                                            <i nz-icon [nzType]="action.text" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
+                                        </a>
+                                    </ng-container>
+
+                                    <ng-container *ngSwitchCase="'delete'">
+                                        <ng-container *ngIf="data.canBeDeleted">
+                                            <nz-divider nzType="vertical" *ngIf="checkPermission(20) || checkPermission(21)"></nz-divider>
+                                            <a (click)="showConfirm(data.id)">
+                                                <i nz-icon [nzType]="action.text" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
+                                            </a>
+                                        </ng-container>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>

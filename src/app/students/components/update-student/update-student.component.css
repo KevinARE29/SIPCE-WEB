@@ -1,0 +1,31 @@
+.title i[nz-icon] {
+  font-size: 25px;
+  margin: 10px 10px 0px 0px;
+}
+
+nz-date-picker, nz-year-picker, nz-select {
+  width: 100%;
+  border-radius: 7px;
+}
+
+.relation {
+  min-width: 150px;
+}
+
+.addSibling span {
+  margin: 5px;
+}
+
+.btnTabs, .siblings {
+  margin-top: 10px;
+}
+
+.code {
+  margin-top: 15px;
+  margin-left: 10px;
+  font-weight: 500;
+}
+
+.search-sibling {
+  margin-top: 20px;
+}

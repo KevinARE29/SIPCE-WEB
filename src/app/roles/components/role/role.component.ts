@@ -81,7 +81,10 @@ export class RoleComponent implements OnInit {
       const param: string = params.get('role');
 
       this.roleForm = this.fb.group({
-        name: [null, [Validators.required, Validators.maxLength(32)]]
+        name: [
+          null,
+          [Validators.required, Validators.maxLength(32), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        ]
       });
 
       if (typeof param === 'string' && !Number.isNaN(Number(param))) {
@@ -143,7 +146,7 @@ export class RoleComponent implements OnInit {
             'error',
             'Ocurrió un error al crear el rol. Por favor verifique lo siguiente:',
             err.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
 
@@ -174,7 +177,7 @@ export class RoleComponent implements OnInit {
             'error',
             'Ocurrió un error al obtener el rol. Por favor verifique lo siguiente:',
             err.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
       }
@@ -202,7 +205,7 @@ export class RoleComponent implements OnInit {
             'error',
             'Ocurrió un error al actualizar el rol. Por favor verifique lo siguiente:',
             err.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
         this.btnLoading = false;

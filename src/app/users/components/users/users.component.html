@@ -1,0 +1,134 @@
+<div nz-row nzJustify="space-around">
+    <div nz-col nzFlex="auto">
+        <h1>Usuarios</h1>
+    </div>
+    <div nz-col nzFlex="110px">
+        <a nz-button nzType="primary" routerLink="/usuarios/0">Crear usuario</a>
+    </div>
+</div>
+
+<div nz-row [nzGutter]="[10, 10]">
+    <!-- Username -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="4">
+        <label>Usuario: </label>
+        <nz-input-group [nzSuffix]="inputClearUsername">
+            <input nz-input [(ngModel)]="searchParams.username" placeholder="Buscar usuario" />
+        </nz-input-group>
+        <ng-template #inputClearUsername>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.username" (click)="searchParams.username = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Name -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5">
+        <label>Nombre: </label>
+        <nz-input-group [nzSuffix]="inputClearName">
+            <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Buscar nombre" />
+        </nz-input-group>
+        <ng-template #inputClearName>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.firstname" (click)="searchParams.firstname = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Lastname -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5">
+        <label>Apellido: </label>
+        <nz-input-group [nzSuffix]="inputClearLastname">
+            <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Buscar apellido" />
+        </nz-input-group>
+        <ng-template #inputClearLastname>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.lastname" (click)="searchParams.lastname = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Email -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5">
+        <label>Correo electrónico: </label>
+        <nz-input-group [nzSuffix]="inputClearEmail">
+            <input nz-input [(ngModel)]="searchParams.email" placeholder="Buscar correo electrónico" />
+        </nz-input-group>
+        <ng-template #inputClearEmail>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.email" (click)="searchParams.email = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Roles -->
+    <div nz-col nzXs="24" nzSm="10" nzMd="8" nzLg="8" nzXl="5">
+        <label>Rol: </label>
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="roleSearch" (ngModelChange)="search()">
+            <nz-option *ngFor="let rol of roles" [nzLabel]="rol.name" [nzValue]="rol.id"></nz-option>
+        </nz-select>
+    </div>
+</div>
+
+<br>
+
+<div nz-row nzJustify="end">
+  <!-- Status & search button-->
+  <div nz-col>
+    <label>Mostrar inactivos </label>
+    <nz-switch [(ngModel)]="searchParams.active" [nzCheckedChildren]="checkedTemplate" [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
+    <ng-template #checkedTemplate><i nz-icon nzType="check"></i></ng-template>
+    <ng-template #unCheckedTemplate><i nz-icon nzType="close"></i></ng-template>
+    <button nz-button nzType="primary" (click)="search()">Buscar</button>
+  </div>
+</div>
+
+<div nz-row>
+    <div nz-col nzSpan="24">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <nz-table #filterTable
+                [nzData]="listOfDisplayData"
+                nzTableLayout="fixed"
+                nzSize="small"
+                [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems"
+                [nzPageSize]="pagination.perPage"
+                [nzPageIndex]="pagination.page"
+                (nzQueryParams)="getUsers($event)"
+            >
+                <thead>
+                    <tr>
+                        <th nzColumnKey="username" [nzSortFn]="true" [nzSortPriority]="1">Usuario</th>
+                        <th nzColumnKey="firstname" [nzSortFn]="true" [nzSortPriority]="2">Nombres</th>
+                        <th nzColumnKey="lastname" [nzSortFn]="true" [nzSortPriority]="3">Apellidos</th>
+                        <th nzColumnKey="email" [nzSortFn]="true" [nzSortPriority]="4">Correo electrónico</th>
+                        <th nzColumnKey="role">Roles</th>
+                        <th [nzAlign]="'center'">Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let data of filterTable.data">
+                        <td>
+                            <i nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="data.active ? '#52c41a' : '#bdbdbd'"></i>
+                            {{ data.username }}
+                        </td>
+                        <td>{{ data.firstname }}</td>
+                        <td>{{ data.lastname }}</td>
+                        <td>{{ data.email }}</td>
+                        <td>
+                            <ng-container *ngFor="let rol of data.roles; last as isLast">
+                                {{ rol.name }}
+                                <ng-container *ngIf="!isLast">
+                                    <nz-divider nzType="vertical"></nz-divider>
+                                </ng-container>
+                            </ng-container>
+                        </td>
+                        <td [nzAlign]="'center'">
+                            <a routerLink="/usuarios/{{data.id}}">
+                                <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
+                            </a>
+                            <ng-container *ngIf="checkPermission(14)">
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <a (click)="showConfirm(data.id)">
+                                    <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
+                                </a>
+                            </ng-container>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>

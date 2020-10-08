@@ -32,6 +32,17 @@ import { NzTransferModule } from 'ng-zorro-antd/transfer';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzListModule } from 'ng-zorro-antd/list';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzStepsModule } from 'ng-zorro-antd/steps';
+import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
+import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { es_ES } from 'ng-zorro-antd/i18n';
@@ -67,7 +78,20 @@ const ngZorro = [
   NzTransferModule,
   NzNotificationModule,
   NzSelectModule,
-  NzDatePickerModule
+  NzDatePickerModule,
+  NzDatePickerModule,
+  NzUploadModule,
+  NzPopconfirmModule,
+  NzSwitchModule,
+  NzTagModule,
+  NzListModule,
+  NzCollapseModule,
+  NzTimePickerModule,
+  NzTabsModule,
+  NzEmptyModule,
+  NzStepsModule,
+  NzAutocompleteModule,
+  NzCollapseModule
 ];
 
 @NgModule({

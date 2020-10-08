@@ -1,0 +1,15 @@
+nz-table {
+    margin-top: 30px;
+}
+
+nz-select, nz-range-picker {
+    width: 100%;
+}
+
+.btn-container {
+  height: 100%;
+}
+
+nz-range-picker {
+  border-radius: 7px;
+}

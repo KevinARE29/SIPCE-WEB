@@ -9,15 +9,15 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './login/guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: '/welcome' },
+  { path: '', pathMatch: 'full', redirectTo: '/inicio' },
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then((m) => m.LoginModule),
     canLoad: [AuthGuard]
   },
   {
-    path: 'welcome',
-    loadChildren: () => import('./pages/welcome/welcome.module').then((m) => m.WelcomeModule),
+    path: 'inicio',
+    loadChildren: () => import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
     canLoad: [AuthGuard]
   },
   {
@@ -41,8 +41,33 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'usuarios',
+    loadChildren: () => import('./users/users.module').then((m) => m.UsersModule),
+    canLoad: [AuthGuard]
+  },
+  {
     path: 'reset-psw',
     loadChildren: () => import('./manage-password/reset-password.module').then((m) => m.ResetPasswordModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'catalogos',
+    loadChildren: () => import('./academic-catalogs/academic-catalogs.module').then((m) => m.AcademicCatalogsModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'estudiantes',
+    loadChildren: () => import('./students/students.module').then((m) => m.StudentsModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'asignaciones',
+    loadChildren: () => import('./school-year/school-year.module').then((m) => m.SchoolYearModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'calendario',
+    loadChildren: () => import('./calendar/calendar.module').then((m) => m.CalendarModule),
     canLoad: [AuthGuard]
   },
   {

@@ -1,0 +1,17 @@
+.title a {
+    margin-top: 12px;
+    margin-left: 10px;
+    font-size: 1.3em;
+}
+
+.status {
+    margin-top: -5px;
+    margin-left: 15px;
+    background-color: #eeeeee;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.responsibles {
+    margin: 5px;;
+}

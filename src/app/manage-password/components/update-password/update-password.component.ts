@@ -90,8 +90,7 @@ export class UpdatePasswordComponent implements OnInit {
         this.length = 6;
         this.availablePolitics = this.availablePolitics + 'al menos 6 caracteres.';
       } else {
-        this.availablePolitics =
-          this.availablePolitics + 'al menos ' + this.securityPolicy.minLength + ' caracteres.';
+        this.availablePolitics = this.availablePolitics + 'al menos ' + this.securityPolicy.minLength + ' caracteres.';
         this.length = this.securityPolicy.minLength;
       }
     });
@@ -176,7 +175,7 @@ export class UpdatePasswordComponent implements OnInit {
               'error',
               'Ocurrió un error al cambiar la contraseña. Por favor verifique lo siguiente:',
               error.message,
-              { nzDuration: 0 }
+              { nzDuration: 30000 }
             );
           }
 

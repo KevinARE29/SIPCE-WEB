@@ -54,7 +54,7 @@ export class SecurityPoliciesComponent implements OnInit {
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create('error', 'Ocurrió un error al obtener las políticas de seguridad.', err.message, {
-            nzDuration: 0
+            nzDuration: 30000
           });
         }
       }
@@ -100,7 +100,7 @@ export class SecurityPoliciesComponent implements OnInit {
                 'error',
                 'Ocurrió un error al actualizar las políticas de seguridad.',
                 err.message,
-                { nzDuration: 0 }
+                { nzDuration: 30000 }
               );
             }
           })

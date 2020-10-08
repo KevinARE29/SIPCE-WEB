@@ -1,0 +1,51 @@
+<!-- <div nz-col [nzXs]="{ span: 20, offset: 2 }" [nzSm]="{ span: 20, offset: 2 }"
+    [nzMd]="{ span: 20, offset: 2 }" [nzLg]="{ span: 20, offset: 8 }"> -->
+<div nz-col [nzXs]="{ span: 14 }" [nzSm]="{ span: 14 }" [nzMd]="{ span: 14 }" [nzLg]="{ span: 14 }"
+    [nzXl]="{ span: 14, offset: 4 }">
+    <h1>Formulario de creación de horario de atención</h1>
+    <!--  (submit)="sendEmail()"  formControlName="day"-->
+    <form nz-form [formGroup]="daysForm">
+        <nz-form-item>
+            <nz-form-label nzRequired nzFor="day">Dias de atención</nz-form-label>
+            <nz-select [nzMaxTagCount]="5" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
+                formControlName="day" nzPlaceHolder="Seleccione los dias deseados">
+                <nz-option *ngFor="let item of listOfOption" [nzLabel]="item" [nzValue]="item"></nz-option>
+            </nz-select>
+            <ng-template #tagPlaceHolder let-selectedList> and {{ selectedList.length }} more selected </ng-template>
+        </nz-form-item>
+        <div formArrayName="schedules">
+
+            <div *ngFor="let schedule of scheduleFormsA.controls; let i=index" [formGroupName]="i">
+                <div nz-row nzJustify="space-around">
+                    <nz-form-item>
+                        <nz-form-label nzRequired nzFor="startTime">Hora de inicio</nz-form-label>
+                        <!-- [(ngModel)]="time" -->
+                        <nz-time-picker forControlName="startTime" [nzUse12Hours]="true" nzFormat="h:mm a">
+                        </nz-time-picker>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label nzRequired nzFor="endTime">Hora de fin</nz-form-label>
+                        <!-- [(ngModel)]="time" -->
+                        <nz-time-picker forControlName="endTime" [nzUse12Hours]="true" nzFormat="h:mm a">
+                        </nz-time-picker>
+                    </nz-form-item>
+                    <i nz-icon nzType="minus-circle-o" (click)="deleteSchedule(i)" class="dynamic-delete-button"
+                        nzTooltipTitle="Eliminar horario"></i>
+                </div>
+            </div>
+            <nz-form-item nzJustify="space-around">
+                <button nz-button nzType="dashed" class="add-button" (click)="addSchedule()">
+                    <i nz-icon nzType="plus"></i>
+                    Añadir horario de atención
+                </button>
+            </nz-form-item>
+        </div>
+        <nz-form-item nzJustify="space-around">
+
+            <button nz-button [nzLoading]="btnLoading" [nzType]="'primary'">
+                Guardar
+            </button>
+
+        </nz-form-item>
+    </form>
+</div>

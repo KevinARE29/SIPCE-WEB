@@ -3,37 +3,155 @@
         {
             "title": "Políticas de seguridad",
             "icon": "key",
-            "permission": 2,
-            "allow": null,
+            "permissions": [2],
+            "allowed": null,
             "children": [
                 {
                     "route": "/politicas-seguridad",
-                    "name": "Políticas de seguridad"
+                    "name": "Políticas de seguridad",
+                    "permission": 2,
+                    "allowed": false
                 }
             ]
         }, {
             "title": "Roles",
             "icon": "lock",
-            "permission": 4,
-            "allow": null,
+            "permissions": [4],
+            "allowed": null,
             "children": [
                 {
                     "route": "/roles",
-                    "name": "Roles"
+                    "name": "Roles",
+                    "permission": 4,
+                    "allowed": false
                 }
             ]
         }, {
             "title": "Bitácoras",
             "icon": "profile",
-            "permission": 10,
-            "allow": null,
+            "permissions": [10],
+            "allowed": null,
             "children": [
                 {
                     "route": "/bitacora/accesos",
-                    "name": "Bitácora de accesos"
+                    "name": "Bitácora de accesos",
+                    "permission": 10,
+                    "allowed": false
                 }, {
                     "route": "/bitacora/acciones",
-                    "name": "Bitácora de acciones"
+                    "name": "Bitácora de acciones",
+                    "permission": 10,
+                    "allowed": false
+                }
+            ]
+        },
+        {
+            "title": "Catálogos académicos",
+            "icon": "ordered-list",
+            "permissions": [13],
+            "allowed": null,
+            "children": [ 
+                {
+                    "route": "/catalogos/turnos",
+                    "name": "Turnos",
+                    "permission": 13,
+                    "allowed": false
+                }, {
+                    "route": "/catalogos/ciclos",
+                    "name": "Ciclos",
+                    "permission": 13,
+                    "allowed": false
+                }, {
+                    "route": "/catalogos/grados",
+                    "name": "Grados",
+                    "permission": 13,
+                    "allowed": false
+                }, {
+                    "route": "/catalogos/secciones",
+                    "name": "Secciones",
+                    "permission": 13,
+                    "allowed": false
+                }, {
+                    "route": "/catalogos/periodos",
+                    "name": "Periodos",
+                    "permission": 13,
+                    "allowed": false
+                }
+            ]
+        },
+        {
+            "title": "Usuarios",
+            "icon": "user",
+            "permissions": [11, 12, 3],
+            "allowed": null,
+            "children": [
+                {
+                    "route": "/usuarios/consultar",
+                    "name": "Usuarios",
+                    "permission": 13,
+                    "allowed": false
+                }, {
+                    "route": "/usuarios/sin-credenciales",
+                    "name": "Usuarios sin credenciales",
+                    "permission": 12,
+                    "allowed": false
+                }, {
+                    "route": "/usuarios/carga-masiva",
+                    "name": "Cargar usuarios",
+                    "permission": 3,
+                    "allowed": false
+                }
+            ]
+        },
+        {
+            "title": "Estudiantes",
+            "icon": "solution",
+            "permissions": [18, 17, 23],
+            "allowed": null,
+            "children": [
+                {
+                    "route": "/estudiantes/consultar",
+                    "name": "Estudiantes",
+                    "permission": 18,
+                    "allowed": false
+                }, {
+                    "route": "/estudiantes/carga-masiva",
+                    "name": "Cargar estudiantes",
+                    "permission": 17,
+                    "allowed": false
+                }, {
+                    "route": "/estudiantes/asignar",
+                    "name": "Asignar estudiantes",
+                    "permission": 23,
+                    "allowed": false
+                }
+            ]
+        },
+        {
+            "title": "Año escolar",
+            "icon": "contacts",
+            "permissions": [19],
+            "allowed": null,
+            "children": [
+                {
+                    "route": "/asignaciones",
+                    "name": "Año escolar",
+                    "permission": 19,
+                    "allowed": false
+                }
+            ]
+        },
+        {
+            "title": "Agenda",
+            "icon": "calendar",
+            "permissions": [22],
+            "allowed": null,
+            "children": [
+                {
+                    "route": "/calendario",
+                    "name": "Calendario",
+                    "permission": 22,
+                    "allowed": false
                 }
             ]
         }
