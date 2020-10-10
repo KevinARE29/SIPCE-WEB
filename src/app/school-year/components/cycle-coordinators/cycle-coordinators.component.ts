@@ -36,7 +36,7 @@ export class CycleCoordinatorsComponent implements OnInit {
 
   getCycleCoordinators(): void {
     this.loading = true;
-    this.userService.getUsersByRole(5).subscribe((data) => {
+    this.userService.getUsersByRole(3).subscribe((data) => {
       this.coordinators = data['data'];
       this.loading = false;
       this.transformData();

@@ -90,7 +90,9 @@ export class SchoolYearComponent implements OnInit {
   initializeShifts(): void {
     if (this.schoolYear.shifts.length === 0) {
       this.catalogs.shifts.forEach((shift) => {
-        const _shift = this.previousSchoolYear.shifts.find((x) => x['shift']['id'] === shift.id);
+        let _shift =  null;
+        
+        if (this.previousSchoolYear['id']) _shift = this.previousSchoolYear.shifts.find((x) => x['shift']['id'] === shift.id);
 
         if (_shift) this.schoolYear.shifts.push(_shift);
         else {
@@ -113,9 +115,10 @@ export class SchoolYearComponent implements OnInit {
   initializeCycleCoordinators(): void {
     this.checkEmptyCoordinators();
 
-    if (this.emptyUsers['total'] === this.emptyUsers['empty']) {
+    if (this.emptyUsers['total'] === this.emptyUsers['empty'] && this.previousSchoolYear['id']) {
       this.previousSchoolYear.shifts.forEach((shift) => {
         const _shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === shift['shift']['id']);
+
         shift['shift']['cycles'].forEach((cycle) => {
           const _cycle = _shift['shift']['cycles'].find((x) => x['cycle']['id'] === cycle['cycle']['id']);
           _cycle['cycleCoordinator'] = cycle['cycleCoordinator'];
@@ -132,7 +135,7 @@ export class SchoolYearComponent implements OnInit {
   initializeHeadTeachers(): void {
     this.checkEmptyHeadTeachers();
 
-    if (this.emptyUsers['total'] === this.emptyUsers['empty']) {
+    if (this.emptyUsers['total'] === this.emptyUsers['empty'] && this.previousSchoolYear['id']) {
       this.previousSchoolYear.shifts.forEach((shift) => {
         const _shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === shift['shift']['id']);
 
@@ -166,7 +169,7 @@ export class SchoolYearComponent implements OnInit {
   initializeCounselors(): void {
     this.checkEmptyCounselors();
     
-    if (this.emptyUsers['total'] === this.emptyUsers['empty']) {
+    if (this.emptyUsers['total'] === this.emptyUsers['empty'] && this.previousSchoolYear['id']) {
       this.previousSchoolYear.shifts.forEach((shift) => {
         const _shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === shift['shift']['id']);
 

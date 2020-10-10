@@ -36,7 +36,7 @@ export class HeadTeachersComponent implements OnInit {
 
   getHeadTeachers(): void {
     this.loading = true;
-    this.userService.getUsersByRole(3).subscribe((data) => {
+    this.userService.getUsersByRole(5).subscribe((data) => {
       this.teachers = data['data'];
       this.loading = false;
 
