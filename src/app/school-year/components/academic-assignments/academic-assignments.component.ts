@@ -51,21 +51,23 @@ export class AcademicAssignmentsComponent implements OnInit {
       const listOfData = new Array<ItemData>();
 
       // Get current assignation
-      Object.entries(currentShift[0]['shift']['cycles']).forEach(([key, value]) => {
-        const cycle = value['cycle'];
-        Object.entries(value['gradeDetails']).forEach(([key, value]) => {
-          const sections = new Array<ShiftPeriodGrade>();
-          Object.entries(value['sectionDetails']).forEach(([key, value]) => {
-            sections.push(value['section']);
-          });
+      if (currentShift[0]) {
+        Object.entries(currentShift[0]['shift']['cycles']).forEach(([key, value]) => {
+          const cycle = value['cycle'];
+          Object.entries(value['gradeDetails']).forEach(([key, value]) => {
+            const sections = new Array<ShiftPeriodGrade>();
+            Object.entries(value['sectionDetails']).forEach(([key, value]) => {
+              sections.push(value['section']);
+            });
 
-          preConfig.push({
-            cycle: { ...cycle },
-            grade: { ...value['grade'] },
-            sections: sections
+            preConfig.push({
+              cycle: { ...cycle },
+              grade: { ...value['grade'] },
+              sections: sections
+            });
           });
         });
-      });
+      }
 
       // Merge data
       this.catalogs.grades.forEach((grade) => {

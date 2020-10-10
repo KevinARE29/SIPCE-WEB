@@ -28,7 +28,7 @@ export class CounselorsComponent implements OnInit {
 
   getCounselors(): void {
     this.loading = true;
-    this.userService.getUsersByRole(1).subscribe((data) => {
+    this.userService.getUsersByRole(4).subscribe((data) => {
       this.counselors = data['data'];
       this.loading = false;
 
