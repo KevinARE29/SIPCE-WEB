@@ -150,7 +150,7 @@ export class NewStudentComponent implements OnInit {
     this.studentService.createStudent(this.student).subscribe(
       (r) => {
         this.message.success(`El estudiante ${this.student.firstname} ${this.student.lastname} ha sido creado`);
-        // this.router.navigate['estudiantes/consultar'];
+        this.studentForm.reset();
       },
       (error) => {
         this.loading = false;
