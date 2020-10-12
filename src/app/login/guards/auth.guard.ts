@@ -40,7 +40,13 @@ export class AuthGuard implements CanActivate, CanLoad {
     const token = this.authService.getToken();
 
     if (!token) {
-      if (url !== '/login' && url !== '/contrasena/recuperar' && !url.includes('reset-psw') && url !== '/') {
+      if (
+        url !== '/' &&
+        url !== '/login' &&
+        url !== '/contrasena/recuperar' &&
+        !url.includes('reset-psw') &&
+        !url.includes('/counseling/requests?confirmationToken')
+      ) {
         this.router.navigate(['login']);
       } else {
         res = true;

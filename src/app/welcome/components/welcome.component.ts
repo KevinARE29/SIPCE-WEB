@@ -44,8 +44,13 @@ export class WelcomeComponent implements OnInit {
       const subject = this.counselingConsultationForm.controls['subject'].value;
       const comment = this.counselingConsultationForm.controls['comment'].value;
 
+      this.btnLoading = true;
+
       this.welcomeService.requestConsulation(email, subject, comment).subscribe(() => {
         this.counselingConsultationForm.reset();
+
+        this.btnLoading = false;
+
         this.notification.create(
           'success',
           'Solicitud generada con éxito',

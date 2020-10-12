@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -26,5 +27,22 @@ export class WelcomeService {
     jsonData = JSON.stringify(data);
 
     return this.http.post<void>(`${this.baseUrl}counseling/requests`, jsonData);
+  }
+
+  verifyCounselingRequest(confirmationToken: string): Observable<void> {
+    return this.http
+      .post<void>(`${this.baseUrl}counseling/requests/verification?confirmationToken=${confirmationToken}`, {})
+      .pipe(catchError(this.handleError()));
+  }
+
+  /**
+   * Handle Http operation that failed.
+   * Let the app continue.
+   */
+  private handleError() {
+    return (error: any) => {
+      error.error.message = this.errorMessageService.transformMessage('counseling', error.error.message);
+      return throwError(error.error);
+    };
   }
 }

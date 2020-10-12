@@ -62,6 +62,9 @@
         "school-year": {
             "year": "Año",
             "status": "Estado"
+        },
+        "counseling": {
+            "confirmationToken": "Token de confirmación"
         }
     }
 }
