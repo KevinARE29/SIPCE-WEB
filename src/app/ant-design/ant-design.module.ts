@@ -42,11 +42,11 @@ import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { es_ES } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
-
 import es from '@angular/common/locales/es';
 
 registerLocaleData(es);
@@ -79,11 +79,14 @@ const ngZorro = [
   NzNotificationModule,
   NzSelectModule,
   NzDatePickerModule,
+  NzDatePickerModule,
   NzUploadModule,
   NzPopconfirmModule,
   NzSwitchModule,
   NzTagModule,
   NzListModule,
+  NzCollapseModule,
+  NzTimePickerModule,
   NzTabsModule,
   NzEmptyModule,
   NzStepsModule,

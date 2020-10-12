@@ -4,7 +4,7 @@
             <nz-table #fixedTable [nzData]="item.items" nzSize="small" nzTableLayout="auto" [nzFrontPagination]="false" [nzScroll]="{ x: '0vw' }">
                 <thead>
                     <tr>
-                        <th nzLeft nzWidth="150px" nzAlign="center">Ciclo</th>
+                        <th nzLeft nzWidth="175px" nzAlign="center">Ciclo</th>
                         <th nzLeft nzWidth="100px" nzAlign="center">Grado</th>
                         <ng-container *ngIf="!isActive;else showAvailables">
                             <th nzAlign="center" [nzEllipsis]="true" *ngFor="let section of sections" [nzWidth]="section.name.length > 2 ? '120px' : '50px'">

@@ -140,6 +140,20 @@
                     "allowed": false
                 }
             ]
+        },
+        {
+            "title": "Agenda",
+            "icon": "calendar",
+            "permissions": [22],
+            "allowed": null,
+            "children": [
+                {
+                    "route": "/calendario",
+                    "name": "Calendario",
+                    "permission": 22,
+                    "allowed": false
+                }
+            ]
         }
     ]  
 }
