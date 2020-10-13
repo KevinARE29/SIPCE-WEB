@@ -72,6 +72,9 @@
             "Description": "Descripcion",
             "Participants": "Empleados",
             "Student": "Estudiantes"
+        },
+        "counseling": {
+            "confirmationToken": "Token de confirmación"
         }
     }
 }

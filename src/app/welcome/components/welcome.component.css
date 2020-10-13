@@ -1,0 +1,96 @@
+/* Background */
+.welcome-background-image {
+  background-image: url("../../../assets/back-to-school-wallpaper.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  min-height: 100vh;
+  color: white;
+}
+
+.welcome-background-color {
+  width: 100%;
+  min-height: 100vh;
+  background-color: rgba(0, 21, 41, 0.80);
+}
+
+.welcome-background {
+  background-color: transparent;
+  border: none;
+  text-align: center;
+}
+
+.welcome-logo {
+  max-width: 100px;
+}
+
+/* Buttons */
+.welcome-form-button {
+  border-radius: 15px;
+  min-width: 50%;
+  padding: 8px;
+  height: auto;
+  letter-spacing: 0.5px;
+}
+
+/* Title and subtitle */
+.welcome-title {
+  color: white;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  letter-spacing: 0.5px;
+}
+
+.welcome-subtitle {
+  color: white;
+  font-size: 16px;
+  margin-bottom: 30px;
+  letter-spacing: 0.5px;
+}
+
+a {
+  margin-bottom: 10px;
+}
+
+.welcome-link {
+  margin-top: 50px;
+}
+
+nz-card h2 {
+  text-align: center;
+  margin-bottom: 0;
+}
+
+nz-card p {
+  text-align: justify;
+}
+
+nz-form-label.ant-col-24  {
+  padding: 0;
+}
+
+nz-form-item:last-of-type {
+  margin-bottom: 0;
+}
+
+textarea {
+  resize: none;
+}
+
+@media (max-width: 767px) {
+  .welcome-background-card {
+    margin-bottom: 40px;
+  }
+
+  .hide-on-small {
+    display: none;
+  }
+
+  .welcome-link {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    display: inline-block;
+  }
+}

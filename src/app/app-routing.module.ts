@@ -7,9 +7,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './login/guards/auth.guard';
+import { ConfirmRequestComponent } from './welcome/components/confirm-request/confirm-request.component';
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: '/inicio' },
+  {
+    path: '',
+    loadChildren: () => import('./welcome/welcome.module').then((m) => m.WelcomeModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'counseling/requests',
+    component: ConfirmRequestComponent,
+    canActivate: [AuthGuard]
+  },
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then((m) => m.LoginModule),
