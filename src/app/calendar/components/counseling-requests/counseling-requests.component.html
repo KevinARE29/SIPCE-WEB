@@ -1,1 +1,41 @@
-<p>counseling-requests works!</p>
+<button ejs-button nz-button nzType="primary" cssClass='e-info' (click)='editor()'> Aprobar </button>
+<ejs-schedule #scheduleObj [eventSettings]="eventSettings" locale="es" (popupOpen)="onPopupOpen($event)">
+    <ng-template #editorTemplate let-data>
+        <form class="custom-event-editor">
+            <div>
+                <label class="e-textlabel">Asunto</label>
+                <input id="Subject" class="e-field e-input" type="text" data-name="Subject" name="Subject"/>
+            </div>
+
+            <div>
+                <label class="e-textlabel">Lugar</label>
+
+                <input id="Location" class="e-field e-input" value="{{ data.Location }}" type="text"
+                    data-name="Location" name="Location"/>
+            </div>
+
+            <div>
+                <label class="e-textlabel">Inicio</label>
+                <input id="StartTime" class="e-field" type="text" data-name="StartTime" name="StartTime" />
+            </div>
+
+            <div>
+                <label class="e-textlabel">Fin</label>
+                <input id="EndTime" class="e-field" type="text" data-name="EndTime" name="EndTime" />
+            </div>
+
+            <div colspan="4">
+                <ejs-recurrenceeditor id="RecurrenceRule" class="e-field" name="RecurrenceRule"
+                    value='{{data.RecurrenceRule}}' data-name="RecurrenceRule" locale="es" #recurrenceObj
+                    (change)="onChange($event)">
+                </ejs-recurrenceeditor>
+            </div>
+
+            <div>
+                <label class="e-textlabel">Descripción</label>
+                <textarea id="Description" class="e-field e-input" data-name="Description" name="Description"
+                    rows="3" cols="50" style="width: 100%; height: 60px !important; resize: vertical;"></textarea>
+            </div>
+        </form>
+    </ng-template>
+</ejs-schedule>
