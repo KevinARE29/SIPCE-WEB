@@ -6,7 +6,7 @@
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CalendarComponent } from './components/calendar.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
 
 import { AuthGuard } from '../login/guards/auth.guard';
 
