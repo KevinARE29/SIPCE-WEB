@@ -16,9 +16,10 @@ import { CalendarComponent } from './components/calendar.component';
 import { DateTimePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { RecurrenceEditorModule } from '@syncfusion/ej2-angular-schedule';
 import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
+import { CounselingRequestsComponent } from './components/counseling-requests/counseling-requests.component';
 
 @NgModule({
-  declarations: [CalendarComponent],
+  declarations: [CalendarComponent, CounselingRequestsComponent],
   providers: [AgendaService, DayService, WeekService, WorkWeekService, MonthService],
   imports: [
     CommonModule,

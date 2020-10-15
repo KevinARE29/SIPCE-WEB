@@ -1,6 +1,6 @@
 /* Background */
 .auth-background-image {
-  background-image: url("../../../assets/back-to-school-wallpaper.jpg");
+  background-image: url('../../../assets/back-to-school-wallpaper.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: bottom;
