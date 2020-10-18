@@ -1,4 +1,4 @@
-<button ejs-button nz-button nzType="primary" cssClass='e-info' (click)='editor()'> Aprobar </button>
+<button ejs-button nz-button nzType="primary" cssClass='e-info' (click)='editor("student")'> Aprobar </button>
 <ejs-schedule #scheduleObj [eventSettings]="eventSettings" locale="es" (popupOpen)="onPopupOpen($event)">
     <ng-template #editorTemplate let-data>
         <form class="custom-event-editor">
@@ -24,13 +24,6 @@
                 <input id="EndTime" class="e-field" type="text" data-name="EndTime" name="EndTime" />
             </div>
 
-            <div colspan="4">
-                <ejs-recurrenceeditor id="RecurrenceRule" class="e-field" name="RecurrenceRule"
-                    value='{{data.RecurrenceRule}}' data-name="RecurrenceRule" locale="es" #recurrenceObj
-                    (change)="onChange($event)">
-                </ejs-recurrenceeditor>
-            </div>
-
             <div>
                 <label class="e-textlabel">Descripción</label>
                 <textarea id="Description" class="e-field e-input" data-name="Description" name="Description"
@@ -39,3 +32,71 @@
         </form>
     </ng-template>
 </ejs-schedule>
+
+<div nz-row>
+    <div class="params">
+        <div class="param">
+            <a (click)="updateParams('firstname')">
+                <div class="param-key">Nombres</div> 
+                <div class="param-value">
+                    <div><i nz-icon nzType="caret-up" nzTheme="outline" [ngClass]="{'principal': params.sort[0].value === 'ascend'}"></i></div>
+                    <div class="caret-down"><i nz-icon nzType="caret-down" nzTheme="outline" [ngClass]="{'principal': params.sort[0].value === 'descend'}"></i></div>
+                </div>
+            </a>
+        </div>
+        <div class="param">
+            <a (click)="updateParams('lastname')">
+                <div class="param-key">Apellidos</div> 
+                <div class="param-value">
+                    <div><i nz-icon nzType="caret-up" nzTheme="outline" [ngClass]="{'principal': params.sort[1].value === 'ascend'}"></i></div>
+                    <div class="caret-down"><i nz-icon nzType="caret-down" nzTheme="outline" [ngClass]="{'principal': params.sort[1].value === 'descend'}"></i></div>
+                </div>
+            </a>
+        </div>
+        <div class="param">
+            <a (click)="updateParams('email')">
+                <div class="param-key">Correo electrónico</div> 
+                <div class="param-value">
+                    <div><i nz-icon nzType="caret-up" nzTheme="outline" [ngClass]="{'principal': params.sort[2].value === 'ascend'}"></i></div>
+                    <div class="caret-down"><i nz-icon nzType="caret-down" nzTheme="outline" [ngClass]="{'principal': params.sort[2].value === 'descend'}"></i></div>
+                </div>
+            </a>
+        </div>
+        <div class="param">
+            <a (click)="updateParams('date')">
+                <div class="param-key">Fecha</div> 
+                <div class="param-value">
+                    <div><i nz-icon nzType="caret-up" nzTheme="outline" [ngClass]="{'principal': params.sort[3].value === 'ascend'}"></i></div>
+                    <div class="caret-down"><i nz-icon nzType="caret-down" nzTheme="outline" [ngClass]="{'principal': params.sort[3].value === 'descend'}"></i></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div nz-row>
+    <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+        <div nz-row nzJustify="center">
+            <div *ngFor="let student of listOfDisplayData" nz-col nzXs="24" nzSm="11" nzMd="9" nzLg="7" nzXl="6" nzXxl="5">
+                <nz-card [nzActions]="[approve, reject]">
+                    <nz-card-meta [nzAvatar]="avatarTemplate" [nzTitle]="[student.firstname + ' ' + student.lastname]" [nzDescription]="student.code"></nz-card-meta>
+                    <p>{{ student.currentGrade.name }}</p>
+                    <p>17/10/2020</p>
+                </nz-card>
+                <ng-template #avatarTemplate>
+                    <nz-avatar nzSrc="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
+                </ng-template>
+                <ng-template #approve>
+                    <button ejs-button nz-button nzType="primary" (click)='editor("Sesión con " + student.firstname + " " + student.lastname)'> Aprobar </button>
+                </ng-template>
+                <ng-template #reject>
+                    Rechazar
+                </ng-template>
+            </div>
+        </div>
+    </nz-spin>
+</div>
+
+<div nz-row>
+    <nz-pagination [nzPageIndex]="pagination.page" [nzTotal]="pagination.totalItems" [nzSize]="'small'" (nzPageIndexChange)="paginate($event)"></nz-pagination>
+</div>

@@ -14,7 +14,7 @@ import { CounselingRequestsComponent } from './components/counseling-requests/co
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'eventos',
     component: CalendarComponent,
     canActivate: [AuthGuard],
     data: { permission: 22 }

@@ -148,7 +148,7 @@
             "allowed": null,
             "children": [
                 {
-                    "route": "/calendario",
+                    "route": "/calendario/eventos",
                     "name": "Calendario",
                     "permission": 22,
                     "allowed": false
