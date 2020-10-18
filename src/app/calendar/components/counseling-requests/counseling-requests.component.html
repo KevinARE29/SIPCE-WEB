@@ -1,4 +1,3 @@
-<button ejs-button nz-button nzType="primary" cssClass='e-info' (click)='editor("student")'> Aprobar </button>
 <ejs-schedule #scheduleObj [eventSettings]="eventSettings" locale="es" (popupOpen)="onPopupOpen($event)">
     <ng-template #editorTemplate let-data>
         <form class="custom-event-editor">
@@ -33,6 +32,69 @@
     </ng-template>
 </ejs-schedule>
 
+<!-- Search engine -->
+<div nz-row [nzGutter]="[10, 10]">
+    <!-- Code -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>NIE: </label>
+        <nz-input-group [nzSuffix]="inputClearCode">
+            <input nz-input [(ngModel)]="searchParams.code" placeholder="Buscar NIE" />
+        </nz-input-group>
+        <ng-template #inputClearCode>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.code" (click)="searchParams.code = null; getStudents()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Name -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>Nombre: </label>
+        <nz-input-group [nzSuffix]="inputClearName">
+            <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Buscar nombre" />
+        </nz-input-group>
+        <ng-template #inputClearName>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.firstname" (click)="searchParams.firstname = null; getStudents()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Lastname -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>Apellido: </label>
+        <nz-input-group [nzSuffix]="inputClearLastname">
+            <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Buscar apellido" />
+        </nz-input-group>
+        <ng-template #inputClearLastname>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.lastname" (click)="searchParams.lastname = null; getStudents()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Email -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>Correo electrónico: </label>
+        <nz-input-group [nzSuffix]="inputClearEmail">
+            <input nz-input [(ngModel)]="searchParams.email" placeholder="Buscar correo electrónico" />
+        </nz-input-group>
+        <ng-template #inputClearEmail>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.email" (click)="searchParams.email = null; getStudents()"></i>
+        </ng-template>
+    </div>
+
+    <!-- Grade -->
+    <!-- <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="10">
+        <label>Grado: </label>
+        <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.grade.id" (ngModelChange)="getStudents()">
+            <nz-option *ngFor="let grade of grades" [nzLabel]="grade.name" [nzValue]="grade.id"></nz-option>
+        </nz-select>
+    </div> -->
+
+    <!-- Search button-->
+    <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="4" nzXl="4">
+      <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+        <button nz-button nzType="primary" (click)="getStudents()">Buscar</button>
+      </div>
+    </div>
+</div>
+
+<!-- Sorters -->
 <div nz-row>
     <div class="params">
         <div class="param">
@@ -74,29 +136,28 @@
     </div>
 </div>
 
+<!-- Student's requests -->
 <div nz-row>
     <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
         <div nz-row nzJustify="center">
-            <div *ngFor="let student of listOfDisplayData" nz-col nzXs="24" nzSm="11" nzMd="9" nzLg="7" nzXl="6" nzXxl="5">
-                <nz-card [nzActions]="[approve, reject]">
+            <div *ngFor="let student of listOfDisplayData" nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="6" nzXl="5" nzXxl="4" class="student">
+                <nz-card>
                     <nz-card-meta [nzAvatar]="avatarTemplate" [nzTitle]="[student.firstname + ' ' + student.lastname]" [nzDescription]="student.code"></nz-card-meta>
                     <p>{{ student.currentGrade.name }}</p>
                     <p>17/10/2020</p>
+                    <div nz-row nzJustify="center" nzAlign="top">
+                        <button nz-button nzType="primary" nzGhost>Ver</button>
+                    </div>
                 </nz-card>
                 <ng-template #avatarTemplate>
                     <nz-avatar nzSrc="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></nz-avatar>
-                </ng-template>
-                <ng-template #approve>
-                    <button ejs-button nz-button nzType="primary" (click)='editor("Sesión con " + student.firstname + " " + student.lastname)'> Aprobar </button>
-                </ng-template>
-                <ng-template #reject>
-                    Rechazar
                 </ng-template>
             </div>
         </div>
     </nz-spin>
 </div>
 
-<div nz-row>
+<!-- Pagination -->
+<div nz-row nzJustify="center" nzAlign="top">
     <nz-pagination [nzPageIndex]="pagination.page" [nzTotal]="pagination.totalItems" [nzSize]="'small'" (nzPageIndexChange)="paginate($event)"></nz-pagination>
 </div>

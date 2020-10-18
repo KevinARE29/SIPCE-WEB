@@ -18,6 +18,7 @@ import language from './../../shared/calendar-language.json';
 import { StudentService } from 'src/app/students/shared/student.service'; //TODO: Remove
 import { Student } from 'src/app/students/shared/student.model';
 import { Pagination } from 'src/app/shared/pagination.model';
+import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 
 L10n.load(language);
 
@@ -49,6 +50,7 @@ export class CounselingRequestsComponent implements OnInit {
 
     this.getStudents();
     this.searchParams = new Student();
+    this.searchParams.grade = new ShiftPeriodGrade();
 
     this.pagination = new Pagination();
     this.pagination.perPage = 10;
@@ -125,10 +127,10 @@ export class CounselingRequestsComponent implements OnInit {
       case null:
         currentParam.value = 'ascend';
         break;
-      case 'asc':
+      case 'ascend':
         currentParam.value = 'descend';
         break;
-      case 'desc':
+      case 'descend':
         currentParam.value = null;
         break;
     }
