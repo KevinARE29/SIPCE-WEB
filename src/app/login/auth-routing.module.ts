@@ -7,7 +7,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { LoginComponent } from './components/login.component';
+import { LoginComponent } from './components/login/login.component';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
