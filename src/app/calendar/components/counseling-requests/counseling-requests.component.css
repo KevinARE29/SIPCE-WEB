@@ -10,7 +10,7 @@ ejs-schedule {
     float: left;
 }
 
-.param {
+.param, nz-pagination {
     margin: 10px;
 }
 
@@ -28,4 +28,20 @@ ejs-schedule {
 
 .ant-btn:not(.ant-btn-icon-only) {
     min-width: 50px;
+}
+
+nz-card {
+    border-radius: 10px;
+}
+
+.btn-container {
+    height: 100%;
+}
+
+nz-select, nz-range-picker {
+    width: 100%;
+}
+  
+nz-range-picker {
+    border-radius: 7px;
 }

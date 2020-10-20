@@ -78,17 +78,17 @@
     </div>
 
     <!-- Grade -->
-    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="10">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="7">
         <label>Grado: </label>
         <nz-input-group>
-            <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar grado" [(ngModel)]="searchParams.grade" (ngModelChange)="getCounselingRequests()">
+            <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar grado" [(ngModel)]="searchParams.grade.id" (ngModelChange)="getCounselingRequests()">
                 <nz-option *ngFor="let grade of grades" [nzLabel]="grade.name" [nzValue]="grade.id"></nz-option>
             </nz-select>
         </nz-input-group>
     </div>
 
     <!-- Created at -->
-    <div nz-col nzXs="24" nzSm="24" nzMd="16" nzLg="16" nzXl="7">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="7">
         <label>Fecha: </label>
         <nz-input-group>
             <nz-range-picker
@@ -101,7 +101,7 @@
     </div>
 
     <!-- Search button-->
-    <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="4" nzXl="4">
+    <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="8" nzXl="7">
       <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
         <button nz-button nzType="primary" (click)="getCounselingRequests()">Buscar</button>
       </div>
@@ -179,13 +179,13 @@
                         <ng-template #defaultPhoto>
                             <nz-avatar nzIcon="user"></nz-avatar>
                         </ng-template>
-                            {{ data.student.firstname }} {{ data.student.lastname }} {{ data.student.firstname }} {{ data.student.lastname }} 
+                            {{ data.student.firstname }} {{ data.student.lastname }}
                         <p>{{ data['student'].code }}</p>
                     <p>
                         {{ data['student'].currentGrade.name }} 
                         <nz-tag [nzColor]="'geekblue'">{{data['student'].currentShift.name}}</nz-tag>
                     </p>
-                    <p>{{ data['student'].createdAt | date:"dd/MM/yyyy": "es" }}</p>
+                    <p>{{ data['counselingRequest'].createdAt | date:"dd/MM/yyyy": "es" }}</p>
                     <div nz-row nzJustify="center" nzAlign="top">
                         <button nz-button nzType="primary" nzGhost>Ver</button>
                     </div>
