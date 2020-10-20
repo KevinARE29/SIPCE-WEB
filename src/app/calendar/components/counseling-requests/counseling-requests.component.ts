@@ -62,7 +62,6 @@ export class CounselingRequestsComponent implements OnInit {
 
   ngOnInit(): void {
     this.setDatePicker();
-    this.getCounselingRequests();
     this.init();
     this.getProfile();
   }
@@ -142,6 +141,7 @@ export class CounselingRequestsComponent implements OnInit {
         });
       }
 
+      if (this.shifts.length) this.getCounselingRequests();
       this.loading = false;
     });
   }
