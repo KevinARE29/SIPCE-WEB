@@ -22,6 +22,7 @@ import { Pagination } from 'src/app/shared/pagination.model';
 import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 import { UserService } from 'src/app/users/shared/user.service';
 import { EventService } from '../../shared/event.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 L10n.load(language);
 
@@ -54,10 +55,16 @@ export class CounselingRequestsComponent implements OnInit {
   listOfDisplayData: { student: Student; counselingRequest: unknown }[] = [];
   pagination: Pagination;
 
+  // Modals
+  currentRequest: { student: Student; counselingRequest: unknown };
+  isConfirmLoading = false;
+  isVisible = false;
+
   constructor(
     private userService: UserService,
     private eventService: EventService,
-    private notification: NzNotificationService
+    private notification: NzNotificationService,
+    private modal: NzModalService
   ) {}
 
   ngOnInit(): void {
@@ -102,8 +109,10 @@ export class CounselingRequestsComponent implements OnInit {
     });
   }
 
-  editor(name: string): void {
-    const cellData: Object = { subject: name };
+  editor(): void {
+    const cellData: Object = {
+      subject: `Sesión con ${this.currentRequest['student']['firstname']} ${this.currentRequest['student']['lastname']}`
+    };
     this.scheduleObj.openEditor(cellData, 'Add');
   }
 
@@ -219,5 +228,26 @@ export class CounselingRequestsComponent implements OnInit {
   paginate(page: number): void {
     this.params.pageIndex = page;
     this.getCounselingRequests();
+  }
+
+  // Modal
+  showModal(data: unknown): void {
+    console.log(data);
+    this.currentRequest = { student: data['student'], counselingRequest: data['counselingRequest'] };
+    this.isVisible = true;
+  }
+
+  approve(): void {
+    this.isVisible = false;
+    this.editor();
+  }
+
+  reject(): void {
+    this.isVisible = false;
+    // TODO: Add confirm modal
+  }
+
+  close(): void {
+    this.isVisible = false;
   }
 }

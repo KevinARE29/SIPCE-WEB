@@ -202,7 +202,7 @@
                     </p>
                     <p>{{ data['counselingRequest'].createdAt | date:"dd/MM/yyyy": "es" }}</p>
                     <div nz-row nzJustify="center" nzAlign="top">
-                        <button nz-button nzType="primary" nzGhost>Ver</button>
+                        <button nz-button nzType="primary" nzGhost (click)="showModal(data)">Ver</button>
                     </div>
                 </nz-card>
                 <ng-template #avatarTemplate>
@@ -232,3 +232,32 @@
             nzMessage="Debe tener grados asignados para poder consultar las solicitudes de los estudiantes.">
     </nz-alert>
 </ng-template>
+
+<!-- Modal -->
+<nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]="modalTitle"
+    [nzContent]="modalContent"
+    [nzFooter]="modalFooter"
+    (nzOnCancel)="close()"
+>
+    <ng-template #modalTitle> Solicitud de consejería </ng-template>
+
+    <ng-template #modalContent>
+        <div>
+            <strong>Estudiante: </strong> {{ currentRequest['student'].firstname }} {{ currentRequest['student'].lastname }}
+        </div>
+        <div>
+            <strong>Asunto: </strong> {{ currentRequest['counselingRequest']['subject'] }}
+        </div>
+        <div *ngIf="currentRequest['counselingRequest']['comment']">
+            <strong>Comentario: </strong> 
+            <p>{{ currentRequest['counselingRequest']['comment'] }}</p>
+        </div>
+    </ng-template>
+
+    <ng-template #modalFooter>
+        <button nz-button nzType="default" (click)="reject()" [nzLoading]="isConfirmLoading">Rechazar</button>
+        <button nz-button nzType="primary" (click)="approve()" [nzLoading]="isConfirmLoading">Aprobar</button>
+    </ng-template>
+</nz-modal>
