@@ -102,6 +102,10 @@ export class EventService {
     return this.http.delete<void>(`${this.baseUrl}me/schedules/${eventId}`).pipe(catchError(this.handleError()));
   }
 
+  getCounselingRequests(): Observable<unknown> {
+    return this.http.get<unknown>(`${this.baseUrl}me/requests`).pipe(catchError(this.handleError()));
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.

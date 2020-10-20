@@ -13,14 +13,23 @@ import {
 import { L10n } from '@syncfusion/ej2-base';
 import { DateTimePicker } from '@syncfusion/ej2-calendars';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { subMonths, differenceInCalendarDays } from 'date-fns';
 
 import language from './../../shared/calendar-language.json';
 import { StudentService } from 'src/app/students/shared/student.service'; //TODO: Remove
 import { Student } from 'src/app/students/shared/student.model';
 import { Pagination } from 'src/app/shared/pagination.model';
 import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
+import { UserService } from 'src/app/users/shared/user.service';
+import { EventService } from '../../shared/event.service';
 
 L10n.load(language);
+
+export interface Shift {
+  id: number;
+  name: string;
+  grades: ShiftPeriodGrade[];
+}
 
 @Component({
   selector: 'app-counseling-requests',
@@ -37,30 +46,53 @@ export class CounselingRequestsComponent implements OnInit {
   // Search / paginate / sort variables
   searchParams: Student;
   params: NzTableQueryParams;
+  shifts: Shift[];
+  grades: ShiftPeriodGrade[];
 
   // Result variables
   loading = false;
-  listOfDisplayData: Student[];
+  listOfDisplayData: { student: Student; counselingRequest: unknown }[] = [];
   pagination: Pagination;
 
-  constructor(private studentService: StudentService) {}
+  constructor(
+    private studentService: StudentService,
+    private userService: UserService,
+    private eventService: EventService
+  ) {}
 
   ngOnInit(): void {
     this.setDatePicker();
+    // this.getStudents();
+    this.getCounselingRequests();
+    this.init();
+    this.getProfile();
+  }
 
-    this.getStudents();
+  init(): void {
+    const currentDate = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 23, 59, 59);
+    let date = subMonths(currentDate, 1);
+    date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+
     this.searchParams = new Student();
+    this.searchParams['createdAt'] = [date, currentDate];
+    this.searchParams.currentShift = new ShiftPeriodGrade();
     this.searchParams.grade = new ShiftPeriodGrade();
 
     this.pagination = new Pagination();
+    this.shifts = new Array<Shift>();
+    this.grades = new Array<ShiftPeriodGrade>();
+
     this.pagination.perPage = 10;
     this.pagination.page = 1;
+
     this.params = { pageIndex: this.pagination.page, pageSize: this.pagination.perPage, sort: null, filter: null };
     this.params.sort = [
+      { key: 'code', value: null },
       { key: 'firstname', value: null },
       { key: 'lastname', value: null },
-      { key: 'email', value: null },
-      { key: 'date', value: null }
+      { key: 'currentShiftId', value: null },
+      { key: 'currentGradeId', value: null },
+      { key: 'createdAt', value: null }
     ];
   }
 
@@ -95,30 +127,66 @@ export class CounselingRequestsComponent implements OnInit {
     }
   }
 
-  getStudents(): void {
-    const paginate = this.params ? this.params.pageIndex !== this.pagination.page : false; // TODO: review
+  getProfile(): void {
     this.loading = true;
 
-    this.studentService.getStudents(this.params, this.searchParams, true, paginate).subscribe(
-      (data) => {
-        this.pagination = data['pagination'];
-        this.listOfDisplayData = data['data'];
+    this.userService.getUserProfile().subscribe((data) => {
+      if (data['counselorAssignation']) {
+        Object.values(data['counselorAssignation']).forEach((assignation) => {
+          const grades = new Array<ShiftPeriodGrade>();
+          assignation[0]['gradeDetails'].forEach((grade) => {
+            grades.push(grade.grade);
+          });
 
-        this.loading = false;
-      },
-      (error) => {
-        this.loading = false;
-        const statusCode = error.statusCode;
-        const notIn = [401, 403];
-
-        if (!notIn.includes(statusCode) && statusCode < 500) {
-          // this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
-          //   nzDuration: 30000
-          // });
-        }
+          this.shifts.push({ id: assignation[0]['shift'].id, name: assignation[0]['shift'].name, grades });
+        });
       }
-    );
+
+      this.loading = false;
+    });
   }
+
+  getCounselingRequests(): void {
+    this.eventService.getCounselingRequests().subscribe((data) => {
+      console.log(data);
+      data['data'].forEach((req) => {
+        console.log(req);
+        const counselingRequest = {
+          id: req.id,
+          subject: req.subject,
+          comment: req.comment,
+          createdAt: req.createdAt
+        };
+        this.listOfDisplayData.push({ student: req['student'], counselingRequest });
+      });
+      console.log(this.listOfDisplayData);
+    });
+  }
+
+  // getStudents(): void {
+  //   const paginate = this.params ? this.params.pageIndex !== this.pagination.page : false; // TODO: review
+  //   this.loading = true;
+
+  //   this.studentService.getStudents(this.params, this.searchParams, true, paginate).subscribe(
+  //     (data) => {
+  //       this.pagination = data['pagination'];
+  //       this.listOfDisplayData = data['data'];
+
+  //       this.loading = false;
+  //     },
+  //     (error) => {
+  //       this.loading = false;
+  //       const statusCode = error.statusCode;
+  //       const notIn = [401, 403];
+
+  //       if (!notIn.includes(statusCode) && statusCode < 500) {
+  //         // this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
+  //         //   nzDuration: 30000
+  //         // });
+  //       }
+  //     }
+  //   );
+  // }
 
   updateParams(key: string): void {
     const currentParam = this.params.sort.find((x) => x.key === key);
@@ -135,12 +203,26 @@ export class CounselingRequestsComponent implements OnInit {
         break;
     }
 
-    this.getStudents();
+    this.getCounselingRequests();
   }
 
+  cleanGradesSelect(shift: number): void {
+    this.grades = shift ? this.shifts.find((x) => x.id === shift).grades : new Array<ShiftPeriodGrade>();
+    this.searchParams.grade = null;
+  }
+
+  onChangeDatePicker(result: Date[]): void {
+    this.searchParams['createdAt'][0] = result[0];
+    this.searchParams['createdAt'][1] = result[1];
+  }
+
+  disabledDate = (current: Date): boolean => {
+    // Can not select days after today
+    return differenceInCalendarDays(current, new Date()) > 0;
+  };
+
   paginate(page: number): void {
-    console.log(page);
     this.params.pageIndex = page;
-    this.getStudents();
+    this.getCounselingRequests();
   }
 }

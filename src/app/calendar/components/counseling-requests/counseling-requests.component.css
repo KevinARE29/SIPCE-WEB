@@ -10,7 +10,7 @@ ejs-schedule {
     float: left;
 }
 
-.param, .student {
+.param {
     margin: 10px;
 }
 
@@ -28,8 +28,4 @@ ejs-schedule {
 
 .ant-btn:not(.ant-btn-icon-only) {
     min-width: 50px;
-}
-
-nz-card {
-    border-radius: 10px;
 }
