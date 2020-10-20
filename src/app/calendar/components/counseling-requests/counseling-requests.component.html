@@ -32,11 +32,11 @@
     </ng-template>
 </ejs-schedule>
 
-<ng-container *ngIf="shifts.length;else noShifts">
+<ng-container *ngIf="shifts.length; else noShifts">
     <!-- Search engine -->
     <div nz-row [nzGutter]="[10, 10]">
         <!-- Code -->
-        <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" nzXl="6">
             <label>NIE: </label>
             <nz-input-group [nzSuffix]="inputClearCode">
                 <input nz-input [(ngModel)]="searchParams.code" placeholder="Buscar NIE" />
@@ -48,7 +48,7 @@
         </div>
 
         <!-- Name -->
-        <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" nzXl="6">
             <label>Nombre: </label>
             <nz-input-group [nzSuffix]="inputClearName">
                 <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Buscar nombre" />
@@ -60,7 +60,7 @@
         </div>
 
         <!-- Lastname -->
-        <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" nzXl="6">
             <label>Apellido: </label>
             <nz-input-group [nzSuffix]="inputClearLastname">
                 <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Buscar apellido" />
@@ -72,7 +72,7 @@
         </div>
 
         <!-- Shift -->
-        <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" nzXl="6">
             <label>Turno: </label>
             <nz-input-group>
                 <nz-select class="shift" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar turno"
@@ -83,7 +83,7 @@
         </div>
 
         <!-- Grade -->
-        <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" nzXl="6">
             <label>Grado: </label>
             <nz-input-group>
                 <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar grado"
@@ -94,7 +94,7 @@
         </div>
 
         <!-- Created at -->
-        <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="12" nzXl="6">
+        <div nz-col nzXs="24" nzSm="24" nzMd="18" nzLg="12" nzXl="6">
             <label>Fecha: </label>
             <nz-input-group>
                 <nz-range-picker nzFormat="dd/MM/yyyy" [ngModel]="searchParams['createdAt']" [nzDisabledDate]="disabledDate"
@@ -103,7 +103,7 @@
         </div>
 
         <!-- Search button-->
-        <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="8" nzXl="7">
+        <div nz-col nzXs="24" nzSm="24" nzMd="6" nzLg="6" nzXl="12">
             <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
                 <button nz-button nzType="primary" (click)="getCounselingRequests()">Buscar</button>
             </div>
@@ -185,7 +185,7 @@
     <!-- Student's requests -->
     <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
         <div nz-row nzJustify="center" [nzGutter]="[16, 24]" *ngIf="listOfDisplayData.length;else empty">
-            <div *ngFor="let data of listOfDisplayData" nz-col nzXs="23" nzSm="24" nzMd="12" nzLg="8" nzXl="6" nzXXl="5"
+            <div *ngFor="let data of listOfDisplayData" nz-col nzXs="23" nzSm="11" nzMd="12" nzLg="8" nzXl="6" nzXXl="5"
                 class="gutter-row student">
                 <nz-card>
                     <ng-container *ngIf="data['student'].currentPhoto;else defaultPhoto">
