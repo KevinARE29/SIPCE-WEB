@@ -170,6 +170,11 @@ export class EventService {
     return this.http.get<unknown>(url).pipe(catchError(this.handleError()));
   }
 
+  answerRequest(requestId: number, status: string): Observable<void> {
+    const data = JSON.stringify({ status });
+    return this.http.patch<void>(`${this.baseUrl}me/requests/${requestId}`, data).pipe(catchError(this.handleError()));
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.

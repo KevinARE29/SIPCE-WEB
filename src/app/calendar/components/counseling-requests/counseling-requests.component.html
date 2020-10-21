@@ -1,4 +1,4 @@
-<ejs-schedule #scheduleObj [eventSettings]="eventSettings" locale="es" (popupOpen)="onPopupOpen($event)">
+<ejs-schedule #scheduleObj [eventSettings]="eventData" locale="es" (popupOpen)="onPopupOpen($event)" (actionBegin)="onBegin($event)">
     <ng-template #editorTemplate let-data>
         <form class="custom-event-editor">
             <div>
@@ -147,7 +147,7 @@
                 </a>
             </div>
             <div class="param">
-                <a (click)="updateParams('currentShiftId')">
+                <a (click)="updateParams('currentShift')">
                     <div class="param-key">Turno</div>
                     <div class="param-value">
                         <div><i nz-icon nzType="caret-up" nzTheme="outline"
@@ -158,7 +158,7 @@
                 </a>
             </div>
             <div class="param">
-                <a (click)="updateParams('currentGradeId')">
+                <a (click)="updateParams('currentGrade')">
                     <div class="param-key">Grado</div>
                     <div class="param-value">
                         <div><i nz-icon nzType="caret-up" nzTheme="outline"

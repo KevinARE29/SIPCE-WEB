@@ -72,6 +72,7 @@ export class CalendarComponent implements OnInit {
   public currentViewMode: View = 'Month';
 
   public eventFields: Object = { text: 'eventTypeText', value: 'eventTypeText' };
+  // TODO: Move this to an enum
   public EventData: Object[] = [
     { eventTypeText: 'Sesión con estudiante', Id: 1 },
     { eventTypeText: 'Entrevista con docente titular', Id: 2 },
