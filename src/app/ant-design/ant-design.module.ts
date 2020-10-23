@@ -43,6 +43,7 @@ import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { es_ES } from 'ng-zorro-antd/i18n';
@@ -91,7 +92,8 @@ const ngZorro = [
   NzEmptyModule,
   NzStepsModule,
   NzAutocompleteModule,
-  NzCollapseModule
+  NzCollapseModule,
+  NzPaginationModule
 ];
 
 @NgModule({

@@ -13,19 +13,19 @@ import { DateTimePicker } from '@syncfusion/ej2-calendars';
 import { EventRenderedArgs } from '@syncfusion/ej2-angular-schedule';
 
 import { addDays, addHours, endOfMonth, getDay, startOfMonth, subDays, compareDesc } from 'date-fns';
-import * as numberingSystems from '../../../../node_modules/cldr-data/supplemental/numberingSystems.json';
-import * as gregorian from '../../../../node_modules/cldr-data/main/es/ca-gregorian.json';
+import * as numberingSystems from '../../../../../node_modules/cldr-data/supplemental/numberingSystems.json';
+import * as gregorian from '../../../../../node_modules/cldr-data/main/es/ca-gregorian.json';
 import * as numbers from 'cldr-data/main/es/numbers.json';
 import * as timeZoneNames from 'cldr-data/main/es/timeZoneNames.json';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
-import language from './../shared/calendar-language.json';
-import { Appointment } from '../shared/appointment.model';
-import { User } from '../../users/shared/user.model';
-import { Student } from '../../students/shared/student.model';
-import { StudentService } from '../../students/shared/student.service';
-import { UserService } from '../../users/shared/user.service';
-import { EventService } from '../shared/event.service';
+import language from './../../shared/calendar-language.json';
+import { Appointment } from '../../shared/appointment.model';
+import { User } from '../../../users/shared/user.model';
+import { Student } from '../../../students/shared/student.model';
+import { StudentService } from '../../../students/shared/student.service';
+import { UserService } from '../../../users/shared/user.service';
+import { EventService } from '../../shared/event.service';
 loadCldr(numberingSystems['default'], gregorian['default'], numbers['default'], timeZoneNames['default']);
 
 L10n.load(language);
@@ -72,6 +72,7 @@ export class CalendarComponent implements OnInit {
   public currentViewMode: View = 'Month';
 
   public eventFields: Object = { text: 'eventTypeText', value: 'eventTypeText' };
+  // TODO: Move this to an enum
   public EventData: Object[] = [
     { eventTypeText: 'Sesión con estudiante', Id: 1 },
     { eventTypeText: 'Entrevista con docente titular', Id: 2 },

@@ -148,8 +148,13 @@
             "allowed": null,
             "children": [
                 {
-                    "route": "/calendario",
+                    "route": "/calendario/eventos",
                     "name": "Calendario",
+                    "permission": 22,
+                    "allowed": false
+                }, {
+                    "route": "/calendario/solicitudes",
+                    "name": "Solicitudes de consejería",
                     "permission": 22,
                     "allowed": false
                 }

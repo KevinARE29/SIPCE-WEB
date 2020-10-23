@@ -4,8 +4,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { subMonths } from 'date-fns';
+
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { Appointment } from './appointment.model';
+import { Student } from 'src/app/students/shared/student.model';
 
 @Injectable({
   providedIn: 'root'
@@ -100,6 +104,75 @@ export class EventService {
 
   deleteEvent(eventId: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}me/schedules/${eventId}`).pipe(catchError(this.handleError()));
+  }
+
+  getCounselingRequests(params: NzTableQueryParams, search: Student, paginate: boolean): Observable<unknown> {
+    let url = this.baseUrl + 'me/requests';
+    let queryParams = '';
+
+    // Paginate?
+    if (paginate) queryParams += '?page=' + params.pageIndex;
+
+    // Params
+    if (params) {
+      let sort = '&sort=';
+      params.sort.forEach((param) => {
+        if (param.value) {
+          sort += param.key;
+          switch (param.value) {
+            case 'ascend':
+              sort += '-' + param.value.substring(0, 3) + ',';
+              break;
+            case 'descend':
+              sort += '-' + param.value.substring(0, 4) + ',';
+              break;
+          }
+        }
+      });
+
+      if (sort.length > 6) {
+        if (sort.charAt(sort.length - 1) === ',') sort = sort.slice(0, -1);
+
+        queryParams += sort;
+      }
+    }
+
+    if (search) {
+      if (search.code) queryParams += '&code=' + search.code;
+
+      if (search.firstname) queryParams += '&firstname=' + search.firstname;
+
+      if (search.lastname) queryParams += '&lastname=' + search.lastname;
+
+      if (search.currentShift && search.currentShift.id) queryParams += '&currentShift=' + search.currentShift.id;
+
+      if (search.grade && search.grade.id) queryParams += '&currentGrade=' + search.grade.id;
+    }
+
+    if (search && search['createdAt'] && search['createdAt'][0] != undefined && search['createdAt'][1] != undefined) {
+      queryParams +=
+        '&createdAtStart=' +
+        search['createdAt'][0].toISOString() +
+        '&createdAtEnd=' +
+        search['createdAt'][1].toISOString();
+    } else {
+      const currentDate = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 23, 59, 59);
+      let date = subMonths(currentDate, 1);
+
+      date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+
+      queryParams += '&createdAtStart=' + date.toISOString() + '&createdAtEnd=' + currentDate.toISOString();
+    }
+
+    if (queryParams.charAt(0) === '&') queryParams = queryParams.replace('&', '?');
+
+    url += queryParams;
+    return this.http.get<unknown>(url).pipe(catchError(this.handleError()));
+  }
+
+  answerRequest(requestId: number, status: string): Observable<void> {
+    const data = JSON.stringify({ status });
+    return this.http.patch<void>(`${this.baseUrl}me/requests/${requestId}`, data).pipe(catchError(this.handleError()));
   }
 
   /**
