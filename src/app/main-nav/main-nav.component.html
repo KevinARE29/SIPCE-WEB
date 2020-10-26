@@ -43,6 +43,43 @@
         </span>
       </nz-page-header-tags>
       <nz-page-header-extra>
+        <!-- Request notifications -->
+        <span class="requestsCounter">
+            <nz-badge [nzCount]="5">
+              <a class="requests" nz-popover [nzPopoverTitle]="titleTemplate" [nzPopoverContent]="contentTemplate" nzPopoverPlacement="bottom">
+                <i nz-icon nzType="reconciliation" nzTheme="fill"></i>
+              </a>
+            </nz-badge>
+          <ng-template #titleTemplate>Solicitudes de consejería</ng-template>
+          <ng-template #contentTemplate>
+            <div nz-row class="popover">
+              <div nz-col nzSpan="4">
+                <nz-avatar nzIcon="user"></nz-avatar>
+              </div>
+              <div nz-col nzSpan="20">
+                <strong>Firstname Secondname Lastname</strong><br>
+                <p nz-typography nzEllipsis nzEllipsisRows="1">Por la cicatriz que lleva en la frente, sabemos que Harry Potter no es un niño como los demás.</p>
+              </div>
+            </div>
+            <hr>
+
+            <div nz-row class="popover">
+              <div nz-col nzSpan="4">
+                <nz-avatar nzIcon="user"></nz-avatar>
+              </div>
+              <div nz-col nzSpan="20">
+                <strong>Firstname Secondname Lastname</strong><br>
+                <p nz-typography nzEllipsis nzEllipsisRows="1">Por la cicatriz que lleva en la frente, sabemos que Harry Potter no es un niño como los demás.</p>
+              </div>
+            </div>
+            <hr>
+
+            <div nz-row nzJustify="center">
+              <a routerLink="/calendario/solicitudes">Ver todas</a>
+            </div>
+          </ng-template>
+        </span>
+        <!-- Username and dropdown options -->
         <span class="user">
           <a nz-dropdown [nzDropdownMenu]="menu">
             {{username}}

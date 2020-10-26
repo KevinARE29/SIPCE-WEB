@@ -85,6 +85,30 @@ nz-avatar {
   color: black;
 }
 
+.requests {
+  width: 32px;
+  height: 32px;
+  border-radius: 50px;
+  background: #001529;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.requestsCounter nz-badge a i {
+  font-size: 20px;
+  color: #ffffff;
+  margin: 5px;
+}
+
+.popover {
+  width: 250px;
+  margin-bottom: -10px;
+}
+
+hr {
+  border-top: 0.5px solid #e0e0e0;
+}
+
 /* Change footer style on login, forgot password, etc. */
 .fixed-footer {
   position: fixed;
