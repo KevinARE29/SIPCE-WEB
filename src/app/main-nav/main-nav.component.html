@@ -45,34 +45,30 @@
       <nz-page-header-extra>
         <!-- Request notifications -->
         <span class="requestsCounter">
-            <nz-badge [nzCount]="5">
+            <nz-badge [nzCount]="requestNotifications?.total">
               <a class="requests" nz-popover [nzPopoverTitle]="titleTemplate" [nzPopoverContent]="contentTemplate" nzPopoverPlacement="bottom">
                 <i nz-icon nzType="reconciliation" nzTheme="fill"></i>
               </a>
             </nz-badge>
           <ng-template #titleTemplate>Solicitudes de consejería</ng-template>
           <ng-template #contentTemplate>
-            <div nz-row class="popover">
-              <div nz-col nzSpan="4">
-                <nz-avatar nzIcon="user"></nz-avatar>
+            <ng-container *ngFor="let item of requestNotifications.list">
+              <div nz-row class="popover">
+                <div nz-col nzSpan="4">
+                  <ng-container *ngIf="item['student'].currentPhoto;else defaultPhoto">
+                    <nz-avatar [nzSrc]="item['student'].currentPhoto.path"></nz-avatar>
+                  </ng-container>
+                  <ng-template #defaultPhoto>
+                    <nz-avatar nzIcon="user"></nz-avatar>
+                  </ng-template>
+                </div>
+                <div nz-col nzSpan="20">
+                  <strong>{{ item['student'].firstname }} {{ item['student'].lastname }}</strong><br>
+                  <p nz-typography nzEllipsis nzEllipsisRows="1">{{ item.subject }}</p>
+                </div>
               </div>
-              <div nz-col nzSpan="20">
-                <strong>Firstname Secondname Lastname</strong><br>
-                <p nz-typography nzEllipsis nzEllipsisRows="1">Por la cicatriz que lleva en la frente, sabemos que Harry Potter no es un niño como los demás.</p>
-              </div>
-            </div>
-            <hr>
-
-            <div nz-row class="popover">
-              <div nz-col nzSpan="4">
-                <nz-avatar nzIcon="user"></nz-avatar>
-              </div>
-              <div nz-col nzSpan="20">
-                <strong>Firstname Secondname Lastname</strong><br>
-                <p nz-typography nzEllipsis nzEllipsisRows="1">Por la cicatriz que lleva en la frente, sabemos que Harry Potter no es un niño como los demás.</p>
-              </div>
-            </div>
-            <hr>
+              <hr>
+            </ng-container>
 
             <div nz-row nzJustify="center">
               <a routerLink="/calendario/solicitudes">Ver todas</a>

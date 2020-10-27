@@ -8,10 +8,16 @@
 import { Component, OnInit, AfterContentChecked } from '@angular/core';
 import { Router } from '@angular/router';
 
+import MenuJson from '../../assets/menu.json';
 import { AuthService } from '../login/shared/auth.service';
 import { Permission } from '../shared/permission.model';
-import MenuJson from '../../assets/menu.json';
+import { SocketioService } from '../shared/services/socketio.service';
+import { EventService } from '../calendar/shared/event.service';
 
+interface RequestNotifications {
+  total: number;
+  list: unknown[];
+}
 @Component({
   selector: 'app-main-nav',
   templateUrl: './main-nav.component.html',
@@ -26,8 +32,15 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   avatar: string;
   username: string;
   year: number;
+  connectionOn = false;
+  requestNotifications: RequestNotifications;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private socketService: SocketioService,
+    private authService: AuthService,
+    private eventService: EventService
+  ) {}
 
   ngOnInit(): void {
     this.year = new Date().getFullYear();
@@ -41,6 +54,16 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
       this.setPermissions();
     } else if (!!!this.token) {
       this.username = null;
+      this.connectionOn = false;
+    }
+
+    // IS the user allowed to manage requests?
+    const hasPermission = !!this.jwt.permissions.find((x) => x === 25);
+
+    if (!!this.username && !this.connectionOn && hasPermission) {
+      this.socketService.setupSocketConnection(this.username);
+      this.requestListener();
+      this.connectionOn = true;
     }
   }
 
@@ -60,6 +83,7 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
     this.jwt = this.authService.jwtDecoder(localStorage.getItem('accessToken'));
     this.username = this.jwt.sub;
     this.avatar = this.username.charAt(0).toUpperCase();
+    console.log('Getting username');
   }
 
   getToken(): string {
@@ -96,5 +120,15 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
         menu.allowed = false;
       }
     });
+  }
+
+  requestListener(): void {
+    // this.socketService.requestListener().subscribe(() => {
+      console.log('Retrieve data');
+      this.eventService.getCounselingRequests(null, null, null).subscribe((data) => {
+        this.requestNotifications = { total: data['pagination'].totalItems, list: data['data'].splice(5) };
+        console.log(this.requestNotifications);
+      });
+    // });
   }
 }
