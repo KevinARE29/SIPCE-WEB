@@ -22,6 +22,7 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   menuOptions: any;
   isCollapsed = false;
   jwt: any;
+  token: string;
   avatar: string;
   username: string;
   year: number;
@@ -33,9 +34,13 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   }
 
   ngAfterContentChecked(): void {
-    if (this.getToken()) {
+    this.token = this.getToken();
+
+    if (!!this.token && !!!this.username) {
       this.getUsername();
       this.setPermissions();
+    } else if (!!!this.token) {
+      this.username = null;
     }
   }
 
@@ -58,7 +63,8 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   }
 
   getToken(): string {
-    return this.authService.getToken();
+    const token = this.authService.getToken();
+    return token;
   }
 
   setPermissions(): void {
