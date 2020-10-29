@@ -44,7 +44,7 @@
       </nz-page-header-tags>
       <nz-page-header-extra>
         <!-- Request notifications -->
-        <span class="requestsCounter">
+        <span class="requestsCounter" *ngIf="checkPermission(25)">
             <nz-badge [nzCount]="requestNotifications?.total">
               <a class="requests" nz-popover [nzPopoverTitle]="titleTemplate" [nzPopoverContent]="contentTemplate" nzPopoverPlacement="bottom">
                 <i nz-icon nzType="reconciliation" nzTheme="fill"></i>

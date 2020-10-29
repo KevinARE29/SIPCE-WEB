@@ -58,7 +58,7 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
       this.setPermissions();
 
       // Is the user allowed to manage requests?
-      hasPermission = !!this.jwt.permissions.find((x) => x === 25);
+      hasPermission = this.checkPermission(25);
     } else if (!!!this.token) {
       this.username = null;
       this.connectionOn = false;
@@ -134,6 +134,11 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
         menu.allowed = false;
       }
     });
+  }
+
+  checkPermission(id: number): boolean {
+    const isAllowed = !!this.jwt.permissions.find((x) => x === id);
+    return isAllowed;
   }
 
   getRequest(): void {
