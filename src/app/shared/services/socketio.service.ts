@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
 
 import * as io from 'socket.io-client';
 import { environment } from 'src/environments/environment';
@@ -12,25 +12,17 @@ export class SocketioService {
 
   constructor() {}
 
-  setupSocketConnection(username: string): void {
-    console.log(environment.socketURL);
-    this.socket = io(`${environment.socketURL}/requests`, { query: `username=${username} ` });
+  setupSocketConnection(username: string): Promise<Observable<void>> {
+    this.socket = io(`${environment.socketURL}/requests`, { query: `username=${username}` });
 
-    this.socket.on('joinedRoom', (data: string) => {
-      console.log(data);
+    return new Promise((resolve, reject) => {
+      this.socket.on('connect', () => {
+        resolve(fromEvent(this.socket, 'newRequest'))
+      });
     });
   }
 
-  requestListener(): Observable<void> {
-    console.log('Ok');
-    this.socket.on('newRequest', () => {
-      return new Observable<void>((observer) => {
-        observer.next();
-      });
-    });
-
-    return new Observable<void>((observer) => {
-      observer.next();
-    });
+  closeConnection(): void {
+    this.socket.disconnect();
   }
 }

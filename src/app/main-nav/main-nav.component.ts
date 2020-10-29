@@ -33,7 +33,10 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   username: string;
   year: number;
   connectionOn = false;
-  requestNotifications: RequestNotifications;
+  requestNotifications: RequestNotifications = {
+    list: [],
+    total: 0
+  };
 
   constructor(
     private router: Router,
@@ -48,21 +51,30 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
 
   ngAfterContentChecked(): void {
     this.token = this.getToken();
+    let hasPermission = false;
 
     if (!!this.token && !!!this.username) {
       this.getUsername();
       this.setPermissions();
+
+      // Is the user allowed to manage requests?
+      hasPermission = !!this.jwt.permissions.find((x) => x === 25);
     } else if (!!!this.token) {
       this.username = null;
       this.connectionOn = false;
+
     }
 
-    // IS the user allowed to manage requests?
-    const hasPermission = !!this.jwt.permissions.find((x) => x === 25);
-
     if (!!this.username && !this.connectionOn && hasPermission) {
-      this.socketService.setupSocketConnection(this.username);
-      this.requestListener();
+      // Initial call.
+      this.getRequest();
+
+      // Get socket and suscribe.
+      this.socketService.setupSocketConnection(this.username).then((obs) => {
+        obs.subscribe(() => {
+          this.getRequest();
+        })
+      });
       this.connectionOn = true;
     }
   }
@@ -70,11 +82,14 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   logoutClicked(): void {
     this.authService.logout().subscribe(
       () => {
+        this.authService.cleanLocalStorage();
         this.router.navigate(['/login']);
+        this.socketService.closeConnection();
       },
       () => {
         this.authService.cleanLocalStorage();
         this.router.navigate(['/login']);
+        this.socketService.closeConnection();
       }
     );
   }
@@ -122,13 +137,9 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
     });
   }
 
-  requestListener(): void {
-    // this.socketService.requestListener().subscribe(() => {
-      console.log('Retrieve data');
-      this.eventService.getCounselingRequests(null, null, null).subscribe((data) => {
-        this.requestNotifications = { total: data['pagination'].totalItems, list: data['data'].splice(5) };
-        console.log(this.requestNotifications);
-      });
-    // });
+  getRequest(): void {
+    this.eventService.getCounselingRequests(null, null, null).subscribe((data) => {
+      this.requestNotifications = { total: data['pagination'].totalItems, list: data['data'].splice(0, 5) };
+    });
   }
 }
