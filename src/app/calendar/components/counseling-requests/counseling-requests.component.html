@@ -1,4 +1,5 @@
-<ejs-schedule #scheduleObj [eventSettings]="eventData" locale="es" (popupOpen)="onPopupOpen($event)" (actionBegin)="onBegin($event)">
+<ejs-schedule #scheduleObj [eventSettings]="eventData" locale="es" (popupOpen)="onPopupOpen($event)"
+    (actionBegin)="onBegin($event)">
     <ng-template #editorTemplate let-data>
         <form class="custom-event-editor">
             <div>
@@ -54,8 +55,8 @@
                 <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Buscar nombre" />
             </nz-input-group>
             <ng-template #inputClearName>
-                <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.firstname"
-                    (click)="searchParams.firstname = null; getCounselingRequests()"></i>
+                <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
+                    *ngIf="searchParams.firstname" (click)="searchParams.firstname = null; getCounselingRequests()"></i>
             </ng-template>
         </div>
 
@@ -66,8 +67,8 @@
                 <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Buscar apellido" />
             </nz-input-group>
             <ng-template #inputClearLastname>
-                <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.lastname"
-                    (click)="searchParams.lastname = null; getCounselingRequests()"></i>
+                <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
+                    *ngIf="searchParams.lastname" (click)="searchParams.lastname = null; getCounselingRequests()"></i>
             </ng-template>
         </div>
 
@@ -97,8 +98,8 @@
         <div nz-col nzXs="24" nzSm="24" nzMd="18" nzLg="12" nzXl="6">
             <label>Fecha: </label>
             <nz-input-group>
-                <nz-range-picker nzFormat="dd/MM/yyyy" [ngModel]="searchParams['createdAt']" [nzDisabledDate]="disabledDate"
-                    (ngModelChange)="onChangeDatePicker($event)"></nz-range-picker>
+                <nz-range-picker nzFormat="dd/MM/yyyy" [ngModel]="searchParams['createdAt']"
+                    [nzDisabledDate]="disabledDate" (ngModelChange)="onChangeDatePicker($event)"></nz-range-picker>
             </nz-input-group>
         </div>
 
@@ -188,20 +189,32 @@
             <div *ngFor="let data of listOfDisplayData" nz-col nzXs="23" nzSm="11" nzMd="12" nzLg="8" nzXl="6" nzXXl="5"
                 class="gutter-row student">
                 <nz-card>
-                    <ng-container *ngIf="data['student'].currentPhoto;else defaultPhoto">
-                        <nz-avatar [nzSrc]="data['student'].currentPhoto.path"></nz-avatar>
-                    </ng-container>
-                    <ng-template #defaultPhoto>
-                        <nz-avatar nzIcon="user"></nz-avatar>
-                    </ng-template>
-                    {{ data.student.firstname }} {{ data.student.lastname }}
+                    <div nz-row>
+                        <div nz-col nzSpan="8">
+                            <ng-container *ngIf="data['student'].currentPhoto;else defaultPhoto">
+                                <nz-avatar [nzSize]="70" [nzSrc]="data['student'].currentPhoto.path"></nz-avatar>
+                            </ng-container>
+                            <ng-template #defaultPhoto>
+                                <nz-avatar [nzSize]="70" nzIcon="user"></nz-avatar>
+                            </ng-template>
+                        </div>
+                        <div nz-col nzSpan="16" class="name">
+                            {{ data.student.firstname }} {{ data.student.lastname }}
+                            {{ data.student.firstname }} {{ data.student.lastname }}
+                        </div>
+                    </div>
                     <p>{{ data['student'].code }}</p>
                     <p>
                         {{ data['student'].currentGrade.name }}
                         <nz-tag [nzColor]="'geekblue'">{{data['student'].currentShift.name}}</nz-tag>
                     </p>
-                    <p>{{ data['counselingRequest'].createdAt | date:"dd/MM/yyyy": "es" }}</p>
-                    <div nz-row nzJustify="center" nzAlign="top">
+                    <p> <strong>Fecha de solicitud:</strong>
+                        {{ data['counselingRequest'].createdAt | date:"dd/MM/yyyy": "es" }}</p>
+                    <p nz-typography nzEllipsis nzEllipsisRows="1">
+                        <strong>Asunto: </strong>
+                        {{ data['counselingRequest']['subject'] }}
+                    </p>
+                    <div nz-row nzJustify="center" nzAlign="top" class="info">
                         <button nz-button nzType="primary" nzGhost (click)="showModal(data)">Ver</button>
                     </div>
                 </nz-card>
@@ -222,36 +235,32 @@
 
     <!-- Pagination -->
     <div nz-row nzJustify="center" nzAlign="top">
-        <nz-pagination [nzPageIndex]="pagination.page" [nzTotal]="pagination.totalItems" [nzSize]="'small'"
-            (nzPageIndexChange)="paginate($event)"></nz-pagination>
+        <nz-pagination [nzPageIndex]="pagination.page" [nzTotal]="pagination.totalItems"
+            [nzPageSize]="pagination.perPage" [nzSize]="'small'" (nzPageIndexChange)="paginate($event)"></nz-pagination>
     </div>
 </ng-container>
 
 <ng-template #noShifts>
     <nz-alert *ngIf="!loading" nzType="warning" nzCloseable nzShowIcon
-            nzMessage="Debe tener grados asignados para poder consultar las solicitudes de los estudiantes.">
+        nzMessage="Debe tener grados asignados para poder consultar las solicitudes de los estudiantes.">
     </nz-alert>
 </ng-template>
 
 <!-- Modal -->
-<nz-modal
-    [(nzVisible)]="isVisible"
-    [nzTitle]="modalTitle"
-    [nzContent]="modalContent"
-    [nzFooter]="modalFooter"
-    (nzOnCancel)="close()"
->
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter"
+    (nzOnCancel)="close()">
     <ng-template #modalTitle> Solicitud de consejería </ng-template>
 
     <ng-template #modalContent>
         <div>
-            <strong>Estudiante: </strong> {{ currentRequest['student'].firstname }} {{ currentRequest['student'].lastname }}
+            <strong>Estudiante: </strong> {{ currentRequest['student'].firstname }}
+            {{ currentRequest['student'].lastname }}
         </div>
         <div>
             <strong>Asunto: </strong> {{ currentRequest['counselingRequest']['subject'] }}
         </div>
         <div *ngIf="currentRequest['counselingRequest']['comment']">
-            <strong>Comentario: </strong> 
+            <strong>Comentario: </strong>
             <p>{{ currentRequest['counselingRequest']['comment'] }}</p>
         </div>
     </ng-template>

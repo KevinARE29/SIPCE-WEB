@@ -163,7 +163,7 @@ export class CounselingRequestsComponent implements OnInit {
     this.shifts = new Array<Shift>();
     this.grades = new Array<ShiftPeriodGrade>();
 
-    this.pagination.perPage = 10;
+    this.pagination.perPage = 12;
     this.pagination.page = 1;
 
     this.params = { pageIndex: this.pagination.page, pageSize: this.pagination.perPage, sort: null, filter: null };
@@ -238,6 +238,7 @@ export class CounselingRequestsComponent implements OnInit {
 
   getCounselingRequests(): void {
     const paginate = this.params ? this.params.pageIndex !== this.pagination.page : false;
+    this.params.pageSize = 12;
     this.loading = true;
 
     this.eventService.getCounselingRequests(this.params, this.searchParams, paginate).subscribe(

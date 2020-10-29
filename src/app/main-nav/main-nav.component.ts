@@ -98,7 +98,6 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
     this.jwt = this.authService.jwtDecoder(localStorage.getItem('accessToken'));
     this.username = this.jwt.sub;
     this.avatar = this.username.charAt(0).toUpperCase();
-    console.log('Getting username');
   }
 
   getToken(): string {
