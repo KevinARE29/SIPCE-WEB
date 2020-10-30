@@ -164,6 +164,8 @@ export class EventService {
       queryParams += '&createdAtStart=' + date.toISOString() + '&createdAtEnd=' + currentDate.toISOString();
     }
 
+    queryParams += '&perPage=' + (params ? params.pageSize : 12);
+
     if (queryParams.charAt(0) === '&') queryParams = queryParams.replace('&', '?');
 
     url += queryParams;

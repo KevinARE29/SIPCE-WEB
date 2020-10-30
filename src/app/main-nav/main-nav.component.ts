@@ -8,10 +8,16 @@
 import { Component, OnInit, AfterContentChecked } from '@angular/core';
 import { Router } from '@angular/router';
 
+import MenuJson from '../../assets/menu.json';
 import { AuthService } from '../login/shared/auth.service';
 import { Permission } from '../shared/permission.model';
-import MenuJson from '../../assets/menu.json';
+import { SocketioService } from '../shared/services/socketio.service';
+import { EventService } from '../calendar/shared/event.service';
 
+interface RequestNotifications {
+  total: number;
+  list: unknown[];
+}
 @Component({
   selector: 'app-main-nav',
   templateUrl: './main-nav.component.html',
@@ -22,31 +28,68 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   menuOptions: any;
   isCollapsed = false;
   jwt: any;
+  token: string;
   avatar: string;
   username: string;
   year: number;
+  connectionOn = false;
+  requestNotifications: RequestNotifications = {
+    list: [],
+    total: 0
+  };
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private socketService: SocketioService,
+    private authService: AuthService,
+    private eventService: EventService
+  ) {}
 
   ngOnInit(): void {
     this.year = new Date().getFullYear();
   }
 
   ngAfterContentChecked(): void {
-    if (this.getToken()) {
+    this.token = this.getToken();
+    let hasPermission = false;
+
+    if (!!this.token && !!!this.username) {
       this.getUsername();
       this.setPermissions();
+
+      // Is the user allowed to manage requests?
+      hasPermission = this.checkPermission(25);
+    } else if (!!!this.token) {
+      this.username = null;
+      this.connectionOn = false;
+
+    }
+
+    if (!!this.username && !this.connectionOn && hasPermission) {
+      // Initial call.
+      this.getRequest();
+
+      // Get socket and suscribe.
+      this.socketService.setupSocketConnection(this.username).then((obs) => {
+        obs.subscribe(() => {
+          this.getRequest();
+        })
+      });
+      this.connectionOn = true;
     }
   }
 
   logoutClicked(): void {
     this.authService.logout().subscribe(
       () => {
+        this.authService.cleanLocalStorage();
         this.router.navigate(['/login']);
+        this.socketService.closeConnection();
       },
       () => {
         this.authService.cleanLocalStorage();
         this.router.navigate(['/login']);
+        this.socketService.closeConnection();
       }
     );
   }
@@ -58,7 +101,8 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   }
 
   getToken(): string {
-    return this.authService.getToken();
+    const token = this.authService.getToken();
+    return token;
   }
 
   setPermissions(): void {
@@ -89,6 +133,17 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
       } else {
         menu.allowed = false;
       }
+    });
+  }
+
+  checkPermission(id: number): boolean {
+    const isAllowed = !!this.jwt.permissions.find((x) => x === id);
+    return isAllowed;
+  }
+
+  getRequest(): void {
+    this.eventService.getCounselingRequests(null, null, null).subscribe((data) => {
+      this.requestNotifications = { total: data['pagination'].totalItems, list: data['data'].splice(0, 5) };
     });
   }
 }

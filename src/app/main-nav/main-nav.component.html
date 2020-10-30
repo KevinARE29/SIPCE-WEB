@@ -43,6 +43,44 @@
         </span>
       </nz-page-header-tags>
       <nz-page-header-extra>
+        <!-- Request notifications -->
+        <span class="requestsCounter" *ngIf="checkPermission(25)">
+            <nz-badge [nzCount]="requestNotifications?.total">
+              <a class="requests" nz-popover [nzPopoverTitle]="titleTemplate" [nzPopoverContent]="contentTemplate" nzPopoverPlacement="bottom">
+                <i nz-icon nzType="reconciliation" nzTheme="fill"></i>
+              </a>
+            </nz-badge>
+          <ng-template #titleTemplate>Solicitudes de consejería</ng-template>
+          <ng-template #contentTemplate>
+            <ng-container *ngIf="requestNotifications.list.length;else noItems">
+              <ng-container *ngFor="let item of requestNotifications.list">
+                <div nz-row class="popover">
+                  <div nz-col nzSpan="4">
+                    <ng-container *ngIf="item['student'].currentPhoto;else defaultPhoto">
+                      <nz-avatar [nzSrc]="item['student'].currentPhoto.path"></nz-avatar>
+                    </ng-container>
+                    <ng-template #defaultPhoto>
+                      <nz-avatar nzIcon="user"></nz-avatar>
+                    </ng-template>
+                  </div>
+                  <div nz-col nzSpan="20">
+                    <strong>{{ item['student'].firstname }} {{ item['student'].lastname }}</strong><br>
+                    <p nz-typography nzEllipsis nzEllipsisRows="1">{{ item.subject }}</p>
+                  </div>
+                </div>
+                <hr>
+              </ng-container>
+  
+              <div nz-row nzJustify="center">
+                <a routerLink="/calendario/solicitudes">Ver todas</a>
+              </div>
+            </ng-container>
+            <ng-template #noItems>
+              <i>No tiene solicitudes de consejería</i>
+            </ng-template>
+          </ng-template>
+        </span>
+        <!-- Username and dropdown options -->
         <span class="user">
           <a nz-dropdown [nzDropdownMenu]="menu">
             {{username}}
