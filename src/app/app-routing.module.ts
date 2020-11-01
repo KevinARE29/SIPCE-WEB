@@ -81,6 +81,11 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'sesiones',
+    loadChildren: () => import('./sessions/sessions.module').then((m) => m.SessionsModule),
+    canLoad: [AuthGuard]
+  },
+  {
     path: '**',
     redirectTo: '/error404',
     pathMatch: 'full'

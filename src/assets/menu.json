@@ -159,6 +159,20 @@
                     "allowed": false
                 }
             ]
+        },
+        {
+            "title": "Sesiones",
+            "icon": "reconciliation",
+            "permissions": [22],
+            "allowed": null,
+            "children": [
+                {
+                    "route": "sesiones",
+                    "name": "Consultar",
+                    "permission": 22,
+                    "allowed": false
+                }
+            ]
         }
     ]  
 }
