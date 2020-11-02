@@ -152,6 +152,11 @@
                     "name": "Calendario",
                     "permission": 19,
                     "allowed": false
+                }, {
+                    "route": "/calendario/solicitudes",
+                    "name": "Solicitudes de consejería",
+                    "permission": 22,
+                    "allowed": false
                 }
             ]
         }

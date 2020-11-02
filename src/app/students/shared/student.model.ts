@@ -20,4 +20,7 @@ export class Student {
   images: unknown[];
   siblings: Student[];
   canBeDeleted: boolean;
+  currentShift: ShiftPeriodGrade;
+  currentGrade: ShiftPeriodGrade;
+  currentPhoto: string;
 }
