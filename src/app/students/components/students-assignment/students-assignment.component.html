@@ -210,8 +210,8 @@
                             <tbody>
                                 <tr *ngFor="let data of assignedStudentsTable.data">
                                     <td>
-                                        <ng-container *ngIf="data.student.images.length > 0;else avatar">
-                                            <nz-avatar nzIcon="user" [nzSize]="40" [nzSrc]="data.student.images[0].path"></nz-avatar>
+                                        <ng-container *ngIf="data.student?.currentPhoto;else avatar">
+                                            <nz-avatar nzIcon="user" [nzSize]="40" [nzSrc]="data.student.currentPhoto.path"></nz-avatar>
                                         </ng-container>
                                         <ng-template #avatar>
                                             <nz-avatar nzIcon="user" [nzSize]="40"></nz-avatar>
@@ -305,8 +305,8 @@
                                         [nzDisabled]="data.disabled"
                                         (nzCheckedChange)="onItemChecked(data.student.id, $event, false)"></td>
                                     <td>
-                                        <ng-container *ngIf="data.student.images.length > 0;else avatar">
-                                            <nz-avatar nzIcon="user" [nzSize]="40" [nzSrc]="data.student.images[0].path"></nz-avatar>
+                                        <ng-container *ngIf="data.student?.currentPhoto;else avatar">
+                                            <nz-avatar nzIcon="user" [nzSize]="40" [nzSrc]="data.student.currentPhoto.path"></nz-avatar>
                                         </ng-container>
                                         <ng-template #avatar>
                                             <nz-avatar nzIcon="user" [nzSize]="40"></nz-avatar>
