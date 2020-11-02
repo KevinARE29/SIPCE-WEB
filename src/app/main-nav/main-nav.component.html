@@ -44,6 +44,49 @@
       </nz-page-header-tags>
       <nz-page-header-extra>
         <span class="user">
+          
+          <nz-badge [nzCount]="events.length">
+             <a nz-popover nzPopoverTitle="Notificaciones de las proximas 24 horas" [nzPopoverContent]="contentTemplate" nzPopoverPlacement="bottom" nzPopoverTrigger="click">
+               <i nz-icon class="icon-style" nzType="bell" nzTheme="fill"></i>
+            </a>
+           </nz-badge>
+          
+            <ng-template #contentTemplate>
+              <ng-container *ngIf="events.length; else noItems">
+              
+                <nz-row>
+                  <nz-col> 
+                     <p> Posees {{events.length}} eventos próximos</p>
+                  </nz-col>
+                </nz-row>
+                <nz-row>
+                   <button  nz-button class="markAsReadButton" nzType="primary" (click)="markAllAsView()">
+                        Marcar todos como leído
+                   </button>
+                </nz-row>
+               <div *ngFor="let appointment of events">
+                <nz-badge [nzDot]="dot">
+                  <div nz-row>
+                    <div nz-col [nzSpan]="4" >
+                      <i nz-icon class="calendar-style" nzType="calendar" nzTheme="outline"></i>
+                    </div>
+                    <div nz-col [nzSpan]="20" >
+                      <a class="upcoming-events" (click)= "markAsView(appointment.Id)" >{{ appointment.Subject }}</a>
+                      <p>{{ appointment.StartTime | date: 'dd/MM/yyyy hh:mm a' }} </p>
+                        <p><b>Tipo de evento: </b>{{ appointment.EventType}}</p>  
+                         <nz-divider nzType="horizontal"></nz-divider>
+                    </div>
+                  </div>              
+                </nz-badge>
+              </div>
+        
+              </ng-container>
+            </ng-template>  
+      
+            <ng-template #noItems>
+              <i>No tiene notificaciones de eventos</i>
+            </ng-template>
+        
           <a nz-dropdown [nzDropdownMenu]="menu">
             {{username}}
             <i nz-icon nzType="caret-down"></i>

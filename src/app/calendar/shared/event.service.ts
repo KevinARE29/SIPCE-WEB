@@ -21,6 +21,8 @@ export class EventService {
     const startDate = fromDate.toISOString();
     const endDate = toDate.toISOString();
 
+    console.log(startDate, endDate, 'esto se va como query param a la ruta');
+
     return this.http.get<Appointment[]>(`${this.baseUrl}me/schedules?fromDate=${startDate}&toDate=${endDate}`).pipe(
       map((response) => {
         const events = new Array<Appointment>();
@@ -33,6 +35,13 @@ export class EventService {
       }),
       catchError(this.handleError())
     );
+  }
+
+  markEventsAsRead(eventsIdArray: Array<number>): Observable<void> {
+    const data = JSON.stringify({
+      eventsId: eventsIdArray
+    });
+    return this.http.post<void>(`${this.baseUrl}me/schedules/notifications`, data).pipe(catchError(this.handleError()));
   }
 
   createEvent(calendarEvent: Appointment, event: Appointment): Observable<Appointment> {

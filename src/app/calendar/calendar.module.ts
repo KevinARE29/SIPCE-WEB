@@ -12,13 +12,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { CalendarRoutingModule } from './calendar-routing.module';
 import { AntDesignModule } from '../ant-design/ant-design.module';
-import { CalendarComponent } from './components/calendar.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
 import { DateTimePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { RecurrenceEditorModule } from '@syncfusion/ej2-angular-schedule';
 import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
+import { UpcomingEventsComponent } from './components/upcoming-events/upcoming-events.component';
 
 @NgModule({
-  declarations: [CalendarComponent],
+  declarations: [CalendarComponent, UpcomingEventsComponent],
   providers: [AgendaService, DayService, WeekService, WorkWeekService, MonthService],
   imports: [
     CommonModule,

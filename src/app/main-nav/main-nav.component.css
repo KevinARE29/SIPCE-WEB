@@ -11,6 +11,45 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+nz-badge {
+  margin-right: 20px;
+}
+
+nz-divider {
+  width: 150%;
+}
+
+.icon-style {
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  line-height: 35px;
+  text-align: center;
+  color: #ffffff;
+  border-radius: 50%;
+  background: #001529;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.calendar-style {
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+  margin: 3px;
+}
+
+.markAsReadButton {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5%;
+}
+
+.upcoming-events {
+  display: inline-block;
+  vertical-align: middle;
+}
 .app-layout {
   min-height: 100vh;
 }
