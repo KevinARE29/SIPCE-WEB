@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-
-import { compareDesc, subMonths, differenceInCalendarDays } from 'date-fns';
+import { subMonths, differenceInCalendarDays } from 'date-fns';
 
 import { AuthService } from 'src/app/login/shared/auth.service';
 import { UserService } from 'src/app/users/shared/user.service';

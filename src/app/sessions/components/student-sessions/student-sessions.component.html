@@ -1,1 +1,114 @@
-<p>student-sessions works!</p>
+<div nz-row nzJustify="center" [nzGutter]="[20, 10]">
+    <div nz-col>
+        <div nz-row nzJustify="center">
+            <nz-avatar [nzSize]="64" nzIcon="user"></nz-avatar>
+        </div>
+        <div nz-row nzJustify="center" class="links">
+            <a>Perfil</a> 
+            <a>Expediente</a>
+        </div>
+    </div>
+
+    <div nz-col>
+        <p>Nombre completo del estudiante</p>
+        <p>NIE</p>
+        <p>Edad: <strong>#</strong></p>
+        <p>Grado y sección: <strong>Grado A</strong></p>
+        <p>Ingreso: <strong>Grado (año)</strong></p>
+    </div>
+</div>
+
+<!-- Pre-create button-->
+<div nz-row nzJustify="center">
+    <div class="btn-container">
+        <button nz-button nzType="primary">Crear nuevo registro</button>
+    </div>
+</div>
+
+<div nz-row [nzGutter]="[10, 10]">
+    <!-- Registered at -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="16" nzLg="12" nzXl="6">
+        <label>Fecha: </label>
+        <nz-input-group>
+            <nz-range-picker nzFormat="dd/MM/yyyy" [ngModel]="searchSessionParams.registeredAt"
+                [nzDisabledDate]="disabledDate" (ngModelChange)="onChangeDatePicker($event)"></nz-range-picker>
+        </nz-input-group>
+    </div>
+
+    <!-- Event type -->
+    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="6" nzXl="6">
+        <label>Tipo de evento: </label>
+        <nz-input-group>
+            <nz-select class="relation" nzShowSearch nzAllowClear [(ngModel)]="searchSessionParams.type"
+                (ngModelChange)="getSessions(null)">
+                <nz-option *ngFor="let type of eventTypes" [nzValue]="type" [nzLabel]="type">
+                </nz-option>
+            </nz-select>
+        </nz-input-group>
+    </div>
+
+    <!-- Search button-->
+    <div nz-col nzXs="24" nzSm="12" nzMd="24" nzLg="4" nzXl="4">
+        <div class="btn-container" nz-row nzAlign="bottom">
+            <button nz-button nzType="primary" (click)="getSessions(null)">Buscar</button>
+        </div>
+    </div>
+</div>
+
+<div nz-row>
+    <div nz-col nzSpan="24">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <nz-table #filterTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems" [nzPageSize]="pagination.perPage" [nzPageIndex]="pagination.page"
+                nzSize="small" (nzQueryParams)="getSessions($event)">
+                <thead>
+                    <tr>
+                        <th nzColumnKey="code" [nzSortFn]="true" [nzSortPriority]="1">Sesión</th>
+                        <th nzColumnKey="eventType" [nzSortFn]="true" [nzSortPriority]="2">Tipo de entrevista</th>
+                        <th nzColumnKey="sessionDate" [nzSortFn]="true" [nzSortPriority]="6">Fecha</th>
+                        <th [nzAlign]="'center'">Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td [nzAlign]="'center'">
+                            <a>
+                                <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
+                            </a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a>
+                                <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
+                            </a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a>
+                                <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let data of filterTable.data">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td [nzAlign]="'center'">
+                            <a>
+                                <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
+                            </a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a>
+                                <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
+                            </a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a>
+                                <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>

@@ -98,11 +98,28 @@
                         <th nzColumnKey="currentShift" [nzSortFn]="true" [nzSortPriority]="4">Turno</th>
                         <th nzColumnKey="currentGrade" [nzSortFn]="true" [nzSortPriority]="5">Grado</th>
                         <th nzColumnKey="sessionDate" [nzSortFn]="true" [nzSortPriority]="6">Última consejería</th>
-                        <th [nzAlign]="'center'" *ngIf="actions.length">Acción</th>
+                        <th [nzAlign]="'center'">Acción</th>
                     </tr>
                 </thead>
 
                 <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td [nzAlign]="'center'">
+                            <a [routerLink]="['/estudiantes', 0, 'detalle']">
+                                Perfil
+                            </a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a>Expediente</a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a [routerLink]="['/sesiones', 0]">Sesiones</a>
+                        </td>
+                    </tr>
                     <tr *ngFor="let data of filterTable.data">
                         <td></td>
                         <td></td>
@@ -110,26 +127,14 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td [nzAlign]="'center'" *ngIf="actions.length">
-                            <ng-container *ngFor="let action of actions">
-                                <ng-container [ngSwitch]="action.text">
-                                    <ng-container *ngSwitchCase="'eye'">
-                                        <a [routerLink]="['/estudiantes', data.id, 'detalle']">
-                                            Perfil
-                                        </a>
-                                    </ng-container>
-
-                                    <ng-container *ngSwitchCase="'edit'">
-                                        <nz-divider nzType="vertical"></nz-divider>
-                                        <a>Expediente</a>
-                                    </ng-container>
-
-                                    <ng-container *ngSwitchCase="'delete'">
-                                        <nz-divider nzType="vertical"></nz-divider>
-                                        <a>Sesiones</a>
-                                    </ng-container>
-                                </ng-container>
-                            </ng-container>
+                        <td [nzAlign]="'center'">
+                            <a [routerLink]="['/estudiantes', 0, 'detalle']">
+                                Perfil
+                            </a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a>Expediente</a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a>Sesiones</a>
                         </td>
                     </tr>
                 </tbody>
@@ -137,4 +142,3 @@
         </nz-spin>
     </div>
 </div>
-
