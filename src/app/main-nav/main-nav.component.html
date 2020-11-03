@@ -80,16 +80,20 @@
             </ng-template>
           </ng-template>
         </span>
+        <!--Upcoming events notification-->
+        <span class="requestsCounter" *ngIf="checkPermission(19)">
+          
+        </span>
         <!-- Username and dropdown options -->
         <span class="user">
           
           <nz-badge [nzCount]="events.length">
-             <a nz-popover nzPopoverTitle="Notificaciones de las proximas 24 horas" [nzPopoverContent]="contentTemplate" nzPopoverPlacement="bottom" nzPopoverTrigger="click">
+             <a nz-popover  class="popover" nzPopoverTitle="Notificaciones de las proximas 24 horas" [nzPopoverContent]="contentTemplate" nzPopoverPlacement="bottom" nzPopoverTrigger="click">
                <i nz-icon class="icon-style" nzType="bell" nzTheme="fill"></i>
             </a>
            </nz-badge>
           
-            <ng-template #contentTemplate>
+            <ng-template  class="popover" #contentTemplate>
               <ng-container *ngIf="events.length; else noItems">
               
                 <nz-row>
@@ -103,7 +107,7 @@
                    </button>
                 </nz-row>
                <div *ngFor="let appointment of events">
-                <nz-badge [nzDot]="dot">
+                <nz-badge [nzDot]="!appointment.notification">
                   <div nz-row>
                     <div nz-col [nzSpan]="4" >
                       <i nz-icon class="calendar-style" nzType="calendar" nzTheme="outline"></i>
@@ -112,7 +116,7 @@
                       <a class="upcoming-events" (click)= "markAsView(appointment.Id)" >{{ appointment.Subject }}</a>
                       <p>{{ appointment.StartTime | date: 'dd/MM/yyyy hh:mm a' }} </p>
                         <p><b>Tipo de evento: </b>{{ appointment.EventType}}</p>  
-                         <nz-divider nzType="horizontal"></nz-divider>
+                        <hr>
                     </div>
                   </div>              
                 </nz-badge>

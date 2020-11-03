@@ -96,15 +96,20 @@ export class UpcomingEventsComponent implements OnInit {
   getEvents(startDate: Date, endDate: Date): void {
     this.loading = true;
     console.log(startDate, endDate, '---fechas antes de ser enviadas--');
-    this.eventService.getEvents(startDate, endDate).subscribe((events) => {
-      this.eventData = null;
-      this.eventData = {
-        dataSource: events
-      };
-      console.log(events, 'eventos en upcoming events');
-      this.loading = false;
-      if (!this.toolBarItemRendered) this.toolBarItemRendered = true;
-    });
+    this.eventService.getEvents(startDate, endDate).subscribe(
+      (events) => {
+        this.eventData = null;
+        this.eventData = {
+          dataSource: events
+        };
+        console.log(events, 'eventos en upcoming events');
+        this.loading = false;
+        if (!this.toolBarItemRendered) this.toolBarItemRendered = true;
+      },
+      () => {
+        this.loading = false;
+      }
+    );
   }
 
   randomItem(): string {
