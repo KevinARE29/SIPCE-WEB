@@ -238,7 +238,7 @@ export class CalendarComponent implements OnInit {
             }
             this.scheduleObj.refresh();
             this.loading = false;
-            this.recurrenceRule = '';
+            this.recurrenceRule = null;
             this.message.success(`La serie de eventos ha sido actualizada`);
           });
 
@@ -296,7 +296,7 @@ export class CalendarComponent implements OnInit {
 
           this.event = new Appointment();
           this.loading = false;
-          this.recurrenceRule = '';
+          this.recurrenceRule = null;
           this.message.success(`Evento creado con éxito`);
         },
         () => {
@@ -325,7 +325,7 @@ export class CalendarComponent implements OnInit {
           }
           this.scheduleObj.refresh();
           this.loading = false;
-          this.recurrenceRule = '';
+          this.recurrenceRule = null;
           this.message.success(`El evento ha sido actualizado`);
         });
       }
