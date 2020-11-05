@@ -1,21 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-  EventSettingsModel,
-  ScheduleComponent,
-  RecurrenceEditor,
-  PopupOpenEventArgs,
-  View
-} from '@syncfusion/ej2-angular-schedule';
-import { L10n, loadCldr, isNullOrUndefined } from '@syncfusion/ej2-base';
-import { DateTimePicker } from '@syncfusion/ej2-calendars';
+import { EventSettingsModel, ScheduleComponent, View } from '@syncfusion/ej2-angular-schedule';
+import { L10n, loadCldr } from '@syncfusion/ej2-base';
+
 import { EventRenderedArgs } from '@syncfusion/ej2-angular-schedule';
 
-import { addDays, addHours, endOfMonth, getDay, startOfMonth, subDays, compareDesc } from 'date-fns';
 import * as numberingSystems from '../../../../../node_modules/cldr-data/supplemental/numberingSystems.json';
 import * as gregorian from '../../../../../node_modules/cldr-data/main/es/ca-gregorian.json';
 import * as numbers from 'cldr-data/main/es/numbers.json';
 import * as timeZoneNames from 'cldr-data/main/es/timeZoneNames.json';
-import { NzMessageService } from 'ng-zorro-antd/message';
 
 import language from './../../shared/calendar-language.json';
 import { Appointment } from '../../shared/appointment.model';
@@ -53,6 +45,9 @@ export class UpcomingEventsComponent implements OnInit {
 
   public data: object[] = [];
   public eventData: EventSettingsModel = {
+    allowAdding: false,
+    allowEditing: false,
+    allowDeleting: false,
     dataSource: null
   };
 
@@ -64,6 +59,7 @@ export class UpcomingEventsComponent implements OnInit {
 
   ngOnInit(): void {
     this.events = new Array<Appointment>();
+    //Getting tomorrow date and setting the hour to 23:59:59
     this.tomorrowDate = new Date();
     this.tomorrowDate = add(new Date(), {
       days: 1
@@ -75,8 +71,6 @@ export class UpcomingEventsComponent implements OnInit {
     this.startDate = new Date();
     this.endDate = this.tomorrowDate;
     this.getEvents(this.startDate, this.endDate);
-    console.log(this.startDate, 'hola este es la fecha de inicio en el upcoming events component');
-    console.log(this.endDate, 'hola este es la fecha de fin upcoming events component');
     this.minDate = this.startDate;
     this.maxDate = this.endDate;
   }
@@ -95,14 +89,12 @@ export class UpcomingEventsComponent implements OnInit {
 
   getEvents(startDate: Date, endDate: Date): void {
     this.loading = true;
-    console.log(startDate, endDate, '---fechas antes de ser enviadas--');
     this.eventService.getEvents(startDate, endDate).subscribe(
       (events) => {
         this.eventData = null;
         this.eventData = {
           dataSource: events
         };
-        console.log(events, 'eventos en upcoming events');
         this.loading = false;
         if (!this.toolBarItemRendered) this.toolBarItemRendered = true;
       },

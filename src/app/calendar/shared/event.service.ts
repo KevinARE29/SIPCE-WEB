@@ -25,8 +25,6 @@ export class EventService {
     const startDate = fromDate.toISOString();
     const endDate = toDate.toISOString();
 
-    console.log(startDate, endDate, 'esto se va como query param a la ruta');
-
     return this.http.get<Appointment[]>(`${this.baseUrl}me/schedules?fromDate=${startDate}&toDate=${endDate}`).pipe(
       map((response) => {
         const events = new Array<Appointment>();

@@ -30,6 +30,7 @@ nz-divider {
   background: #001529;
   display: inline-block;
   vertical-align: middle;
+  border: 0px;
 }
 
 .calendar-style {
@@ -49,9 +50,15 @@ nz-divider {
 .upcoming-events {
   display: inline-block;
   vertical-align: middle;
+  padding-bottom: 5px;
 }
+
+.eventType-style {
+  margin-bottom: 5px;
+}
+
 .app-layout {
-  min-height: 100vh;
+  min-height: 100vh; 
 }
 
 .menu-sidebar {
@@ -137,6 +144,18 @@ nz-avatar {
   font-size: 20px;
   color: #ffffff;
   margin: 5px;
+}
+
+.scroll-style {
+  max-height: 500px;
+  max-width: 300px;
+  overflow-y: scroll;
+}
+
+
+.popover-notification {
+  width: 250px;
+  padding-bottom: 25%;
 }
 
 .popover {

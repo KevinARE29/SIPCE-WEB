@@ -2,7 +2,7 @@
 /* 
   Path: app/main-nav/main-nav.component.ts
   Objective: Define main navigation behavior
-  Author: Veronica Reyes
+  Author: Veronica Reyes y Esme Lopez
 */
 
 import { Component, OnInit, AfterContentChecked } from '@angular/core';
@@ -17,7 +17,6 @@ import { add } from 'date-fns';
 import { SocketioService } from '../shared/services/socketio.service';
 import { EventService } from '../calendar/shared/event.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 interface RequestNotifications {
   total: number;
@@ -41,9 +40,7 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   year: number;
   dot = true;
 
-  loading = false;
   startDate: Date;
-
   tomorrowDate: Date;
   endDate: Date;
 
@@ -57,7 +54,6 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
     private router: Router,
     private socketService: SocketioService,
     private authService: AuthService,
-    private notification: NzNotificationService,
     private eventService: EventService,
     private message: NzMessageService
   ) {}
@@ -65,7 +61,7 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   ngOnInit(): void {
     this.year = new Date().getFullYear();
     this.events = new Array<Appointment>();
-
+    //Getting tomorrow date and setting the hour to 23:59:59
     this.tomorrowDate = new Date();
     this.tomorrowDate = add(new Date(), {
       days: 1
@@ -75,9 +71,6 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
     this.tomorrowDate.setSeconds(59);
     this.startDate = new Date();
     this.endDate = this.tomorrowDate;
-
-    console.log(this.startDate, 'hola este es la fecha de inicioooooooo');
-    console.log(this.endDate, 'hola este es la fecha de fiiiiin');
   }
 
   ngAfterContentChecked(): void {
@@ -133,10 +126,8 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
 
   getEvents(startDate: Date, endDate: Date): void {
     this.events = new Array<Appointment>();
-    console.log(startDate, endDate, '---fechas antes de ser enviadas--');
     this.eventService.getEvents(startDate, endDate).subscribe((events) => {
       this.events = events;
-      console.log(events, 'eventos----------------');
     });
   }
 
@@ -183,15 +174,11 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   }
 
   markAsView(id: number): void {
-    // this.dot = !this.dot;
     this.eventsIds = new Array<number>();
 
-    console.log(id, 'id');
     const eventRead = this.events.find((p) => p.Id === id);
     if (eventRead.notification === false) {
       eventRead.notification = true;
-      console.log(eventRead, 'evento marcado como leido');
-      console.log(this.events, 'array de eventos');
       this.eventsIds.push(eventRead.Id);
       this.eventService.markEventsAsRead(this.eventsIds).subscribe(() => {
         this.message.success('Evento marcado como leído exitosamente');
@@ -206,8 +193,6 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
     this.events.forEach((appointment) => {
       this.eventsIds.push(appointment.Id);
     });
-
-    console.log(this.eventsIds, 'eventsIds');
 
     this.eventService.markEventsAsRead(this.eventsIds).subscribe(() => {
       this.events.forEach((appointment) => {
