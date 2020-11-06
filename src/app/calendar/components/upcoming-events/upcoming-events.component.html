@@ -1,0 +1,7 @@
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+    <ejs-schedule  width='auto' height='550px' #scheduleObj [currentView]="currentViewMode"
+        [views]="views" [selectedDate]="selectedDate" timezone="America/El_Salvador"
+        locale="es" [eventSettings]="eventData" (eventRendered)="applyCategoryColor($event)" [minDate]="minDate"
+        [maxDate]="maxDate">
+    </ejs-schedule>
+</nz-spin>

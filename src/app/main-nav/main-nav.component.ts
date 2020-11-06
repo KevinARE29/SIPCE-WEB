@@ -2,7 +2,7 @@
 /* 
   Path: app/main-nav/main-nav.component.ts
   Objective: Define main navigation behavior
-  Author: Esme López y Veronica Reyes
+  Author: Veronica Reyes y Esme Lopez
 */
 
 import { Component, OnInit, AfterContentChecked } from '@angular/core';
@@ -11,6 +11,9 @@ import { Router } from '@angular/router';
 import MenuJson from '../../assets/menu.json';
 import { AuthService } from '../login/shared/auth.service';
 import { Permission } from '../shared/permission.model';
+
+import { Appointment } from '../../app/calendar/shared/appointment.model';
+import { add } from 'date-fns';
 import { SocketioService } from '../shared/services/socketio.service';
 import { EventService } from '../calendar/shared/event.service';
 
@@ -25,6 +28,8 @@ interface RequestNotifications {
 })
 export class MainNavComponent implements OnInit, AfterContentChecked {
   permissions: Array<Permission> = [];
+  events: Appointment[];
+  eventsIds: Array<number> = [];
   menuOptions: any;
   isCollapsed = false;
   jwt: any;
@@ -32,6 +37,12 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   avatar: string;
   username: string;
   year: number;
+  dot = true;
+
+  startDate: Date;
+  tomorrowDate: Date;
+  endDate: Date;
+
   connectionOn = false;
   requestNotifications: RequestNotifications = {
     list: [],
@@ -52,6 +63,7 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   ngAfterContentChecked(): void {
     this.token = this.getToken();
     let hasPermission = false;
+    let hasPermissionForNotifications = false;
 
     if (!!this.token && !!!this.username) {
       this.getUsername();
@@ -59,10 +71,27 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
 
       // Is the user allowed to manage requests?
       hasPermission = this.checkPermission(25);
+      // Is the user allowed to view notifications of the upcoming events?
+      hasPermissionForNotifications = this.checkPermission(19);
     } else if (!!!this.token) {
       this.username = null;
       this.connectionOn = false;
+    }
 
+    if (!!this.username && hasPermissionForNotifications) {
+      //Getting tomorrow date and setting the hour to 23:59:59
+      this.events = new Array<Appointment>();
+      this.tomorrowDate = new Date();
+      this.tomorrowDate = add(new Date(), {
+        days: 2
+      });
+      this.tomorrowDate.setHours(0);
+      this.tomorrowDate.setMinutes(0);
+      this.tomorrowDate.setSeconds(0);
+      this.startDate = new Date();
+      this.endDate = this.tomorrowDate;
+      // getting events with the specific date range
+      this.getEvents(this.startDate, this.endDate);
     }
 
     if (!!this.username && !this.connectionOn && hasPermission) {
@@ -73,7 +102,7 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
       this.socketService.setupSocketConnection(this.username).then((obs) => {
         obs.subscribe(() => {
           this.getRequest();
-        })
+        });
       });
       this.connectionOn = true;
     }
@@ -92,6 +121,13 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
         this.socketService.closeConnection();
       }
     );
+  }
+
+  getEvents(startDate: Date, endDate: Date): void {
+    this.events = new Array<Appointment>();
+    this.eventService.getEvents(startDate, endDate).subscribe((events) => {
+      this.events = events;
+    });
   }
 
   getUsername(): void {
@@ -133,6 +169,32 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
       } else {
         menu.allowed = false;
       }
+    });
+  }
+
+  markAsView(id: number): void {
+    this.eventsIds = new Array<number>();
+
+    const eventRead = this.events.find((p) => p.Id === id);
+    if (eventRead.Notification === false) {
+      eventRead.Notification = true;
+      this.eventsIds.push(eventRead.Id);
+      this.eventService.markEventsAsRead(this.eventsIds).subscribe();
+    }
+    this.router.navigate(['calendario/proximos']);
+  }
+
+  markAllAsView(): void {
+    this.eventsIds = new Array<number>();
+    //Getting all the ids from the events array
+    this.events.forEach((appointment) => {
+      this.eventsIds.push(appointment.Id);
+    });
+
+    this.eventService.markEventsAsRead(this.eventsIds).subscribe(() => {
+      this.events.forEach((appointment) => {
+        if (appointment.Notification === false) appointment.Notification = true;
+      });
     });
   }
 

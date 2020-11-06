@@ -39,6 +39,13 @@ export class EventService {
     );
   }
 
+  markEventsAsRead(eventsIdArray: Array<number>): Observable<void> {
+    const data = JSON.stringify({
+      eventsId: eventsIdArray
+    });
+    return this.http.post<void>(`${this.baseUrl}me/schedules/notifications`, data).pipe(catchError(this.handleError()));
+  }
+
   createEvent(calendarEvent: Appointment, event: Appointment): Observable<Appointment> {
     const participants = new Array<number>();
 

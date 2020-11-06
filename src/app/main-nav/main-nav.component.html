@@ -45,11 +45,12 @@
       <nz-page-header-extra>
         <!-- Request notifications -->
         <span class="requestsCounter" *ngIf="checkPermission(25)">
-            <nz-badge [nzCount]="requestNotifications?.total">
-              <a class="requests" nz-popover [nzPopoverTitle]="titleTemplate" [nzPopoverContent]="contentTemplate" nzPopoverPlacement="bottom">
-                <i nz-icon nzType="reconciliation" nzTheme="fill"></i>
-              </a>
-            </nz-badge>
+          <nz-badge [nzCount]="requestNotifications?.total">
+            <a class="requests" nz-popover [nzPopoverTitle]="titleTemplate" [nzPopoverContent]="contentTemplate"
+              nzPopoverPlacement="bottom">
+              <i nz-icon nzType="reconciliation" nzTheme="fill"></i>
+            </a>
+          </nz-badge>
           <ng-template #titleTemplate>Solicitudes de consejería</ng-template>
           <ng-template #contentTemplate>
             <ng-container *ngIf="requestNotifications.list.length;else noItems">
@@ -70,13 +71,57 @@
                 </div>
                 <hr>
               </ng-container>
-  
+
               <div nz-row nzJustify="center">
                 <a routerLink="/calendario/solicitudes">Ver todas</a>
               </div>
             </ng-container>
             <ng-template #noItems>
               <i>No tiene solicitudes de consejería</i>
+            </ng-template>
+          </ng-template>
+        </span>
+        <!--Upcoming events notification-->
+        <span *ngIf="checkPermission(19)">
+          <nz-badge [nzCount]="events.length">
+            <a class="popover-notification" nz-popover [nzPopoverTitle]="titleTemplate"
+              [nzPopoverContent]="contentTemplate" nzPopoverPlacement="bottom">
+              <i nz-icon class="icon-style" nzType="bell" nzTheme="fill"></i>
+            </a>
+          </nz-badge>
+          <ng-template #titleTemplate>Notificaciones de las próximas 24 horas</ng-template>
+          <ng-template #contentTemplate>
+            <div class="scroll-style">
+              <ng-container *ngIf="events.length; else noItems">
+                <nz-row>
+                  <nz-col>
+                    <p> Posee {{events.length}} eventos próximos</p>
+                  </nz-col>
+                </nz-row>
+                <nz-row>
+                  <button nz-button class="markAsReadButton" nzType="primary" (click)="markAllAsView()">
+                    Marcar todos como leídos
+                  </button>
+                </nz-row>
+                <ng-container *ngFor="let appointment of events">
+                  <nz-badge [nzDot]="!appointment.Notification">
+                    <div nz-row class="popover">
+                      <div nz-col nzSpan="4">
+                        <i nz-icon class="calendar-style" nzType="calendar" nzTheme="outline"></i>
+                      </div>
+                      <div nz-col nzSpan="20">
+                        <a class="upcoming-events" (click)="markAsView(appointment.Id)">{{ appointment.Subject }}</a>
+                        <p class="eventType-style">{{ appointment.StartTime | date: 'dd/MM/yyyy hh:mm a' }} </p>
+                        <p><strong>Tipo de evento: </strong>{{ appointment.EventType}}</p>
+                      </div>
+                    </div>
+                    <hr>
+                  </nz-badge>
+                </ng-container>
+              </ng-container>
+            </div>
+            <ng-template #noItems>
+              <i>No tiene notificaciones de eventos</i>
             </ng-template>
           </ng-template>
         </span>
@@ -93,7 +138,17 @@
             <ul nz-menu class="user-dropdown-item">
               <li nz-menu-item (click)='logoutClicked()'> Cerrar sesión
                 <i nz-icon style="margin-left: 3px;">
-                  <svg xmlns="http://www.w3.org/2000/svg" id="Capa_1" enable-background="new 0 0 551.13 551.13" height="16" viewBox="0 0 551.13 551.13" width="16"><g><path d="m435.616 160.051-24.354 24.354 73.937 73.937h-244.08v34.446h244.08l-73.937 73.937 24.354 24.354 115.514-115.514z" data-original="#000000" class="active-path" data-old_color="#000000" style="fill:#000000"/><path d="m378.902 516.685h-344.456v-482.239h344.456v34.446h34.446v-51.669c0-9.52-7.703-17.223-17.223-17.223h-378.902c-9.52 0-17.223 7.703-17.223 17.223v516.684c0 9.52 7.703 17.223 17.223 17.223h378.902c9.52 0 17.223-7.703 17.223-17.223v-51.668h-34.446z" data-original="#000000" class="active-path" data-old_color="#000000" style="fill:#000000"/></g> </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" id="Capa_1" enable-background="new 0 0 551.13 551.13"
+                    height="16" viewBox="0 0 551.13 551.13" width="16">
+                    <g>
+                      <path
+                        d="m435.616 160.051-24.354 24.354 73.937 73.937h-244.08v34.446h244.08l-73.937 73.937 24.354 24.354 115.514-115.514z"
+                        data-original="#000000" class="active-path" data-old_color="#000000" style="fill:#000000" />
+                      <path
+                        d="m378.902 516.685h-344.456v-482.239h344.456v34.446h34.446v-51.669c0-9.52-7.703-17.223-17.223-17.223h-378.902c-9.52 0-17.223 7.703-17.223 17.223v516.684c0 9.52 7.703 17.223 17.223 17.223h378.902c9.52 0 17.223-7.703 17.223-17.223v-51.668h-34.446z"
+                        data-original="#000000" class="active-path" data-old_color="#000000" style="fill:#000000" />
+                    </g>
+                  </svg>
                 </i>
               </li>
             </ul>
@@ -112,7 +167,8 @@
     <nz-footer nz-row nzJustify="center" nzAlign="middle" [ngClass]="(!!getToken())?'':'fixed-footer'">
       <div nzcol>
         <p class="height-100">
-          <img [src]="!!getToken() ? './assets/Minerva.png' : './assets/MinervaBlanco.png'" alt="Universidad de El Salvador">
+          <img [src]="!!getToken() ? './assets/Minerva.png' : './assets/MinervaBlanco.png'"
+            alt="Universidad de El Salvador">
         </p>
       </div>
       <div nzcol>

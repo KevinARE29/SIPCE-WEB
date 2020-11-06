@@ -11,8 +11,54 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+nz-badge {
+  margin-right: 20px;
+}
+
+nz-divider {
+  width: 150%;
+}
+
+.icon-style {
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  line-height: 35px;
+  text-align: center;
+  color: #ffffff;
+  border-radius: 50%;
+  background: #001529;
+  display: inline-block;
+  vertical-align: middle;
+  border: 0px;
+}
+
+.calendar-style {
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+  margin: 3px;
+}
+
+.markAsReadButton {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5%;
+}
+
+.upcoming-events {
+  display: inline-block;
+  vertical-align: middle;
+  padding-bottom: 5px;
+}
+
+.eventType-style {
+  margin-bottom: 5px;
+}
+
 .app-layout {
-  min-height: 100vh;
+  min-height: 100vh; 
 }
 
 .menu-sidebar {
@@ -98,6 +144,18 @@ nz-avatar {
   font-size: 20px;
   color: #ffffff;
   margin: 5px;
+}
+
+.scroll-style {
+  max-height: 500px;
+  max-width: 300px;
+  overflow-y: scroll;
+}
+
+
+.popover-notification {
+  width: 250px;
+  padding-bottom: 25%;
 }
 
 .popover {
