@@ -12,8 +12,6 @@ import * as timeZoneNames from 'cldr-data/main/es/timeZoneNames.json';
 import language from './../../shared/calendar-language.json';
 import { Appointment } from '../../shared/appointment.model';
 
-import { StudentService } from '../../../students/shared/student.service';
-import { UserService } from '../../../users/shared/user.service';
 import { EventService } from '../../shared/event.service';
 import { add } from 'date-fns';
 
@@ -33,6 +31,7 @@ export class UpcomingEventsComponent implements OnInit {
 
   startDate: Date;
   tomorrowDate: Date;
+  maxDateCalendar: Date;
   endDate: Date;
 
   @ViewChild('scheduleObj')
@@ -51,28 +50,28 @@ export class UpcomingEventsComponent implements OnInit {
     dataSource: null
   };
 
-  constructor(
-    private eventService: EventService,
-    private studentService: StudentService,
-    private userService: UserService
-  ) {}
+  constructor(private eventService: EventService) {}
 
   ngOnInit(): void {
     this.events = new Array<Appointment>();
     //Getting tomorrow date and setting the hour to 23:59:59
     this.tomorrowDate = new Date();
     this.tomorrowDate = add(new Date(), {
+      days: 2
+    });
+    this.tomorrowDate.setHours(0);
+    this.tomorrowDate.setMinutes(0);
+    this.tomorrowDate.setSeconds(0);
+
+    this.maxDateCalendar = add(new Date(), {
       days: 1
     });
-    this.tomorrowDate.setHours(23);
-    this.tomorrowDate.setMinutes(59);
-    this.tomorrowDate.setSeconds(59);
 
     this.startDate = new Date();
     this.endDate = this.tomorrowDate;
     this.getEvents(this.startDate, this.endDate);
     this.minDate = this.startDate;
-    this.maxDate = this.endDate;
+    this.maxDate = this.maxDateCalendar;
   }
 
   applyCategoryColor(args: EventRenderedArgs): void {
@@ -96,6 +95,7 @@ export class UpcomingEventsComponent implements OnInit {
           dataSource: events
         };
         this.loading = false;
+        console.log('eventos:', events);
         if (!this.toolBarItemRendered) this.toolBarItemRendered = true;
       },
       () => {
