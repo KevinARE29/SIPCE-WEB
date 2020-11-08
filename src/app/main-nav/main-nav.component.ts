@@ -16,7 +16,6 @@ import { Appointment } from '../../app/calendar/shared/appointment.model';
 import { add } from 'date-fns';
 import { SocketioService } from '../shared/services/socketio.service';
 import { EventService } from '../calendar/shared/event.service';
-import { NzMessageService } from 'ng-zorro-antd/message';
 
 interface RequestNotifications {
   total: number;
@@ -54,23 +53,11 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
     private router: Router,
     private socketService: SocketioService,
     private authService: AuthService,
-    private eventService: EventService,
-    private message: NzMessageService
+    private eventService: EventService
   ) {}
 
   ngOnInit(): void {
     this.year = new Date().getFullYear();
-    this.events = new Array<Appointment>();
-    //Getting tomorrow date and setting the hour to 23:59:59
-    this.tomorrowDate = new Date();
-    this.tomorrowDate = add(new Date(), {
-      days: 1
-    });
-    this.tomorrowDate.setHours(23);
-    this.tomorrowDate.setMinutes(59);
-    this.tomorrowDate.setSeconds(59);
-    this.startDate = new Date();
-    this.endDate = this.tomorrowDate;
   }
 
   ngAfterContentChecked(): void {
@@ -92,6 +79,18 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
     }
 
     if (!!this.username && hasPermissionForNotifications) {
+      //Getting tomorrow date and setting the hour to 23:59:59
+      this.events = new Array<Appointment>();
+      this.tomorrowDate = new Date();
+      this.tomorrowDate = add(new Date(), {
+        days: 2
+      });
+      this.tomorrowDate.setHours(0);
+      this.tomorrowDate.setMinutes(0);
+      this.tomorrowDate.setSeconds(0);
+      this.startDate = new Date();
+      this.endDate = this.tomorrowDate;
+      // getting events with the specific date range
       this.getEvents(this.startDate, this.endDate);
     }
 
@@ -177,12 +176,10 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
     this.eventsIds = new Array<number>();
 
     const eventRead = this.events.find((p) => p.Id === id);
-    if (eventRead.notification === false) {
-      eventRead.notification = true;
+    if (eventRead.Notification === false) {
+      eventRead.Notification = true;
       this.eventsIds.push(eventRead.Id);
-      this.eventService.markEventsAsRead(this.eventsIds).subscribe(() => {
-        this.message.success('Evento marcado como leído exitosamente');
-      });
+      this.eventService.markEventsAsRead(this.eventsIds).subscribe();
     }
     this.router.navigate(['calendario/proximos']);
   }
@@ -196,9 +193,8 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
 
     this.eventService.markEventsAsRead(this.eventsIds).subscribe(() => {
       this.events.forEach((appointment) => {
-        if (appointment.notification === false) appointment.notification = true;
+        if (appointment.Notification === false) appointment.Notification = true;
       });
-      this.message.success('Eventos marcados como leídos exitosamente');
     });
   }
 

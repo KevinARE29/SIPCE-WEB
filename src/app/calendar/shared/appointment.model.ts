@@ -14,6 +14,6 @@ export class Appointment {
   RecurrenceException: string;
   Description: string;
   Participants: User[];
-  notification: boolean;
+  Notification: boolean;
   Student: Student;
 }
