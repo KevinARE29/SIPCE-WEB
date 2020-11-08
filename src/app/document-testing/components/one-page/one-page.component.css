@@ -1,0 +1,22 @@
+.ant-card-body {
+    height: 792px;
+    width: 612px;
+    background-color: white;
+    border: 1px dashed pink;
+    margin: 0 auto;
+    padding: 50px;
+}
+
+.logo {
+    width: 100px;
+}
+
+.content {
+    margin-top: 20px;
+}
+
+.signature {
+    width: 100%;
+    margin-top: 25px;
+    border-bottom: 1px solid black;
+}
