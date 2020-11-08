@@ -1,1 +1,41 @@
-<p>large-document works!</p>
+<div class="ant-card-body">
+    <div nz-row>
+        <div nz-col nzSpan="4" nzOffset="1">
+            <img class="logo" src="assets/logo-maristas-color.png" alt="">
+        </div>
+        <div nz-col nzSpan="12" nzOffset="2">
+            <h2>LICEO SALVADOREÑO</h2>
+            <h3>Documento de prueba</h3>
+            <span>{{ today }}</span>
+        </div>
+    </div>
+
+    <div nz-row class="content" nzJustify="center">
+        <div nz-col>
+            <nz-table #basicTable [nzData]="listOfData" [nzFrontPagination]=false nzSize="small">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Grade</th>
+                    <th>Section</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of basicTable.data">
+                    <td>{{ data.id }}</td>
+                    <td>{{ data.text }}</td>
+                    <td>{{ data.anotherText }}</td>
+                    <td>A</td>
+                  </tr>
+                </tbody>
+              </nz-table>
+        </div>
+    </div>
+
+    <div nz-row id="signature">
+        <div nz-col class="signature" nzSpan="10"></div>
+        <div nz-col nzSpan="24"> Nombre del orientador </div>
+        <div nz-col nzSpan="24"> Orientador de sexto grado </div>
+    </div>
+</div>
