@@ -365,8 +365,9 @@ export class CalendarComponent implements OnInit {
     this.results = new Array<Student>();
     this.resultsUsers = new Array<User>();
     this.showAlert = false;
-
+    console.log(args.type);
     if (args.type === 'Editor') {
+      console.log('EDITOR');
       const startElement: HTMLInputElement = args.element.querySelector('#StartTime') as HTMLInputElement;
       if (!startElement.classList.contains('e-datetimepicker')) {
         new DateTimePicker(
@@ -387,6 +388,20 @@ export class CalendarComponent implements OnInit {
 
       document.getElementById('RecurrenceRule').style.display =
         this.scheduleObj.currentAction === 'EditOccurrence' ? 'none' : 'block';
+
+      const deleteButton = document.getElementsByClassName('e-event-delete');
+      if (deleteButton) (deleteButton[0] as HTMLButtonElement).disabled = true;
+
+      if (this.scheduleObj.currentAction === 'EditSeries') {
+        const deleteButton = document.getElementsByClassName('e-event-save');
+        if (deleteButton) (deleteButton[0] as HTMLButtonElement).disabled = true;
+      }
+      console.log(this.scheduleObj.currentAction);
+    } else if (args.type === 'QuickInfo') {
+      const deleteButtonIcon = document.getElementsByClassName('e-delete');
+      const editButtonIcon = document.getElementsByClassName('e-edit');
+      (deleteButtonIcon[0] as HTMLButtonElement).disabled = true;
+      // (editButtonIcon[0] as HTMLButtonElement).disabled = true;
     }
   }
 
