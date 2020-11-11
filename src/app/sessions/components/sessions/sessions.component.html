@@ -6,7 +6,8 @@
 
 <div nz-row [nzGutter]="[10, 10]">
     <!-- Code -->
-    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+    <!-- To add this in a single row on md and sm, we use offset and pull -->
+    <div nz-col nzXs="24" [nzSm]="{span: 12, pull: 12, offset: 12}"  [nzLg]="{span: 6, offset: 0, pull: 0}">
         <label>NIE: </label>
         <nz-input-group [nzSuffix]="inputClearCode">
             <input nz-input [(ngModel)]="searchStudentParams.code" placeholder="Buscar NIE" />
@@ -17,7 +18,7 @@
     </div>
 
     <!-- Name -->
-    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="9" nzXl="9">
         <label>Nombre: </label>
         <nz-input-group [nzSuffix]="inputClearName">
             <input nz-input [(ngModel)]="searchStudentParams.firstname" placeholder="Buscar nombre" />
@@ -28,7 +29,7 @@
     </div>
 
     <!-- Lastname -->
-    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="9" nzXl="9">
         <label>Apellido: </label>
         <nz-input-group [nzSuffix]="inputClearLastname">
             <input nz-input [(ngModel)]="searchStudentParams.lastname" placeholder="Buscar apellido" />
@@ -39,7 +40,7 @@
     </div>
 
     <!-- Shift -->
-    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" nzXl="6">
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="8" nzXl="6">
         <label>Turno: </label>
         <nz-input-group>
             <nz-select class="shift" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar turno"
@@ -50,7 +51,7 @@
     </div>
 
     <!-- Grade -->
-    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" nzXl="6">
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="8" nzXl="6">
         <label>Grado: </label>
         <nz-input-group>
             <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar grado"
@@ -60,17 +61,8 @@
         </nz-input-group>
     </div>
 
-    <!-- Registered at -->
-    <div nz-col nzXs="24" nzSm="24" nzMd="18" nzLg="12" nzXl="6">
-        <label>Fecha: </label>
-        <nz-input-group>
-            <nz-range-picker nzFormat="dd/MM/yyyy" [ngModel]="searchSessionParams.registeredAt"
-                [nzDisabledDate]="disabledDate" (ngModelChange)="onChangeDatePicker($event)"></nz-range-picker>
-        </nz-input-group>
-    </div>
-
     <!-- Search button-->
-    <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="4" nzXl="4">
+    <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="8" nzXl="12">
       <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
         <button nz-button nzType="primary" (click)="getSessions(null)">Buscar</button>
       </div>
@@ -97,7 +89,7 @@
                         <th nzColumnKey="lastname" [nzSortFn]="true" [nzSortPriority]="3">Apellidos</th>
                         <th nzColumnKey="currentShift" [nzSortFn]="true" [nzSortPriority]="4">Turno</th>
                         <th nzColumnKey="currentGrade" [nzSortFn]="true" [nzSortPriority]="5">Grado</th>
-                        <th nzColumnKey="sessionDate" [nzSortFn]="true" [nzSortPriority]="6">Última consejería</th>
+                        <th nzColumnKey="sessions" [nzSortFn]="true" [nzSortPriority]="6">Cant. de sesiones</th>
                         <th [nzAlign]="'center'">Acción</th>
                     </tr>
                 </thead>
