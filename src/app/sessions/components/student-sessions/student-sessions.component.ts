@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { subMonths, differenceInCalendarDays } from 'date-fns';
+
+import { StudentService } from 'src/app/students/shared/student.service';
 
 import { EventTypes } from './../../../shared/enums/event-types.enum';
 import { Pagination } from 'src/app/shared/pagination.model';
 import { Session } from '../../shared/session.model';
+import { Student } from 'src/app/students/shared/student.model';
 
 @Component({
   selector: 'app-student-sessions',
@@ -15,13 +19,22 @@ export class StudentSessionsComponent implements OnInit {
   searchSessionParams: Session;
   eventTypes: any;
 
+  // Student data
+  student: Student;
+  loadingStudent = true;
+
   // Table variables
   loading = false;
   listOfDisplayData: Session[];
   pagination: Pagination;
-  constructor() { }
+
+  constructor(
+    private route: ActivatedRoute,
+    private studentService: StudentService
+  ) { }
 
   ngOnInit(): void {
+    this.student = new Student();
     this.init();
   }
 
@@ -37,6 +50,21 @@ export class StudentSessionsComponent implements OnInit {
     this.pagination = new Pagination();
     this.pagination.perPage = 10;
     this.pagination.page = 1;
+
+    this.getStudent();
+  }
+
+  getStudent(): void {
+    const param = this.route.snapshot.params['student'];
+
+    if (typeof param === 'string' && !Number.isNaN(Number(param))) {
+      const id = Number(param);
+
+      this.studentService.getStudent(id).subscribe((student) => {
+        this.student = student;
+        this.loadingStudent = false;
+      });
+    } 
   }
 
   getSessions(params): void {

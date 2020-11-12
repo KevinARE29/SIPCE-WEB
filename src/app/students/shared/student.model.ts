@@ -22,5 +22,5 @@ export class Student {
   canBeDeleted: boolean;
   currentShift: ShiftPeriodGrade;
   currentGrade: ShiftPeriodGrade;
-  currentPhoto: string;
+  currentPhoto: unknown;
 }

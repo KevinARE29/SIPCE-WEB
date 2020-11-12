@@ -186,6 +186,7 @@ export class StudentService {
         student.startedGrade = result['data'].startedGrade;
         student.siblings = result['data'].siblings;
         student.registrationYear = result['data'].registrationYear;
+        student.currentPhoto = result['data'].currentPhoto;
 
         student.responsibles = new Array<Responsible>();
         student.images = new Array<unknown>();
