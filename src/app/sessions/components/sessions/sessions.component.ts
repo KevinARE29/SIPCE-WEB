@@ -2,8 +2,13 @@ import { Component, OnInit } from '@angular/core';
 
 import { subMonths, differenceInCalendarDays } from 'date-fns';
 
+
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
+
 import { AuthService } from 'src/app/login/shared/auth.service';
 import { UserService } from 'src/app/users/shared/user.service';
+import { SessionService } from '../../shared/session.service';
 
 import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 import { Pagination } from 'src/app/shared/pagination.model';
@@ -30,8 +35,7 @@ export class SessionsComponent implements OnInit {
   actions: unknown[] = [];
 
   // Search params
-  searchStudentParams: Student;
-  searchSessionParams: Session;
+  searchParams: Student;
   shifts: Shift[];
   grades: ShiftPeriodGrade[];
 
@@ -40,7 +44,12 @@ export class SessionsComponent implements OnInit {
   listOfDisplayData: Student[];
   pagination: Pagination;
 
-  constructor(private authService: AuthService, private userService: UserService) { }
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+    private sessionService: SessionService,
+    private notification: NzNotificationService
+  ) { }
 
   ngOnInit(): void {
     this.init();
@@ -53,10 +62,9 @@ export class SessionsComponent implements OnInit {
     let date = subMonths(currentDate, 1);
     date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
 
-    this.searchSessionParams = new Session();
-    this.searchStudentParams = new Student();
-    this.searchStudentParams.currentShift = new ShiftPeriodGrade();
-    this.searchStudentParams.grade = new ShiftPeriodGrade();
+    this.searchParams = new Student();
+    this.searchParams.shift = new ShiftPeriodGrade();
+    this.searchParams.grade = new ShiftPeriodGrade();
 
     this.shifts = new Array<Shift>();
     this.grades = new Array<ShiftPeriodGrade>();
@@ -104,26 +112,38 @@ export class SessionsComponent implements OnInit {
           this.shifts.push({ id: assignation[0]['shift'].id, name: assignation[0]['shift'].name, grades });
         });
       }
-
-      if (this.shifts.length) console.log(this.shifts); // this.getSessions();
-      this.loading = false;
     });
   }
 
-  getSessions(params): void {
-    console.log(params);
+  getSessions(params: NzTableQueryParams): void {
+    this.loading = true;
+
+    this.sessionService.getSessions(params, this.searchParams).subscribe(
+      (data) => {
+        this.pagination = data['pagination'];
+        this.listOfDisplayData = data['data'];
+
+        this.loading = false;
+      },
+      (error) => {
+        this.loading = false;
+        const statusCode = error.statusCode;
+        const notIn = [401, 403];
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
+            nzDuration: 30000
+          });
+        }
+      }
+    );
   }
 
   cleanGradesSelect(shift: number): void {
     this.grades = shift ? this.shifts.find((x) => x.id === shift).grades : new Array<ShiftPeriodGrade>();
     if (this.grades) this.grades.sort((a, b) => a.id - b.id);
     this.getSessions(null);
-    this.searchStudentParams.grade.id = null;
-  }
-
-  onChangeDatePicker(result: Date[]): void {
-    this.searchSessionParams['registeredAt'][0] = result[0];
-    this.searchSessionParams['registeredAt'][1] = result[1];
+    this.searchParams.grade.id = null;
   }
 
   disabledDate = (current: Date): boolean => {

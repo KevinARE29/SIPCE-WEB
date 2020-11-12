@@ -10,10 +10,10 @@
     <div nz-col nzXs="24" [nzSm]="{span: 12, pull: 12, offset: 12}"  [nzLg]="{span: 6, offset: 0, pull: 0}">
         <label>NIE: </label>
         <nz-input-group [nzSuffix]="inputClearCode">
-            <input nz-input [(ngModel)]="searchStudentParams.code" placeholder="Buscar NIE" />
+            <input nz-input [(ngModel)]="searchParams.code" placeholder="Buscar NIE" />
         </nz-input-group>
         <ng-template #inputClearCode>
-            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchStudentParams.code" (click)="searchStudentParams.code = null; getSessions(null)"></i>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.code" (click)="searchParams.code = null; getSessions(null)"></i>
         </ng-template>
     </div>
 
@@ -21,10 +21,10 @@
     <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="9" nzXl="9">
         <label>Nombre: </label>
         <nz-input-group [nzSuffix]="inputClearName">
-            <input nz-input [(ngModel)]="searchStudentParams.firstname" placeholder="Buscar nombre" />
+            <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Buscar nombre" />
         </nz-input-group>
         <ng-template #inputClearName>
-            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchStudentParams.firstname" (click)="searchStudentParams.firstname = null; getSessions(null)"></i>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.firstname" (click)="searchParams.firstname = null; getSessions(null)"></i>
         </ng-template>
     </div>
 
@@ -32,10 +32,10 @@
     <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="9" nzXl="9">
         <label>Apellido: </label>
         <nz-input-group [nzSuffix]="inputClearLastname">
-            <input nz-input [(ngModel)]="searchStudentParams.lastname" placeholder="Buscar apellido" />
+            <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Buscar apellido" />
         </nz-input-group>
         <ng-template #inputClearLastname>
-            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchStudentParams.lastname" (click)="searchStudentParams.lastname = null; getSessions(null)"></i>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.lastname" (click)="searchParams.lastname = null; getSessions(null)"></i>
         </ng-template>
     </div>
 
@@ -44,7 +44,7 @@
         <label>Turno: </label>
         <nz-input-group>
             <nz-select class="shift" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar turno"
-                [(ngModel)]="searchStudentParams.currentShift.id" (ngModelChange)="cleanGradesSelect($event);">
+                [(ngModel)]="searchParams.shift.id" (ngModelChange)="cleanGradesSelect($event);">
                 <nz-option *ngFor="let shift of shifts" [nzLabel]="shift.name" [nzValue]="shift.id"></nz-option>
             </nz-select>
         </nz-input-group>
@@ -55,7 +55,7 @@
         <label>Grado: </label>
         <nz-input-group>
             <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar grado"
-                [(ngModel)]="searchStudentParams.grade.id" (ngModelChange)="getSessions(null)">
+                [(ngModel)]="searchParams.grade.id" (ngModelChange)="getSessions(null)">
                 <nz-option *ngFor="let grade of grades" [nzLabel]="grade.name" [nzValue]="grade.id"></nz-option>
             </nz-select>
         </nz-input-group>
@@ -89,44 +89,28 @@
                         <th nzColumnKey="lastname" [nzSortFn]="true" [nzSortPriority]="3">Apellidos</th>
                         <th nzColumnKey="currentShift" [nzSortFn]="true" [nzSortPriority]="4">Turno</th>
                         <th nzColumnKey="currentGrade" [nzSortFn]="true" [nzSortPriority]="5">Grado</th>
-                        <th nzColumnKey="sessions" [nzSortFn]="true" [nzSortPriority]="6">Cant. de sesiones</th>
+                        <th nzColumnKey="sessions">Cant. de sesiones</th>
                         <th [nzAlign]="'center'">Acción</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td [nzAlign]="'center'">
-                            <a [routerLink]="['/estudiantes', 0, 'detalle']">
-                                Perfil
-                            </a>
-                            <nz-divider nzType="vertical"></nz-divider>
-                            <a>Expediente</a>
-                            <nz-divider nzType="vertical"></nz-divider>
-                            <a [routerLink]="['/sesiones', 0]">Sesiones</a>
-                        </td>
-                    </tr>
+                    <!-- <tr *ngFor="let data of filterTable.data"> -->
                     <tr *ngFor="let data of filterTable.data">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>{{data.code}}</td>
+                        <td>{{data.firstname}}</td>
+                        <td>{{data.lastname}}</td>
+                        <td>{{data.currentShift.name}}</td>
+                        <td>{{data.currentGrade.name}}</td>
+                        <td>0</td>
                         <td [nzAlign]="'center'">
-                            <a [routerLink]="['/estudiantes', 0, 'detalle']">
+                            <a [routerLink]="['/estudiantes', data.id, 'detalle']">
                                 Perfil
                             </a>
                             <nz-divider nzType="vertical"></nz-divider>
-                            <a>Expediente</a>
-                            <nz-divider nzType="vertical"></nz-divider>
-                            <a>Sesiones</a>
+                            <!-- <a>Expediente</a>
+                            <nz-divider nzType="vertical"></nz-divider> -->
+                            <a [routerLink]="['/sesiones', data.id]">Sesiones</a>
                         </td>
                     </tr>
                 </tbody>
