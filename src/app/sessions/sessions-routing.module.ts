@@ -6,6 +6,10 @@ import { AuthGuard } from '../login/guards/auth.guard';
 import { SessionsComponent } from './components/sessions/sessions.component';
 import { StudentSessionsComponent } from './components/student-sessions/student-sessions.component';
 
+import { StudentSessionComponent } from './components/student-session/student-session.component';
+import { ResponsibleInterviewComponent } from './components/responsible-interview/responsible-interview.component';
+import { TeacherInterviewComponent } from './components/teacher-interview/teacher-interview.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -16,6 +20,24 @@ const routes: Routes = [
   {
     path: ':student',
     component: StudentSessionsComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 22 } // TODO: Update permission id
+  }, 
+  {
+    path: ':student/sesion-individual',
+    component: StudentSessionComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 22 } // TODO: Update permission id
+  },
+  {
+    path: ':student/entrevista-docente',
+    component: TeacherInterviewComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 22 } // TODO: Update permission id
+  },
+  {
+    path: ':student/entrevista-responsable',
+    component: ResponsibleInterviewComponent,
     canActivate: [AuthGuard],
     data: { permission: 22 } // TODO: Update permission id
   }
