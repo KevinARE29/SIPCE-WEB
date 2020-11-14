@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 
 import { subMonths, differenceInCalendarDays } from 'date-fns';
 
-
 import { EventTypes } from './../../../shared/enums/event-types.enum';
 import { Pagination } from 'src/app/shared/pagination.model';
 import { Session } from '../../shared/session.model';
