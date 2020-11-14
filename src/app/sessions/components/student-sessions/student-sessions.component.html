@@ -1,30 +1,4 @@
-
-<nz-spin nzTip="Cargando ..." [nzSpinning]="loadingStudent">
-    <div nz-row nzJustify="center" [nzGutter]="[20, 10]">
-        <div nz-col>
-            <div nz-row nzJustify="center">
-                <ng-container *ngIf="student.currentPhoto; else defaultPhoto">
-                    <nz-avatar [nzSize]="64" [nzSrc]="student.currentPhoto.path"></nz-avatar>
-                </ng-container>
-                <ng-template #defaultPhoto>
-                    <nz-avatar [nzSize]="64" nzIcon="user"></nz-avatar>
-                </ng-template>
-            </div>
-            <div nz-row nzJustify="center" class="links">
-                <a [routerLink]="['/estudiantes', student.id, 'detalle']">Perfil</a>
-                <!-- <a>Expediente</a> -->
-            </div>
-        </div>
-    
-        <div class="student-data" nz-col>
-            <p>{{student.firstname}} {{student.lastname}}</p>
-            <p>{{student.code}}</p>
-            <p>Edad:  <strong>{{student.age}}</strong></p>
-            <p>Grado y sección:  <strong>{{student.grade?.name}} {{student.section?.name || '-'}}</strong></p>
-            <p>Ingreso:  <strong>{{student.registrationYear}} ({{student.startedGrade?.name}})</strong></p>
-        </div>
-    </div>
-</nz-spin>
+<app-students-details [id]="studentId"></app-students-details>
 
 <!-- Pre-create button-->
 <div nz-row nzJustify="center">

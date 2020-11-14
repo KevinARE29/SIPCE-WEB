@@ -3,12 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 
 import { subMonths, differenceInCalendarDays } from 'date-fns';
 
-import { StudentService } from 'src/app/students/shared/student.service';
 
 import { EventTypes } from './../../../shared/enums/event-types.enum';
 import { Pagination } from 'src/app/shared/pagination.model';
 import { Session } from '../../shared/session.model';
-import { Student } from 'src/app/students/shared/student.model';
+
 
 @Component({
   selector: 'app-student-sessions',
@@ -16,12 +15,12 @@ import { Student } from 'src/app/students/shared/student.model';
   styleUrls: ['./student-sessions.component.css']
 })
 export class StudentSessionsComponent implements OnInit {
+
+  // Param.
+  studentId: number;
+
   searchSessionParams: Session;
   eventTypes: any;
-
-  // Student data
-  student: Student;
-  loadingStudent = true;
 
   // Table variables
   loading = false;
@@ -29,12 +28,10 @@ export class StudentSessionsComponent implements OnInit {
   pagination: Pagination;
 
   constructor(
-    private route: ActivatedRoute,
-    private studentService: StudentService
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    this.student = new Student();
     this.init();
   }
 
@@ -51,19 +48,10 @@ export class StudentSessionsComponent implements OnInit {
     this.pagination.perPage = 10;
     this.pagination.page = 1;
 
-    this.getStudent();
-  }
-
-  getStudent(): void {
     const param = this.route.snapshot.params['student'];
 
     if (typeof param === 'string' && !Number.isNaN(Number(param))) {
-      const id = Number(param);
-
-      this.studentService.getStudent(id).subscribe((student) => {
-        this.student = student;
-        this.loadingStudent = false;
-      });
+      this.studentId = Number(param);
     } 
   }
 
