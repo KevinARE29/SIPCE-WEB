@@ -2,7 +2,7 @@
     <div nz-row nzJustify="center" [nzGutter]="[20, 10]">
 
         <!-- Photo and links -->
-        <div nz-col nzXl="6">
+        <div nz-col nzXl="4">
             <div nz-row nzJustify="center">
                 <ng-container *ngIf="student.currentPhoto; else defaultPhoto">
                     <nz-avatar [nzSize]="64" [nzSrc]="student.currentPhoto['path']"></nz-avatar>
@@ -18,29 +18,12 @@
         </div>
     
         <!-- Student basic data -->
-        <div class="student-data" nz-col nzXl="6">
+        <div class="student-data" nz-col>
             <p>{{student.firstname}} {{student.lastname}}</p>
             <p>{{student.code}}</p>
             <p>Edad:  <strong>{{student.age}}</strong></p>
             <p>Grado y sección:  <strong>{{student.grade?.name}} {{student.section?.name || '-'}}</strong></p>
             <p>Ingreso:  <strong>{{student.registrationYear}} ({{student.startedGrade?.name}})</strong></p>
-        </div>
-
-        <!-- Student siblings and responsibles -->
-        <div class="student-data" nz-col nzXl="6">
-            <div *ngIf="student.siblings.length">
-                <strong>Hermanos</strong>
-                <ul type="square">
-                    <li *ngFor="let sibling of student.siblings">{{ sibling.firstname }} {{ sibling.lastname }} ({{ sibling.status }})</li>
-                </ul>
-            </div>
-
-            <div *ngIf="student.responsibles.length">
-                <strong>Responsables</strong>
-                <ul type="square">
-                    <li *ngFor="let responsible of student.responsibles">{{ responsible.firstname }} {{ responsible.lastname }} ({{ responsible.relationship }})</li>
-                </ul>
-            </div>
         </div>
 
     </div>
