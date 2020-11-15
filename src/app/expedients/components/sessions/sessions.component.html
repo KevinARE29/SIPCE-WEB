@@ -110,7 +110,7 @@
                             <nz-divider nzType="vertical"></nz-divider>
                             <!-- <a>Expediente</a>
                             <nz-divider nzType="vertical"></nz-divider> -->
-                            <a [routerLink]="['/expedientes/estudiantes', data.id, 'sesiones']">Sesiones</a>
+                            <a [routerLink]="['expedientes', data.expedient?.id ,'estudiantes', data.id, 'sesiones']">Sesiones</a>
                         </td>
                     </tr>
                 </tbody>
