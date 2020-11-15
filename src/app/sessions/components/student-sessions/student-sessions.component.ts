@@ -64,8 +64,8 @@ export class StudentSessionsComponent implements OnInit {
   }
 
   onChangeDatePicker(result: Date[]): void {
-    this.searchSessionParams['registeredAt'][0] = result[0];
-    this.searchSessionParams['registeredAt'][1] = result[1];
+    this.searchSessionParams.startedAt = result[0];
+    this.searchSessionParams.finishAt = result[1];
   }
 
   disabledDate = (current: Date): boolean => {

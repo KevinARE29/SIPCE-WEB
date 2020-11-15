@@ -20,8 +20,7 @@
     <div nz-col nzXs="24" nzSm="16" nzMd="12" nzLg="8">
         <label>Fecha: </label>
         <nz-input-group>
-            <nz-range-picker nzFormat="dd/MM/yyyy" [ngModel]="searchSessionParams.registeredAt"
-                [nzDisabledDate]="disabledDate" (ngModelChange)="onChangeDatePicker($event)"></nz-range-picker>
+            <nz-range-picker nzFormat="dd/MM/yyyy" [nzDisabledDate]="disabledDate" (nzOnCalendarChange)="onChangeDatePicker($event)"></nz-range-picker>
         </nz-input-group>
     </div>
 
@@ -29,7 +28,7 @@
     <div nz-col nzXs="24" nzSm="16" nzMd="12" [nzLg]="{offset: 2, span: 8}">
         <label>Tipo de evento: </label>
         <nz-input-group>
-            <nz-select class="relation" nzShowSearch nzAllowClear [(ngModel)]="searchSessionParams.type"
+            <nz-select class="relation" nzShowSearch nzAllowClear [(ngModel)]="searchSessionParams.sessionType"
                 (ngModelChange)="getSessions(null)">
                 <nz-option *ngFor="let type of eventTypes" [nzValue]="type" [nzLabel]="type">
                 </nz-option>
