@@ -13,9 +13,11 @@
     </div>
 </div>
 
+<br>
+
 <div nz-row [nzGutter]="[10, 10]">
     <!-- Registered at -->
-    <div nz-col nzXs="24" nzSm="24" nzMd="16" nzLg="12" nzXl="6">
+    <div nz-col nzXs="24" nzSm="16" nzMd="12" nzLg="8">
         <label>Fecha: </label>
         <nz-input-group>
             <nz-range-picker nzFormat="dd/MM/yyyy" [ngModel]="searchSessionParams.registeredAt"
@@ -24,7 +26,7 @@
     </div>
 
     <!-- Event type -->
-    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="6" nzXl="6">
+    <div nz-col nzXs="24" nzSm="16" nzMd="12" [nzLg]="{offset: 2, span: 8}">
         <label>Tipo de evento: </label>
         <nz-input-group>
             <nz-select class="relation" nzShowSearch nzAllowClear [(ngModel)]="searchSessionParams.type"
@@ -36,8 +38,8 @@
     </div>
 
     <!-- Search button-->
-    <div nz-col nzXs="24" nzSm="12" nzMd="24" nzLg="4" nzXl="4">
-        <div class="btn-container" nz-row nzAlign="bottom">
+    <div nz-col nzXs="24" nzLg="6">
+        <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
             <button nz-button nzType="primary" (click)="getSessions(null)">Buscar</button>
         </div>
     </div>

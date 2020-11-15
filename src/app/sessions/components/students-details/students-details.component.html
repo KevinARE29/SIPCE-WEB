@@ -1,8 +1,8 @@
 <nz-spin nzTip="Cargando ..." [nzSpinning]="loadingStudent">
-    <div nz-row nzJustify="center" [nzGutter]="[20, 10]">
+    <div nz-row [nzGutter]="[20, 10]">
 
         <!-- Photo and links -->
-        <div nz-col nzXl="4">
+        <div nz-col [nzXs]="{span: 8, offset: 4}" [nzSm]="{span: 6, offset: 6}" [nzLg]="{span: 4, offset: 8}">
             <div nz-row nzJustify="center">
                 <ng-container *ngIf="student.currentPhoto; else defaultPhoto">
                     <nz-avatar [nzSize]="64" [nzSrc]="student.currentPhoto['path']"></nz-avatar>
@@ -18,7 +18,7 @@
         </div>
     
         <!-- Student basic data -->
-        <div class="student-data" nz-col>
+        <div class="student-data" nz-col nzXs="12">
             <p>{{student.firstname}} {{student.lastname}}</p>
             <p>{{student.code}}</p>
             <p>Edad:  <strong>{{student.age}}</strong></p>
