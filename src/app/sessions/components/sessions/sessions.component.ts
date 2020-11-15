@@ -13,11 +13,11 @@ import { SessionService } from '../../shared/session.service';
 import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 import { Pagination } from 'src/app/shared/pagination.model';
 import { Permission } from 'src/app/shared/permission.model';
-import { Student } from 'src/app/students/shared/student.model';
 import { Session } from '../../shared/session.model';
+import { StudentWithSessions } from '../../shared/student-with-sessions.model';
 
 export interface ISessions {
-  student: Student;
+  student: StudentWithSessions;
   session: Session;
 }
 export interface Shift {
@@ -35,13 +35,13 @@ export class SessionsComponent implements OnInit {
   actions: unknown[] = [];
 
   // Search params
-  searchParams: Student;
+  searchParams: StudentWithSessions;
   shifts: Shift[];
   grades: ShiftPeriodGrade[];
 
   // Table variables
   loading = false;
-  listOfDisplayData: Student[];
+  listOfDisplayData: StudentWithSessions[];
   pagination: Pagination;
 
   constructor(
@@ -62,7 +62,7 @@ export class SessionsComponent implements OnInit {
     let date = subMonths(currentDate, 1);
     date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
 
-    this.searchParams = new Student();
+    this.searchParams = new StudentWithSessions();
     this.searchParams.shift = new ShiftPeriodGrade();
     this.searchParams.grade = new ShiftPeriodGrade();
 

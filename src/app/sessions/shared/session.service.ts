@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError, forkJoin } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
-import { Student } from 'src/app/students/shared/student.model';
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
+import { StudentWithSessions } from './student-with-sessions.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +22,8 @@ export class SessionService {
     this.baseUrl = environment.apiURL;
   }
 
-  getSessions(params: NzTableQueryParams, search: Student): Observable<Student[]> {
-    let url = this.baseUrl + 'students';
+  getSessions(params: NzTableQueryParams, search: StudentWithSessions): Observable<StudentWithSessions[]> {
+    let url = this.baseUrl + 'sessions';
     let queryParams = '';
 
     // Params
@@ -54,7 +54,6 @@ export class SessionService {
     }
 
     if (search) {
-      console.log(search);
       if (search.code) queryParams += '&code=' + search.code;
 
       if (search.firstname) queryParams += '&firstname=' + search.firstname;
@@ -70,7 +69,7 @@ export class SessionService {
 
     url += queryParams;
 
-    return this.http.get<Student[]>(url).pipe(
+    return this.http.get<StudentWithSessions[]>(url).pipe(
       catchError(this.handleError())
     );
   }
