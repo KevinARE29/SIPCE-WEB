@@ -9,7 +9,7 @@
 <!-- Pre-create button-->
 <div nz-row nzJustify="center">
     <div class="btn-container">
-        <button nz-button nzType="primary">Crear nuevo registro</button>
+        <button nz-button nzType="primary" (click)="setShowModal(true)">Crear nuevo registro</button>
     </div>
 </div>
 
@@ -100,3 +100,25 @@
         </nz-spin>
     </div>
 </div>
+
+<!-- Create session modal -->
+<nz-modal [(nzVisible)]="showModal" nzTitle="Seleccione el tipo de entrevista" [nzContent]="modalContent"
+    nzOkText="Continuar" nzCancelText="Cancelar" (nzOnOk)="createSession()" (nzOnCancel)="setShowModal(false)">
+    <!-- Modal content -->
+    <ng-template #modalContent>
+        <!-- Event type -->
+        <div nz-row nzJustify="center">
+            <div nz-col nzXs="24" nzMd="18">
+                <nz-input-group>
+                    <nz-select [(ngModel)]="createEventType">
+                        <!-- The value of the option is the route to the form component -->
+                        <nz-option nzValue="" nzLabel="Seleccionar..." [nzDisabled]="true"></nz-option>
+                        <nz-option nzValue="sesion-individual" nzLabel="Sesión con estudiante"></nz-option>
+                        <nz-option nzValue="entrevista-docente" nzLabel="Entrevista con docente titular"></nz-option>
+                        <nz-option nzValue="entrevista-responsable" nzLabel="Entrevista con padres de familia"></nz-option>
+                    </nz-select>
+                </nz-input-group>
+            </div>
+        </div>
+    </ng-template>
+</nz-modal>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { subMonths, differenceInCalendarDays } from 'date-fns';
 
@@ -19,15 +19,20 @@ export class StudentSessionsComponent implements OnInit {
   studentId: number;
 
   searchSessionParams: Session;
-  eventTypes: any;
+  eventTypes: string[];
 
   // Table variables
   loading = false;
   listOfDisplayData: Session[];
   pagination: Pagination;
 
+  // Modal to create.
+  showModal: boolean = false;
+  createEventType: string = "";
+
   constructor(
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -42,7 +47,7 @@ export class StudentSessionsComponent implements OnInit {
     this.searchSessionParams = new Session();
 
     this.eventTypes = Object.keys(EventTypes).filter((k) => isNaN(Number(k)));
-
+    
     this.pagination = new Pagination();
     this.pagination.perPage = 10;
     this.pagination.page = 1;
@@ -67,4 +72,14 @@ export class StudentSessionsComponent implements OnInit {
     // Can not select days after today
     return differenceInCalendarDays(current, new Date()) > 0;
   };
+
+  setShowModal(showModal: boolean): void {
+    this.showModal = showModal;
+  }
+
+  createSession(): void {
+    if (this.createEventType) {
+      this.router.navigate([this.createEventType], {relativeTo: this.route});
+    }
+  }
 }
