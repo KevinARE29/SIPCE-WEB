@@ -81,8 +81,8 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
-    path: 'sesiones',
-    loadChildren: () => import('./sessions/sessions.module').then((m) => m.SessionsModule),
+    path: 'expedientes',
+    loadChildren: () => import('./expedients/expedients.module').then((m) => m.ExpedientsModule),
     canLoad: [AuthGuard]
   },
   {

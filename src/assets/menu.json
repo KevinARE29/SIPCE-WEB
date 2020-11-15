@@ -161,15 +161,15 @@
             ]
         },
         {
-            "title": "Sesiones",
+            "title": "Expediente psicológico",
             "icon": "reconciliation",
-            "permissions": [22],
+            "permissions": [33],
             "allowed": null,
             "children": [
                 {
-                    "route": "sesiones",
-                    "name": "Consultar",
-                    "permission": 22,
+                    "route": "expedientes",
+                    "name": "Estudiantes",
+                    "permission": 33,
                     "allowed": false
                 }
             ]

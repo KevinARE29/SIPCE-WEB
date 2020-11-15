@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { AntDesignModule } from '../ant-design/ant-design.module';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
-import { SessionsRoutingModule } from './sessions-routing.module';
+import { ExpedientsRoutingModule } from './expedients-routing.module';
 import { SessionsComponent } from './components/sessions/sessions.component';
 import { StudentSessionsComponent } from './components/student-sessions/student-sessions.component';
 import { StudentsDetailsComponent } from './components/students-details/students-details.component';
@@ -26,7 +26,7 @@ import { TeacherInterviewComponent } from './components/teacher-interview/teache
     CommonModule,
     AntDesignModule,
     CKEditorModule,
-    SessionsRoutingModule
+    ExpedientsRoutingModule
   ]
 })
-export class SessionsModule { }
+export class ExpedientsModule { }

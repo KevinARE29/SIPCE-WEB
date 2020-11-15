@@ -18,25 +18,25 @@ const routes: Routes = [
     data: { permission: 33 }
   }, 
   {
-    path: ':student',
+    path: 'estudiantes/:student/sesiones',
     component: StudentSessionsComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
   }, 
   {
-    path: ':student/sesion-individual',
+    path: 'estudiantes/:student/sesiones/sesion-individual',
     component: StudentSessionComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
   },
   {
-    path: ':student/entrevista-docente',
+    path: 'estudiantes/:student/sesiones/entrevista-docente',
     component: TeacherInterviewComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
   },
   {
-    path: ':student/entrevista-responsable',
+    path: 'estudiantes/:student/sesiones/entrevista-responsable',
     component: ResponsibleInterviewComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
@@ -47,4 +47,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class SessionsRoutingModule { }
+export class ExpedientsRoutingModule { }
