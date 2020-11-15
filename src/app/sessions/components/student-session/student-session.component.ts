@@ -17,7 +17,10 @@ export class StudentSessionComponent implements OnInit {
   editor = ClassicEditor;
   editorConfig = {
     language: 'es',
-    toolbar: [ 'heading', '|', 'bold', 'italic', '|', 'undo', 'redo' ]
+    toolbar: [ 'heading', '|', 'bold', 'italic', '|', 'bulletedList', 'numberedList', '|' ,'undo', 'redo' ]
+  };
+  model = {
+    editorData: '<p>Hello, world!</p>'
   };
 
   constructor(
@@ -29,7 +32,7 @@ export class StudentSessionComponent implements OnInit {
 
     if (typeof param === 'string' && !Number.isNaN(Number(param))) {
       this.studentId = Number(param);
-    } 
+    }
   }
 
 }
