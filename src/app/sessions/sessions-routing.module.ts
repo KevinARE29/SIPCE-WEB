@@ -15,31 +15,31 @@ const routes: Routes = [
     path: '',
     component: SessionsComponent,
     canActivate: [AuthGuard],
-    data: { permission: 22 } // TODO: Update permission id
+    data: { permission: 33 }
   }, 
   {
     path: ':student',
     component: StudentSessionsComponent,
     canActivate: [AuthGuard],
-    data: { permission: 22 } // TODO: Update permission id
+    data: { permission: 33 }
   }, 
   {
     path: ':student/sesion-individual',
     component: StudentSessionComponent,
     canActivate: [AuthGuard],
-    data: { permission: 22 } // TODO: Update permission id
+    data: { permission: 33 }
   },
   {
     path: ':student/entrevista-docente',
     component: TeacherInterviewComponent,
     canActivate: [AuthGuard],
-    data: { permission: 22 } // TODO: Update permission id
+    data: { permission: 33 }
   },
   {
     path: ':student/entrevista-responsable',
     component: ResponsibleInterviewComponent,
     canActivate: [AuthGuard],
-    data: { permission: 22 } // TODO: Update permission id
+    data: { permission: 33 }
   }
 ];
 
