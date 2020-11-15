@@ -29,7 +29,9 @@
               }
             ],
             "styles": ["src/theme.less", "src/styles.css"],
-            "scripts": []
+            "scripts": [
+              "node_modules/@ckeditor/ckeditor5-build-classic/build/translations/es.js"
+            ]
           },
           "configurations": {
             "production": {

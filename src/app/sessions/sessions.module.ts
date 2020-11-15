@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+// Third-party
 import { AntDesignModule } from '../ant-design/ant-design.module';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 import { SessionsRoutingModule } from './sessions-routing.module';
 import { SessionsComponent } from './components/sessions/sessions.component';
@@ -23,6 +25,7 @@ import { TeacherInterviewComponent } from './components/teacher-interview/teache
   imports: [
     CommonModule,
     AntDesignModule,
+    CKEditorModule,
     SessionsRoutingModule
   ]
 })

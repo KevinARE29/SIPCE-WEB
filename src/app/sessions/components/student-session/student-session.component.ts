@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+// Editor.
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 @Component({
   selector: 'app-student-session',
   templateUrl: './student-session.component.html',
@@ -9,6 +12,13 @@ import { ActivatedRoute } from '@angular/router';
 export class StudentSessionComponent implements OnInit {
   // Param.
   studentId: number;
+
+  // Editor.
+  editor = ClassicEditor;
+  editorConfig = {
+    language: 'es',
+    toolbar: [ 'heading', '|', 'bold', 'italic', '|', 'undo', 'redo' ]
+  };
 
   constructor(
     private route: ActivatedRoute
