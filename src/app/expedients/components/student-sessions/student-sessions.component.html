@@ -52,48 +52,31 @@
                 nzSize="small" (nzQueryParams)="getSessions($event)">
                 <thead>
                     <tr>
-                        <th nzColumnKey="code" [nzSortFn]="true" [nzSortPriority]="1">Sesión</th>
-                        <th nzColumnKey="eventType" [nzSortFn]="true" [nzSortPriority]="2">Tipo de entrevista</th>
-                        <th nzColumnKey="sessionDate" [nzSortFn]="true" [nzSortPriority]="6">Fecha</th>
+                        <th nzColumnKey="code">Sesión</th>
+                        <th nzColumnKey="sessionType" [nzSortFn]="true" [nzSortPriority]="1">Tipo de entrevista</th>
+                        <th nzColumnKey="startedAt" [nzSortFn]="true" [nzSortPriority]="2">Fecha</th>
                         <th [nzAlign]="'center'">Acción</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td [nzAlign]="'center'">
-                            <a>
-                                <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
-                            </a>
-                            <nz-divider nzType="vertical"></nz-divider>
-                            <a>
-                                <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
-                            </a>
-                            <nz-divider nzType="vertical"></nz-divider>
-                            <a>
-                                <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
-                            </a>
-                        </td>
-                    </tr>
                     <tr *ngFor="let data of filterTable.data">
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>{{data.id}}</td>
+                        <td>{{data.sessionType}}</td>
+                        <td>{{data.startedAt | date: 'dd/MM/yyyy'}}</td>
                         <td [nzAlign]="'center'">
-                            <a>
+                            <a *ngIf="!data.draft">
                                 <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
                             </a>
-                            <nz-divider nzType="vertical"></nz-divider>
-                            <a>
-                                <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
-                            </a>
-                            <nz-divider nzType="vertical"></nz-divider>
-                            <a>
-                                <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
-                            </a>
+                            <ng-container *ngIf="data.draft">
+                                <a>
+                                    <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
+                                </a>
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <a>
+                                    <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
+                                </a>
+                            </ng-container>    
                         </td>
                     </tr>
                 </tbody>

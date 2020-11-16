@@ -3,7 +3,7 @@ export class Session {
     sessionType: string;
     serviceType: string;
     startedAt: Date;
-    finishAt: Date;
+    finishedAt: Date;
     duration: number;
     comments: string;
     treatedTopics: string[];

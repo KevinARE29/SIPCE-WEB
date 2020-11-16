@@ -3,6 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { subMonths, differenceInCalendarDays } from 'date-fns';
 
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+
+import { SessionService } from '../../shared/session.service';
+
 import { EventTypes } from './../../../shared/enums/event-types.enum';
 import { Pagination } from 'src/app/shared/pagination.model';
 import { Session } from '../../shared/session.model';
@@ -17,6 +21,7 @@ export class StudentSessionsComponent implements OnInit {
 
   // Param.
   studentId: number;
+  expedientId: number;
 
   searchSessionParams: Session;
   eventTypes: string[];
@@ -32,7 +37,9 @@ export class StudentSessionsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private sessionService: SessionService,
+    private notification: NzNotificationService
   ) { }
 
   ngOnInit(): void {
@@ -52,20 +59,44 @@ export class StudentSessionsComponent implements OnInit {
     this.pagination.perPage = 10;
     this.pagination.page = 1;
 
-    const param = this.route.snapshot.params['student'];
+    const paramExpedient = this.route.snapshot.params['expedient'];
+    if (typeof paramExpedient === 'string' && !Number.isNaN(Number(paramExpedient))) {
+      this.expedientId = Number(paramExpedient);
+    }
 
-    if (typeof param === 'string' && !Number.isNaN(Number(param))) {
-      this.studentId = Number(param);
-    } 
+    const paramStudent = this.route.snapshot.params['student'];
+    if (typeof paramStudent === 'string' && !Number.isNaN(Number(paramStudent))) {
+      this.studentId = Number(paramStudent);
+    }
   }
 
   getSessions(params): void {
-    console.log(params);
+    this.loading = true;
+
+    this.sessionService.getStudentSessions(this.studentId, this.expedientId, params, this.searchSessionParams).subscribe(
+      (data) => {
+        this.pagination = data['pagination'];
+        this.listOfDisplayData = data['data']['sessions'];
+
+        this.loading = false;
+      },
+      (error) => {
+        this.loading = false;
+        const statusCode = error.statusCode;
+        const notIn = [401, 403];
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
+            nzDuration: 30000
+          });
+        }
+      }
+    );
   }
 
   onChangeDatePicker(result: Date[]): void {
     this.searchSessionParams.startedAt = result[0];
-    this.searchSessionParams.finishAt = result[1];
+    this.searchSessionParams.finishedAt = result[1];
   }
 
   disabledDate = (current: Date): boolean => {
