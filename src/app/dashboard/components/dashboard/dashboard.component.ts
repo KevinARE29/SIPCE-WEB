@@ -30,25 +30,6 @@ export class DashboardComponent implements OnInit {
   public lineChartPlugins = [];
   //#endregion
 
-  //#region Chart with highcharts
-  Highcharts: typeof Highcharts = Highcharts;
-  chartOptions: Highcharts.Options = {
-    series: [
-      {
-        data: [65, 59, 80, 81, 56, 55, 40],
-        type: 'line'
-      },
-      {
-        data: [75, 89, 90, 51, 26, 85, 20],
-        type: 'line'
-      }
-    ],
-    credits: {
-      enabled: false
-    }
-  };
-  //#endregion
-
   constructor() {}
 
   ngOnInit(): void {}
