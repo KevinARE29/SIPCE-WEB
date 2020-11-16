@@ -7,7 +7,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 import { SessionService } from '../../shared/session.service';
 
-import { EventTypes } from './../../../shared/enums/event-types.enum';
+import { SessionTypes } from './../../../shared/enums/session-types.enum';
 import { Pagination } from 'src/app/shared/pagination.model';
 import { Session } from '../../shared/session.model';
 
@@ -53,7 +53,7 @@ export class StudentSessionsComponent implements OnInit {
 
     this.searchSessionParams = new Session();
 
-    this.eventTypes = Object.keys(EventTypes).filter((k) => isNaN(Number(k)));
+    this.eventTypes = Object.keys(SessionTypes).filter((k) => isNaN(Number(k)));
     
     this.pagination = new Pagination();
     this.pagination.perPage = 10;
