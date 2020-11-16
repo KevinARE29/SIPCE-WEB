@@ -6,7 +6,6 @@ import { subMonths, differenceInCalendarDays } from 'date-fns';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
-import { AuthService } from 'src/app/login/shared/auth.service';
 import { UserService } from 'src/app/users/shared/user.service';
 import { SessionService } from '../../shared/session.service';
 
@@ -45,7 +44,6 @@ export class SessionsComponent implements OnInit {
   pagination: Pagination;
 
   constructor(
-    private authService: AuthService,
     private userService: UserService,
     private sessionService: SessionService,
     private notification: NzNotificationService
@@ -54,7 +52,6 @@ export class SessionsComponent implements OnInit {
   ngOnInit(): void {
     this.init();
     this.getProfile();
-    this.setPermissions();
   }
 
   init(): void {
@@ -73,30 +70,6 @@ export class SessionsComponent implements OnInit {
     this.pagination.perPage = 10;
     this.pagination.page = 1;
   }
-
-  //#region Control page permissions
-  setPermissions(): void {
-    const token = this.authService.getToken();
-    const content = this.authService.jwtDecoder(token);
-
-    const permissions = content.permissions;
-
-    // this.permissions.push(new Permission(, ''));
-
-    this.permissions.forEach((p) => {
-      const index = permissions.indexOf(p.id);
-      p.allow = index == -1 ? false : true;
-
-      // Determine which actions are allowed in the table
-      if (p.allow && p.id !== 17) this.actions.push(p);
-    });
-  }
-
-  checkPermission(id: number): boolean {
-    const index = this.permissions.find((p) => p.id === id);
-    return index.allow;
-  }
-  //#endregion
 
   getProfile(): void {
     this.loading = true;
