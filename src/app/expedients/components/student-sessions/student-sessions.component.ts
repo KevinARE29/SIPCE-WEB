@@ -75,7 +75,8 @@ export class StudentSessionsComponent implements OnInit {
 
     this.sessionService.getStudentSessions(this.studentId, this.expedientId, params, this.searchSessionParams).subscribe(
       (data) => {
-        this.pagination = data['pagination'];
+        // TODO: Add pagination from BE.
+        // this.pagination = data['pagination'];
         this.listOfDisplayData = data['data']['sessions'];
 
         this.loading = false;

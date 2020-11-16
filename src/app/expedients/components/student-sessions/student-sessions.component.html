@@ -47,7 +47,7 @@
 <div nz-row>
     <div nz-col nzSpan="24">
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-            <nz-table #filterTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzFrontPagination]="false"
+            <nz-table #filterTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzFrontPagination]="true"
                 [nzTotal]="pagination.totalItems" [nzPageSize]="pagination.perPage" [nzPageIndex]="pagination.page"
                 nzSize="small" (nzQueryParams)="getSessions($event)">
                 <thead>
