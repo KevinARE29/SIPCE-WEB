@@ -9,7 +9,6 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { StudentWithSessions } from './student-with-sessions.model';
 import { Session } from './session.model';
-import { Expedient } from './expedient.model';
 
 @Injectable({
   providedIn: 'root'
@@ -81,7 +80,7 @@ export class SessionService {
     expedientId: number,
     params: NzTableQueryParams,
     search: Session
-  ): Observable<Expedient[]> {
+  ): Observable<Session[]> {
     let url = this.baseUrl + 'students/' + studentId + '/expedients/' + expedientId + '/sessions';
     let queryParams = '';
 
@@ -124,7 +123,7 @@ export class SessionService {
 
     url += queryParams;
 
-    return this.http.get<Expedient[]>(url).pipe(
+    return this.http.get<Session[]>(url).pipe(
       catchError(this.handleError())
     );
   }

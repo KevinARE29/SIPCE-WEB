@@ -47,12 +47,12 @@
 <div nz-row>
     <div nz-col nzSpan="24">
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-            <nz-table #filterTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzFrontPagination]="true"
+            <nz-table #filterTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzFrontPagination]="false"
                 [nzTotal]="pagination.totalItems" [nzPageSize]="pagination.perPage" [nzPageIndex]="pagination.page"
                 nzSize="small" (nzQueryParams)="getSessions($event)">
                 <thead>
                     <tr>
-                        <th nzColumnKey="code">Sesión</th>
+                        <th nzColumnKey="identifier">Sesión</th>
                         <th nzColumnKey="sessionType" [nzSortFn]="true" [nzSortPriority]="1">Tipo de entrevista</th>
                         <th nzColumnKey="startedAt" [nzSortFn]="true" [nzSortPriority]="2">Fecha</th>
                         <th [nzAlign]="'center'">Acción</th>
@@ -61,7 +61,7 @@
 
                 <tbody>
                     <tr *ngFor="let data of filterTable.data">
-                        <td>{{data.id}}</td>
+                        <td>{{data.identifier}}</td>
                         <td>{{data.sessionType}}</td>
                         <td>{{data.startedAt | date: 'dd/MM/yyyy'}}</td>
                         <td [nzAlign]="'center'">

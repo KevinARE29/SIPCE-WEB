@@ -1,5 +1,6 @@
 export class Session {
     id: number;
+    identifier: number;
     sessionType: string;
     serviceType: string;
     startedAt: Date;
