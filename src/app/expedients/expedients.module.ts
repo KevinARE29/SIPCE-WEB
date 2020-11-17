@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 // Third-party
 import { AntDesignModule } from '../ant-design/ant-design.module';
@@ -24,6 +25,7 @@ import { TeacherInterviewComponent } from './components/teacher-interview/teache
   ],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     AntDesignModule,
     CKEditorModule,
     ExpedientsRoutingModule
