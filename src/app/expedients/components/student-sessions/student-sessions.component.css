@@ -1,0 +1,20 @@
+nz-select, nz-range-picker {
+    width: 100%;
+    border-radius: 7px;
+}
+
+.links a{
+    padding: 5px;
+}
+
+nz-table {
+    margin-top: 15px;
+}
+
+.btn-container {
+    height: 100%;
+}
+
+.student-data p {
+    margin-bottom: 5px;
+}

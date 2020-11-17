@@ -159,6 +159,20 @@
                     "allowed": false
                 }
             ]
+        },
+        {
+            "title": "Expediente psicológico",
+            "icon": "reconciliation",
+            "permissions": [33],
+            "allowed": null,
+            "children": [
+                {
+                    "route": "expedientes",
+                    "name": "Estudiantes",
+                    "permission": 33,
+                    "allowed": false
+                }
+            ]
         }
     ]  
 }

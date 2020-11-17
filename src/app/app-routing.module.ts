@@ -87,6 +87,11 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'expedientes',
+    loadChildren: () => import('./expedients/expedients.module').then((m) => m.ExpedientsModule),
+    canLoad: [AuthGuard]
+  },
+  {
     path: '**',
     redirectTo: '/error404',
     pathMatch: 'full'
