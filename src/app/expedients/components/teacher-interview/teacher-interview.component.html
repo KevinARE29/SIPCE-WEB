@@ -74,12 +74,16 @@
                 <div nz-col nzXs="24">
                     <nz-form-item>
                         <nz-form-label><strong>Participantes</strong></nz-form-label>
-                        <nz-form-control
-                            [nzValidateStatus]="participantsControl.dirty && !participantsControl.valid ? 'error' : 'success'"
-                            nzErrorTip="Debe seleccionar por lo menos un participante"
-                        >
+                        <nz-form-control [nzErrorTip]="participantsErrors">
+                            <nz-select nzMode="multiple" formControlName="participants" nzPlaceHolder="Seleccionar" [nzDropdownMatchSelectWidth]="false" [nzLoading]="loadingUsers">
+                                <ng-container *ngFor="let user of userResults">
+                                    <nz-option [nzLabel]="user.firstname + ' ' + user.lastname" [nzValue]="user.id"></nz-option>
+                                </ng-container>
+                            </nz-select>
             
-                        
+                            <ng-template #participantsErrors let-control>
+                                <ng-container *ngIf="control.hasError('required')">Seleccione por lo menos un participante<br></ng-container>
+                            </ng-template>
                         </nz-form-control>
                     </nz-form-item>
                 </div>

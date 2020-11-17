@@ -5,6 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 import { differenceInCalendarDays } from 'date-fns';
 
 import { ServiceTypes } from './../../../shared/enums/service-types.enum';
+import { User } from '../../../users/shared/user.model';
+
+import { UserService } from '../../../users/shared/user.service';
 
 // Editor.
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -30,6 +33,11 @@ export class TeacherInterviewComponent implements OnInit {
   // Service types
   serviceTypes = Object.keys(ServiceTypes).filter((k) => isNaN(Number(k)));
 
+  // Participants
+  userResults: User[] = [];
+  loadingUsers = false;
+
+
   // Editor
   editor = ClassicEditor;
   editorConfig = {
@@ -39,7 +47,8 @@ export class TeacherInterviewComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private userService: UserService
   ) { }
 
   ngOnInit(): void {
@@ -57,12 +66,24 @@ export class TeacherInterviewComponent implements OnInit {
       participants: [[], [Validators.required]],
       evaluations: [[]]
     });
+
+    this.getUsers();
   }
 
+  // Participants
   get participantsControl(): AbstractControl {
     return this.sessionForm.get('participants');
   }
 
+  getUsers(): void {
+    this.loadingUsers = true;
+    this.userService.getUserByUsername('').subscribe((r) => {
+      this.userResults = r['data'];
+      this.loadingUsers = false;
+    });
+  }
+
+  // Date.
   disabledDate = (current: Date): boolean => {
     // Can not select days after today
     return differenceInCalendarDays(current, new Date()) > 0;
@@ -73,6 +94,8 @@ export class TeacherInterviewComponent implements OnInit {
       this.sessionForm.controls[i].markAsDirty();
       this.sessionForm.controls[i].updateValueAndValidity();
     }
+
+    console.log(this.sessionForm.value);
   }
 
 }
