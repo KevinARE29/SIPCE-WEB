@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { differenceInCalendarDays } from 'date-fns';
@@ -20,6 +20,8 @@ export class TeacherInterviewComponent implements OnInit {
 
   // Form.
   sessionForm: FormGroup;
+  actionLoading = false;
+  submitAsDraft = false;
 
   // Duration input.
   durationFormatter = (value: number) => value ? `${value} min` : '';
@@ -51,13 +53,26 @@ export class TeacherInterviewComponent implements OnInit {
       date: [null, [Validators.required]],
       duration: ['', [Validators.required]],
       serviceType: [null, [Validators.required]],
-      comments: [null, [Validators.required]]
+      comments: [null, [Validators.required]],
+      participants: [[], [Validators.required]],
+      evaluations: [[]]
     });
+  }
+
+  get participantsControl(): AbstractControl {
+    return this.sessionForm.get('participants');
   }
 
   disabledDate = (current: Date): boolean => {
     // Can not select days after today
     return differenceInCalendarDays(current, new Date()) > 0;
   };
+
+  submitForm(event: any): void {
+    for (const i in this.sessionForm.controls) {
+      this.sessionForm.controls[i].markAsDirty();
+      this.sessionForm.controls[i].updateValueAndValidity();
+    }
+  }
 
 }

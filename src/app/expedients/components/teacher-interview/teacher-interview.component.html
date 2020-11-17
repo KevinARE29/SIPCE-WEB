@@ -6,7 +6,7 @@
 
 <app-students-details [id]="studentId"></app-students-details>
 
-<form nz-form nzLayout="vertical" [formGroup]="sessionForm">
+<form nz-form nzLayout="vertical" [formGroup]="sessionForm" (ngSubmit)="submitForm($event)">
 
     <div nz-row nzJustify="center" [nzGutter]="10">
 
@@ -74,11 +74,12 @@
                 <div nz-col nzXs="24">
                     <nz-form-item>
                         <nz-form-label><strong>Participantes</strong></nz-form-label>
-                        <nz-form-control [nzErrorTip]="participantsErrors">
-                            
-                            <ng-template #participantsErrors let-control>
-                                <ng-container *ngIf="control.hasError('required')">La fecha es requerida<br></ng-container>
-                            </ng-template>
+                        <nz-form-control
+                            [nzValidateStatus]="participantsControl.dirty && !participantsControl.valid ? 'error' : 'success'"
+                            nzErrorTip="Debe seleccionar por lo menos un participante"
+                        >
+            
+                        
                         </nz-form-control>
                     </nz-form-item>
                 </div>
@@ -110,6 +111,20 @@
                     </ng-template>
                 </nz-form-control>
             </nz-form-item>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div nz-row nzJustify="center" [nzGutter]="40">
+        <div nz-col>
+            <button id="draft" nz-button nzType="default" [nzLoading]="actionLoading">
+                Guardar borrador
+            </button>
+        </div>    
+        <div nz-col>
+            <button id="no-draft" nz-button nzType="primary" [nzLoading]="actionLoading">
+                Registrar entrevista
+            </button>
         </div>
     </div>
 </form>
