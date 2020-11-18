@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
+
 import { DashboardService } from '../../shared/dashboard.service';
+import { NgChart } from './../../shared/chart.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,13 +19,13 @@ export class DashboardComponent implements OnInit {
     { data: [75, 89, 90, 51, 26, 85, 20], label: 'Series B', fill: false, lineTension: 0 },
     { data: [25, 49, 60, 71, 86, 25, 90], label: 'Series C', fill: false, lineTension: 0 }
   ];
-  public lineChartLabels: Label[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+  lineChartLabels: Label[];
   // public lineChartOptions: ChartOptions & { annotation: any } = {
   //   responsive: true
   // };
   public lineChartColors: Color[] = [
     {
-      borderColor: 'rgba(255,0,0,0.3)'//,
+      borderColor: 'rgba(255,0,0,0.3)' //,
       //backgroundColor: 'rgba(255,0,0,0.3)'
     }
   ];
@@ -32,14 +34,12 @@ export class DashboardComponent implements OnInit {
   public lineChartPlugins = [];
   //#endregion
 
-  page: {
-    activeUsers: string;
-    totalStudents: string;
-    usersByRole: [];
-    studentsByStatus: [];
-    studentsByCurrentShiftAndGrade: [];
-    studentsByCurrentShift: [];
-  };
+  public activeUsers: string;
+  public totalStudents: string;
+  public usersByRole: NgChart;
+  public studentsByStatus: NgChart;
+  public studentsByCurrentShiftAndGrade: [];
+  public studentsByCurrentShift: [];
 
   constructor(private dashboardService: DashboardService) {}
 
@@ -50,15 +50,16 @@ export class DashboardComponent implements OnInit {
   getDashboard(): void {
     this.loading = true;
     this.dashboardService.getDashboard().subscribe((data) => {
-      this.page = {
-        activeUsers: data['activeUsers'],
-        totalStudents: data['totalStudents'],
-        usersByRole: data[''],
-        studentsByStatus: data[''],
-        studentsByCurrentShiftAndGrade: data[''],
-        studentsByCurrentShift: data['']
-      };
+      this.activeUsers = data['activeUsers'];
+      this.totalStudents = data['totalStudents'];
+      this.usersByRole = data['usersByRole'];
+      this.studentsByStatus = data['studentsByStatus'];
+      this.studentsByCurrentShiftAndGrade = data[''];
+      this.studentsByCurrentShift = data[''];
+
       this.loading = false;
     });
   }
+
+  rolesChart(): void {}
 }

@@ -15,13 +15,13 @@
           <!-- User counter -->
           <div nz-col class="chart">
             <p class="chart-title">Usuarios</p>
-            <div class="counter"> {{ page?.activeUsers }} </div>
+            <div class="counter"> {{ activeUsers }} </div>
           </div>
     
           <!-- Student counter -->
           <div nz-col class="chart">
             <p class="chart-title">Estudiantes activos</p>
-            <div class="counter"> {{ page?.totalStudents }} </div>
+            <div class="counter"> {{ totalStudents }} </div>
           </div>
         </div>
     
@@ -29,6 +29,16 @@
         <div nz-col nzXs="24" nzSm="12" nzMd="16" class="gutter-row">
           <div class="chart">
             <p class="chart-title">Roles de usuarios</p>
+
+            <ng-container *ngIf="usersByRole">
+              <canvas baseChart
+                [data]="usersByRole.data"
+                [labels]="usersByRole.labels"
+                [chartType]="usersByRole.type"
+                [options]="usersByRole.options"
+                [legend]="usersByRole.legend">
+              </canvas>
+            </ng-container>
           </div>
         </div>
     
@@ -36,6 +46,15 @@
         <div nz-col nzXs="24" nzSm="24" nzMd="12" class="gutter-row">
           <div class="chart">
             <p class="chart-title">Estudiantes por estado</p>
+            <ng-container *ngIf="studentsByStatus">
+              <canvas baseChart
+                [data]="studentsByStatus.data"
+                [labels]="studentsByStatus.labels"
+                [chartType]="studentsByStatus.type"
+                [options]="studentsByStatus.options"
+                [legend]="studentsByStatus.legend">
+              </canvas>
+            </ng-container>
           </div>
         </div>
     
