@@ -54,7 +54,7 @@ export class StudentSessionsComponent implements OnInit {
 
     this.searchSessionParams = new Session();
 
-    this.eventTypes = Object.keys(SessionTypes).filter((k) => isNaN(Number(k)));
+    this.eventTypes = Object.values(SessionTypes).filter((k) => isNaN(Number(k)));
     
     this.pagination = new Pagination();
     this.pagination.perPage = 10;
