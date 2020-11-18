@@ -1,20 +1,56 @@
-<div nz-row nzJustify="center">
-    <div nz-col>
-        <img class="logo" src="assets/logo-maristas-color.png" alt="Logo">
-
-        <h1>Bienvenido a SIAPCE</h1>
-        <h3 class="principal">Dashboard en proceso de construcción</h3>
-    </div>
-
-    <!-- <div nz-col nzSpan="12">
-        <div style="display: block;">
-            <canvas baseChart
-              [datasets]="lineChartData"
-              [labels]="lineChartLabels"
-              [legend]="lineChartLegend"
-              [chartType]="lineChartType"
-              [plugins]="lineChartPlugins">
-            </canvas>
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+  <div nz-row nzJustify="center" [nzGutter]="[16, 10]">
+      <!-- <div nz-col nzSpan="12">
+          <div style="display: block;">
+              <canvas baseChart
+                [datasets]="lineChartData"
+                [labels]="lineChartLabels"
+                [legend]="lineChartLegend"
+                [chartType]="lineChartType"
+                [plugins]="lineChartPlugins">
+              </canvas>
+            </div>
+      </div> -->
+        <div nz-col nzXs="24" nzSm="12" nzMd="8"  class="gutter-row counters">
+          <!-- User counter -->
+          <div nz-col class="chart">
+            <p class="chart-title">Usuarios</p>
+            <div class="counter"> {{ page?.activeUsers }} </div>
           </div>
-    </div> -->
-</div>
+    
+          <!-- Student counter -->
+          <div nz-col class="chart">
+            <p class="chart-title">Estudiantes activos</p>
+            <div class="counter"> {{ page?.totalStudents }} </div>
+          </div>
+        </div>
+    
+        <!-- Role chart -->
+        <div nz-col nzXs="24" nzSm="12" nzMd="16" class="gutter-row">
+          <div class="chart">
+            <p class="chart-title">Roles de usuarios</p>
+          </div>
+        </div>
+    
+        <!-- Students by status -->
+        <div nz-col nzXs="24" nzSm="24" nzMd="12" class="gutter-row">
+          <div class="chart">
+            <p class="chart-title">Estudiantes por estado</p>
+          </div>
+        </div>
+    
+        <!-- Students per shift -->
+        <div nz-col nzXs="24" nzSm="24" nzMd="12" class="gutter-row">
+          <div class="chart">
+            <p class="chart-title">Estudiantes por turno</p>
+          </div>
+        </div>
+    
+        <!-- Students by grade -->
+        <div nz-col nzXs="24" nzSm="24" nzMd="24" class="gutter-row">
+          <div class="chart">
+            <p class="chart-title">Estudiantes por grado</p>
+          </div>
+        </div>
+  </div>
+</nz-spin>

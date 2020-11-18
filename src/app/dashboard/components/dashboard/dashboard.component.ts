@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
+import { DashboardService } from '../../shared/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,6 +9,7 @@ import { Color, Label } from 'ng2-charts';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
+  loading = false;
   //#region Line chart with ng2-charts
   // TODO: Update code based on use case
   public lineChartData: ChartDataSets[] = [
@@ -30,7 +32,33 @@ export class DashboardComponent implements OnInit {
   public lineChartPlugins = [];
   //#endregion
 
-  constructor() {}
+  page: {
+    activeUsers: string;
+    totalStudents: string;
+    usersByRole: [];
+    studentsByStatus: [];
+    studentsByCurrentShiftAndGrade: [];
+    studentsByCurrentShift: [];
+  };
 
-  ngOnInit(): void {}
+  constructor(private dashboardService: DashboardService) {}
+
+  ngOnInit(): void {
+    this.getDashboard();
+  }
+
+  getDashboard(): void {
+    this.loading = true;
+    this.dashboardService.getDashboard().subscribe((data) => {
+      this.page = {
+        activeUsers: data['activeUsers'],
+        totalStudents: data['totalStudents'],
+        usersByRole: data[''],
+        studentsByStatus: data[''],
+        studentsByCurrentShiftAndGrade: data[''],
+        studentsByCurrentShift: data['']
+      };
+      this.loading = false;
+    });
+  }
 }

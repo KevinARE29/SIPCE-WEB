@@ -1,14 +1,21 @@
-img.logo {
-    min-height: 200px;
-    max-height: 500px;
+
+.chart-title {
+    font-weight: bolder;
+    color: black;
 }
 
-img.construction {
-    height: 60px;
-    margin-top: -15px;
-    margin-left: 10px;
+.chart {
+    border: 1px solid #e2e2e2;
+    padding: 10px;
+    border-radius: 8px;
+}
+.counters div {
+    margin-bottom: 5px;
 }
 
-h1, h3 {
+.counter {
     text-align: center;
+    font-weight: bolder;
+    font-size: 2em;
+    padding: 5px;
 }
