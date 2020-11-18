@@ -24,6 +24,7 @@ export class StudentSessionsComponent implements OnInit {
   expedientId: number;
 
   searchSessionParams: Session;
+  dateRangeSearch: Date[];
   eventTypes: string[];
 
   // Table variables
@@ -94,9 +95,14 @@ export class StudentSessionsComponent implements OnInit {
     );
   }
 
-  onChangeDatePicker(result: Date[]): void {
-    this.searchSessionParams.startedAt = result[0];
-    this.searchSessionParams.finishedAt = result[1];
+  onChangeDatePicker(): void {
+    if (this.dateRangeSearch.length > 1) {
+      this.searchSessionParams.startedAt = this.dateRangeSearch[0];
+      this.searchSessionParams.finishedAt = this.dateRangeSearch[1];
+    } else {
+      this.searchSessionParams.startedAt = null;
+      this.searchSessionParams.finishedAt = null;
+    }
   }
 
   disabledDate = (current: Date): boolean => {

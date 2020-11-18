@@ -20,7 +20,7 @@
     <div nz-col nzXs="24" nzSm="16" nzMd="12" nzLg="8">
         <label>Fecha: </label>
         <nz-input-group>
-            <nz-range-picker nzFormat="dd/MM/yyyy" [nzDisabledDate]="disabledDate" (nzOnCalendarChange)="onChangeDatePicker($event)"></nz-range-picker>
+            <nz-range-picker nzFormat="dd/MM/yyyy" [nzDisabledDate]="disabledDate" [(ngModel)]="dateRangeSearch" (ngModelChange)="onChangeDatePicker()"></nz-range-picker>
         </nz-input-group>
     </div>
 
@@ -52,16 +52,16 @@
                 nzSize="small" (nzQueryParams)="getSessions($event)">
                 <thead>
                     <tr>
-                        <th nzColumnKey="identifier">Sesión</th>
-                        <th nzColumnKey="sessionType" [nzSortFn]="true" [nzSortPriority]="1">Tipo de entrevista</th>
-                        <th nzColumnKey="startedAt" [nzSortFn]="true" [nzSortPriority]="2">Fecha</th>
+                        <th nzColumnKey="identifier" [nzSortFn]="true" [nzSortPriority]="1">Sesión</th>
+                        <th nzColumnKey="sessionType" [nzSortFn]="true" [nzSortPriority]="2">Tipo de entrevista</th>
+                        <th nzColumnKey="startedAt" [nzSortFn]="true" [nzSortPriority]="3" [nzSortOrder]="'descend'">Fecha</th>
                         <th [nzAlign]="'center'">Acción</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <tr *ngFor="let data of filterTable.data">
-                        <td>{{data.identifier}}</td>
+                        <td>{{data.identifier || '-'}}</td>
                         <td>{{data.sessionType}}</td>
                         <td>{{data.startedAt | date: 'dd/MM/yyyy'}}</td>
                         <td [nzAlign]="'center'">
