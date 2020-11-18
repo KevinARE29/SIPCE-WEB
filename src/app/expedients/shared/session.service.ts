@@ -7,6 +7,9 @@ import { catchError } from 'rxjs/operators';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
+
+import { SessionTypes } from './../../shared/enums/session-types.enum';
+
 import { StudentWithSessions } from './student-with-sessions.model';
 import { Session } from './session.model';
 
@@ -126,6 +129,26 @@ export class SessionService {
     return this.http.get<Session[]>(url).pipe(
       catchError(this.handleError())
     );
+  }
+
+  createSession(expedientId: number, studentId: number, session: Session): Observable<unknown> {
+    let url = this.baseUrl + 'students/' + studentId + '/expedients/' + expedientId + '/sessions';
+
+    const data: any = {
+      sessionType: session.sessionType,
+      serviceType: session.serviceType,
+      evaluations: session.evaluations.map((evaluation) => evaluation.description),
+      startedAt: session.startedAt,
+      duration: session.duration,
+      comments: session.comments,
+      draft: session.draft
+    };
+
+    if (session.sessionType === SessionTypes.ENTREVISTA_DOCENTE) {
+      data.participants = session.participants;
+    }
+
+    return this.http.post<Session>(url, JSON.stringify(data)).pipe(catchError(this.handleError()));
   }
 
   /**
