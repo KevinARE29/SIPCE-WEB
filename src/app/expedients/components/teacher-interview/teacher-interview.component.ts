@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { differenceInCalendarDays } from 'date-fns';
@@ -81,7 +81,7 @@ export class TeacherInterviewComponent implements OnInit {
       duration: [null, [Validators.required]],
       serviceType: [null, [Validators.required]],
       participants: [[], [Validators.required]],
-      evaluations: [[]],
+      evaluations: this.fb.array([], [Validators.required]),
       comments: [null, [Validators.required]]
     });
 
@@ -101,6 +101,23 @@ export class TeacherInterviewComponent implements OnInit {
     });
   }
 
+  // Evaluations
+  get evaluationsControl(): FormArray {
+    return this.sessionForm.get('evaluations') as FormArray;
+  }
+
+  addEvaluation(): void {
+    const evaluationForm = this.fb.group({
+      description: [null, [Validators.required]]
+    });
+
+    this.evaluationsControl.push(evaluationForm);
+  }
+
+  removeEvaluation(index: number): void {
+    this.evaluationsControl.removeAt(index);
+  }
+
   // Date.
   disabledDate = (current: Date): boolean => {
     // Can not select days after today
@@ -112,6 +129,14 @@ export class TeacherInterviewComponent implements OnInit {
       this.sessionForm.controls[i].markAsDirty();
       this.sessionForm.controls[i].updateValueAndValidity();
     }
+
+    // To control the evaluation FormGroups
+    this.evaluationsControl.controls.forEach((evaluationForm: FormGroup) => {
+      for (const i in evaluationForm.controls) {
+        evaluationForm.controls[i].markAsDirty();
+        evaluationForm.controls[i].updateValueAndValidity();
+      }
+    });
 
     const isDraft = event.submitter.id === 'draft';
 

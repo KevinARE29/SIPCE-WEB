@@ -137,7 +137,7 @@ export class SessionService {
     const data: any = {
       sessionType: session.sessionType,
       serviceType: session.serviceType,
-      evaluations: session.evaluations.map((evaluation) => evaluation.description),
+      evaluations: session.evaluations,
       startedAt: session.startedAt,
       duration: session.duration,
       comments: session.comments,
