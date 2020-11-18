@@ -151,6 +151,14 @@ export class SessionService {
     return this.http.post<Session>(url, JSON.stringify(data)).pipe(catchError(this.handleError()));
   }
 
+  deleteSession(expedientId: number, studentId: number, sessionId: number): Observable<void> {
+    let url = this.baseUrl + 'students/' + studentId + '/expedients/' + expedientId + '/sessions/' + sessionId;
+
+    return this.http.delete<void>(url).pipe(
+      catchError(this.handleError())
+    );
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.

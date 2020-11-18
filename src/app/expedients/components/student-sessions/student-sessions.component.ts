@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { subMonths, differenceInCalendarDays } from 'date-fns';
 
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 import { SessionService } from '../../shared/session.service';
 
@@ -40,7 +42,9 @@ export class StudentSessionsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private sessionService: SessionService,
-    private notification: NzNotificationService
+    private notification: NzNotificationService,
+    private modal: NzModalService,
+    private message: NzMessageService
   ) { }
 
   ngOnInit(): void {
@@ -88,6 +92,35 @@ export class StudentSessionsComponent implements OnInit {
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
+            nzDuration: 30000
+          });
+        }
+      }
+    );
+  }
+
+  confirmDelete(sessionId: number): void {
+    this.modal.confirm({
+      nzTitle: `¿Desea eliminar la sesión?`,
+      nzContent: `Eliminará la sesión. La acción no puede deshacerse.`,
+      nzOnOk: () => {
+        this.deleteSession(sessionId)
+      }
+    });
+  }
+
+  deleteSession(sessionId: number): void {
+    this.sessionService.deleteSession(this.expedientId, this.studentId, sessionId).subscribe(
+      () => {
+        this.message.success('La sesión ha sido eliminada.');
+        this.listOfDisplayData = this.listOfDisplayData.filter((session) => session.id !== sessionId);
+      },
+      (error) => {
+        const statusCode = error.statusCode;
+        const notIn = [401, 403];
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create('error', 'Ocurrió un error al intentar eliminar la sesión.', error.message, {
             nzDuration: 30000
           });
         }
