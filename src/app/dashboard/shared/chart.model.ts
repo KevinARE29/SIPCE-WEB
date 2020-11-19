@@ -8,5 +8,4 @@ export class NgChart {
   type: ChartType;
   legend: boolean;
   options: ChartOptions;
-  colors: string[];
 }

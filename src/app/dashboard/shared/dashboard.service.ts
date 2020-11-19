@@ -7,7 +7,6 @@ import { Label } from 'ng2-charts';
 import { ChartDataSets } from 'chart.js';
 
 import { environment } from './../../../environments/environment';
-import { ErrorMessageService } from 'src/app/shared/error-message.service';
 
 import { NgChart } from './chart.model';
 
@@ -17,7 +16,7 @@ import { NgChart } from './chart.model';
 export class DashboardService {
   baseUrl: string;
 
-  constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
+  constructor(private http: HttpClient) {
     this.baseUrl = environment.apiURL;
   }
 
@@ -67,7 +66,10 @@ export class DashboardService {
         studentsByShiftAndGrade.labels = new Array<Label>();
         studentsByShiftAndGrade.type = 'horizontalBar';
         studentsByShiftAndGrade.legend = true;
-        studentsByShiftAndGrade.options = { responsive: true, legend: { position: 'right' } };
+        studentsByShiftAndGrade.options = {
+          responsive: true,
+          legend: { position: 'right' }
+        };
         response['studentsByCurrentShiftAndGrade'] = response['studentsByCurrentShiftAndGrade'].sort(
           (a, b) => a.gradeId - b.gradeId
         );
@@ -100,7 +102,6 @@ export class DashboardService {
           studentsByShift
         };
 
-        // console.log(response);
         return page;
       }),
       catchError(this.handleError())
@@ -114,7 +115,6 @@ export class DashboardService {
   private handleError() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (error: any) => {
-      // error.error.message = this.errorMessageService.transformMessage('dashboard', error.error.message);
       return throwError(error.error);
     };
   }
