@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartDataSets, ChartOptions } from 'chart.js';
+import { ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 
 import { DashboardService } from '../../shared/dashboard.service';
@@ -38,8 +38,8 @@ export class DashboardComponent implements OnInit {
   public totalStudents: string;
   public usersByRole: NgChart;
   public studentsByStatus: NgChart;
-  public studentsByCurrentShiftAndGrade: [];
-  public studentsByCurrentShift: [];
+  public studentsByShiftAndGrade: NgChart;
+  public studentsByShift: NgChart;
 
   constructor(private dashboardService: DashboardService) {}
 
@@ -54,9 +54,9 @@ export class DashboardComponent implements OnInit {
       this.totalStudents = data['totalStudents'];
       this.usersByRole = data['usersByRole'];
       this.studentsByStatus = data['studentsByStatus'];
-      this.studentsByCurrentShiftAndGrade = data[''];
-      this.studentsByCurrentShift = data[''];
-
+      this.studentsByShift = data['studentsByShift'];
+      this.studentsByShiftAndGrade = data['studentsByShiftAndGrade'];
+      console.log(this.studentsByShiftAndGrade);
       this.loading = false;
     });
   }

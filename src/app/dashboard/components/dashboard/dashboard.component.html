@@ -27,7 +27,7 @@
     
         <!-- Role chart -->
         <div nz-col nzXs="24" nzSm="12" nzMd="16" class="gutter-row">
-          <div class="chart">
+          <div class="chart pie-chart">
             <p class="chart-title">Roles de usuarios</p>
 
             <ng-container *ngIf="usersByRole">
@@ -44,8 +44,9 @@
     
         <!-- Students by status -->
         <div nz-col nzXs="24" nzSm="24" nzMd="12" class="gutter-row">
-          <div class="chart">
+          <div class="chart pie-chart">
             <p class="chart-title">Estudiantes por estado</p>
+
             <ng-container *ngIf="studentsByStatus">
               <canvas baseChart
                 [data]="studentsByStatus.data"
@@ -60,8 +61,18 @@
     
         <!-- Students per shift -->
         <div nz-col nzXs="24" nzSm="24" nzMd="12" class="gutter-row">
-          <div class="chart">
+          <div class="chart pie-chart">
             <p class="chart-title">Estudiantes por turno</p>
+
+            <ng-container *ngIf="studentsByShift">
+              <canvas baseChart
+                [data]="studentsByShift.data"
+                [labels]="studentsByShift.labels"
+                [chartType]="studentsByShift.type"
+                [options]="studentsByShift.options"
+                [legend]="studentsByShift.legend">
+              </canvas>
+            </ng-container>
           </div>
         </div>
     
@@ -69,6 +80,16 @@
         <div nz-col nzXs="24" nzSm="24" nzMd="24" class="gutter-row">
           <div class="chart">
             <p class="chart-title">Estudiantes por grado</p>
+
+            <ng-container *ngIf="studentsByShiftAndGrade">
+              <canvas baseChart
+                [datasets]="studentsByShiftAndGrade.datasets"
+                [labels]="studentsByShiftAndGrade.labels"
+                [options]="studentsByShiftAndGrade.options"
+                [legend]="studentsByShiftAndGrade.legend"
+                [chartType]="studentsByShiftAndGrade.type">
+              </canvas>
+            </ng-container>
           </div>
         </div>
   </div>
