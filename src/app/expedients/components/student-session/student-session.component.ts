@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { differenceInCalendarDays } from 'date-fns';
@@ -146,7 +146,6 @@ export class StudentSessionComponent implements OnInit {
     session.duration = formValue['duration'];
     session.serviceType = formValue['serviceType'];
     session.comments = formValue['comments'];
-    session.participants = formValue['participants'];
     session.evaluations = formValue['evaluations'];
 
     this.sessionService.createSession(this.expedientId, this.studentId, session).subscribe(
