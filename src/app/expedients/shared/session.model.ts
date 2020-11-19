@@ -11,10 +11,11 @@ export class Session {
 
     draft: boolean;
     startedAt: Date;
+    startHour: Date;
     finishedAt: Date;
     duration: number;
     comments: string;
-    treatedTopics: string[];
+    treatedTopics: string;
     agreements: string;
     evaluations: Evaluation[];
     participants: number[];
