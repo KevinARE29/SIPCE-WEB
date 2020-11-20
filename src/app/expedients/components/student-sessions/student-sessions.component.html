@@ -65,7 +65,7 @@
                         <td>{{data.sessionType}}</td>
                         <td>{{data.startedAt | date: 'dd/MM/yyyy'}}</td>
                         <td [nzAlign]="'center'">
-                            <a *ngIf="!data.draft">
+                            <a *ngIf="!data.draft" [routerLink]="[getSessionPath(data.sessionType), data.id]">
                                 <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
                             </a>
                             <ng-container *ngIf="data.draft">
