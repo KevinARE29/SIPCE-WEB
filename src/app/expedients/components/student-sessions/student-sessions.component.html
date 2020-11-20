@@ -69,7 +69,7 @@
                                 <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
                             </a>
                             <ng-container *ngIf="data.draft">
-                                <a>
+                                <a [routerLink]="[getSessionPath(data.sessionType), data.id]">
                                     <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
                                 </a>
                                 <nz-divider nzType="vertical"></nz-divider>

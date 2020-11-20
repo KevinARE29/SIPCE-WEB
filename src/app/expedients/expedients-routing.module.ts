@@ -30,13 +30,31 @@ const routes: Routes = [
     data: { permission: 33 }
   },
   {
+    path: ':expedient/estudiantes/:student/sesiones/sesion-individual/:session',
+    component: StudentSessionComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 33 }
+  },
+  {
     path: ':expedient/estudiantes/:student/sesiones/entrevista-docente',
     component: TeacherInterviewComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
   },
   {
+    path: ':expedient/estudiantes/:student/sesiones/entrevista-docente/:session',
+    component: TeacherInterviewComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 33 }
+  },
+  {
     path: ':expedient/estudiantes/:student/sesiones/entrevista-responsable',
+    component: ResponsibleInterviewComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 33 }
+  },
+  {
+    path: ':expedient/estudiantes/:student/sesiones/entrevista-responsable/:session',
     component: ResponsibleInterviewComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
