@@ -30,6 +30,11 @@ export class TeacherInterviewComponent implements OnInit {
   // Param.
   studentId: number;
   expedientId: number;
+  sessionId: number;
+
+  // Edit object
+  loadingSession = false;
+  session: Session;
 
   // Form.
   sessionForm: FormGroup;
@@ -75,14 +80,43 @@ export class TeacherInterviewComponent implements OnInit {
       this.expedientId = Number(paramExpedient);
     }
 
+    const paramSession = this.route.snapshot.params['session'];
+    if (typeof paramSession === 'string' && !Number.isNaN(Number(paramSession))) {
+      this.sessionId = Number(paramSession);
+    }
+
+    // Get session.
+    if (this.sessionId) {
+      this.loadingSession = true;
+
+      // To avoid errors
+      this.sessionForm = this.fb.group({});
+
+      this.sessionService.getSession(this.expedientId, this.studentId, this.sessionId).subscribe((r) => {
+        this.session = r['data'];
+        this.buildForm();
+        this.loadingSession = false;
+      });
+    } else {
+      this.buildForm();
+    }
+  }
+
+  buildForm(): void {
     this.sessionForm = this.fb.group({
-      date: [null, [Validators.required]],
-      duration: [null, [Validators.required]],
-      serviceType: [null, [Validators.required]],
+      date: [this.session ? this.session.startedAt : null, [Validators.required]],
+      duration: [this.session ? this.session.duration : null, [Validators.required]],
       participants: [[], [Validators.required]],
+      serviceType: [this.session ? this.session.serviceType : null, [Validators.required]],
       evaluations: this.fb.array([]),
-      comments: [null, [Validators.required]]
+      comments: [this.session ? this.session.comments : null, [Validators.required]]
     });
+
+    if (this.session && this.session.evaluations) {
+      this.session.evaluations.forEach((evaluation) => {
+        this.addEvaluation(evaluation.id, evaluation.description);
+      });
+    }
 
     this.getUsers();
   }
@@ -98,6 +132,10 @@ export class TeacherInterviewComponent implements OnInit {
       this.userResults = r['data'];
       this.loadingUsers = false;
     });
+
+    if (this.session) {
+      this.participantsControl.setValue(this.session.counselor.map((participant) => participant.id));
+    }
   }
 
   // Evaluations
@@ -105,10 +143,14 @@ export class TeacherInterviewComponent implements OnInit {
     return this.sessionForm.get('evaluations') as FormArray;
   }
 
-  addEvaluation(): void {
+  addEvaluation(id: number = null, description: string = null): void {
     const evaluationForm = this.fb.group({
-      description: [null, [Validators.required]]
+      description: [description, [Validators.required]]
     });
+
+    if (id) {
+      evaluationForm.addControl('id', this.fb.control(id));
+    }
 
     this.evaluationsControl.push(evaluationForm);
   }
@@ -141,20 +183,20 @@ export class TeacherInterviewComponent implements OnInit {
 
     if (this.sessionForm.valid) {
       if (isDraft) {
-        this.createSession(true);
+        this.saveSession(true);
       } else {
         this.modal.confirm({
           nzTitle: '¿Desea registrar la sesión?',
           nzContent: 'La sesión ya no se podrá editar luego de realizar esta acción. ¿Desea continuar?',
           nzOnOk: () => {
-            this.createSession(false)
+            this.saveSession(false)
           }
         });
       }
     }
   }
 
-  createSession(isDraft: boolean): void {
+  saveSession(isDraft: boolean): void {
     this.actionLoading = true;
 
     const formValue = this.sessionForm.value;
@@ -163,17 +205,21 @@ export class TeacherInterviewComponent implements OnInit {
     session.draft = isDraft;
     session.sessionType = SessionTypes.ENTREVISTA_DOCENTE;
     session.startedAt = formValue['date'];
-    session.duration = formValue['duration'];
+    session.duration = Number.parseInt(formValue['duration']);
     session.serviceType = formValue['serviceType'];
     session.comments = formValue['comments'];
     session.participants = formValue['participants'];
     session.evaluations = formValue['evaluations'];
 
+    if (this.session) {
+      session.id = this.session.id
+    }
+
     this.sessionService.saveSession(this.expedientId, this.studentId, session).subscribe(
       () => {
         const message = isDraft ? 'La sesión se ha guardado como borrador.' : 'La sesión ha sido registrada';
         this.message.success(message);
-        this.router.navigate(['..'], {relativeTo: this.route});
+        this.router.navigate(['expedientes', this.expedientId, 'estudiantes', this.studentId, 'sesiones']);
       },
       (error) => {
         this.actionLoading = false;
