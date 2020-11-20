@@ -1,11 +1,12 @@
 <div nz-row nzJustify="space-between">
     <div nz-col>
-        <h1>Nueva sesión individual</h1>
+        <h1 *ngIf="!loadingSession">{{ session ? 'Editar sesión individual' : 'Nueva sesión individual'}}</h1>
     </div>
 </div>
 
 <app-students-details [id]="studentId"></app-students-details>
 
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loadingSession">
 <form nz-form nzLayout="vertical" [formGroup]="sessionForm" (ngSubmit)="submitForm($event)">
 
     <div nz-row nzJustify="center" [nzGutter]="10">
@@ -18,7 +19,7 @@
                 <div nz-col nzXs="24">
                     <nz-form-item>
                         <nz-form-label><strong>Fecha</strong></nz-form-label>
-                        <nz-form-control [nzErrorTip]="dateErrors">
+                        <nz-form-control *ngIf="!loadingSession" [nzErrorTip]="dateErrors">
                             <nz-date-picker formControlName="date" [nzShowTime]="{nzHideDisabledOptions: true, nzFormat: 'HH:mm'}"
                                 nzFormat="dd/MM/yyyy HH:mm" [nzDisabledDate]="disabledDate" nzPlaceHolder="Seleccionar"
                             >
@@ -34,7 +35,7 @@
                 <div nz-col nzXs="24">
                     <nz-form-item>
                         <nz-form-label><strong>Duración</strong></nz-form-label>
-                        <nz-form-control [nzErrorTip]="durationErrors">
+                        <nz-form-control *ngIf="!loadingSession" [nzErrorTip]="durationErrors">
                             <nz-input-number formControlName="duration" [nzMin]="15" [nzMax]="240" [nzStep]="15"
                                 [nzFormatter]="durationFormatter" [nzParser]="durationParser" nzPlaceHolder="Seleccionar"
                             ></nz-input-number>
@@ -56,7 +57,7 @@
                 <div nz-col nzXs="24">
                     <nz-form-item>
                         <nz-form-label><strong>Tipo de servicio</strong></nz-form-label>
-                        <nz-form-control [nzErrorTip]="serviceTypeErrors">
+                        <nz-form-control *ngIf="!loadingSession" [nzErrorTip]="serviceTypeErrors">
                             
                             <nz-select nzAllowClear nzPlaceHolder="Seleccionar" formControlName="serviceType">
                                 <nz-option *ngFor="let type of serviceTypes" [nzValue]="type" [nzLabel]="type">
@@ -77,9 +78,9 @@
         <div nz-col nzXs="24" nzLg="20">
             <nz-form-item>
                 <nz-form-label><strong>Evaluaciones</strong></nz-form-label>
-                <nz-form-control>
+                <nz-form-control *ngIf="!loadingSession">
 
-                   <!-- Array Form --> 
+                    <!-- Array Form -->
                     <ng-container formArrayName="evaluations">
                         <div class="evaluation-div" *ngFor="let _ of evaluationsControl.controls; index as i">
                             <ng-container [formGroupName]="i">
@@ -114,7 +115,7 @@
         <div nz-col nzXs="24" nzLg="20">
             <nz-form-item>
                 <nz-form-label><strong>Comentarios de la sesión</strong></nz-form-label>
-                <nz-form-control [nzErrorTip]="commentErrors">
+                <nz-form-control *ngIf="!loadingSession" [nzErrorTip]="commentErrors">
                     <ckeditor formControlName="comments" [editor]="editor" [config]="editorConfig"></ckeditor>
                     <ng-template #commentErrors let-control>
                         <ng-container *ngIf="control.hasError('required')">El comentario es requerido<br></ng-container>
@@ -125,7 +126,7 @@
     </div>
 
     <!-- Actions -->
-    <div nz-row nzJustify="center" [nzGutter]="40">
+    <div nz-row nzJustify="center" [nzGutter]="40" *ngIf="!loadingSession">
         <div nz-col>
             <!-- Button id to decide when to create as draft via submitter.id -->
             <button id="draft" nz-button nzType="default" [nzLoading]="actionLoading">
@@ -140,3 +141,4 @@
         </div>
     </div>
 </form>
+</nz-spin>

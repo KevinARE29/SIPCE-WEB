@@ -169,7 +169,7 @@ export class TeacherInterviewComponent implements OnInit {
     session.participants = formValue['participants'];
     session.evaluations = formValue['evaluations'];
 
-    this.sessionService.createSession(this.expedientId, this.studentId, session).subscribe(
+    this.sessionService.saveSession(this.expedientId, this.studentId, session).subscribe(
       () => {
         const message = isDraft ? 'La sesión se ha guardado como borrador.' : 'La sesión ha sido registrada';
         this.message.success(message);
