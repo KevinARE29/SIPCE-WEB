@@ -144,7 +144,7 @@
         {
             "title": "Agenda",
             "icon": "calendar",
-            "permissions": [19],
+            "permissions": [19, 22],
             "allowed": null,
             "children": [
                 {
@@ -170,6 +170,20 @@
                     "route": "expedientes",
                     "name": "Estudiantes",
                     "permission": 33,
+                    "allowed": false
+                }
+            ]
+        },
+        {
+            "title": "Reportes",
+            "icon": "book",
+            "permissions": [0],
+            "allowed": false,
+            "children": [
+                {
+                    "route": "reportes/tipos-de-sesion",
+                    "name": "Citas por tipo de sesión",
+                    "permission": 0,
                     "allowed": false
                 }
             ]
