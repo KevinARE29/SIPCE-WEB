@@ -161,10 +161,7 @@ export class SessionService {
       data.agreements = session.agreements;
       data.treatedTopics = session.treatedTopics;
       data.responsibles = session.responsibles;
-      
-      if (session.otherResponsible) {
-        data.otherResponsible = session.otherResponsible;
-      }
+      data.otherResponsible = session.otherResponsible;
     }
 
     if (session.id) {
