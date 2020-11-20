@@ -5,10 +5,10 @@
         <div nz-col [nzXs]="{span: 8, offset: 4}" [nzSm]="{span: 6, offset: 6}" [nzLg]="{span: 4, offset: 8}">
             <div nz-row nzJustify="center">
                 <ng-container *ngIf="student.currentPhoto; else defaultPhoto">
-                    <nz-avatar [nzSize]="64" [nzSrc]="student.currentPhoto['path']"></nz-avatar>
+                    <nz-avatar [nzSize]="100" [nzSrc]="student.currentPhoto['path']"></nz-avatar>
                 </ng-container>
                 <ng-template #defaultPhoto>
-                    <nz-avatar [nzSize]="64" nzIcon="user"></nz-avatar>
+                    <nz-avatar [nzSize]="100" nzIcon="user"></nz-avatar>
                 </ng-template>
             </div>
             <div nz-row nzJustify="center" class="links">

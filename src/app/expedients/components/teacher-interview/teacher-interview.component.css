@@ -2,3 +2,7 @@ nz-input-number, nz-date-picker, nz-select {
     width: 100%;
     border-radius: 7px;
 }
+
+.evaluation-div {
+    margin-bottom: 10px;
+}

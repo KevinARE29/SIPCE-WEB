@@ -74,12 +74,16 @@
                 <div nz-col nzXs="24">
                     <nz-form-item>
                         <nz-form-label><strong>Participantes</strong></nz-form-label>
-                        <nz-form-control
-                            [nzValidateStatus]="participantsControl.dirty && !participantsControl.valid ? 'error' : 'success'"
-                            nzErrorTip="Debe seleccionar por lo menos un participante"
-                        >
+                        <nz-form-control [nzErrorTip]="participantsErrors">
+                            <nz-select nzMode="multiple" formControlName="participants" nzPlaceHolder="Seleccionar" [nzDropdownMatchSelectWidth]="false" [nzLoading]="loadingUsers">
+                                <ng-container *ngFor="let user of userResults">
+                                    <nz-option [nzLabel]="user.firstname + ' ' + user.lastname" [nzValue]="user.id"></nz-option>
+                                </ng-container>
+                            </nz-select>
             
-                        
+                            <ng-template #participantsErrors let-control>
+                                <ng-container *ngIf="control.hasError('required')">Seleccione por lo menos un participante<br></ng-container>
+                            </ng-template>
                         </nz-form-control>
                     </nz-form-item>
                 </div>
@@ -88,11 +92,35 @@
                 <div nz-col nzXs="24">
                     <nz-form-item>
                         <nz-form-label><strong>Evaluaciones</strong></nz-form-label>
-                        <nz-form-control [nzErrorTip]="evaluationsErrors">
-                            
-                            <ng-template #evaluationsErrors let-control>
-                                <ng-container *ngIf="control.hasError('required')">Las evaluaciones son requeridas<br></ng-container>
-                            </ng-template>
+                        <nz-form-control>
+
+                           <!-- Array Form --> 
+                            <ng-container formArrayName="evaluations">
+                                <div class="evaluation-div" *ngFor="let _ of evaluationsControl.controls; index as i">
+                                    <ng-container [formGroupName]="i">
+
+                                        <!-- Control -->
+                                        <nz-form-control [nzErrorTip]="evaluationsErrors"> 
+
+                                            <!-- Control Layout -->
+                                            <div nz-row nzLayout="horizontal">   
+                                                <textarea nz-col nzSpan="22" nzLg="21" nzXl="22" nz-input formControlName="description" placeholder="Evaluación"></textarea>
+                                                <a nz-col nzSpan="2" nzLg="3" nzXl="2" nz-button nzType="link" (click)="removeEvaluation(i)"><i nz-icon nzType="minus-circle" nzTheme="outline"></i></a>
+                                            </div>
+                                            <!-- / Control Layout -->
+
+                                        </nz-form-control>
+                                        <!-- / Control -->
+    
+                                        <ng-template #evaluationsErrors let-control>
+                                            <ng-container *ngIf="control.hasError('required')">La evaluación es requerida<br></ng-container>
+                                        </ng-template>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                            <!-- / Array Form --> 
+    
+                            <a nz-button nzType="link" (click)="addEvaluation()">Agregar evaluación <i nz-icon nzType="plus-circle" nzTheme="outline"></i></a>
                         </nz-form-control>
                     </nz-form-item>
                 </div>
@@ -117,11 +145,13 @@
     <!-- Actions -->
     <div nz-row nzJustify="center" [nzGutter]="40">
         <div nz-col>
+            <!-- Button id to decide when to create as draft via submitter.id -->
             <button id="draft" nz-button nzType="default" [nzLoading]="actionLoading">
                 Guardar borrador
             </button>
         </div>    
         <div nz-col>
+            <!-- Button id to decide when to create as draft via submitter.id -->
             <button id="no-draft" nz-button nzType="primary" [nzLoading]="actionLoading">
                 Registrar entrevista
             </button>
