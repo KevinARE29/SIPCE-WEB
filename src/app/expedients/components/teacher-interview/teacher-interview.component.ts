@@ -81,7 +81,7 @@ export class TeacherInterviewComponent implements OnInit {
       duration: [null, [Validators.required]],
       serviceType: [null, [Validators.required]],
       participants: [[], [Validators.required]],
-      evaluations: this.fb.array([], [Validators.required]),
+      evaluations: this.fb.array([]),
       comments: [null, [Validators.required]]
     });
 
