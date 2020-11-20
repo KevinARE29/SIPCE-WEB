@@ -131,7 +131,15 @@ export class SessionService {
     );
   }
 
-  createSession(expedientId: number, studentId: number, session: Session): Observable<unknown> {
+  getSession(expedientId: number, studentId: number, sessionId: number): Observable<Session> {
+    let url = this.baseUrl + 'students/' + studentId + '/expedients/' + expedientId + '/sessions/' + sessionId;
+
+    return this.http.get<Session>(url).pipe(
+      catchError(this.handleError())
+    );
+  }
+
+  saveSession(expedientId: number, studentId: number, session: Session): Observable<unknown> {
     let url = this.baseUrl + 'students/' + studentId + '/expedients/' + expedientId + '/sessions';
 
     const data: any = {
@@ -159,7 +167,12 @@ export class SessionService {
       }
     }
 
-    return this.http.post<Session>(url, JSON.stringify(data)).pipe(catchError(this.handleError()));
+    if (session.id) {
+      url += '/' + session.id;
+      return this.http.patch<Session>(url, JSON.stringify(data)).pipe(catchError(this.handleError()));
+    } else {
+      return this.http.post<Session>(url, JSON.stringify(data)).pipe(catchError(this.handleError()));
+    }
   }
 
   deleteSession(expedientId: number, studentId: number, sessionId: number): Observable<void> {

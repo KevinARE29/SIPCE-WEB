@@ -1,16 +1,14 @@
+import { User } from '../../users/shared/user.model';
+import { Responsible } from 'src/app/students/shared/responsible.model';
+
 class Evaluation {
     id: number;
     description: string;
 }
 
-class Responsible {
+class ResponsibleAttendance {
     id: number;
     attended: boolean;
-}
-
-class OtherResponsible {
-    otherResponsibleName: string;
-    otherResponsibleRelationship: string;
 }
 
 export class Session {
@@ -28,15 +26,31 @@ export class Session {
     // Filter field
     finishedAt: Date;
 
-    // Teach interview form.
+    // Teach interview request
     participants: number[];
+
+    // Teacher interview response
+    counselor: User[];
 
     // Responsible interview
     startHour: Date;
     treatedTopics: string;
     agreements: string;
 
-    // Responsible interview form
-    responsibles: Responsible[];
-    otherResponsible: OtherResponsible;
+    // Responsible interview request
+    responsibles: ResponsibleAttendance[];
+    otherResponsible: {
+        otherResponsibleName: string;
+        otherResponsibleRelationship: string;
+    }
+
+    // Responsible interview response
+    sessionResponsibleAssistence: {
+        responsible1Assistence: boolean;
+        responsible2Assistence: boolean;
+        otherResponsibleName: boolean;
+        otherResponsibleRelationship: string;
+        responsible1: Responsible;
+        responsible2: Responsible;
+    }
 }
