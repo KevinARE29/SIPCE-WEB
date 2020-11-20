@@ -82,11 +82,75 @@
 
         <!-- Participants -->
         <div nz-col nzXs="24" [nzLg]="{span: 9, offset: 2}" [nzXl]="{span: 8, offset: 4}">
-            <div nz-row [nzGutter]="10">
 
+            <nz-spin nzTip="Cargando ..." [nzSpinning]="loadingResponsibles">
+                <div nz-row [nzGutter]="10">
+
+                    <!-- Responsibles -->
+                    <div nz-col nzXs="24">
+                        <nz-form-item>
+                            <nz-form-label><strong>Participantes</strong></nz-form-label>
+                            <nz-form-control *ngIf="responsibleOne">
+                                
+                                <label nz-checkbox formControlName="responsibleOne">
+                                    {{responsibleOne.firstname}} {{responsibleOne.lastname}} ({{responsibleOne.relationship}})
+                                </label>
     
+                            </nz-form-control>
+    
+                            <nz-form-control *ngIf="responsibleTwo">
+                                
+                                <label nz-checkbox formControlName="responsibleTwo">
+                                    {{responsibleTwo.firstname}} {{responsibleTwo.lastname}} ({{responsibleTwo.relationship}})
+                                </label>
+    
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
 
-            </div>
+                    <!-- Other responsible -->
+                    <div nz-col nzXs="8">
+                        <nz-form-item>
+                            <nz-form-control>
+                                <label nz-checkbox formControlName="otherResponsible" (ngModelChange)="onChangeOtherResponsible($event)">Otro</label>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+
+                    <div nz-col nzXs="16">
+                        <nz-form-item>
+                            <nz-form-control [nzErrorTip]="otherResponsibleRelationshipErrors">
+                                
+                                <nz-select nzShowSearch nzAllowClear formControlName="otherResponsibleRelationship" nzPlaceHolder="Seleccionar parentesco">
+                                    <nz-option *ngFor="let relation of kinshipRelationships" [nzValue]="relation" [nzLabel]="relation">
+                                    </nz-option>
+                                </nz-select>
+
+                                <ng-template #otherResponsibleRelationshipErrors let-control>
+                                    <ng-container *ngIf="control.hasError('required')">La relación es requerida<br></ng-container>
+                                </ng-template>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+
+                    <div nz-col nzXs="24">
+                        <nz-form-item>
+                            <nz-form-control [nzErrorTip]="otherResponsibleNameErrors">
+                                
+                                <input nz-input formControlName="otherResponsibleName" placeholder="Nombre del responsable" />
+
+                                <ng-template #otherResponsibleNameErrors let-control>
+                                    <ng-container *ngIf="control.hasError('required')">El nombre del responsable es requerido<br></ng-container>
+                                </ng-template>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+
+                    
+    
+                </div>
+            </nz-spin>
+
         </div>
 
         <!-- Treated Topics -->

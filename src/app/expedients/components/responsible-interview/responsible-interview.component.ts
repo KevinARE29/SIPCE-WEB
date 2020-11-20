@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { differenceInCalendarDays } from 'date-fns';
@@ -8,8 +8,11 @@ import { differenceInCalendarDays } from 'date-fns';
 import { ServiceTypes } from './../../../shared/enums/service-types.enum';
 import { Session } from '../../shared/session.model';
 import { SessionTypes } from 'src/app/shared/enums/session-types.enum';
+import { Responsible } from 'src/app/students/shared/responsible.model';
+import { KinshipRelationship } from './../../../shared/kinship-relationship.enum';
 
 import { SessionService } from '../../shared/session.service';
+import { ResponsibleService } from 'src/app/students/shared/responsible.service';
 
 // Editor.
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -33,6 +36,12 @@ export class ResponsibleInterviewComponent implements OnInit {
   sessionForm: FormGroup;
   actionLoading = false;
 
+  // Responsibles
+  responsibleOne: Responsible;
+  responsibleTwo: Responsible;
+  loadingResponsibles = false;
+  kinshipRelationships = Object.keys(KinshipRelationship).filter((k) => isNaN(Number(k)));
+
   // Duration input.
   durationFormatter = (value: number) => value ? `${value} min` : '';
   durationParser = (value: string) => value.replace(' min', '');
@@ -55,6 +64,7 @@ export class ResponsibleInterviewComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private sessionService: SessionService,
+    private responsibleService: ResponsibleService,
     private message: NzMessageService,
     private notification: NzNotificationService,
     private modal: NzModalService
@@ -75,12 +85,65 @@ export class ResponsibleInterviewComponent implements OnInit {
       date: [null, [Validators.required]],
       time: [null, [Validators.required]],
       duration: [null, [Validators.required]],
+      responsibleOne: [false],
+      responsibleTwo: [false],
+      otherResponsible: [false],
+      otherResponsibleName: this.fb.control({value: '', disabled: true}),
+      otherResponsibleRelationship: this.fb.control({value: '', disabled: true}),
       serviceType: [null, [Validators.required]],
       agreements: [null, [Validators.required]],
       treatedTopics: [null, [Validators.required]],
-      evaluations: this.fb.array([], [Validators.required]),
+      evaluations: this.fb.array([]),
       comments: [null, [Validators.required]]
     });
+
+    this.getResponsibles();
+  }
+
+  // Responsibles
+  getResponsibles(): void {
+    this.loadingResponsibles = true;
+    this.responsibleService.getResponsibles(this.studentId).subscribe((r) => {
+      const responsibles = r['data'];
+
+      if (responsibles[0]) {
+        this.responsibleOne = responsibles[0];
+      }
+
+      if (responsibles[1]) {
+        this.responsibleOne = responsibles[1];
+      }
+
+      this.loadingResponsibles = false;
+    });
+  }
+
+  get otherResponsibleRelationshipControl(): AbstractControl {
+    return this.sessionForm.get('otherResponsibleRelationship');
+  }
+
+  get otherResponsibleNameControl(): AbstractControl {
+    return this.sessionForm.get('otherResponsibleName');
+  }
+
+  onChangeOtherResponsible(checked: boolean): void {
+    if (checked) {
+      this.otherResponsibleRelationshipControl.setValidators([Validators.required]);
+      this.otherResponsibleRelationshipControl.updateValueAndValidity();
+      this.otherResponsibleRelationshipControl.enable();
+
+      this.otherResponsibleNameControl.setValidators([Validators.required]);
+      this.otherResponsibleNameControl.updateValueAndValidity();
+      this.otherResponsibleNameControl.enable();
+    } else {
+      this.otherResponsibleRelationshipControl.setValidators(null);
+      this.otherResponsibleRelationshipControl.updateValueAndValidity();
+      this.otherResponsibleRelationshipControl.disable();
+
+      this.otherResponsibleNameControl.setValidators(null);
+      this.otherResponsibleNameControl.updateValueAndValidity();
+      this.otherResponsibleNameControl.disable();
+    }
   }
 
   // Evaluations
@@ -122,21 +185,19 @@ export class ResponsibleInterviewComponent implements OnInit {
 
     const isDraft = event.submitter.id === 'draft';
 
-    console.log(this.sessionForm.value);
-
-    // if (this.sessionForm.valid) {
-    //   if (isDraft) {
-    //     this.createSession(true);
-    //   } else {
-    //     this.modal.confirm({
-    //       nzTitle: '¿Desea registrar la sesión?',
-    //       nzContent: 'La sesión ya no se podrá editar luego de realizar esta acción. ¿Desea continuar?',
-    //       nzOnOk: () => {
-    //         this.createSession(false)
-    //       }
-    //     });
-    //   }
-    // }
+    if (this.sessionForm.valid) {
+      if (isDraft) {
+        this.createSession(true);
+      } else {
+        this.modal.confirm({
+          nzTitle: '¿Desea registrar la sesión?',
+          nzContent: 'La sesión ya no se podrá editar luego de realizar esta acción. ¿Desea continuar?',
+          nzOnOk: () => {
+            this.createSession(false)
+          }
+        });
+      }
+    }
   }
 
   createSession(isDraft: boolean): void {
@@ -155,6 +216,30 @@ export class ResponsibleInterviewComponent implements OnInit {
     session.treatedTopics = formValue['treatedTopics'];
     session.comments = formValue['comments'];
     session.evaluations = formValue['evaluations'];
+
+    // Responsibles.
+    session.responsibles = [];
+
+    if (this.responsibleOne) {
+      session.responsibles.push({
+        id: this.responsibleOne.id,
+        attended: formValue['responsibleOne']
+      });
+    }
+
+    if (this.responsibleTwo) {
+      session.responsibles.push({
+        id: this.responsibleTwo.id,
+        attended: formValue['responsibleTwo']
+      });
+    }
+
+    if (formValue['otherResponsible']) {
+      session.otherResponsible = {
+        otherResponsibleName: formValue['otherResponsibleName'],
+        otherResponsibleRelationship: formValue['otherResponsibleRelationship']
+      }
+    }
 
     this.sessionService.createSession(this.expedientId, this.studentId, session).subscribe(
       () => {

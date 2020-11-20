@@ -148,6 +148,17 @@ export class SessionService {
       data.participants = session.participants;
     }
 
+    if (session.sessionType === SessionTypes.ENTREVISTA_PADRES) {
+      data.startHour = session.startHour;
+      data.agreements = session.agreements;
+      data.treatedTopics = session.treatedTopics;
+      data.responsibles = session.responsibles;
+      
+      if (session.otherResponsible) {
+        data.otherResponsible = session.otherResponsible;
+      }
+    }
+
     return this.http.post<Session>(url, JSON.stringify(data)).pipe(catchError(this.handleError()));
   }
 

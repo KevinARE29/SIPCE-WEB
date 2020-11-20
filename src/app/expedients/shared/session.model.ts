@@ -3,20 +3,40 @@ class Evaluation {
     description: string;
 }
 
+class Responsible {
+    id: number;
+    attended: boolean;
+}
+
+class OtherResponsible {
+    otherResponsibleName: string;
+    otherResponsibleRelationship: string;
+}
+
 export class Session {
     id: number;
     identifier: number;
+
     sessionType: string;
     serviceType: string;
-
     draft: boolean;
     startedAt: Date;
-    startHour: Date;
-    finishedAt: Date;
     duration: number;
     comments: string;
+    evaluations: Evaluation[];
+
+    // Filter field
+    finishedAt: Date;
+
+    // Teach interview form.
+    participants: number[];
+
+    // Responsible interview
+    startHour: Date;
     treatedTopics: string;
     agreements: string;
-    evaluations: Evaluation[];
-    participants: number[];
+
+    // Responsible interview form
+    responsibles: Responsible[];
+    otherResponsible: OtherResponsible;
 }
