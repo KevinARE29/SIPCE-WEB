@@ -46,7 +46,6 @@ export class TeacherInterviewComponent implements OnInit {
   userResults: User[] = [];
   loadingUsers = false;
 
-
   // Editor
   editor = ClassicEditor;
   editorConfig = {

@@ -13,7 +13,6 @@ import { SessionTypes } from './../../../shared/enums/session-types.enum';
 import { Pagination } from 'src/app/shared/pagination.model';
 import { Session } from '../../shared/session.model';
 
-
 @Component({
   selector: 'app-student-sessions',
   templateUrl: './student-sessions.component.html',
