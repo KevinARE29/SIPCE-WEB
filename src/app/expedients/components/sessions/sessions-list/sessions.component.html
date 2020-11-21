@@ -102,15 +102,17 @@
                         <td>{{data.lastname}}</td>
                         <td>{{data.currentShift.name}}</td>
                         <td>{{data.currentGrade.name}}</td>
-                        <td>{{data.sessionsCounter}}</td>
+                        <td [nzAlign]="'center'">{{data.expedient?.id ? data.sessionsCounter : '-'}}</td>
                         <td [nzAlign]="'center'">
                             <a [routerLink]="['/estudiantes', data.id, 'detalle']">
                                 Perfil
                             </a>
-                            <nz-divider nzType="vertical"></nz-divider>
-                            <!-- <a>Expediente</a>
-                            <nz-divider nzType="vertical"></nz-divider> -->
-                            <a [routerLink]="[data.expedient?.id ,'estudiantes', data.id, 'sesiones']">Sesiones</a>
+                            <nz-divider *ngIf="!data.expedient?.id" nzType="vertical"></nz-divider>
+                            <a *ngIf="!data.expedient?.id">Crear expediente</a>
+                            <nz-divider *ngIf="data.expedient?.id" nzType="vertical"></nz-divider>
+                            <a *ngIf="data.expedient?.id">Expediente</a>
+                            <nz-divider *ngIf="data.expedient?.id" nzType="vertical"></nz-divider>
+                            <a *ngIf="data.expedient?.id" [routerLink]="[data.expedient?.id ,'estudiantes', data.id, 'sesiones']">Sesiones</a>
                         </td>
                     </tr>
                 </tbody>
