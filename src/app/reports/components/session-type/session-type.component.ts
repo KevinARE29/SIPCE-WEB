@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 
 import { subMonths, differenceInCalendarDays } from 'date-fns';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
+import { Shift } from 'src/app/calendar/components/counseling-requests/counseling-requests.component';
+import { User } from 'src/app/users/shared/user.model';
 import { ReportService } from '../../shared/report.service';
 
 import { SessionTypes } from './../../../shared/enums/session-types.enum';
@@ -23,15 +26,10 @@ export interface SessionsReport {
 })
 export class SessionTypeComponent implements OnInit {
   loading = false;
-  listOfDisplayData: {
-    counselor: string;
-    count: number;
-    cycle: string;
-    grade: string;
-    sessionType: string;
-    shift: string;
-  }[] = [];
+  listOfDisplayData: SessionsReport[];
+  schoolYear: unknown;
 
+  // Search
   searchParams: {
     sessionType: string;
     shiftId: number;
@@ -40,21 +38,19 @@ export class SessionTypeComponent implements OnInit {
     counselorId: number;
     dateRange: unknown;
   };
-  type: string;
+
+  // Search lists
+  shifts: ShiftPeriodGrade[];
+  cycles: ShiftPeriodGrade[];
+  grades: ShiftPeriodGrade[];
+  counselors: User[];
   sessionTypesList: string[];
 
   constructor(private reportService: ReportService) {}
 
   ngOnInit(): void {
     this.init();
-    // this.listOfDisplayData = new Array<{
-    //   counselor: string;
-    //   count: number;
-    //   cycle: string;
-    //   grade: string;
-    //   sessionType: string;
-    //   shift: string;
-    // }>();
+    this.getCatalogsData();
   }
 
   init(): void {
@@ -70,18 +66,59 @@ export class SessionTypeComponent implements OnInit {
       dateRange: null
     };
 
+    this.shifts = new Array<ShiftPeriodGrade>();
+    this.cycles = new Array<ShiftPeriodGrade>();
+    this.grades = new Array<ShiftPeriodGrade>();
+    this.counselors = new Array<User>();
+
     this.sessionTypesList = Object.keys(SessionTypes).filter((k) => isNaN(Number(k)));
     date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
 
     this.searchParams.dateRange = [date, currentDate];
   }
 
-  getData(params: NzTableQueryParams): void {
-    this.reportService.mergeUserData(params, this.searchParams, 'session_type').subscribe((data) => {
-      this.listOfDisplayData = [];
-      this.listOfDisplayData = data['reportData']['data'];
-      console.log(this.listOfDisplayData);
+  getCatalogsData(): void {
+    this.reportService.mergeUserData().subscribe((data) => {
+      this.schoolYear = data['assignation'][0];
+      this.counselors = data['counselors']['data'];
+
+      this.schoolYear['shifts'].forEach((shift) => {
+        this.shifts.push({ id: shift.shift.id, name: shift.shift.name, active: shift.shift.active });
+      });
     });
+  }
+
+  getSessionsReport(params: NzTableQueryParams): void {
+    this.loading = true;
+
+    this.reportService.getSessionsReport(params, this.searchParams, 'session_type').subscribe((data) => {
+      this.listOfDisplayData = [];
+      this.listOfDisplayData = data['data'];
+
+      this.loading = false;
+    });
+  }
+
+  cleanSelectors(type: string, id: number): void {
+    switch (type) {
+      case 'shift':
+        this.searchParams.cycleId = null;
+
+        this.cycles = id
+          ? this.schoolYear['shifts'].find((x) => x['shift'].id === id)['shift']['cycles']
+          : new Array<ShiftPeriodGrade>();
+        break;
+      case 'cycle':
+        const cycles = this.schoolYear['shifts'].find((x) => x['shift'].id === id)['shift']['cycles'];
+
+        this.grades = id ? cycles.find((x) => x['cycle'].id === id)['gradeDetails'] : new Array<ShiftPeriodGrade>();
+        if (this.grades) this.grades.sort((a, b) => a.id - b.id);
+        break;
+    }
+
+    this.searchParams.gradeId = null;
+
+    this.getSessionsReport(null);
   }
 
   onChangeDatePicker(result: Date[]): void {

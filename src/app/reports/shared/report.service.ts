@@ -3,10 +3,12 @@ import { Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
 
 import { subMonths } from 'date-fns';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 import { environment } from 'src/environments/environment';
+
 import { UserService } from 'src/app/users/shared/user.service';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { SchoolYearService } from 'src/app/school-year/shared/school-year.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,11 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 export class ReportService {
   baseUrl: string;
 
-  constructor(private http: HttpClient, private userService: UserService) {
+  constructor(
+    private http: HttpClient,
+    private userService: UserService,
+    private schoolYearService: SchoolYearService
+  ) {
     this.baseUrl = environment.apiURL;
   }
 
@@ -72,14 +78,12 @@ export class ReportService {
     }
 
     url += queryParams;
-    console.log(url);
     return this.http.get<unknown>(url);
   }
 
-  mergeUserData(sort: NzTableQueryParams, searchParams: unknown, reportType: string): Observable<any> {
+  mergeUserData(): Observable<any> {
     return forkJoin({
-      reportData: this.getSessionsReport(sort, searchParams, reportType),
-      userProfile: this.userService.getUserProfile(),
+      assignation: this.schoolYearService.getSchoolYear(),
       counselors: this.userService.getUsersByRole(4)
     });
   }
