@@ -10,6 +10,7 @@ import { Student } from 'src/app/students/shared/student.model';
 })
 export class StudentsDetailsComponent implements OnInit {
   @Input() id: number;
+  @Input() openLinkInOtherTab: boolean = true;
 
   // Student data
   student: Student;

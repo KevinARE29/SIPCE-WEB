@@ -151,4 +151,22 @@ export class StudentSessionsComponent implements OnInit {
       this.router.navigate([this.createEventType], {relativeTo: this.route});
     }
   }
+
+  getSessionPath(sessionType): string {
+    let path = '';
+
+    switch(sessionType) {
+      case SessionTypes.SESION: 
+        path = 'sesion-individual';
+        break;
+      case SessionTypes.ENTREVISTA_DOCENTE:
+        path = 'entrevista-docente';
+        break;
+      case SessionTypes.ENTREVISTA_PADRES:
+        path = 'entrevista-responsable';
+        break;
+    }
+
+    return path;
+  } 
 }

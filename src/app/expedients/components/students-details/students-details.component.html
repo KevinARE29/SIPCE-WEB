@@ -12,7 +12,7 @@
                 </ng-template>
             </div>
             <div nz-row nzJustify="center" class="links">
-                <a [routerLink]="['/estudiantes', student.id, 'detalle']">Perfil</a>
+                <a [target]="openLinkInOtherTab ? '_blank' : null" [routerLink]="['/estudiantes', student.id, 'detalle']">Perfil</a>
                 <!-- <a>Expediente</a> -->
             </div>
         </div>

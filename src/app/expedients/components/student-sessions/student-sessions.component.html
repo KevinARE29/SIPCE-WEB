@@ -4,7 +4,7 @@
     </div>
 </div>
 
-<app-students-details [id]="studentId"></app-students-details>
+<app-students-details [id]="studentId" [openLinkInOtherTab]="false"></app-students-details>
 
 <!-- Pre-create button-->
 <div nz-row nzJustify="center">
@@ -65,11 +65,11 @@
                         <td>{{data.sessionType}}</td>
                         <td>{{data.startedAt | date: 'dd/MM/yyyy'}}</td>
                         <td [nzAlign]="'center'">
-                            <a *ngIf="!data.draft">
+                            <a *ngIf="!data.draft" [routerLink]="[getSessionPath(data.sessionType), data.id]">
                                 <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
                             </a>
                             <ng-container *ngIf="data.draft">
-                                <a>
+                                <a [routerLink]="[getSessionPath(data.sessionType), data.id]">
                                     <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
                                 </a>
                                 <nz-divider nzType="vertical"></nz-divider>
