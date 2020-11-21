@@ -1,7 +1,7 @@
 export enum InterventionProgramTypes {
-    ACADEMICO = 'Individual Académico',
-    CONDUCTUAL = 'Individual Conductual',
-    EMOCIONAL = 'Individual Emocional',
-    MIXTO = 'Individual Mixto',
-    GRUPAL = 'Grupal'
+    ACADEMICO = 'Individual académico',
+    CONDUCTUAL = 'Individual conductual',
+    EMOCIONAL = 'Individual emocional',
+    MIXTO = 'Individual mixto',
+    GRUPAL = 'Grupales'
 }

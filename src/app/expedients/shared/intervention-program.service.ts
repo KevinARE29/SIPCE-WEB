@@ -59,7 +59,7 @@ export class InterventionProgramService {
 
       if (search.type) queryParams += '&type=' + search.type;
 
-      if (search.status) queryParams += '&status=' + search.status;
+      if (!search.status) queryParams += '&status=' + search.status;
     }
 
     if (queryParams.charAt(0) === '&') queryParams = queryParams.replace('&', '?');
