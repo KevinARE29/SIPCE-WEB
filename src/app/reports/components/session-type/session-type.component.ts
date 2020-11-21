@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { format, subMonths, differenceInCalendarDays } from 'date-fns';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 import { SessionTypes } from './../../../shared/enums/session-types.enum';
 
@@ -47,7 +48,7 @@ export class SessionTypeComponent implements OnInit {
   counselors: User[];
   sessionTypesList: string[];
 
-  constructor(private reportService: ReportService) {}
+  constructor(private reportService: ReportService, private notification: NzNotificationService) {}
 
   ngOnInit(): void {
     this.init();
@@ -133,6 +134,8 @@ export class SessionTypeComponent implements OnInit {
   };
 
   exportExcel(): void {
+    this.notification.create('info', 'Exportación en progreso', 'El archivo estará listo en unos momentos.');
+
     const fileName = `Citas por tipo de sesión - ${format(new Date(), 'ddMMyyyyHHmmss')}.xlsx`;
 
     /* Table id is passed over here */
