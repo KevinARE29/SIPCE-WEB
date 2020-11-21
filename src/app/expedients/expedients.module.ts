@@ -16,6 +16,9 @@ import { StudentSessionComponent } from './components/sessions/student-session/s
 import { ResponsibleInterviewComponent } from './components/sessions/responsible-interview/responsible-interview.component';
 import { TeacherInterviewComponent } from './components/sessions/teacher-interview/teacher-interview.component';
 
+// Intervention programs.
+import { InterventionProgramsListComponent } from './components/intervention-programs/intervention-programs-list/intervention-programs-list.component';
+import { InterventionProgramsFormComponent } from './components/intervention-programs/intervention-programs-form/intervention-programs-form.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,9 @@ import { TeacherInterviewComponent } from './components/sessions/teacher-intervi
     StudentsDetailsComponent,
     StudentSessionComponent,
     ResponsibleInterviewComponent,
-    TeacherInterviewComponent
+    TeacherInterviewComponent,
+    InterventionProgramsListComponent,
+    InterventionProgramsFormComponent
   ],
   imports: [
     CommonModule,

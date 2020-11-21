@@ -171,6 +171,12 @@
                     "name": "Estudiantes",
                     "permission": 33,
                     "allowed": false
+                },
+                {
+                    "route": "expedientes/programas",
+                    "name": "Programas de intervención",
+                    "permission": 33,
+                    "allowed": false
                 }
             ]
         }
