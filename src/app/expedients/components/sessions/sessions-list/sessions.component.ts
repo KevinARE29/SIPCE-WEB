@@ -6,13 +6,13 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 import { UserService } from 'src/app/users/shared/user.service';
-import { SessionService } from '../../shared/session.service';
+import { SessionService } from '../../../shared/session.service';
 
 import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 import { Pagination } from 'src/app/shared/pagination.model';
 import { Permission } from 'src/app/shared/permission.model';
-import { Session } from '../../shared/session.model';
-import { StudentWithSessions } from '../../shared/student-with-sessions.model';
+import { Session } from '../../../shared/session.model';
+import { StudentWithSessions } from '../../../shared/student-with-sessions.model';
 
 export interface ISessions {
   student: StudentWithSessions;

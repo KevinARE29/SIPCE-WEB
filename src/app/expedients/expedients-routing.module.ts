@@ -3,12 +3,12 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard } from '../login/guards/auth.guard';
 
-import { SessionsComponent } from './components/sessions/sessions.component';
-import { StudentSessionsComponent } from './components/student-sessions/student-sessions.component';
+import { SessionsComponent } from './components/sessions/sessions-list/sessions.component';
+import { StudentSessionsComponent } from './components/sessions/student-sessions/student-sessions.component';
 
-import { StudentSessionComponent } from './components/student-session/student-session.component';
-import { ResponsibleInterviewComponent } from './components/responsible-interview/responsible-interview.component';
-import { TeacherInterviewComponent } from './components/teacher-interview/teacher-interview.component';
+import { StudentSessionComponent } from './components/sessions/student-session/student-session.component';
+import { ResponsibleInterviewComponent } from './components/sessions/responsible-interview/responsible-interview.component';
+import { TeacherInterviewComponent } from './components/sessions/teacher-interview/teacher-interview.component';
 
 const routes: Routes = [
   {
