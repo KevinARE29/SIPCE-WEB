@@ -1,0 +1,111 @@
+<!-- Search engine -->
+<div nz-row [nzGutter]="[10, 10]">
+    <!-- Shift -->
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" nzXl="6">
+        <label>Turno: </label>
+        <!-- <nz-input-group [nzSuffix]="inputClearCode">
+            <input nz-input [(ngModel)]="searchParams.code" placeholder="Buscar NIE" />
+        </nz-input-group>
+        <ng-template #inputClearCode>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.code"
+                (click)="searchParams.code = null; getCounselingRequests()"></i>
+        </ng-template> -->
+    </div>
+
+    <!-- Cycle -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" nzXl="6">
+        <label>Ciclo: </label>
+        <!-- <nz-input-group [nzSuffix]="inputClearName">
+            <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Buscar nombre" />
+        </nz-input-group>
+        <ng-template #inputClearName>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
+                *ngIf="searchParams.firstname" (click)="searchParams.firstname = null; getCounselingRequests()"></i>
+        </ng-template> -->
+    </div>
+
+    <!-- Grade -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" nzXl="6">
+        <label>Grado: </label>
+        <!-- <nz-input-group [nzSuffix]="inputClearLastname">
+            <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Buscar apellido" />
+        </nz-input-group>
+        <ng-template #inputClearLastname>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
+                *ngIf="searchParams.lastname" (click)="searchParams.lastname = null; getCounselingRequests()"></i>
+        </ng-template> -->
+    </div>
+
+    <!-- Counselor -->
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" nzXl="6">
+        <label>Orientador: </label>
+        <nz-input-group>
+            <!-- <nz-select class="shift" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar turno"
+                [(ngModel)]="searchParams.currentShift.id" (ngModelChange)="cleanGradesSelect($event);">
+                <nz-option *ngFor="let shift of shifts" [nzLabel]="shift.name" [nzValue]="shift.id"></nz-option>
+            </nz-select> -->
+        </nz-input-group>
+    </div>
+
+    <!-- Session types -->
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" nzXl="6">
+        <label>Tipo de sesión: </label>
+        <nz-input-group>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar tipo de sesión"
+                [(ngModel)]="searchParams['sessionType']" (ngModelChange)="getData(null)">
+                <nz-option *ngFor="let type of sessionTypesList" [nzLabel]="type" [nzValue]="type"></nz-option>
+            </nz-select>
+        </nz-input-group>
+    </div>
+
+    <!-- Date -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="18" nzLg="12" nzXl="6">
+        <label>Fecha: </label>
+        <nz-input-group>
+            <nz-range-picker nzFormat="dd/MM/yyyy" [ngModel]="searchParams.dateRange"
+                [nzDisabledDate]="disabledDate" (ngModelChange)="onChangeDatePicker($event)"></nz-range-picker>
+        </nz-input-group>
+    </div>
+
+    <!-- Search button-->
+    <div nz-col nzXs="24" nzSm="24" nzMd="6" nzLg="6" nzXl="12">
+        <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+            <button nz-button nzType="primary" (click)="getData(null)">Buscar</button>
+        </div>
+    </div>
+</div>
+
+<div nz-row id="sessions-table">
+    <div nz-col nzSpan="24">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <nz-table #filterTable
+                [nzData]="listOfDisplayData"
+                nzTableLayout="fixed"
+                nzSize="small"
+                (nzQueryParams)="getData($event)"
+            >
+                <thead>
+                    <tr>
+                        <th nzColumnKey="shiftId" [nzSortFn]="true" [nzSortPriority]="1">Turno</th>
+                        <th nzColumnKey="cycleId" [nzSortFn]="true" [nzSortPriority]="2">Ciclo</th>
+                        <th nzColumnKey="gradeId" [nzSortFn]="true" [nzSortPriority]="3">Grado</th>
+                        <th nzColumnKey="counselorId" [nzSortFn]="true" [nzSortPriority]="4">Orientador</th>
+                        <th nzColumnKey="sessionType" [nzSortFn]="true" [nzSortPriority]="5">Tipo de sesión</th>
+                        <th [nzAlign]="'center'">Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let data of filterTable.data">
+                        <td>{{ data.shift }}</td>
+                        <td>{{ data.cycle }}</td>
+                        <td>{{ data.grade }}</td>
+                        <td>{{ data.counselor }}</td>
+                        <td>{{ data.sessionType }}</td>
+                        <td [nzAlign]="'center'">{{ data.count }}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>
