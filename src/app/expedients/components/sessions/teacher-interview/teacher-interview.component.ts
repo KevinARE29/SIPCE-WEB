@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { differenceInCalendarDays } from 'date-fns';
 
 // Models
-import { ServiceTypes } from './../../../shared/enums/service-types.enum';
-import { Session } from '../../shared/session.model';
+import { ServiceTypes } from './../../../../shared/enums/service-types.enum';
+import { User } from '../../../../users/shared/user.model';
+import { Session } from '../../../shared/session.model';
 import { SessionTypes } from 'src/app/shared/enums/session-types.enum';
 
-import { SessionService } from '../../shared/session.service';
+import { UserService } from '../../../../users/shared/user.service';
+import { SessionService } from '../../../shared/session.service';
 
 // Editor.
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -20,11 +22,11 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
-  selector: 'app-student-session',
-  templateUrl: './student-session.component.html',
-  styleUrls: ['./student-session.component.css']
+  selector: 'app-teacher-interview',
+  templateUrl: './teacher-interview.component.html',
+  styleUrls: ['./teacher-interview.component.css']
 })
-export class StudentSessionComponent implements OnInit {
+export class TeacherInterviewComponent implements OnInit {
   // Param.
   studentId: number;
   expedientId: number;
@@ -45,20 +47,22 @@ export class StudentSessionComponent implements OnInit {
   // Service types
   serviceTypes = Object.keys(ServiceTypes).filter((k) => isNaN(Number(k)));
 
-  // Editor.
+  // Participants
+  userResults: User[] = [];
+  loadingUsers = false;
+
+  // Editor
   editor = ClassicEditor;
   editorConfig = {
     language: 'es',
     toolbar: [ 'heading', '|', 'bold', 'italic', '|', 'bulletedList', 'numberedList', '|' ,'undo', 'redo' ]
-  };
-  model = {
-    editorData: '<p>Hello, world!</p>'
   };
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
+    private userService: UserService,
     private sessionService: SessionService,
     private message: NzMessageService,
     private notification: NzNotificationService,
@@ -102,6 +106,7 @@ export class StudentSessionComponent implements OnInit {
     this.sessionForm = this.fb.group({
       date: [this.session ? this.session.startedAt : null, [Validators.required]],
       duration: [this.session ? this.session.duration : null, [Validators.required]],
+      participants: [[], [Validators.required]],
       serviceType: [this.session ? this.session.serviceType : null, [Validators.required]],
       evaluations: this.fb.array([]),
       comments: [this.session ? this.session.comments : null, [Validators.required]]
@@ -111,6 +116,25 @@ export class StudentSessionComponent implements OnInit {
       this.session.evaluations.forEach((evaluation) => {
         this.addEvaluation(evaluation.id, evaluation.description);
       });
+    }
+
+    this.getUsers();
+  }
+
+  // Participants
+  get participantsControl(): AbstractControl {
+    return this.sessionForm.get('participants');
+  }
+
+  getUsers(): void {
+    this.loadingUsers = true;
+    this.userService.getUserByUsername('').subscribe((r) => {
+      this.userResults = r['data'];
+      this.loadingUsers = false;
+    });
+
+    if (this.session) {
+      this.participantsControl.setValue(this.session.counselor.map((participant) => participant.id));
     }
   }
 
@@ -179,11 +203,12 @@ export class StudentSessionComponent implements OnInit {
 
     const session = new Session();
     session.draft = isDraft;
-    session.sessionType = SessionTypes.SESION;
+    session.sessionType = SessionTypes.ENTREVISTA_DOCENTE;
     session.startedAt = formValue['date'];
     session.duration = Number.parseInt(formValue['duration']);
     session.serviceType = formValue['serviceType'];
     session.comments = formValue['comments'];
+    session.participants = formValue['participants'];
     session.evaluations = formValue['evaluations'];
 
     if (this.session) {

@@ -7,11 +7,11 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
-import { SessionService } from '../../shared/session.service';
+import { SessionService } from '../../../shared/session.service';
 
-import { SessionTypes } from './../../../shared/enums/session-types.enum';
+import { SessionTypes } from './../../../../shared/enums/session-types.enum';
 import { Pagination } from 'src/app/shared/pagination.model';
-import { Session } from '../../shared/session.model';
+import { Session } from '../../../shared/session.model';
 
 @Component({
   selector: 'app-student-sessions',
