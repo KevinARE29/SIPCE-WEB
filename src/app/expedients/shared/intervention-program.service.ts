@@ -13,7 +13,7 @@ import { InterventionProgram } from './intervention-program.model';
 @Injectable({
   providedIn: 'root'
 })
-export class SessionService {
+export class InterventionProgramService {
   baseUrl: string;
 
   constructor(
@@ -23,7 +23,7 @@ export class SessionService {
     this.baseUrl = environment.apiURL;
   }
 
-  getSessions(params: NzTableQueryParams, search: InterventionProgram): Observable<InterventionProgram[]> {
+  getPrograms(params: NzTableQueryParams, search: InterventionProgram): Observable<InterventionProgram[]> {
     let url = this.baseUrl + 'intervention-programs';
     let queryParams = '';
 
@@ -71,7 +71,7 @@ export class SessionService {
     );
   }
 
-  saveSession(program: InterventionProgram): Observable<unknown> {
+  saveProgram(program: InterventionProgram): Observable<unknown> {
     let url = this.baseUrl + 'intervention-programs';
 
     const data: any = {
@@ -89,7 +89,7 @@ export class SessionService {
     }
   }
 
-  deleteSession(programId: number): Observable<void> {
+  deleteProgram(programId: number): Observable<void> {
     let url = this.baseUrl + 'intervention-programs/' + programId;
 
     return this.http.delete<void>(url).pipe(

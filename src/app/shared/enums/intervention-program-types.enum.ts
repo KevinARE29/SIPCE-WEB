@@ -1,4 +1,4 @@
-export enum EventTypes {
+export enum InterventionProgramTypes {
     ACADEMICO = 'Individual Académico',
     CONDUCTUAL = 'Individual Conductual',
     EMOCIONAL = 'Individual Emocional',
