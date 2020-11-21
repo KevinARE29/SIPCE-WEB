@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 
-import { subMonths, differenceInCalendarDays } from 'date-fns';
+import * as XLSX from 'xlsx';
+import { format, subMonths, differenceInCalendarDays } from 'date-fns';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
-import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
-import { Shift } from 'src/app/calendar/components/counseling-requests/counseling-requests.component';
-import { User } from 'src/app/users/shared/user.model';
-import { ReportService } from '../../shared/report.service';
 
 import { SessionTypes } from './../../../shared/enums/session-types.enum';
+
+import { ReportService } from '../../shared/report.service';
+import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
+import { User } from 'src/app/users/shared/user.model';
 
 export interface SessionsReport {
   sessionType: string;
@@ -130,4 +131,19 @@ export class SessionTypeComponent implements OnInit {
     // Can not select days after today
     return differenceInCalendarDays(current, new Date()) > 0;
   };
+
+  exportExcel(): void {
+    const fileName = `Citas por tipo de sesión - ${format(new Date(), 'ddMMyyyyHHmmss')}.xlsx`;
+
+    /* Table id is passed over here */
+    const element = document.getElementById('excel-table');
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+
+    /* Generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Citas por tipo de sesión');
+
+    /* Save to file */
+    XLSX.writeFile(wb, fileName);
+  }
 }

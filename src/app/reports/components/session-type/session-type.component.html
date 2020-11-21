@@ -75,6 +75,11 @@
 <div nz-row id="sessions-table">
     <div nz-col nzSpan="24">
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <div nz-row [nzJustify]="'end'">
+                <a style="cursor: pointer" (click)="exportExcel()">
+                    Excel <i nz-icon nzType="download" nzTheme="outline"></i>
+                </a>
+            </div>
             <nz-table #filterTable
                 [nzData]="listOfDisplayData"
                 nzTableLayout="fixed"
@@ -106,3 +111,27 @@
         </nz-spin>
     </div>
 </div>
+
+<table id="excel-table" hidden>
+    <thead>
+        <tr>
+            <th>Turno</th>
+            <th>Ciclo</th>
+            <th>Grado</th>
+            <th>Orientador</th>
+            <th>Tipo de sesión</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let data of listOfDisplayData">
+            <td>{{ data.shift }}</td>
+            <td>{{ data.cycle }}</td>
+            <td>{{ data.grade }}</td>
+            <td>{{ data.counselor }}</td>
+            <td>{{ data.sessionType }}</td>
+            <td>{{ data.count }}</td>
+        </tr>
+    </tbody>
+</table>
