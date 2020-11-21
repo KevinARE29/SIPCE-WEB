@@ -4,7 +4,7 @@
     </div>
 </div>
 
-<app-students-details [id]="studentId"></app-students-details>
+<app-students-details [id]="studentId" [openLinkInOtherTab]="false"></app-students-details>
 
 <!-- Pre-create button-->
 <div nz-row nzJustify="center">
@@ -20,7 +20,7 @@
     <div nz-col nzXs="24" nzSm="16" nzMd="12" nzLg="8">
         <label>Fecha: </label>
         <nz-input-group>
-            <nz-range-picker nzFormat="dd/MM/yyyy" [nzDisabledDate]="disabledDate" (nzOnCalendarChange)="onChangeDatePicker($event)"></nz-range-picker>
+            <nz-range-picker nzFormat="dd/MM/yyyy" [nzDisabledDate]="disabledDate" [(ngModel)]="dateRangeSearch" (ngModelChange)="onChangeDatePicker()"></nz-range-picker>
         </nz-input-group>
     </div>
 
@@ -52,28 +52,28 @@
                 nzSize="small" (nzQueryParams)="getSessions($event)">
                 <thead>
                     <tr>
-                        <th nzColumnKey="identifier">Sesión</th>
-                        <th nzColumnKey="sessionType" [nzSortFn]="true" [nzSortPriority]="1">Tipo de entrevista</th>
-                        <th nzColumnKey="startedAt" [nzSortFn]="true" [nzSortPriority]="2">Fecha</th>
+                        <th nzColumnKey="identifier" [nzSortFn]="true" [nzSortPriority]="1">Sesión</th>
+                        <th nzColumnKey="sessionType" [nzSortFn]="true" [nzSortPriority]="2">Tipo de entrevista</th>
+                        <th nzColumnKey="startedAt" [nzSortFn]="true" [nzSortPriority]="3" [nzSortOrder]="'descend'">Fecha</th>
                         <th [nzAlign]="'center'">Acción</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <tr *ngFor="let data of filterTable.data">
-                        <td>{{data.identifier}}</td>
+                        <td>{{data.identifier || '-'}}</td>
                         <td>{{data.sessionType}}</td>
                         <td>{{data.startedAt | date: 'dd/MM/yyyy'}}</td>
                         <td [nzAlign]="'center'">
-                            <a *ngIf="!data.draft">
+                            <a *ngIf="!data.draft" [routerLink]="[getSessionPath(data.sessionType), data.id]">
                                 <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
                             </a>
                             <ng-container *ngIf="data.draft">
-                                <a>
+                                <a [routerLink]="[getSessionPath(data.sessionType), data.id]">
                                     <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
                                 </a>
                                 <nz-divider nzType="vertical"></nz-divider>
-                                <a>
+                                <a (click)="confirmDelete(data.id)">
                                     <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
                                 </a>
                             </ng-container>    
@@ -97,7 +97,7 @@
                     <nz-select [(ngModel)]="createEventType">
                         <!-- The value of the option is the route to the form component -->
                         <nz-option nzValue="" nzLabel="Seleccionar..." [nzDisabled]="true"></nz-option>
-                        <nz-option nzValue="sesion-individual" nzLabel="Sesión con estudiante"></nz-option>
+                        <nz-option nzValue="sesion-individual" nzLabel="Sesión individual"></nz-option>
                         <nz-option nzValue="entrevista-docente" nzLabel="Entrevista con docente"></nz-option>
                         <nz-option nzValue="entrevista-responsable" nzLabel="Entrevista con padres de familia"></nz-option>
                     </nz-select>

@@ -11,7 +11,7 @@ import { AppPermission } from './app-permission.model';
 export class PermissionService {
   baseUrl: string;
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {
     this.baseUrl = environment.apiURL;
   }
 

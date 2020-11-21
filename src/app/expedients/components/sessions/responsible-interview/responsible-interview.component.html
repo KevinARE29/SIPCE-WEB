@@ -1,0 +1,307 @@
+<div nz-row nzJustify="space-between">
+    <div nz-col>
+        <h1 *ngIf="!loadingSession">
+            {{ session ? 
+                ( session.draft ? 'Editar entrevista con padres de familia' : ('Entrevista con padres de familia #' + session.identifier))
+                : 'Nueva entrevista con padres de familia'}}
+        </h1>
+    </div>
+</div>
+
+<app-students-details [id]="studentId"></app-students-details>
+
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loadingSession">
+<form nz-form nzLayout="vertical" [formGroup]="sessionForm" (ngSubmit)="submitForm($event)">
+
+    <div nz-row nzJustify="center" [nzGutter]="10">
+
+        <!-- Date, duration, service type -->
+        <div nz-col nzXs="24" nzLg="9" nzXl="8">
+            <div nz-row [nzGutter]="10">
+
+                <!-- Date -->
+                <div nz-col nzXs="24">
+                    <nz-form-item>
+                        <nz-form-label><strong>Fecha</strong></nz-form-label>
+
+                        <nz-form-control *ngIf="!loadingSession && (!session || session.draft)" [nzErrorTip]="dateErrors">
+                            <nz-date-picker formControlName="date" [nzShowTime]="{nzHideDisabledOptions: true, nzFormat: 'HH:mm'}"
+                                nzFormat="dd/MM/yyyy HH:mm" [nzDisabledDate]="disabledDate" nzPlaceHolder="Seleccionar"
+                            >
+                            </nz-date-picker>
+                            <ng-template #dateErrors let-control>
+                                <ng-container *ngIf="control.hasError('required')">La fecha es requerida<br></ng-container>
+                            </ng-template>
+                        </nz-form-control>
+
+                        <ng-container *ngIf="session && !session.draft">
+                            {{session.startedAt | date: 'dd/MM/yyyy HH:mm'}}
+                        </ng-container>
+
+                    </nz-form-item>
+                </div>
+
+                <!-- Duration and time -->
+                <div nz-col nzXs="12">
+                    <nz-form-item>
+                        <nz-form-label><strong>Hora de inicio</strong></nz-form-label>
+                        <nz-form-control *ngIf="!loadingSession && (!session || session.draft)" [nzErrorTip]="timeError">
+
+                            <nz-time-picker formControlName="time" nzFormat="HH:mm" nzPlaceHolder="Seleccionar"></nz-time-picker>
+                            
+                            <ng-template #timeError let-control>
+                                <ng-container *ngIf="control.hasError('required')">La hora de inicio es requerida<br></ng-container>
+                            </ng-template>
+                        </nz-form-control>
+
+                        <ng-container *ngIf="session && !session.draft">
+                            {{session.startHour | date: 'HH:mm'}}
+                        </ng-container>
+                    </nz-form-item>
+                </div>
+
+                <div nz-col nzXs="12">
+                    <nz-form-item>
+                        <nz-form-label><strong>Duración</strong></nz-form-label>
+                        <nz-form-control *ngIf="!loadingSession && (!session || session.draft)" [nzErrorTip]="durationErrors">
+                            <nz-input-number formControlName="duration" [nzMin]="15" [nzMax]="240" [nzStep]="15"
+                                [nzFormatter]="durationFormatter" [nzParser]="durationParser" nzPlaceHolder="Seleccionar"
+                            ></nz-input-number>
+                            <ng-template #durationErrors let-control>
+                                <ng-container *ngIf="control.hasError('required')">La duración es requerida<br></ng-container>
+                            </ng-template>
+                        </nz-form-control>
+
+                        <ng-container *ngIf="session && !session.draft">
+                            {{session.duration}} minutos
+                        </ng-container>
+                    </nz-form-item>
+                </div>
+
+                <!-- Service Type -->
+                <div nz-col nzXs="24">
+                    <nz-form-item>
+                        <nz-form-label><strong>Tipo de servicio</strong></nz-form-label>
+                        <nz-form-control *ngIf="!loadingSession && (!session || session.draft)" [nzErrorTip]="serviceTypeErrors">
+                            
+                            <nz-select nzAllowClear nzPlaceHolder="Seleccionar" formControlName="serviceType">
+                                <nz-option *ngFor="let type of serviceTypes" [nzValue]="type" [nzLabel]="type">
+                                </nz-option>
+                            </nz-select>
+
+                            <ng-template #serviceTypeErrors let-control>
+                                <ng-container *ngIf="control.hasError('required')">El tipo de servicio es requerido<br></ng-container>
+                            </ng-template>
+                        </nz-form-control>
+
+                        <ng-container *ngIf="session && !session.draft">
+                            {{session.serviceType}}
+                        </ng-container>
+                    </nz-form-item>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Participants -->
+        <div nz-col nzXs="24" [nzLg]="{span: 9, offset: 2}" [nzXl]="{span: 8, offset: 4}">
+
+            <nz-spin nzTip="Cargando ..." [nzSpinning]="loadingResponsibles">
+                <div nz-row [nzGutter]="10">
+
+                    <!-- Responsibles -->
+                    <div nz-col nzXs="24">
+                        <nz-form-item>
+                            <nz-form-label><strong>Participantes</strong></nz-form-label>
+                            <nz-form-control *ngIf="!loadingSession && responsibleOne && (!session || session.draft)">
+                                <label nz-checkbox formControlName="responsibleOne">
+                                    {{responsibleOne.firstname}} {{responsibleOne.lastname}} ({{responsibleOne.relationship}})
+                                </label>
+                            </nz-form-control>
+
+    
+                            <nz-form-control *ngIf="!loadingSession && responsibleTwo && (!session || session.draft)">
+                                <label nz-checkbox formControlName="responsibleTwo">
+                                    {{responsibleTwo.firstname}} {{responsibleTwo.lastname}} ({{responsibleTwo.relationship}})
+                                </label>
+                            </nz-form-control>
+
+                            <ng-container *ngIf="session && !session.draft">
+                                <ul>
+                                    <li *ngIf="responsibleOne">
+                                        {{responsibleOne.firstname}} {{responsibleOne.lastname}} ({{responsibleOne.relationship}}): {{session.sessionResponsibleAssistence.responsible1Assistence ? 'Asistió' : 'No asistió'}} 
+                                    </li>
+                                    <li *ngIf="responsibleTwo">
+                                        {{responsibleTwo.firstname}} {{responsibleTwo.lastname}} ({{responsibleTwo.relationship}}); {{session.sessionResponsibleAssistence.responsible2Assistence ? 'Asistió' : 'No asistió'}}
+                                    </li>
+                                    <li *ngIf="!!session.sessionResponsibleAssistence.otherResponsibleName && !!session.sessionResponsibleAssistence.otherResponsibleRelationship">
+                                        {{session.sessionResponsibleAssistence.otherResponsibleName}} ({{session.sessionResponsibleAssistence.otherResponsibleRelationship}}): Asistió
+                                    </li>
+                                </ul>
+                            </ng-container>
+                        </nz-form-item>
+                    </div>
+
+                    <!-- Other responsible -->
+                    <div nz-col nzXs="8">
+                        <nz-form-item>
+                            <nz-form-control *ngIf="!loadingSession && (!session || session.draft)">
+                                <label nz-checkbox formControlName="otherResponsible" (ngModelChange)="onChangeOtherResponsible($event)">Otro</label>
+                            </nz-form-control>
+
+                        </nz-form-item>
+                    </div>
+
+                    <div nz-col nzXs="16">
+                        <nz-form-item>
+                            <nz-form-control *ngIf="!loadingSession && (!session || session.draft)" [nzErrorTip]="otherResponsibleRelationshipErrors">
+                                
+                                <nz-select nzShowSearch nzAllowClear formControlName="otherResponsibleRelationship" nzPlaceHolder="Seleccionar parentesco">
+                                    <nz-option *ngFor="let relation of kinshipRelationships" [nzValue]="relation" [nzLabel]="relation">
+                                    </nz-option>
+                                </nz-select>
+
+                                <ng-template #otherResponsibleRelationshipErrors let-control>
+                                    <ng-container *ngIf="control.hasError('required')">La relación es requerida<br></ng-container>
+                                </ng-template>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+
+                    <div nz-col nzXs="24">
+                        <nz-form-item>
+                            <nz-form-control *ngIf="!loadingSession && (!session || session.draft)" [nzErrorTip]="otherResponsibleNameErrors">
+                                
+                                <input nz-input formControlName="otherResponsibleName" placeholder="Nombre del responsable" />
+
+                                <ng-template #otherResponsibleNameErrors let-control>
+                                    <ng-container *ngIf="control.hasError('required')">El nombre del responsable es requerido<br></ng-container>
+                                </ng-template>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+    
+                </div>
+            </nz-spin>
+
+        </div>
+
+        <!-- Treated Topics -->
+        <div nz-col nzXs="24" nzLg="9" nzXl="8">
+            <nz-form-item>
+                <nz-form-label><strong>Puntos</strong></nz-form-label>
+                <nz-form-control *ngIf="!loadingSession && (!session || session.draft)" [nzErrorTip]="treatedTopicsErrors">
+                    
+                    <textarea nz-input formControlName="treatedTopics" placeholder="Puntos tratados"></textarea>
+
+                    <ng-template #treatedTopicsErrors let-control>
+                        <ng-container *ngIf="control.hasError('required')">Los puntos tratados son requeridos<br></ng-container>
+                    </ng-template>
+                </nz-form-control>
+
+                <ng-container *ngIf="session && !session.draft">
+                    {{session.treatedTopics}}
+                </ng-container>
+
+            </nz-form-item>
+        </div>
+
+        <!-- Agreements -->
+        <div nz-col nzXs="24" [nzLg]="{span: 9, offset: 2}" [nzXl]="{span: 8, offset: 4}">
+            <nz-form-item>
+                <nz-form-label><strong>Acuerdos</strong></nz-form-label>
+                <nz-form-control *ngIf="!loadingSession && (!session || session.draft)" [nzErrorTip]="agreementsErrors">
+                    
+                    <textarea nz-input formControlName="agreements" placeholder="Acuerdos"></textarea>
+
+                    <ng-template #agreementsErrors let-control>
+                        <ng-container *ngIf="control.hasError('required')">Los acuerdos son requeridos<br></ng-container>
+                    </ng-template>
+                </nz-form-control>
+
+                <ng-container *ngIf="session && !session.draft">
+                    {{session.agreements}}
+                </ng-container>
+            </nz-form-item>
+        </div>
+
+        <!-- Evaluations -->
+        <div nz-col nzXs="24" nzLg="20">
+            <nz-form-item>
+                <nz-form-label><strong>Evaluaciones</strong></nz-form-label>
+                <nz-form-control *ngIf="!loadingSession && (!session || session.draft)">
+
+                   <!-- Array Form --> 
+                    <ng-container formArrayName="evaluations">
+                        <div class="evaluation-div" *ngFor="let _ of evaluationsControl.controls; index as i">
+                            <ng-container [formGroupName]="i">
+
+                                <!-- Control -->
+                                <nz-form-control [nzErrorTip]="evaluationsErrors"> 
+
+                                    <!-- Control Layout -->
+                                    <div nz-row nzLayout="horizontal">   
+                                        <textarea nz-col nzSpan="22" nzLg="21" nzXl="22" nz-input formControlName="description" placeholder="Evaluación"></textarea>
+                                        <a nz-col nzSpan="2" nzLg="3" nzXl="2" nz-button nzType="link" (click)="removeEvaluation(i)"><i nz-icon nzType="minus-circle" nzTheme="outline"></i></a>
+                                    </div>
+                                    <!-- / Control Layout -->
+
+                                </nz-form-control>
+                                <!-- / Control -->
+
+                                <ng-template #evaluationsErrors let-control>
+                                    <ng-container *ngIf="control.hasError('required')">La evaluación es requerida<br></ng-container>
+                                </ng-template>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                    <!-- / Array Form --> 
+
+                    <a nz-button nzType="link" (click)="addEvaluation()">Agregar evaluación <i nz-icon nzType="plus-circle" nzTheme="outline"></i></a>
+                </nz-form-control>
+
+                <ng-container *ngIf="session && !session.draft">
+                    <ul>
+                        <li *ngFor="let evaluation of session.evaluations">{{evaluation.description}}</li>
+                    </ul>
+
+                    <ng-container *ngIf="!session.evaluations.length">No se registraron evaluaciones</ng-container>
+                </ng-container>
+            </nz-form-item>
+        </div>
+
+        <!-- Comments -->
+        <div nz-col nzXs="24" nzLg="20">
+            <nz-form-item>
+                <nz-form-label><strong>Comentarios de la sesión</strong></nz-form-label>
+                <nz-form-control *ngIf="!loadingSession && (!session || session.draft)" [nzErrorTip]="commentErrors">
+                    <ckeditor formControlName="comments" [editor]="editor" [config]="editorConfig"></ckeditor>
+                    <ng-template #commentErrors let-control>
+                        <ng-container *ngIf="control.hasError('required')">El comentario es requerido<br></ng-container>
+                    </ng-template>
+                </nz-form-control>
+
+                <ng-container *ngIf="session && !session.draft">
+                    <div [innerHTML]="session.comments"></div>
+                </ng-container>
+            </nz-form-item>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div nz-row nzJustify="center" [nzGutter]="40" *ngIf="!loadingSession && (!session || session.draft)">
+        <div nz-col>
+            <!-- Button id to decide when to create as draft via submitter.id -->
+            <button id="draft" nz-button nzType="default" [nzLoading]="actionLoading">
+                Guardar borrador
+            </button>
+        </div>    
+        <div nz-col>
+            <!-- Button id to decide when to create as draft via submitter.id -->
+            <button id="no-draft" nz-button nzType="primary" [nzLoading]="actionLoading">
+                Registrar entrevista
+            </button>
+        </div>
+    </div>
+</form>
+</nz-spin>
