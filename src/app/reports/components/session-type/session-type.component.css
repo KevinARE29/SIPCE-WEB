@@ -2,6 +2,10 @@
     margin-top: 25px;
 }
 
+.btn-container {
+    height: 100%;
+}
+
 nz-select, nz-range-picker {
     width: 100%;
 }

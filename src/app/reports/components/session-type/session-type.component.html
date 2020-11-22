@@ -1,7 +1,7 @@
 <!-- Search engine -->
 <div nz-row [nzGutter]="[10, 10]">
     <!-- Shift -->
-    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" nzXl="6">
+    <div nz-col nzXs="24" nzSm="12" nzMd="24" nzLg="6" nzXl="6">
         <label>Turno: </label>
         <nz-input-group>
             <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar turno" [nzLoading]="!shifts"
@@ -12,7 +12,7 @@
     </div>
 
     <!-- Cycle -->
-    <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" nzXl="6">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
         <label>Ciclo: </label>
         <nz-input-group>
             <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar ciclo" [nzLoading]="!cycles"
@@ -23,7 +23,7 @@
     </div>
 
     <!-- Grade -->
-    <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" nzXl="6">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
         <label>Grado: </label>
         <nz-input-group>
             <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar grado" [nzLoading]="!grades"
@@ -65,7 +65,7 @@
     </div>
 
     <!-- Search button-->
-    <div nz-col nzXs="24" nzSm="24" nzMd="6" nzLg="6" nzXl="12">
+    <div nz-col nzXs="24" nzSm="24" nzMd="6">
         <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
             <button nz-button nzType="primary" (click)="getSessionsReport(null)">Buscar</button>
         </div>

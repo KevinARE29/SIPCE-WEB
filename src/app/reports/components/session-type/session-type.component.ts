@@ -73,7 +73,7 @@ export class SessionTypeComponent implements OnInit {
     this.grades = new Array<ShiftPeriodGrade>();
     this.counselors = new Array<User>();
 
-    this.sessionTypesList = Object.keys(SessionTypes).filter((k) => isNaN(Number(k)));
+    this.sessionTypesList = Object.values(SessionTypes).filter((k) => isNaN(Number(k)));
     date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
 
     this.searchParams.dateRange = [date, currentDate];
