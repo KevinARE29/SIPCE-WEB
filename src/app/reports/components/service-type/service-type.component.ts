@@ -126,7 +126,7 @@ export class ServiceTypeComponent implements OnInit {
   exportExcel(): void {
     this.notification.create('info', 'Exportación en progreso', 'El archivo estará listo en unos momentos.');
 
-    const fileName = `Citas por tipo de sesión - ${format(new Date(), 'ddMMyyyyHHmmss')}.xlsx`;
+    const fileName = `Citas por tipo de servicio - ${format(new Date(), 'ddMMyyyyHHmmss')}.xlsx`;
 
     /* Table id is passed over here */
     const element = document.getElementById('excel-table');
@@ -134,7 +134,7 @@ export class ServiceTypeComponent implements OnInit {
 
     /* Generate workbook and add the worksheet */
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Citas por tipo de sesión');
+    XLSX.utils.book_append_sheet(wb, ws, 'Citas por tipo de servicio');
 
     /* Save to file */
     XLSX.writeFile(wb, fileName);
