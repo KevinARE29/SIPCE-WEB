@@ -2,6 +2,9 @@
     <div nz-col>
         <h1>Programas de intervención</h1>
     </div>
+    <div nz-col>
+        <a nz-button nzType="primary" (click)="openModal(null)">Crear</a>
+    </div>
 </div>
 
 <div nz-row [nzGutter]="[10, 10]">
@@ -66,11 +69,11 @@
                             <td>{{data.name}}</td>
                             <td>{{data.type}}</td>
                             <td [nzAlign]="'center'">
-                                <a>
+                                <a (click)="openModal(data)">
                                     <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
                                 </a>
                                 <nz-divider nzType="vertical"></nz-divider>
-                                <a (click)="confirmDelete(data.id)">
+                                <a (click)="confirmDelete(data)">
                                     <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
                                 </a> 
                             </td>
@@ -84,3 +87,14 @@
         </nz-spin>
     </div>
 </div>
+
+<!-- Create / update modal -->
+<nz-modal [(nzVisible)]="showModal" [nzTitle]="modalTitle" [nzContent]="modalContent"
+    nzOkText="Guardar" nzCancelText="Cancelar" (nzOnOk)="onModalOk()" (nzOnCancel)="setShowModal(false)">
+    
+    <!-- Modal content -->
+    <ng-template #modalContent>
+        <app-intervention-programs-form (formChange)="onFormChanged($event)" [program]="programModal"></app-intervention-programs-form>
+    </ng-template>
+
+</nz-modal>

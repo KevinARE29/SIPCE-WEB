@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 // Models and services
 import { InterventionProgram } from '../../../shared/intervention-program.model';
@@ -16,7 +18,6 @@ import { InterventionProgramTypes } from './../../../../shared/enums/interventio
   styleUrls: ['./intervention-programs-list.component.css']
 })
 export class InterventionProgramsListComponent implements OnInit {
-
   // Table variables
   loadingData = false;
   listOfDisplayData: InterventionProgram[];
@@ -31,15 +32,22 @@ export class InterventionProgramsListComponent implements OnInit {
   // Enum
   programTypes: string[];
 
+  // Modal.
+  showModal = false;
+  modalTitle: string;
+  programModal: InterventionProgram;
+  form: FormGroup;
+
   constructor(
     private programService: InterventionProgramService,
     private notification: NzNotificationService,
     private modal: NzModalService,
     private message: NzMessageService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.search = new InterventionProgram();
+    this.search.status = true;
     this.programTypes = Object.values(InterventionProgramTypes).filter((k) => isNaN(Number(k)));
 
     this.pagination = new Pagination();
@@ -47,10 +55,10 @@ export class InterventionProgramsListComponent implements OnInit {
     this.pagination.page = 1;
   }
 
-  getPrograms(params): void {
+  getPrograms(params: NzTableQueryParams): void {
     this.loadingData = true;
 
-    this.programService.getPrograms( params, this.search).subscribe(
+    this.programService.getPrograms(params, this.search).subscribe(
       (data) => {
         this.pagination = data['pagination'];
         this.listOfDisplayData = data['data'];
@@ -80,6 +88,65 @@ export class InterventionProgramsListComponent implements OnInit {
     }
   }
 
+  // Create / update modal.
+  onFormChanged(form: FormGroup): void {
+    this.form = form;
+  }
+
+  openModal(program: InterventionProgram): void {
+    this.setShowModal(true);
+    this.modalTitle = program ? 'Editar programa de intervención' : 'Crear programa de intervención';
+    this.programModal = program;
+  }
+
+  setShowModal(show: boolean): void {
+    this.showModal = show;
+  }
+
+  onModalOk(): void {
+    for (const i in this.form.controls) {
+      this.form.controls[i].markAsDirty();
+      this.form.controls[i].updateValueAndValidity();
+    }
+
+    if (this.form.valid) {
+      const formValue = this.form.value;
+
+      if (!this.programModal) {
+        this.programModal = new InterventionProgram();
+      }
+
+      this.programModal.name = formValue['name'];
+      this.programModal.description = formValue['description'];
+      this.programModal.type = formValue['type'];
+      this.programModal.status = formValue['status'];
+
+      this.programService.saveProgram(this.programModal).subscribe(
+        (response) => {
+          const message = this.programModal.id ? 'El programa ha sido actualizado' : 'El programa ha sido creado';
+
+          if (!this.programModal.id) {
+            this.listOfDisplayData.push(response['data']);
+          }
+
+          this.message.success(message);
+          this.setShowModal(false);
+        },
+        (error) => {
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
+
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create('error', 'Ocurrió un error al intentar registrar la sesión.', error.message, {
+              nzDuration: 30000
+            });
+          }
+        }
+      );
+    }
+  }
+
+  // Delete program.
   confirmDelete(program: InterventionProgram): void {
     this.modal.confirm({
       nzTitle: `¿Desea eliminar el programa ${program.name}?`,

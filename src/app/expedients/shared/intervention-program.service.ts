@@ -16,10 +16,7 @@ import { InterventionProgram } from './intervention-program.model';
 export class InterventionProgramService {
   baseUrl: string;
 
-  constructor(
-    private http: HttpClient,
-    private errorMessageService: ErrorMessageService
-  ) {
+  constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
     this.baseUrl = environment.apiURL;
   }
 
@@ -59,22 +56,20 @@ export class InterventionProgramService {
 
       if (search.type) queryParams += '&type=' + search.type;
 
-      if (!search.status) queryParams += '&status=' + search.status;
+      queryParams += '&status=' + search.status;
     }
 
     if (queryParams.charAt(0) === '&') queryParams = queryParams.replace('&', '?');
 
     url += queryParams;
 
-    return this.http.get<InterventionProgram[]>(url).pipe(
-      catchError(this.handleError())
-    );
+    return this.http.get<InterventionProgram[]>(url).pipe(catchError(this.handleError()));
   }
 
   saveProgram(program: InterventionProgram): Observable<unknown> {
     let url = this.baseUrl + 'intervention-programs';
 
-    const data: any = {
+    const data = {
       name: program.name,
       type: program.type,
       description: program.description,
@@ -90,11 +85,9 @@ export class InterventionProgramService {
   }
 
   deleteProgram(programId: number): Observable<void> {
-    let url = this.baseUrl + 'intervention-programs/' + programId;
+    const url = this.baseUrl + 'intervention-programs/' + programId;
 
-    return this.http.delete<void>(url).pipe(
-      catchError(this.handleError())
-    );
+    return this.http.delete<void>(url).pipe(catchError(this.handleError()));
   }
 
   /**
@@ -102,6 +95,7 @@ export class InterventionProgramService {
    * Let the app continue.
    */
   private handleError() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (error: any) => {
       error.error.message = this.errorMessageService.transformMessage('sessions', error.error.message);
       return throwError(error.error);
