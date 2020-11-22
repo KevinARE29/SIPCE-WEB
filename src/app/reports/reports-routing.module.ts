@@ -11,13 +11,13 @@ const routes: Routes = [
     path: 'tipos-de-sesion',
     component: SessionTypeComponent,
     canActivate: [AuthGuard],
-    data: { permission: 7 } // TODO: Update
+    data: { permission: 34 }
   },
   {
     path: 'tipos-de-servicio',
     component: ServiceTypeComponent,
     canActivate: [AuthGuard],
-    data: { permission: 7 } // TODO: Update
+    data: { permission: 34 }
   }
 ];
 

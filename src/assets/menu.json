@@ -183,18 +183,18 @@
         {
             "title": "Reportes",
             "icon": "book",
-            "permissions": [0],
+            "permissions": [34],
             "allowed": false,
             "children": [
                 {
                     "route": "reportes/tipos-de-sesion",
                     "name": "Citas por tipo de sesión",
-                    "permission": 0,
+                    "permission": 34,
                     "allowed": false
                 }, {
                     "route": "reportes/tipos-de-servicio",
                     "name": "Citas por tipo de servicio",
-                    "permission": 0,
+                    "permission": 34,
                     "allowed": false
                 }
 
