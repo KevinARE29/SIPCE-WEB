@@ -24,7 +24,6 @@ import { Pagination } from 'src/app/shared/pagination.model';
 import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 import { UserService } from 'src/app/users/shared/user.service';
 import { EventService } from '../../shared/event.service';
-import { User } from 'src/app/logs/shared/user-log.model';
 import { Appointment } from '../../shared/appointment.model';
 
 L10n.load(language);

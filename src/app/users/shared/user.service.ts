@@ -12,7 +12,6 @@ import { User } from './user.model';
 import { subMonths } from 'date-fns';
 import { RoleService } from 'src/app/roles/shared/role.service';
 import { PermissionService } from 'src/app/roles/shared/permission.service';
-import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 
 @Injectable({
   providedIn: 'root'

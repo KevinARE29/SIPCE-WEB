@@ -19,7 +19,6 @@ import { Session } from '../../../shared/session.model';
   styleUrls: ['./student-sessions.component.css']
 })
 export class StudentSessionsComponent implements OnInit {
-
   // Param.
   studentId: number;
   expedientId: number;
@@ -34,8 +33,8 @@ export class StudentSessionsComponent implements OnInit {
   pagination: Pagination;
 
   // Modal to create.
-  showModal: boolean = false;
-  createEventType: string = "";
+  showModal = false;
+  createEventType = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -44,7 +43,7 @@ export class StudentSessionsComponent implements OnInit {
     private notification: NzNotificationService,
     private modal: NzModalService,
     private message: NzMessageService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.init();
@@ -58,7 +57,7 @@ export class StudentSessionsComponent implements OnInit {
     this.searchSessionParams = new Session();
 
     this.eventTypes = Object.values(SessionTypes).filter((k) => isNaN(Number(k)));
-    
+
     this.pagination = new Pagination();
     this.pagination.perPage = 10;
     this.pagination.page = 1;
@@ -77,25 +76,27 @@ export class StudentSessionsComponent implements OnInit {
   getSessions(params): void {
     this.loading = true;
 
-    this.sessionService.getStudentSessions(this.studentId, this.expedientId, params, this.searchSessionParams).subscribe(
-      (data) => {
-        this.pagination = data['pagination'];
-        this.listOfDisplayData = data['data'];
+    this.sessionService
+      .getStudentSessions(this.studentId, this.expedientId, params, this.searchSessionParams)
+      .subscribe(
+        (data) => {
+          this.pagination = data['pagination'];
+          this.listOfDisplayData = data['data'];
 
-        this.loading = false;
-      },
-      (error) => {
-        this.loading = false;
-        const statusCode = error.statusCode;
-        const notIn = [401, 403];
+          this.loading = false;
+        },
+        (error) => {
+          this.loading = false;
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
 
-        if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
-            nzDuration: 30000
-          });
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
+              nzDuration: 30000
+            });
+          }
         }
-      }
-    );
+      );
   }
 
   confirmDelete(sessionId: number): void {
@@ -103,7 +104,7 @@ export class StudentSessionsComponent implements OnInit {
       nzTitle: `¿Desea eliminar la sesión?`,
       nzContent: `Eliminará la sesión. La acción no puede deshacerse.`,
       nzOnOk: () => {
-        this.deleteSession(sessionId)
+        this.deleteSession(sessionId);
       }
     });
   }
@@ -148,15 +149,15 @@ export class StudentSessionsComponent implements OnInit {
 
   createSession(): void {
     if (this.createEventType) {
-      this.router.navigate([this.createEventType], {relativeTo: this.route});
+      this.router.navigate([this.createEventType], { relativeTo: this.route });
     }
   }
 
   getSessionPath(sessionType): string {
     let path = '';
 
-    switch(sessionType) {
-      case SessionTypes.SESION: 
+    switch (sessionType) {
+      case SessionTypes.SESION:
         path = 'sesion-individual';
         break;
       case SessionTypes.ENTREVISTA_DOCENTE:
@@ -168,5 +169,5 @@ export class StudentSessionsComponent implements OnInit {
     }
 
     return path;
-  } 
+  }
 }
