@@ -185,7 +185,13 @@
                     "name": "Citas por tipo de sesión",
                     "permission": 0,
                     "allowed": false
+                }, {
+                    "route": "reportes/tipos-de-servicio",
+                    "name": "Citas por tipo de servicio",
+                    "permission": 0,
+                    "allowed": false
                 }
+
             ]
         }
     ]  
