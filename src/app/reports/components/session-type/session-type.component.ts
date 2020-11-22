@@ -11,16 +11,6 @@ import { ReportService } from '../../shared/report.service';
 import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 import { User } from 'src/app/users/shared/user.model';
 
-export interface SessionsReport {
-  sessionType: string;
-  shiftId: number;
-  cycleId: number;
-  gradeId: number;
-  counselorId: number;
-  startedAt: unknown;
-  finishedAt: unknown;
-}
-
 @Component({
   selector: 'app-session-type',
   templateUrl: './session-type.component.html',
@@ -28,7 +18,7 @@ export interface SessionsReport {
 })
 export class SessionTypeComponent implements OnInit {
   loading = false;
-  listOfDisplayData: SessionsReport[];
+  listOfDisplayData: unknown[];
   schoolYear: unknown;
 
   // Search
