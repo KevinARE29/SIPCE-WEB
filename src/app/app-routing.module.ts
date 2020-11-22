@@ -92,6 +92,11 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'reportes',
+    loadChildren: () => import('./reports/reports.module').then((m) => m.ReportsModule),
+    canLoad: [AuthGuard]
+  },
+  {
     path: '**',
     redirectTo: '/error404',
     pathMatch: 'full'

@@ -1,0 +1,65 @@
+<ng-container *ngIf="programForm">
+    <form nz-form nzLayout="vertical" [formGroup]="programForm">
+        <div nz-row nzJustify="center" [nzGutter]="10">
+    
+            <!-- Name -->
+            <div nz-col nzXs="24">
+                <nz-form-item>
+                    <nz-form-label><strong>Título</strong></nz-form-label>
+                    <nz-form-control [nzErrorTip]="nameErrors">
+                        
+                        <input nz-input formControlName="name" placeholder="Título" />
+
+                        <ng-template #nameErrors let-control>
+                            <ng-container *ngIf="control.hasError('required')">El nombre es requerido<br></ng-container>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <!-- Type -->
+            <div nz-col [nzXs]="program?.id ? 16 : 24">
+                <nz-form-item>
+                    <nz-form-label><strong>Tipo</strong></nz-form-label>
+                    <nz-form-control [nzErrorTip]="typeErrors">
+                        
+                        <nz-select nzAllowClear nzPlaceHolder="Seleccionar" formControlName="type">
+                            <nz-option *ngFor="let type of programTypes" [nzValue]="type" [nzLabel]="type">
+                            </nz-option>
+                        </nz-select>
+
+                        <ng-template #typeErrors let-control>
+                            <ng-container *ngIf="control.hasError('required')">El tipo es requerido<br></ng-container>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <!-- Status -->
+            <div nz-col nzXs="8" *ngIf="program?.id">
+                <nz-form-item>
+                    <nz-form-label><strong>Estado</strong></nz-form-label>
+                    <nz-form-control>
+                        <nz-switch formControlName="status" [nzCheckedChildren]="'Activo'" [nzUnCheckedChildren]="'Histórico'"></nz-switch>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <!-- Description -->
+            <div nz-col nzXs="24">
+                <nz-form-item>
+                    <nz-form-label><strong>Descripción</strong></nz-form-label>
+                    <nz-form-control [nzErrorTip]="descriptionErrors">
+                        
+                        <textarea nz-input formControlName="description" placeholder="Descripción"></textarea>
+
+                        <ng-template #descriptionErrors let-control>
+                            <ng-container *ngIf="control.hasError('required')">La descripción es requerida<br></ng-container>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+        </div>
+    </form>
+</ng-container>

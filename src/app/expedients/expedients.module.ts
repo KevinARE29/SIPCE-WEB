@@ -7,12 +7,18 @@ import { AntDesignModule } from '../ant-design/ant-design.module';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 import { ExpedientsRoutingModule } from './expedients-routing.module';
-import { SessionsComponent } from './components/sessions/sessions.component';
-import { StudentSessionsComponent } from './components/student-sessions/student-sessions.component';
-import { StudentsDetailsComponent } from './components/students-details/students-details.component';
-import { StudentSessionComponent } from './components/student-session/student-session.component';
-import { ResponsibleInterviewComponent } from './components/responsible-interview/responsible-interview.component';
-import { TeacherInterviewComponent } from './components/teacher-interview/teacher-interview.component';
+
+// Sessions
+import { SessionsComponent } from './components/sessions/sessions-list/sessions.component';
+import { StudentSessionsComponent } from './components/sessions/student-sessions/student-sessions.component';
+import { StudentsDetailsComponent } from './components/sessions/students-details/students-details.component';
+import { StudentSessionComponent } from './components/sessions/student-session/student-session.component';
+import { ResponsibleInterviewComponent } from './components/sessions/responsible-interview/responsible-interview.component';
+import { TeacherInterviewComponent } from './components/sessions/teacher-interview/teacher-interview.component';
+
+// Intervention programs.
+import { InterventionProgramsListComponent } from './components/intervention-programs/intervention-programs-list/intervention-programs-list.component';
+import { InterventionProgramsFormComponent } from './components/intervention-programs/intervention-programs-form/intervention-programs-form.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +27,9 @@ import { TeacherInterviewComponent } from './components/teacher-interview/teache
     StudentsDetailsComponent,
     StudentSessionComponent,
     ResponsibleInterviewComponent,
-    TeacherInterviewComponent
+    TeacherInterviewComponent,
+    InterventionProgramsListComponent,
+    InterventionProgramsFormComponent
   ],
   imports: [
     CommonModule,

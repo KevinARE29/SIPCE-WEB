@@ -79,7 +79,7 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
     }
 
     if (!!this.username && hasPermissionForNotifications) {
-      //Getting tomorrow date and setting the hour to 23:59:59
+      // Getting tomorrow date and setting the hour to 23:59:59
       this.events = new Array<Appointment>();
       this.tomorrowDate = new Date();
       this.tomorrowDate = add(new Date(), {
@@ -90,12 +90,12 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
       this.tomorrowDate.setSeconds(0);
       this.startDate = new Date();
       this.endDate = this.tomorrowDate;
-      // getting events with the specific date range
+      // Getting events with the specific date range
       this.getEvents(this.startDate, this.endDate);
     }
 
     if (!!this.username && !this.connectionOn && hasPermission) {
-      // Initial call.
+      // Initial call
       this.getRequest();
 
       // Get socket and suscribe.
@@ -153,7 +153,7 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
       let counter = 0;
       menu.permissions.forEach((permission) => {
         const index = permissions.indexOf(permission);
-        if (index !== -1) counter++;
+        if (index !== -1 || permission === 0) counter++;
       });
 
       if (counter > 0) {
@@ -163,7 +163,7 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
           if (menu.permissions.length === 1) option.allowed = true;
           else {
             const index = permissions.indexOf(option.permission);
-            option.allowed = index !== -1 ? true : false;
+            option.allowed = index !== -1 || option.permission === 0 ? true : false;
           }
         });
       } else {

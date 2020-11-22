@@ -1,0 +1,15 @@
+#sessions-table {
+    margin-top: 25px;
+}
+
+.btn-container {
+    height: 100%;
+}
+
+nz-select, nz-range-picker {
+    width: 100%;
+}
+
+nz-range-picker {
+    border-radius: 7px;
+}

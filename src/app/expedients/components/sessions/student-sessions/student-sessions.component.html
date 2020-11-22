@@ -1,0 +1,108 @@
+<div nz-row nzJustify="space-between">
+    <div nz-col>
+        <h1>Sesiones de consejería</h1>
+    </div>
+</div>
+
+<app-students-details [id]="studentId" [openLinkInOtherTab]="false"></app-students-details>
+
+<!-- Pre-create button-->
+<div nz-row nzJustify="center">
+    <div class="btn-container">
+        <button nz-button nzType="primary" (click)="setShowModal(true)">Crear nuevo registro</button>
+    </div>
+</div>
+
+<br>
+
+<div nz-row [nzGutter]="[10, 10]">
+    <!-- Registered at -->
+    <div nz-col nzXs="24" nzSm="16" nzMd="12" nzLg="8">
+        <label>Fecha: </label>
+        <nz-input-group>
+            <nz-range-picker nzFormat="dd/MM/yyyy" [nzDisabledDate]="disabledDate" [(ngModel)]="dateRangeSearch" (ngModelChange)="onChangeDatePicker()"></nz-range-picker>
+        </nz-input-group>
+    </div>
+
+    <!-- Event type -->
+    <div nz-col nzXs="24" nzSm="16" nzMd="12" [nzLg]="{offset: 2, span: 8}">
+        <label>Tipo de evento: </label>
+        <nz-input-group>
+            <nz-select class="relation" nzShowSearch nzAllowClear [(ngModel)]="searchSessionParams.sessionType"
+                (ngModelChange)="getSessions(null)">
+                <nz-option *ngFor="let type of eventTypes" [nzValue]="type" [nzLabel]="type">
+                </nz-option>
+            </nz-select>
+        </nz-input-group>
+    </div>
+
+    <!-- Search button-->
+    <div nz-col nzXs="24" nzLg="6">
+        <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+            <button nz-button nzType="primary" (click)="getSessions(null)">Buscar</button>
+        </div>
+    </div>
+</div>
+
+<div nz-row>
+    <div nz-col nzSpan="24">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <nz-table #filterTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems" [nzPageSize]="pagination.perPage" [nzPageIndex]="pagination.page"
+                nzSize="small" (nzQueryParams)="getSessions($event)">
+                <thead>
+                    <tr>
+                        <th nzColumnKey="identifier" [nzSortFn]="true" [nzSortPriority]="1">Sesión</th>
+                        <th nzColumnKey="sessionType" [nzSortFn]="true" [nzSortPriority]="2">Tipo de entrevista</th>
+                        <th nzColumnKey="startedAt" [nzSortFn]="true" [nzSortPriority]="3" [nzSortOrder]="'descend'">Fecha</th>
+                        <th [nzAlign]="'center'">Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let data of filterTable.data">
+                        <td>{{data.identifier || '-'}}</td>
+                        <td>{{data.sessionType}}</td>
+                        <td>{{data.startedAt | date: 'dd/MM/yyyy'}}</td>
+                        <td [nzAlign]="'center'">
+                            <a *ngIf="!data.draft" [routerLink]="[getSessionPath(data.sessionType), data.id]">
+                                <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
+                            </a>
+                            <ng-container *ngIf="data.draft">
+                                <a [routerLink]="[getSessionPath(data.sessionType), data.id]">
+                                    <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
+                                </a>
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <a (click)="confirmDelete(data.id)">
+                                    <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
+                                </a>
+                            </ng-container>    
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>
+
+<!-- Create session modal -->
+<nz-modal [(nzVisible)]="showModal" nzTitle="Seleccione el tipo de entrevista" [nzContent]="modalContent"
+    nzOkText="Continuar" nzCancelText="Cancelar" (nzOnOk)="createSession()" (nzOnCancel)="setShowModal(false)">
+    <!-- Modal content -->
+    <ng-template #modalContent>
+        <!-- Event type -->
+        <div nz-row nzJustify="center">
+            <div nz-col nzXs="24" nzMd="18">
+                <nz-input-group>
+                    <nz-select [(ngModel)]="createEventType">
+                        <!-- The value of the option is the route to the form component -->
+                        <nz-option nzValue="" nzLabel="Seleccionar..." [nzDisabled]="true"></nz-option>
+                        <nz-option nzValue="sesion-individual" nzLabel="Sesión individual"></nz-option>
+                        <nz-option nzValue="entrevista-docente" nzLabel="Entrevista con docente"></nz-option>
+                        <nz-option nzValue="entrevista-responsable" nzLabel="Entrevista con padres de familia"></nz-option>
+                    </nz-select>
+                </nz-input-group>
+            </div>
+        </div>
+    </ng-template>
+</nz-modal>

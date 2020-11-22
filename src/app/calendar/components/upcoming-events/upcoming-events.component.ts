@@ -95,7 +95,7 @@ export class UpcomingEventsComponent implements OnInit {
           dataSource: events
         };
         this.loading = false;
-        console.log('eventos:', events);
+
         if (!this.toolBarItemRendered) this.toolBarItemRendered = true;
       },
       () => {

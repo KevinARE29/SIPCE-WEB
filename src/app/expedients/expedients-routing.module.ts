@@ -3,12 +3,15 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard } from '../login/guards/auth.guard';
 
-import { SessionsComponent } from './components/sessions/sessions.component';
-import { StudentSessionsComponent } from './components/student-sessions/student-sessions.component';
+import { SessionsComponent } from './components/sessions/sessions-list/sessions.component';
+import { StudentSessionsComponent } from './components/sessions/student-sessions/student-sessions.component';
 
-import { StudentSessionComponent } from './components/student-session/student-session.component';
-import { ResponsibleInterviewComponent } from './components/responsible-interview/responsible-interview.component';
-import { TeacherInterviewComponent } from './components/teacher-interview/teacher-interview.component';
+import { StudentSessionComponent } from './components/sessions/student-session/student-session.component';
+import { ResponsibleInterviewComponent } from './components/sessions/responsible-interview/responsible-interview.component';
+import { TeacherInterviewComponent } from './components/sessions/teacher-interview/teacher-interview.component';
+
+// Intervention programs.
+import { InterventionProgramsListComponent } from './components/intervention-programs/intervention-programs-list/intervention-programs-list.component';
 
 const routes: Routes = [
   {
@@ -30,7 +33,19 @@ const routes: Routes = [
     data: { permission: 33 }
   },
   {
+    path: ':expedient/estudiantes/:student/sesiones/sesion-individual/:session',
+    component: StudentSessionComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 33 }
+  },
+  {
     path: ':expedient/estudiantes/:student/sesiones/entrevista-docente',
+    component: TeacherInterviewComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 33 }
+  },
+  {
+    path: ':expedient/estudiantes/:student/sesiones/entrevista-docente/:session',
     component: TeacherInterviewComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
@@ -40,6 +55,18 @@ const routes: Routes = [
     component: ResponsibleInterviewComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
+  },
+  {
+    path: ':expedient/estudiantes/:student/sesiones/entrevista-responsable/:session',
+    component: ResponsibleInterviewComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 33 }
+  },
+  {
+    path: 'programas',
+    component: InterventionProgramsListComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 33 } // TODO: Change permission if necessary.
   }
 ];
 
