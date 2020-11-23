@@ -112,7 +112,7 @@
                             <nz-divider *ngIf="data.expedient?.id" nzType="vertical"></nz-divider>
                             <a *ngIf="data.expedient?.id">Expediente</a>
                             <nz-divider *ngIf="data.expedient?.id" nzType="vertical"></nz-divider>
-                            <a *ngIf="data.expedient?.id" [routerLink]="['estudiantes', data.expedient?.id , data.id, 'sesiones']">Sesiones</a>
+                            <a *ngIf="data.expedient?.id" [routerLink]="[data.expedient?.id , data.id, 'sesiones']">Sesiones</a>
                         </td>
                     </tr>
                 </tbody>
