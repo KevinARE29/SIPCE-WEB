@@ -10,15 +10,13 @@ import { Student } from 'src/app/students/shared/student.model';
 })
 export class StudentsDetailsComponent implements OnInit {
   @Input() id: number;
-  @Input() openLinkInOtherTab: boolean = true;
+  @Input() openLinkInOtherTab = true;
 
   // Student data
   student: Student;
   loadingStudent = true;
 
-  constructor(
-    private studentService: StudentService
-  ) { }
+  constructor(private studentService: StudentService) {}
 
   ngOnInit(): void {
     // To avoid errors while loading.
@@ -31,5 +29,4 @@ export class StudentsDetailsComponent implements OnInit {
       this.loadingStudent = false;
     });
   }
-
 }

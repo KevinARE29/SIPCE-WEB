@@ -26,7 +26,7 @@
         <li *ngIf="option.allowed" nz-submenu [nzTitle]="option.title" [nzIcon]="option.icon">
           <ul>
             <ng-container *ngFor="let subOption of option.children">
-              <li nz-menu-item nzMatchRouter nzMatchRouterExact *ngIf="subOption.allowed">
+              <li nz-menu-item nzMatchRouter *ngIf="subOption.allowed">
                 <a [routerLink]="subOption.route">{{ subOption.name }}</a>
               </li>
             </ng-container>

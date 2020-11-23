@@ -39,8 +39,8 @@ export class StudentSessionComponent implements OnInit {
   actionLoading = false;
 
   // Duration input.
-  durationFormatter = (value: number) => value ? `${value} min` : '';
-  durationParser = (value: string) => value.replace(' min', '');
+  durationFormatter = (value: number): string => (value ? `${value} min` : '');
+  durationParser = (value: string): string => value.replace(' min', '');
 
   // Service types
   serviceTypes = Object.keys(ServiceTypes).filter((k) => isNaN(Number(k)));
@@ -49,7 +49,7 @@ export class StudentSessionComponent implements OnInit {
   editor = ClassicEditor;
   editorConfig = {
     language: 'es',
-    toolbar: [ 'heading', '|', 'bold', 'italic', '|', 'bulletedList', 'numberedList', '|' ,'undo', 'redo' ]
+    toolbar: ['heading', '|', 'bold', 'italic', '|', 'bulletedList', 'numberedList', '|', 'undo', 'redo']
   };
   model = {
     editorData: '<p>Hello, world!</p>'
@@ -63,7 +63,7 @@ export class StudentSessionComponent implements OnInit {
     private message: NzMessageService,
     private notification: NzNotificationService,
     private modal: NzModalService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const paramStudent = this.route.snapshot.params['student'];
@@ -141,7 +141,7 @@ export class StudentSessionComponent implements OnInit {
     return differenceInCalendarDays(current, new Date()) > 0;
   };
 
-  submitForm(event: any): void {
+  submitForm(submitter: string): void {
     for (const i in this.sessionForm.controls) {
       this.sessionForm.controls[i].markAsDirty();
       this.sessionForm.controls[i].updateValueAndValidity();
@@ -155,7 +155,7 @@ export class StudentSessionComponent implements OnInit {
       }
     });
 
-    const isDraft = event.submitter.id === 'draft';
+    const isDraft = submitter === 'draft';
 
     if (this.sessionForm.valid) {
       if (isDraft) {
@@ -165,7 +165,7 @@ export class StudentSessionComponent implements OnInit {
           nzTitle: '¿Desea registrar la sesión?',
           nzContent: 'La sesión ya no se podrá editar luego de realizar esta acción. ¿Desea continuar?',
           nzOnOk: () => {
-            this.saveSession(false)
+            this.saveSession(false);
           }
         });
       }
@@ -187,14 +187,14 @@ export class StudentSessionComponent implements OnInit {
     session.evaluations = formValue['evaluations'];
 
     if (this.session) {
-      session.id = this.session.id
+      session.id = this.session.id;
     }
 
     this.sessionService.saveSession(this.expedientId, this.studentId, session).subscribe(
       () => {
         const message = isDraft ? 'La sesión se ha guardado como borrador.' : 'La sesión ha sido registrada';
         this.message.success(message);
-        this.router.navigate(['expedientes', this.expedientId, 'estudiantes', this.studentId, 'sesiones']);
+        this.router.navigate(['expedientes', 'estudiantes', this.expedientId, this.studentId, 'sesiones']);
       },
       (error) => {
         this.actionLoading = false;
@@ -209,5 +209,4 @@ export class StudentSessionComponent implements OnInit {
       }
     );
   }
-
 }

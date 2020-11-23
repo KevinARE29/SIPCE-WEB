@@ -11,7 +11,7 @@
 <app-students-details [id]="studentId"></app-students-details>
 
 <nz-spin nzTip="Cargando ..." [nzSpinning]="loadingSession">
-<form nz-form nzLayout="vertical" [formGroup]="sessionForm" (ngSubmit)="submitForm($event)">
+<form nz-form nzLayout="vertical" [formGroup]="sessionForm" (ngSubmit)="submitForm($event.submitter.id)">
 
     <div nz-row nzJustify="center" [nzGutter]="10">
 
@@ -189,7 +189,7 @@
         <!-- Treated Topics -->
         <div nz-col nzXs="24" nzLg="9" nzXl="8">
             <nz-form-item>
-                <nz-form-label><strong>Puntos</strong></nz-form-label>
+                <nz-form-label><strong>Puntos tratados</strong></nz-form-label>
                 <nz-form-control *ngIf="!loadingSession && (!session || session.draft)" [nzErrorTip]="treatedTopicsErrors">
                     
                     <textarea nz-input formControlName="treatedTopics" placeholder="Puntos tratados"></textarea>
