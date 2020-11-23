@@ -194,7 +194,7 @@ export class StudentSessionComponent implements OnInit {
       () => {
         const message = isDraft ? 'La sesión se ha guardado como borrador.' : 'La sesión ha sido registrada';
         this.message.success(message);
-        this.router.navigate(['expedientes', this.expedientId, 'estudiantes', this.studentId, 'sesiones']);
+        this.router.navigate(['expedientes', 'estudiantes', this.expedientId, this.studentId, 'sesiones']);
       },
       (error) => {
         this.actionLoading = false;
