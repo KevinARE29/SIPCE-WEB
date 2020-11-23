@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { subMonths, differenceInCalendarDays } from 'date-fns';
+import { differenceInCalendarDays } from 'date-fns';
 
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
@@ -46,7 +46,7 @@ export class SessionsComponent implements OnInit {
     private userService: UserService,
     private sessionService: SessionService,
     private notification: NzNotificationService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.init();
@@ -54,10 +54,6 @@ export class SessionsComponent implements OnInit {
   }
 
   init(): void {
-    const currentDate = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 23, 59, 59);
-    let date = subMonths(currentDate, 1);
-    date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
-
     this.searchParams = new StudentWithSessions();
     this.searchParams.shift = new ShiftPeriodGrade();
     this.searchParams.grade = new ShiftPeriodGrade();

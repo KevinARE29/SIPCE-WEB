@@ -1,7 +1,7 @@
 export class InterventionProgram {
-    id: number;
-    name: string;
-    description: string;
-    type: string;
-    status: boolean;
+  id: number;
+  name: string;
+  description: string;
+  type: string;
+  status: boolean;
 }

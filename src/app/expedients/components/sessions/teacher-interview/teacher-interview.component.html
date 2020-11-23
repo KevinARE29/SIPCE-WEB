@@ -12,7 +12,7 @@
 <app-students-details [id]="studentId"></app-students-details>
 
 <nz-spin nzTip="Cargando ..." [nzSpinning]="loadingSession">
-<form nz-form nzLayout="vertical" [formGroup]="sessionForm" (ngSubmit)="submitForm($event)">
+<form nz-form nzLayout="vertical" [formGroup]="sessionForm" (ngSubmit)="submitForm($event.submitter.id)">
 
     <div nz-row nzJustify="center" [nzGutter]="10">
 

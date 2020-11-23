@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { subMonths, differenceInCalendarDays } from 'date-fns';
+import { differenceInCalendarDays } from 'date-fns';
 
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -50,10 +51,6 @@ export class StudentSessionsComponent implements OnInit {
   }
 
   init(): void {
-    const currentDate = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 23, 59, 59);
-    let date = subMonths(currentDate, 1);
-    date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
-
     this.searchSessionParams = new Session();
 
     this.eventTypes = Object.values(SessionTypes).filter((k) => isNaN(Number(k)));
@@ -73,7 +70,7 @@ export class StudentSessionsComponent implements OnInit {
     }
   }
 
-  getSessions(params): void {
+  getSessions(params: NzTableQueryParams): void {
     this.loading = true;
 
     this.sessionService
@@ -153,7 +150,7 @@ export class StudentSessionsComponent implements OnInit {
     }
   }
 
-  getSessionPath(sessionType): string {
+  getSessionPath(sessionType: string): string {
     let path = '';
 
     switch (sessionType) {

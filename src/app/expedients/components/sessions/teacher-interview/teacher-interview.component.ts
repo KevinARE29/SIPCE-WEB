@@ -41,8 +41,8 @@ export class TeacherInterviewComponent implements OnInit {
   actionLoading = false;
 
   // Duration input.
-  durationFormatter = (value: number) => value ? `${value} min` : '';
-  durationParser = (value: string) => value.replace(' min', '');
+  durationFormatter = (value: number): string => (value ? `${value} min` : '');
+  durationParser = (value: string): string => value.replace(' min', '');
 
   // Service types
   serviceTypes = Object.keys(ServiceTypes).filter((k) => isNaN(Number(k)));
@@ -55,7 +55,7 @@ export class TeacherInterviewComponent implements OnInit {
   editor = ClassicEditor;
   editorConfig = {
     language: 'es',
-    toolbar: [ 'heading', '|', 'bold', 'italic', '|', 'bulletedList', 'numberedList', '|' ,'undo', 'redo' ]
+    toolbar: ['heading', '|', 'bold', 'italic', '|', 'bulletedList', 'numberedList', '|', 'undo', 'redo']
   };
 
   constructor(
@@ -67,7 +67,7 @@ export class TeacherInterviewComponent implements OnInit {
     private message: NzMessageService,
     private notification: NzNotificationService,
     private modal: NzModalService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const paramStudent = this.route.snapshot.params['student'];
@@ -165,7 +165,7 @@ export class TeacherInterviewComponent implements OnInit {
     return differenceInCalendarDays(current, new Date()) > 0;
   };
 
-  submitForm(event: any): void {
+  submitForm(submitter: string): void {
     for (const i in this.sessionForm.controls) {
       this.sessionForm.controls[i].markAsDirty();
       this.sessionForm.controls[i].updateValueAndValidity();
@@ -179,7 +179,7 @@ export class TeacherInterviewComponent implements OnInit {
       }
     });
 
-    const isDraft = event.submitter.id === 'draft';
+    const isDraft = submitter === 'draft';
 
     if (this.sessionForm.valid) {
       if (isDraft) {
@@ -189,7 +189,7 @@ export class TeacherInterviewComponent implements OnInit {
           nzTitle: '¿Desea registrar la sesión?',
           nzContent: 'La sesión ya no se podrá editar luego de realizar esta acción. ¿Desea continuar?',
           nzOnOk: () => {
-            this.saveSession(false)
+            this.saveSession(false);
           }
         });
       }
@@ -212,7 +212,7 @@ export class TeacherInterviewComponent implements OnInit {
     session.evaluations = formValue['evaluations'];
 
     if (this.session) {
-      session.id = this.session.id
+      session.id = this.session.id;
     }
 
     this.sessionService.saveSession(this.expedientId, this.studentId, session).subscribe(
@@ -234,5 +234,4 @@ export class TeacherInterviewComponent implements OnInit {
       }
     );
   }
-
 }

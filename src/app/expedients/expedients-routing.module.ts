@@ -19,13 +19,13 @@ const routes: Routes = [
     component: SessionsComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
-  }, 
+  },
   {
     path: ':expedient/estudiantes/:student/sesiones',
     component: StudentSessionsComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
-  }, 
+  },
   {
     path: ':expedient/estudiantes/:student/sesiones/sesion-individual',
     component: StudentSessionComponent,
@@ -74,4 +74,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class ExpedientsRoutingModule { }
+export class ExpedientsRoutingModule {}
