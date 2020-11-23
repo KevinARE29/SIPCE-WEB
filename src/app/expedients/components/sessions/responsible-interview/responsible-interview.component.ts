@@ -297,10 +297,23 @@ export class ResponsibleInterviewComponent implements OnInit {
       });
     }
 
-    session.otherResponsible = {
-      otherResponsibleName: formValue['otherResponsible'] ? formValue['otherResponsibleName'] : null,
-      otherResponsibleRelationship: formValue['otherResponsible'] ? formValue['otherResponsibleRelationship'] : null
-    };
+    // In PATCH, set null to the values.
+    if (this.session) {
+      session.otherResponsible = {
+        otherResponsibleName: formValue['otherResponsible'] ? formValue['otherResponsibleName'] : null,
+        otherResponsibleRelationship: formValue['otherResponsible'] ? formValue['otherResponsibleRelationship'] : null
+      };
+    } else {
+      // If POST, set empty null to the object
+      if (formValue['otherResponsible']) {
+        session.otherResponsible = {
+          otherResponsibleName: formValue['otherResponsibleName'],
+          otherResponsibleRelationship: formValue['otherResponsibleRelationship']
+        };
+      } else {
+        session.otherResponsible = null;
+      }
+    }
 
     if (this.session) {
       session.id = this.session.id;
