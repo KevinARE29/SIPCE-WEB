@@ -297,14 +297,10 @@ export class ResponsibleInterviewComponent implements OnInit {
       });
     }
 
-    if (formValue['otherResponsible']) {
-      session.otherResponsible = {
-        otherResponsibleName: formValue['otherResponsibleName'],
-        otherResponsibleRelationship: formValue['otherResponsibleRelationship']
-      };
-    } else {
-      session.otherResponsible = null;
-    }
+    session.otherResponsible = {
+      otherResponsibleName: formValue['otherResponsible'] ? formValue['otherResponsibleName'] : null,
+      otherResponsibleRelationship: formValue['otherResponsible'] ? formValue['otherResponsibleRelationship'] : null
+    };
 
     if (this.session) {
       session.id = this.session.id;
