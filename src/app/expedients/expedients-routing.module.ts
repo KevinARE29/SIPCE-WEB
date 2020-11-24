@@ -13,10 +13,19 @@ import { TeacherInterviewComponent } from './components/sessions/teacher-intervi
 // Intervention programs.
 import { InterventionProgramsListComponent } from './components/intervention-programs/intervention-programs-list/intervention-programs-list.component';
 
+// Expedient
+import { ExpedientComponent } from './components/expedient/expedient/expedient.component';
+
 const routes: Routes = [
   {
     path: 'estudiantes',
     component: SessionsComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 33 }
+  },
+  {
+    path: 'estudiantes/:student',
+    component: ExpedientComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
   },
