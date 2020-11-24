@@ -167,7 +167,7 @@
             "allowed": null,
             "children": [
                 {
-                    "route": "expedientes",
+                    "route": "expedientes/estudiantes",
                     "name": "Estudiantes",
                     "permission": 33,
                     "allowed": false

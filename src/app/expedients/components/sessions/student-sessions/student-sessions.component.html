@@ -29,7 +29,7 @@
         <label>Tipo de evento: </label>
         <nz-input-group>
             <nz-select class="relation" nzShowSearch nzAllowClear [(ngModel)]="searchSessionParams.sessionType"
-                (ngModelChange)="getSessions(null)">
+                (ngModelChange)="getSessions(null)" nzPlaceHolder="Seleccionar tipo">
                 <nz-option *ngFor="let type of eventTypes" [nzValue]="type" [nzLabel]="type">
                 </nz-option>
             </nz-select>
