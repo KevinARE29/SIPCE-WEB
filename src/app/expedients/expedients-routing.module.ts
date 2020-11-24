@@ -15,49 +15,49 @@ import { InterventionProgramsListComponent } from './components/intervention-pro
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'estudiantes',
     component: SessionsComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
-  }, 
+  },
   {
-    path: ':expedient/estudiantes/:student/sesiones',
+    path: 'estudiantes/:expedient/:student/sesiones',
     component: StudentSessionsComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
-  }, 
+  },
   {
-    path: ':expedient/estudiantes/:student/sesiones/sesion-individual',
+    path: 'estudiantes/:expedient/:student/sesiones/sesion-individual',
     component: StudentSessionComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
   },
   {
-    path: ':expedient/estudiantes/:student/sesiones/sesion-individual/:session',
+    path: 'estudiantes/:expedient/:student/sesiones/sesion-individual/:session',
     component: StudentSessionComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
   },
   {
-    path: ':expedient/estudiantes/:student/sesiones/entrevista-docente',
+    path: 'estudiantes/:expedient/:student/sesiones/entrevista-docente',
     component: TeacherInterviewComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
   },
   {
-    path: ':expedient/estudiantes/:student/sesiones/entrevista-docente/:session',
+    path: 'estudiantes/:expedient/:student/sesiones/entrevista-docente/:session',
     component: TeacherInterviewComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
   },
   {
-    path: ':expedient/estudiantes/:student/sesiones/entrevista-responsable',
+    path: 'estudiantes/:expedient/:student/sesiones/entrevista-responsable',
     component: ResponsibleInterviewComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
   },
   {
-    path: ':expedient/estudiantes/:student/sesiones/entrevista-responsable/:session',
+    path: 'estudiantes/:expedient/:student/sesiones/entrevista-responsable/:session',
     component: ResponsibleInterviewComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
@@ -74,4 +74,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class ExpedientsRoutingModule { }
+export class ExpedientsRoutingModule {}

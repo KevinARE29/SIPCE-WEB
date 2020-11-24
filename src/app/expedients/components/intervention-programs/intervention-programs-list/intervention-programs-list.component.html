@@ -24,7 +24,7 @@
         <label>Tipo: </label>
         <nz-input-group>
             <nz-select nzShowSearch nzAllowClear [(ngModel)]="search.type"
-                (ngModelChange)="getPrograms(null)">
+                (ngModelChange)="getPrograms(null)" nzPlaceHolder="Seleccionar tipo">
                 <nz-option *ngFor="let type of programTypes" [nzValue]="type" [nzLabel]="type">
                 </nz-option>
             </nz-select>

@@ -31,12 +31,6 @@ import { InterventionProgramsFormComponent } from './components/intervention-pro
     InterventionProgramsListComponent,
     InterventionProgramsFormComponent
   ],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    AntDesignModule,
-    CKEditorModule,
-    ExpedientsRoutingModule
-  ]
+  imports: [CommonModule, ReactiveFormsModule, AntDesignModule, CKEditorModule, ExpedientsRoutingModule]
 })
-export class ExpedientsModule { }
+export class ExpedientsModule {}
