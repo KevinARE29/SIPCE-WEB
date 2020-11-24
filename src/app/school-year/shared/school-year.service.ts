@@ -241,11 +241,44 @@ export class SchoolYearService {
       .pipe(catchError(this.handleError()));
   }
 
+  saveTeachers(schoolYear: unknown): Observable<void> {
+    const assignment = new Array<unknown>();
+
+    schoolYear['shifts'].forEach((shift) => {
+      const grades = new Array<unknown>();
+
+      shift['shift']['cycles'].forEach((cycle) => {
+        cycle['gradeDetails'].forEach((grade) => {
+          const sections = new Array<unknown>();
+
+          grade['sectionDetails'].forEach((section) => {
+            const teachers = new Array<number>();
+            section['auxTeachers'].forEach((teacher) => {
+              teachers.push(teacher.id);
+            });
+            sections.push({ sectionId: section['section']['id'], auxTeacherIds: teachers });
+          });
+
+          grades.push({ gradeId: grade['grade']['id'], sections });
+        });
+      });
+      // eslint-disable-next-line prefer-const
+      const mappedShift = { shiftId: shift['shift'].id, grades: grades };
+
+      assignment.push(mappedShift);
+    });
+
+    return this.http
+      .post<void>(`${this.baseUrl}academics/school-year/aux-teachers`, JSON.stringify({ shifts: assignment }))
+      .pipe(catchError(this.handleError()));
+  }
+
   startSchoolYear(): Observable<void> {
     const body = JSON.stringify({ status: 'En curso' });
 
     return this.http.patch<void>(`${this.baseUrl}academics/school-year`, body).pipe(catchError(this.handleError()));
   }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.
