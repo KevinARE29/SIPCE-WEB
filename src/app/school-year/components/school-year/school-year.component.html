@@ -111,14 +111,10 @@
                 </nz-tab>
                 <nz-tab nzTitle="Docentes auxiliares">
                     <div class="shifts">
-                        <app-teachers [catalogs]="catalogs" [assignation]="schoolYear" [isValid]="emptyUsers.valid"></app-teachers>
-                        <!-- <app-head-teachers [catalogs]="catalogs" [assignation]="schoolYear" [isValid]="emptyUsers.valid"
-                            (headTeachersEvent)="updateHeadTeachers($event)">
-                        </app-head-teachers>
-                        
+                        <app-teachers [catalogs]="catalogs" [assignation]="schoolYear" [isValid]="emptyUsers.valid" (teachersEvent)="updateTeachers($event)"></app-teachers>
                         <div nz-row nzJustify="space-around">
-                            <button nz-button nzType="primary" (click)="headTeachersStep(null)">Actualizar</button>
-                        </div> -->
+                            <button nz-button nzType="primary" (click)="teachersTab()">Actualizar</button>
+                        </div>
                     </div>
                 </nz-tab>
                 <nz-tab nzTitle="Orientadores">

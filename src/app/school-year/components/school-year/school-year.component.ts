@@ -401,6 +401,18 @@ export class SchoolYearComponent implements OnInit {
       
     }
   }
+
+  updateTeachers(content: unknown): void {
+    const shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === content['shift']['id']);
+    const cycle = shift['shift']['cycles'].find((x) => x['cycle'].id === content['grade']['cycle']['id']);
+    const grade = cycle['gradeDetails'].find((x) => x['grade'].id === content['grade']['grade']['id']);
+    const section = grade['sectionDetails'].find((x) => x['section'].id === content['section']['section']['id']);
+
+    section['aux-teachers'] = content['section']['aux-teachers'] ? content['section']['aux-teachers'] : new Array<User>();
+
+    section['aux-teachers']['isValid'] = !content['section']['error'];
+    if (!section['aux-teachers'].length) section['aux-teachers']['isValid'] = false;
+  }
   //#endregion
 
   //#region Steps
@@ -659,6 +671,44 @@ export class SchoolYearComponent implements OnInit {
     next ? (this.currentStep += 1) : (this.currentStep -= 1);
   }
 
+  teachersTab(): void {
+    // this.checkEmptyTeachers();
+    // if (this.checkEmptyTeachers['empty'] > 0 && this.checkEmptyTeachers['valid']) this.checkEmptyTeachers['valid'] = false;
+
+    // if (this.checkEmptyTeachers['valid']) {
+      this.loading = true;
+      this.schoolYearService.saveTeachers(this.schoolYear).subscribe(
+        () => {
+          this.loading = false;
+          this.message.success(`La asignación de docentes auxiliares se ha guardado con éxito`);
+        },
+        (error) => {
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
+              nzDuration: 30000
+            });
+          } else if (typeof error === 'string') {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
+              nzDuration: 30000
+            });
+          }
+          this.loading = false;
+        }
+      );
+    // } else {
+    //   this.notification.create(
+    //     'error',
+    //     'Error en la asignación de docentes auxiliares.',
+    //     'Verifique que los valores ingresados en todos los turnos son correctos, no se permiten campos vacíos..',
+    //     {
+    //       nzDuration: 30000
+    //     }
+    //   );
+    // }
+  }
+
   // Check school year elements
   checkEmptyCoordinators(): void {
     this.emptyUsers = { total: 0, empty: 0, valid: true };
@@ -707,5 +757,7 @@ export class SchoolYearComponent implements OnInit {
       });
     });
   }
+
+  // checkEmptyTeachers(): void {}
   //#endregion
 }
