@@ -1,1 +1,30 @@
-<p>teachers works!</p>
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+    <nz-tabset nzTabPosition="left" [nzType]="'line'">
+        <nz-tab *ngFor="let item of items" [nzTitle]="item.shift.name">
+            <div nz-row nzJustify="center">
+                <div nz-col nzXs="24" nzSm="24" nzMd="18" nzLg="15">
+                    <nz-collapse [nzBordered]="false">
+                        <nz-collapse-panel *ngFor="let grade of item.grades" [nzHeader]="grade.grade.name">
+                            <!-- Cycle inputs -->
+                            <nz-form-item *ngFor="let section of grade.sections">
+                                <nz-form-label><span class="label">{{section.section.name}}</span></nz-form-label>
+                                <nz-form-control>
+                                    <nz-select [nzMaxTagCount]="5" nzMode="tags" nzPlaceHolder="Asignar docentes auxiliares"
+                                    [nzMaxTagPlaceholder]="tagPlaceHolder">
+                                        <ng-container *ngFor="let teacher of item.teachers">
+                                            <nz-option [nzHide]="!teacher.active" [nzLabel]="teacher.fullname" [nzValue]="teacher.id">{{teacher.fullname}}</nz-option>
+                                        </ng-container>
+                                    </nz-select>
+                                    <ng-template #tagPlaceHolder let-selectedList> y {{ selectedList.length }} más seleccionados </ng-template>
+                                </nz-form-control>
+                
+                                <span class="error">{{section.error}}</span>
+                                <span class="error" *ngIf="!section.teacher && !isValid">El campo es requerido</span>
+                            </nz-form-item>
+                        </nz-collapse-panel>
+                      </nz-collapse>
+                </div>
+            </div>
+        </nz-tab>
+    </nz-tabset>
+</nz-spin>
