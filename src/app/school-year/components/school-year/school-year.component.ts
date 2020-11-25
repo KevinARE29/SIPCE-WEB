@@ -408,10 +408,12 @@ export class SchoolYearComponent implements OnInit {
     const grade = cycle['gradeDetails'].find((x) => x['grade'].id === content['grade']['grade']['id']);
     const section = grade['sectionDetails'].find((x) => x['section'].id === content['section']['section']['id']);
 
-    section['aux-teachers'] = content['section']['aux-teachers'] ? content['section']['aux-teachers'] : new Array<User>();
+    section['auxTeachers'] = content['aux_teachers'] ? content['aux_teachers'] : new Array<User>();
 
-    section['aux-teachers']['isValid'] = !content['section']['error'];
-    if (!section['aux-teachers'].length) section['aux-teachers']['isValid'] = false;
+    section['auxTeachers']['isValid'] = !content['section']['error'];
+    if (!section['auxTeachers'].length) section['auxTeachers']['isValid'] = false;
+    
+    console.log('Updated section', section);
   }
   //#endregion
 
@@ -628,6 +630,44 @@ export class SchoolYearComponent implements OnInit {
     }
   }
 
+  teachersTab(): void {
+    this.checkEmptyTeachers();
+    if (this.checkEmptyTeachers['empty'] > 0 && this.checkEmptyTeachers['valid']) this.checkEmptyTeachers['valid'] = false;
+    console.log(this.checkEmptyTeachers['valid']);
+    if (this.checkEmptyTeachers['valid']) {
+      this.loading = true;
+      this.schoolYearService.saveTeachers(this.schoolYear).subscribe(
+        () => {
+          this.loading = false;
+          this.message.success(`La asignación de docentes auxiliares se ha guardado con éxito`);
+        },
+        (error) => {
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
+              nzDuration: 30000
+            });
+          } else if (typeof error === 'string') {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
+              nzDuration: 30000
+            });
+          }
+          this.loading = false;
+        }
+      );
+    } else {
+      this.notification.create(
+        'error',
+        'Error en la asignación de docentes auxiliares.',
+        'Verifique que los valores ingresados en todos los turnos son correctos, no se permiten campos vacíos..',
+        {
+          nzDuration: 30000
+        }
+      );
+    }
+  }
+
   counselorsStep(next: boolean): void {
     this.checkEmptyCounselors();
     if (this.emptyUsers['empty'] > 0 && this.emptyUsers['valid']) this.emptyUsers['valid'] = false;
@@ -669,44 +709,6 @@ export class SchoolYearComponent implements OnInit {
 
   finalStep(next: boolean): void {
     next ? (this.currentStep += 1) : (this.currentStep -= 1);
-  }
-
-  teachersTab(): void {
-    // this.checkEmptyTeachers();
-    // if (this.checkEmptyTeachers['empty'] > 0 && this.checkEmptyTeachers['valid']) this.checkEmptyTeachers['valid'] = false;
-
-    // if (this.checkEmptyTeachers['valid']) {
-      this.loading = true;
-      this.schoolYearService.saveTeachers(this.schoolYear).subscribe(
-        () => {
-          this.loading = false;
-          this.message.success(`La asignación de docentes auxiliares se ha guardado con éxito`);
-        },
-        (error) => {
-          const statusCode = error.statusCode;
-          const notIn = [401, 403];
-          if (!notIn.includes(statusCode) && statusCode < 500) {
-            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
-              nzDuration: 30000
-            });
-          } else if (typeof error === 'string') {
-            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
-              nzDuration: 30000
-            });
-          }
-          this.loading = false;
-        }
-      );
-    // } else {
-    //   this.notification.create(
-    //     'error',
-    //     'Error en la asignación de docentes auxiliares.',
-    //     'Verifique que los valores ingresados en todos los turnos son correctos, no se permiten campos vacíos..',
-    //     {
-    //       nzDuration: 30000
-    //     }
-    //   );
-    // }
   }
 
   // Check school year elements
@@ -758,6 +760,22 @@ export class SchoolYearComponent implements OnInit {
     });
   }
 
-  // checkEmptyTeachers(): void {}
+  checkEmptyTeachers(): void {
+    this.emptyUsers = { total: 0, empty: 0, valid: true };
+
+    this.schoolYear.shifts.forEach((shift) => {
+      shift['shift']['cycles'].forEach((cycle) => {
+        cycle['gradeDetails'].forEach((grade) => {
+          grade['sectionDetails'].forEach((section) => {
+            // this.emptyUsers['total']++;
+
+            // if (!section['auxTeacher'].length) this.emptyUsers['empty']++;
+            // if (section['auxTeacher'] && section['auxTeacher']['isValid'] === false)
+            //   this.emptyUsers['valid'] = false;
+          });
+        });
+      });
+    });
+  }
   //#endregion
 }

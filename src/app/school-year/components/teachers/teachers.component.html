@@ -9,20 +9,23 @@
                             <nz-form-item *ngFor="let section of grade.sections">
                                 <nz-form-label><span class="label">{{section.section.name}}</span></nz-form-label>
                                 <nz-form-control>
-                                    <nz-select [nzMaxTagCount]="5" nzMode="tags" nzPlaceHolder="Asignar docentes auxiliares"  [(ngModel)]="section.teachers"
-                                    [nzMaxTagPlaceholder]="tagPlaceHolder" (ngModelChange)="onChange(item, section, $event)">
+                                    <nz-select [nzMaxTagCount]="5" nzMode="tags"
+                                        nzPlaceHolder="Asignar docentes auxiliares" [(ngModel)]="section.auxTeachers"
+                                        [nzMaxTagPlaceholder]="tagPlaceHolder" (ngModelChange)="onChange(item, grade, section, $event)">
                                         <ng-container *ngFor="let teacher of item.teachers">
-                                            <nz-option [nzHide]="!teacher.active" [nzLabel]="teacher.fullname" [nzValue]="teacher.id">{{teacher.fullname}}</nz-option>
+                                            <nz-option [nzLabel]="teacher.fullname" [nzValue]="teacher">
+                                                {{teacher.fullname}}</nz-option>
                                         </ng-container>
                                     </nz-select>
-                                    <ng-template #tagPlaceHolder let-selectedList> y {{ selectedList.length }} más seleccionados </ng-template>
+                                    <ng-template #tagPlaceHolder let-selectedList> y {{ selectedList.length }} más
+                                        seleccionados </ng-template>
                                 </nz-form-control>
-                
+
                                 <span class="error">{{section.error}}</span>
                                 <span class="error" *ngIf="!section.teacher && !isValid">El campo es requerido</span>
                             </nz-form-item>
                         </nz-collapse-panel>
-                      </nz-collapse>
+                    </nz-collapse>
                 </div>
             </div>
         </nz-tab>

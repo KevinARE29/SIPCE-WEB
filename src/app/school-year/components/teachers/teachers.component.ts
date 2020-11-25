@@ -7,7 +7,7 @@ import { UserService } from 'src/app/users/shared/user.service';
 
 interface ItemData {
   section: ShiftPeriodGrade;
-  teachers: User[];
+  auxTeachers: User[];
   error: string;
   initialDisabled: boolean;
 }
@@ -55,11 +55,11 @@ export class TeachersComponent implements OnInit {
           let sections = new Array<ItemData>();
 
           grade['sectionDetails'].forEach((section) => {
-            const teachers = section['auxTeachers'];
-            // console.log(section);
+            const auxTeachers = section['auxTeachers'] ? section['auxTeachers'] : null;
+
             sections.push({
               section: { ...section['section'] },
-              teachers: teachers ? { ...teachers } : null,
+              auxTeachers: auxTeachers,
               error: null,
               initialDisabled: false
             });
@@ -79,45 +79,22 @@ export class TeachersComponent implements OnInit {
       const item = {
         shift,
         grades: listOfGrades,
-        teachers: this.listOfTeachers
+        teachers: this.listOfTeachers.map((teacher) => {
+          return { ...teacher };
+        })
       };
-      // console.log(item);
+
       item['filteredOptions'] = [...item.teachers];
-
-      // const idTeachers = item.teachers.map((teacher) => teacher.id);
-
-      listOfGrades.forEach((grade) => {
-        grade['sections'].forEach((section) => {
-          // Add code
-        });
-      });
 
       this.items.push(item);
     });
+    console.log(this.items);
   }
 
-  onChange(item: unknown, section: ShiftPeriodGrade, teachers: User[]): void {
-    console.log(item);
-    // let remove;
-    // // Assign new teachers
-    // teachers.forEach((teacher) => {
-    //   const currentTeacher = item['grades'].find((x) => x.id === grade.id);
-    //   currentGrade.active = false;
-    // });
+  onChange(item: unknown, grade: ShiftPeriodGrade, section: ShiftPeriodGrade, aux_teachers: User[]): void {
+    console.log(item, section, aux_teachers);
 
-    // if (counselor['gradesCache'].length > counselor.grades.length) {
-    //   counselor['gradesCache'].forEach((g) => {
-    //     const grade = counselor.grades.find((x) => x.id === g.id);
-
-    //     if (!grade) {
-    //       remove = item['grades'].find((x) => x.id == g.id);
-    //       remove.active = true;
-    //     }
-    //   });
-    // }
-
-    // this.teachersEvent.emit({ shift: item['shift'], counselor, remove });
-    // counselor['gradesCache'] = [...counselor.grades];
+    this.teachersEvent.emit({ shift: item['shift'], grade, section, aux_teachers });
   }
 
   // compareFn = (o1: User, o2: User) => {
