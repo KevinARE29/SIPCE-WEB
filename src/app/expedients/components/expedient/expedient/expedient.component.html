@@ -34,7 +34,9 @@
         ></app-expedient-view>
 
         <app-expedient-form *ngIf="editing"
+                            [studentId]="studentId"
                             [expedient]="selectedExpedientExists ? selectedExpedient : null"
+                            (expedientSaved)="onExpedientSaved($event)"
                             (cancelEditing)="setEditing(false)"
         ></app-expedient-form>
 
