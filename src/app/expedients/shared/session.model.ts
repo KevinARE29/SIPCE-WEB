@@ -1,7 +1,7 @@
 import { User } from '../../users/shared/user.model';
 import { Responsible } from 'src/app/students/shared/responsible.model';
 
-class Evaluation {
+export class Evaluation {
   id: number;
   description: string;
 }
