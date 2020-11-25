@@ -1,6 +1,12 @@
 import { InterventionProgram } from './intervention-program.model';
 import { Evaluation } from './session.model';
 
+export class SessionsCounter {
+  individualSessionCounter: number;
+  parentsInterviewCounter: number;
+  teachersInterviewCounter: number;
+}
+
 export class Expedient {
   id: number;
 
@@ -18,9 +24,5 @@ export class Expedient {
   activeInterventionPrograms: InterventionProgram[];
   evaluations: Evaluation[];
 
-  sessionsCounter: {
-    individualSessionCounter: number;
-    parentsInterviewCounter: number;
-    teachersInterviewCounter: number;
-  };
+  sessionsCounter: SessionsCounter;
 }
