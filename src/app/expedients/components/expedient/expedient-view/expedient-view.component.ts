@@ -11,6 +11,7 @@ import { ExpedientService } from 'src/app/expedients/shared/expedient.service';
 })
 export class ExpedientViewComponent {
   @Input() expedient: Expedient;
+  @Input() isEditable: boolean;
   @Output() initEditing = new EventEmitter<void>();
 
   constructor(private expedientService: ExpedientService) {}

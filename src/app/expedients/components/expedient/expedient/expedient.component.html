@@ -29,6 +29,7 @@
 
         <app-expedient-view *ngIf="!editing"
                             [expedient]="selectedExpedientExists ? selectedExpedient : null"
+                            [isEditable]="selectedExpedientIsEditable"
                             (initEditing)="setEditing(true)"
         ></app-expedient-view>
 
