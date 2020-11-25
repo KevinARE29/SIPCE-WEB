@@ -34,7 +34,7 @@ export class ExpedientComponent implements OnInit {
 
     this.loadingExpedients = true;
     this.expedientService.getExpedients(this.studentId).subscribe((r) => {
-      this.expedients = r['data'];
+      this.expedients = r;
       this.setSelectedExpedient(0);
       this.loadingExpedients = false;
     });
@@ -54,5 +54,10 @@ export class ExpedientComponent implements OnInit {
 
   setEditing(editing: boolean): void {
     this.editing = editing;
+  }
+
+  onExpedientSaved(expedient: Expedient): void {
+    this.expedients[this.selectedExpedientIndex] = expedient;
+    this.setSelectedExpedient(this.selectedExpedientIndex);
   }
 }
