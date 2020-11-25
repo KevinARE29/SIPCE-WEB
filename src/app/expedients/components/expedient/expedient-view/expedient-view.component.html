@@ -1,0 +1,16 @@
+<ng-container *ngIf="expedient">
+    <nz-divider [nzText]="text" nzOrientation="right">
+        <ng-template #text><i (click)="onInitEditing()" nz-icon nzType="edit" nzTheme="outline"></i></ng-template>
+      </nz-divider>
+</ng-container>
+
+<ng-container *ngIf="!expedient">
+    <!-- Actions -->
+    <div nz-row nzJustify="center">  
+        <div nz-col>
+            <button nz-button nzType="default" (click)="onInitEditing()">
+                Abrir expediente
+            </button>
+        </div>
+    </div>
+</ng-container>

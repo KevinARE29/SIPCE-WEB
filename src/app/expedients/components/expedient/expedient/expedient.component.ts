@@ -22,6 +22,7 @@ export class ExpedientComponent implements OnInit {
   selectedExpedientIsFirst: boolean;
   selectedExpedientIsLast: boolean;
   selectedExpedientIsEditable: boolean;
+  editing = false;
 
   constructor(private route: ActivatedRoute, private expedientService: ExpedientService) {}
 
@@ -47,6 +48,11 @@ export class ExpedientComponent implements OnInit {
       this.selectedExpedientIsFirst = index === 0;
       this.selectedExpedientIsLast = index === this.expedients.length - 1;
       this.selectedExpedientIsEditable = index === 0;
+      this.editing = false;
     }
+  }
+
+  setEditing(editing: boolean): void {
+    this.editing = editing;
   }
 }

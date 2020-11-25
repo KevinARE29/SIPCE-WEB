@@ -27,6 +27,16 @@
     <ng-container *ngIf="!loadingExpedients">
         <app-students-details-expedient [id]="studentId"></app-students-details-expedient>
 
+        <app-expedient-view *ngIf="!editing"
+                            [expedient]="selectedExpedientExists ? selectedExpedient : null"
+                            (initEditing)="setEditing(true)"
+        ></app-expedient-view>
+
+        <app-expedient-form *ngIf="editing"
+                            [expedient]="selectedExpedientExists ? selectedExpedient : null"
+                            (cancelEditing)="setEditing(false)"
+        ></app-expedient-form>
+
        <app-sessions-counter *ngIf="selectedExpedientExists"
                             [studentId]="studentId"
                             [expedientId]="selectedExpedient.id"

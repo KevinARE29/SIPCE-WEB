@@ -1,0 +1,15 @@
+<form>
+    <!-- Actions -->
+    <div nz-row nzJustify="center" [nzGutter]="40">
+        <div nz-col *ngIf="expedient">
+            <button nz-button nzType="default" [nzLoading]="actionLoading" (click)="onCancel()">
+                Cancelar
+            </button>
+        </div>    
+        <div nz-col>
+            <button nz-button nzType="primary" [nzLoading]="actionLoading">
+                {{expedient ? 'Actualizar' : 'Abrir expediente'}}
+            </button>
+        </div>
+    </div>
+</form>
