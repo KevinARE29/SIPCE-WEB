@@ -22,6 +22,7 @@ import { InterventionProgramsFormComponent } from './components/intervention-pro
 
 // Expedient
 import { ExpedientComponent } from './components/expedient/expedient/expedient.component';
+import { StudentsDetailsComponent as StudentsDetailsExpedientComponent } from './components/expedient/students-details/students-details.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { ExpedientComponent } from './components/expedient/expedient/expedient.c
     TeacherInterviewComponent,
     InterventionProgramsListComponent,
     InterventionProgramsFormComponent,
-    ExpedientComponent
+    ExpedientComponent,
+    StudentsDetailsExpedientComponent
   ],
   imports: [CommonModule, ReactiveFormsModule, AntDesignModule, CKEditorModule, ExpedientsRoutingModule]
 })

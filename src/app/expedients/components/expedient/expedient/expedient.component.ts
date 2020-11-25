@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-expedient',
@@ -6,10 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./expedient.component.css']
 })
 export class ExpedientComponent implements OnInit {
+  studentId: number;
 
-  constructor() { }
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    const paramStudent = this.route.snapshot.params['student'];
+    if (typeof paramStudent === 'string' && !Number.isNaN(Number(paramStudent))) {
+      this.studentId = Number(paramStudent);
+    }
   }
-
 }
