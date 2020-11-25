@@ -6,7 +6,7 @@
         <ng-template #text><i (click)="onInitEditing()" nz-icon nzType="edit" nzTheme="outline"></i></ng-template>
     </nz-divider>
 
-    <div nz-row>
+    <div nz-row [nzGutter]="[20, 20]">
         <!-- General data -->
         <div nz-col nzXs="24">
             <p><strong>Fue referido por:</strong> {{expedient.referrerName}}</p>
@@ -32,6 +32,8 @@
                 <!-- Diagnostic Impressions -->
                 <nz-collapse-panel nzHeader="Impresión diagnóstica" [nzActive]="true">
                     <nz-tag *ngFor="let category of expedient.diagnosticImpressionCategories"> {{ category }}</nz-tag>
+                    
+                    <nz-tag *ngIf="expedient.otherDiagnosticImpressionCategory"> {{ expedient.otherDiagnosticImpressionCategory }}</nz-tag> 
 
                     <p>
                         {{expedient.diagnosticImpression || 'No se ha registrado una impresión diagnóstica'}}
@@ -58,6 +60,7 @@
                     </p>
                     <ul>
                         <li *ngFor="let treatment of expedient.externalPsychologicalTreatments">{{treatment}}</li>
+                        <li *ngIf="expedient.otherExternalPsychologicalTreatment"> {{ expedient.otherExternalPsychologicalTreatment }}</li> 
                     </ul>
                 </div>
             </div>
@@ -84,7 +87,7 @@
 
 <!-- If expedient does not exist, show creation button. -->
 <ng-container *ngIf="!expedient">
-
+    <br><br>
     <div nz-row nzJustify="center">  
         <div nz-col>
             <button nz-button nzType="default" (click)="onInitEditing()">

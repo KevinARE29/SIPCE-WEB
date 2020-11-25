@@ -16,8 +16,12 @@ export class Expedient {
 
   problemDescription: string;
   diagnosticImpression: string;
+
   diagnosticImpressionCategories: string[];
+  otherDiagnosticImpressionCategory: string;
   externalPsychologicalTreatments: string[];
+  otherExternalPsychologicalTreatment: string;
+
   actionPlan: string;
   finalConclusion: string;
 
