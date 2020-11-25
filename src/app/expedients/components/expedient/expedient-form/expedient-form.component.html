@@ -147,18 +147,48 @@
             </div>
         </div>  
     </div>
-
-    <!-- Actions -->
-    <div nz-row nzJustify="center" [nzGutter]="40">
-        <div nz-col *ngIf="expedient">
-            <button nz-button nzType="default" [nzLoading]="actionLoading" (click)="onCancel()">
-                Cancelar
-            </button>
-        </div>    
-        <div nz-col>
-            <button nz-button nzType="primary" [nzLoading]="actionLoading" (click)="submitForm()">
-                {{expedient ? 'Actualizar' : 'Abrir expediente'}}
-            </button>
-        </div>
-    </div>
 </form>
+
+<!-- Actions -->
+<div nz-row nzJustify="center" [nzGutter]="40">
+    <div nz-col *ngIf="!expedient">
+        <label nz-checkbox [(ngModel)]="createSession">
+            Registrar primera sesión
+        </label>
+    </div>
+</div>
+
+<div nz-row nzJustify="center" [nzGutter]="40">
+    <div nz-col *ngIf="expedient">
+        <button nz-button nzType="default" [nzLoading]="actionLoading" (click)="onCancel()">
+            Cancelar
+        </button>
+    </div>    
+    <div nz-col>
+        <button nz-button nzType="primary" [nzLoading]="actionLoading" (click)="submitForm()">
+            {{expedient ? 'Actualizar' : 'Abrir expediente'}}
+        </button>
+    </div>
+</div>
+
+<!-- Create session modal -->
+<nz-modal [(nzVisible)]="showModal" nzTitle="Seleccione el tipo de entrevista" [nzContent]="modalContent"
+    nzOkText="Continuar" nzCancelText="Cancelar" (nzOnOk)="saveExpedientWithSession()" (nzOnCancel)="showModal = false">
+    <!-- Modal content -->
+    <ng-template #modalContent>
+        <!-- Event type -->
+        <div nz-row nzJustify="center">
+            <div nz-col nzXs="24" nzMd="18">
+                <nz-input-group>
+                    <nz-select [(ngModel)]="sessionType">
+                        <!-- The value of the option is the route to the form component -->
+                        <nz-option nzValue="" nzLabel="Seleccionar..." [nzDisabled]="true"></nz-option>
+                        <nz-option nzValue="sesion-individual" nzLabel="Sesión individual"></nz-option>
+                        <nz-option nzValue="entrevista-docente" nzLabel="Entrevista con docente"></nz-option>
+                        <nz-option nzValue="entrevista-responsable" nzLabel="Entrevista con padres de familia"></nz-option>
+                    </nz-select>
+                </nz-input-group>
+            </div>
+        </div>
+    </ng-template>
+</nz-modal>

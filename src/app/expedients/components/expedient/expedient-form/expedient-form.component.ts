@@ -7,6 +7,7 @@ import { Expedient } from 'src/app/expedients/shared/expedient.model';
 import { ExpedientService } from 'src/app/expedients/shared/expedient.service';
 import { DiagnosticImpressionCategories } from 'src/app/shared/enums/diagnostic-impression-categories.enum';
 import { PsychologicalTreatmentTypes } from 'src/app/shared/enums/psychological-treatment-types.enum';
+import { SessionTypes } from 'src/app/shared/enums/session-types.enum';
 
 // NG Zorro
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -32,6 +33,12 @@ export class ExpedientFormComponent implements OnInit {
   psychologicalTreatmentTypes = Object.values(PsychologicalTreatmentTypes).filter((k) => isNaN(Number(k)));
   showOtherExternalPsychologicalTreatment = false;
   showOtherDiagnosticImpressionCategory = false;
+
+  // Create first session.
+  eventTypes = Object.values(SessionTypes).filter((k) => isNaN(Number(k)));
+  showModal = false;
+  createSession = false;
+  sessionType: string;
 
   constructor(
     private expedientService: ExpedientService,
@@ -108,7 +115,18 @@ export class ExpedientFormComponent implements OnInit {
     }
 
     if (this.expedientForm.valid) {
+      if (this.createSession) {
+        this.showModal = true;
+      } else {
+        this.saveExpedient();
+      }
+    }
+  }
+
+  saveExpedientWithSession(): void {
+    if (this.sessionType) {
       this.saveExpedient();
+      this.showModal = false;
     }
   }
 
@@ -138,9 +156,11 @@ export class ExpedientFormComponent implements OnInit {
         const message = this.expedient ? 'Expediente actualizado correctamente' : 'Expediente abierto correctamente';
         this.message.success(message);
 
-        this.expedientSaved.emit(r);
-
-        // this.router.navigate(['expedientes', 'estudiantes', this.expedientId, this.studentId, 'sesiones']);
+        if (this.createSession) {
+          this.router.navigate(['/expedientes', 'estudiantes', r.id, this.studentId, 'sesiones', this.sessionType]);
+        } else {
+          this.expedientSaved.emit(r);
+        }
       },
       (error) => {
         this.actionLoading = false;
