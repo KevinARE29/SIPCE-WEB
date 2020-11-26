@@ -8,8 +8,10 @@ import { differenceInCalendarDays } from 'date-fns';
 import { ServiceTypes } from './../../../../shared/enums/service-types.enum';
 import { Session } from '../../../shared/session.model';
 import { SessionTypes } from 'src/app/shared/enums/session-types.enum';
+import { InterventionProgram } from 'src/app/expedients/shared/intervention-program.model';
 
 import { SessionService } from '../../../shared/session.service';
+import { InterventionProgramService } from 'src/app/expedients/shared/intervention-program.service';
 
 // Editor.
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -45,6 +47,10 @@ export class StudentSessionComponent implements OnInit {
   // Service types
   serviceTypes = Object.keys(ServiceTypes).filter((k) => isNaN(Number(k)));
 
+  // Intervention program
+  loadingPrograms = false;
+  programs: InterventionProgram[];
+
   // Editor.
   editor = ClassicEditor;
   editorConfig = {
@@ -60,6 +66,7 @@ export class StudentSessionComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private sessionService: SessionService,
+    private programService: InterventionProgramService,
     private message: NzMessageService,
     private notification: NzNotificationService,
     private modal: NzModalService
@@ -103,6 +110,7 @@ export class StudentSessionComponent implements OnInit {
       date: [this.session ? this.session.startedAt : null, [Validators.required]],
       duration: [this.session ? this.session.duration : null, [Validators.required]],
       serviceType: [this.session ? this.session.serviceType : null, [Validators.required]],
+      interventionProgram: [this.session ? this.session.interventionProgram?.id : null],
       evaluations: this.fb.array([]),
       comments: [this.session ? this.session.comments : null, [Validators.required]]
     });
@@ -112,6 +120,17 @@ export class StudentSessionComponent implements OnInit {
         this.addEvaluation(evaluation.id, evaluation.description);
       });
     }
+
+    this.getPrograms();
+  }
+
+  // Intervention program.
+  getPrograms(): void {
+    this.loadingPrograms = true;
+    this.programService.getAvailablePrograms().subscribe((r) => {
+      this.programs = r;
+      this.loadingPrograms = false;
+    });
   }
 
   // Evaluations
@@ -183,6 +202,7 @@ export class StudentSessionComponent implements OnInit {
     session.startedAt = formValue['date'];
     session.duration = Number.parseInt(formValue['duration']);
     session.serviceType = formValue['serviceType'];
+    session.interventionProgramId = formValue['interventionProgram'];
     session.comments = formValue['comments'];
     session.evaluations = formValue['evaluations'];
 

@@ -143,6 +143,10 @@ export class SessionService {
       draft: session.draft
     };
 
+    if (session.sessionType === SessionTypes.SESION) {
+      data['interventionProgramId'] = session.interventionProgramId;
+    }
+
     if (session.sessionType === SessionTypes.ENTREVISTA_DOCENTE) {
       data['participants'] = session.participants;
     }

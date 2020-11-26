@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
@@ -64,6 +64,15 @@ export class InterventionProgramService {
     url += queryParams;
 
     return this.http.get<InterventionProgram[]>(url).pipe(catchError(this.handleError()));
+  }
+
+  getAvailablePrograms(): Observable<InterventionProgram[]> {
+    const url = this.baseUrl + 'intervention-programs/availables';
+
+    return this.http.get<InterventionProgram[]>(url).pipe(
+      map((r) => r['data']),
+      catchError(this.handleError())
+    );
   }
 
   saveProgram(program: InterventionProgram): Observable<unknown> {

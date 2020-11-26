@@ -1,5 +1,6 @@
 import { User } from '../../users/shared/user.model';
 import { Responsible } from 'src/app/students/shared/responsible.model';
+import { InterventionProgram } from './intervention-program.model';
 
 class Evaluation {
   id: number;
@@ -25,6 +26,12 @@ export class Session {
 
   // Filter field
   finishedAt: Date;
+
+  // Individual session response
+  interventionProgram: InterventionProgram;
+
+  // Individual session request
+  interventionProgramId: number;
 
   // Teach interview request
   participants: number[];
