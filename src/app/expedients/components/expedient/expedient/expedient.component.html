@@ -28,6 +28,7 @@
         <app-students-details-expedient [id]="studentId"></app-students-details-expedient>
 
         <app-expedient-view *ngIf="!editing"
+                            [studentId]="studentId"
                             [expedient]="selectedExpedientExists ? selectedExpedient : null"
                             [isEditable]="selectedExpedientIsEditable"
                             (initEditing)="setEditing(true)"

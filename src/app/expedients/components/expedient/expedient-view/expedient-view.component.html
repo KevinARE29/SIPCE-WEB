@@ -78,6 +78,33 @@
                 </div>
             </div>
 
+            <!-- Final conclussion -->
+            <div nz-row>
+                <div nz-col nzXs="24">
+                    <p><strong>Comentario final:</strong></p>
+
+                    <ng-container *ngIf="expedient.finalConclusion && !editing">
+                        <p class="text-center">{{expedient.finalConclusion}} <i *ngIf="isEditable" (click)="onInitiEditingFinalConclusion()" nz-icon nzType="edit" nzTheme="outline"></i></p>
+                    </ng-container>
+
+                    <ng-container *ngIf="!expedient.finalConclusion && !editing">
+                        <nz-empty [nzNotFoundContent]="null"></nz-empty>
+                        <p class="text-center"><a *ngIf="isEditable" (click)="onInitiEditingFinalConclusion()">Agregar comentario final</a></p>
+                    </ng-container>
+
+                    <ng-container *ngIf="editing">
+                        <nz-spin nzTip="Cargando ..." [nzSpinning]="loadingAction">
+                            <textarea nz-input [(ngModel)]="finalConclusion" placeholder="Comentario final"></textarea>
+                            <p class="btn-editing-conclusion">
+                                <a class="btn-cancel-editing" (click)="cancelEditignFinalConclusion()">Cancelar</a>
+                                <a (click)="saveExpedient()">Guardar</a>
+                            </p>
+                        </nz-spin>
+                    </ng-container>
+                    
+                </div>
+            </div>
+
         </div>
 
     </div> 

@@ -19,3 +19,16 @@ nz-collapse-panel p{
     max-height: 100px;
     overflow-y: auto;
 }
+
+.text-center {
+    text-align: center;
+}
+
+.btn-editing-conclusion {
+    text-align: right;
+}
+
+.btn-cancel-editing {
+    margin-right: 10px;
+    color: gray;
+}
