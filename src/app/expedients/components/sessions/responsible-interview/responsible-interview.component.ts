@@ -60,9 +60,6 @@ export class ResponsibleInterviewComponent implements OnInit {
     language: 'es',
     toolbar: ['heading', '|', 'bold', 'italic', '|', 'bulletedList', 'numberedList', '|', 'undo', 'redo']
   };
-  model = {
-    editorData: '<p>Hello, world!</p>'
-  };
 
   constructor(
     private route: ActivatedRoute,

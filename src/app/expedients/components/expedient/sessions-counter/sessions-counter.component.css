@@ -1,0 +1,9 @@
+.counter-title {
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+.counter {
+    text-align: center;
+    color: #ef6c00;
+}

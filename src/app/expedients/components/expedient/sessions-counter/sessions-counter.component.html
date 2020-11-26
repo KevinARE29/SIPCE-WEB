@@ -1,0 +1,30 @@
+<br><br><br>
+
+<div nz-row nzJustify="space-between">
+    <div nz-col>
+        <p class="counter-title">Sesiones individuales
+            <a *ngIf="isEditable" [routerLink]="['/expedientes/estudiantes', expedientId, studentId, 'sesiones', 'sesion-individual']">
+                <i nz-icon nzType="plus-circle" nzTheme="outline"></i>
+            </a>
+        </p>
+        <p class="counter">{{sessionsCounter.individualSessionCounter}}</p>
+    </div>
+
+    <div nz-col>
+        <p class="counter-title">Entrevistas con docentes
+            <a *ngIf="isEditable" [routerLink]="['/expedientes/estudiantes', expedientId, studentId, 'sesiones', 'entrevista-docente']">
+                <i nz-icon nzType="plus-circle" nzTheme="outline"></i>
+            </a>
+        </p>
+        <p class="counter">{{sessionsCounter.teachersInterviewCounter}}</p>
+    </div>
+
+    <div nz-col>
+        <p class="counter-title">Entrevistas con padres de familia
+            <a *ngIf="isEditable" [routerLink]="['/expedientes/estudiantes', expedientId, studentId, 'sesiones', 'entrevista-responsable']">
+                <i nz-icon nzType="plus-circle" nzTheme="outline"></i>
+            </a>
+        </p>
+        <p class="counter">{{sessionsCounter.parentsInterviewCounter}}</p>
+    </div>
+</div>

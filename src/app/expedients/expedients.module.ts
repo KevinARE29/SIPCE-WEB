@@ -20,6 +20,13 @@ import { TeacherInterviewComponent } from './components/sessions/teacher-intervi
 import { InterventionProgramsListComponent } from './components/intervention-programs/intervention-programs-list/intervention-programs-list.component';
 import { InterventionProgramsFormComponent } from './components/intervention-programs/intervention-programs-form/intervention-programs-form.component';
 
+// Expedient
+import { ExpedientComponent } from './components/expedient/expedient/expedient.component';
+import { StudentsDetailsComponent as StudentsDetailsExpedientComponent } from './components/expedient/students-details/students-details.component';
+import { SessionsCounterComponent } from './components/expedient/sessions-counter/sessions-counter.component';
+import { ExpedientViewComponent } from './components/expedient/expedient-view/expedient-view.component';
+import { ExpedientFormComponent } from './components/expedient/expedient-form/expedient-form.component';
+
 @NgModule({
   declarations: [
     SessionsComponent,
@@ -29,7 +36,12 @@ import { InterventionProgramsFormComponent } from './components/intervention-pro
     ResponsibleInterviewComponent,
     TeacherInterviewComponent,
     InterventionProgramsListComponent,
-    InterventionProgramsFormComponent
+    InterventionProgramsFormComponent,
+    ExpedientComponent,
+    StudentsDetailsExpedientComponent,
+    SessionsCounterComponent,
+    ExpedientViewComponent,
+    ExpedientFormComponent
   ],
   imports: [CommonModule, ReactiveFormsModule, AntDesignModule, CKEditorModule, ExpedientsRoutingModule]
 })
