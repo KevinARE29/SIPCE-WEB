@@ -6,10 +6,10 @@
                     <nz-collapse [nzBordered]="false">
                         <nz-collapse-panel *ngFor="let grade of item.grades" [nzHeader]="grade.grade.name">
                             <!-- Cycle inputs -->
-                            <nz-form-item *ngFor="let section of grade.sections">
-                                <nz-form-label><span class="label">{{section.section.name}}</span></nz-form-label>
-                                <nz-form-control>
-                                    <nz-select [nzMaxTagCount]="5" nzMode="tags"
+                            <nz-form-item nz-row *ngFor="let section of grade.sections">
+                                <nz-form-label nz-col><span class="label">{{section.section.name}}</span></nz-form-label>
+                                <nz-form-control nz-col>
+                                    <nz-select [nzMaxTagCount]="5" nzMode="multiple" nzShowSearch [compareWith]="compareFn"
                                         nzPlaceHolder="Asignar docentes auxiliares" [(ngModel)]="section.auxTeachers"
                                         [nzMaxTagPlaceholder]="tagPlaceHolder" (ngModelChange)="onChange(item, grade, section, $event)">
                                         <ng-container *ngFor="let teacher of item.teachers">
@@ -20,9 +20,6 @@
                                     <ng-template #tagPlaceHolder let-selectedList> y {{ selectedList.length }} más
                                         seleccionados </ng-template>
                                 </nz-form-control>
-
-                                <span class="error">{{section.error}}</span>
-                                <span class="error" *ngIf="!section.teacher && !isValid">El campo es requerido</span>
                             </nz-form-item>
                         </nz-collapse-panel>
                     </nz-collapse>

@@ -409,11 +409,6 @@ export class SchoolYearComponent implements OnInit {
     const section = grade['sectionDetails'].find((x) => x['section'].id === content['section']['section']['id']);
 
     section['auxTeachers'] = content['aux_teachers'] ? content['aux_teachers'] : new Array<User>();
-
-    section['auxTeachers']['isValid'] = !content['section']['error'];
-    if (!section['auxTeachers'].length) section['auxTeachers']['isValid'] = false;
-    
-    console.log('Updated section', section);
   }
   //#endregion
 
@@ -631,10 +626,6 @@ export class SchoolYearComponent implements OnInit {
   }
 
   teachersTab(): void {
-    this.checkEmptyTeachers();
-    if (this.checkEmptyTeachers['empty'] > 0 && this.checkEmptyTeachers['valid']) this.checkEmptyTeachers['valid'] = false;
-    console.log(this.checkEmptyTeachers['valid']);
-    if (this.checkEmptyTeachers['valid']) {
       this.loading = true;
       this.schoolYearService.saveTeachers(this.schoolYear).subscribe(
         () => {
@@ -656,17 +647,7 @@ export class SchoolYearComponent implements OnInit {
           this.loading = false;
         }
       );
-    } else {
-      this.notification.create(
-        'error',
-        'Error en la asignación de docentes auxiliares.',
-        'Verifique que los valores ingresados en todos los turnos son correctos, no se permiten campos vacíos..',
-        {
-          nzDuration: 30000
-        }
-      );
     }
-  }
 
   counselorsStep(next: boolean): void {
     this.checkEmptyCounselors();
@@ -755,24 +736,6 @@ export class SchoolYearComponent implements OnInit {
           if (!grade['counselor'] || !grade['counselor'].id) this.emptyUsers['empty']++;
           if (grade['counselor'] && grade['counselor']['isValid'] === false)
               this.emptyUsers['valid'] = false;
-        });
-      });
-    });
-  }
-
-  checkEmptyTeachers(): void {
-    this.emptyUsers = { total: 0, empty: 0, valid: true };
-
-    this.schoolYear.shifts.forEach((shift) => {
-      shift['shift']['cycles'].forEach((cycle) => {
-        cycle['gradeDetails'].forEach((grade) => {
-          grade['sectionDetails'].forEach((section) => {
-            // this.emptyUsers['total']++;
-
-            // if (!section['auxTeacher'].length) this.emptyUsers['empty']++;
-            // if (section['auxTeacher'] && section['auxTeacher']['isValid'] === false)
-            //   this.emptyUsers['valid'] = false;
-          });
         });
       });
     });

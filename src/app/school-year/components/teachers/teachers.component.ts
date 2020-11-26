@@ -8,8 +8,6 @@ import { UserService } from 'src/app/users/shared/user.service';
 interface ItemData {
   section: ShiftPeriodGrade;
   auxTeachers: User[];
-  error: string;
-  initialDisabled: boolean;
 }
 
 @Component({
@@ -26,9 +24,8 @@ export class TeachersComponent implements OnInit {
   @Output() teachersEvent = new EventEmitter<unknown>();
   @Input() catalogs: Catalogs;
   @Input() assignation: unknown;
-  @Input() isValid: boolean;
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
     this.getTeachers();
@@ -57,11 +54,15 @@ export class TeachersComponent implements OnInit {
           grade['sectionDetails'].forEach((section) => {
             const auxTeachers = section['auxTeachers'] ? section['auxTeachers'] : null;
 
+            if (auxTeachers) {
+              auxTeachers.forEach((t) => {
+                t.fullname = t.firstname.concat(' ', t.lastname);
+              });
+            }
+
             sections.push({
               section: { ...section['section'] },
-              auxTeachers: auxTeachers,
-              error: null,
-              initialDisabled: false
+              auxTeachers: auxTeachers
             });
           });
 
@@ -88,20 +89,17 @@ export class TeachersComponent implements OnInit {
 
       this.items.push(item);
     });
-    console.log(this.items);
   }
 
   onChange(item: unknown, grade: ShiftPeriodGrade, section: ShiftPeriodGrade, aux_teachers: User[]): void {
-    console.log(item, section, aux_teachers);
-
     this.teachersEvent.emit({ shift: item['shift'], grade, section, aux_teachers });
   }
 
-  // compareFn = (o1: User, o2: User) => {
-  //   if (o1 && o2) {
-  //     return o1.id === o2.id;
-  //   } else {
-  //     return false;
-  //   }
-  // };
+  compareFn = (o1: User, o2: User) => {
+    if (o1 && o2) {
+      return o1.id === o2.id;
+    } else {
+      return false;
+    }
+  };
 }
