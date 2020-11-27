@@ -187,6 +187,25 @@
                     "allowed": false
                 }
             ]
+        },
+        {
+            "title": "Faltas y sanciones",
+            "icon": "safety-certificate",
+            "permissions": [27, 29],
+            "allowed": null,
+            "children": [
+                {
+                    "route": "reglamento/sanciones",
+                    "name": "Sanciones",
+                    "permission": 29,
+                    "allowed": false
+                }, {
+                    "route": "reglamento/faltas",
+                    "name": "Faltas",
+                    "permission": 27,
+                    "allowed": false
+                }
+            ]
         }
     ]  
 }

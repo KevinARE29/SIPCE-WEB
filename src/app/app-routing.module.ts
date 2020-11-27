@@ -97,6 +97,12 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'reglamento',
+    loadChildren: () =>
+      import('./disciplinary-catalogs/disciplinary-catalog.module').then((m) => m.DisciplinaryCatalogModule)
+    // canLoad: [AuthGuard]
+  },
+  {
     path: '**',
     redirectTo: '/error404',
     pathMatch: 'full'

@@ -8,7 +8,7 @@
 </div>
 
 <div nz-row [nzGutter]="[10, 10]">
-    <!-- Username -->
+  <!-- Username -->
     <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="4">
         <label>Usuario: </label>
         <nz-input-group [nzSuffix]="inputClearUsername">
@@ -17,7 +17,7 @@
         <ng-template #inputClearUsername>
             <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.username" (click)="searchParams.username = null; search()"></i>
         </ng-template>
-    </div>
+    </div>  
 
     <!-- Name -->
     <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5">
@@ -132,3 +132,4 @@
         </nz-spin>
     </div>
 </div>
+ 
