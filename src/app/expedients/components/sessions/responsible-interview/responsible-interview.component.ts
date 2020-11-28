@@ -166,7 +166,7 @@ export class ResponsibleInterviewComponent implements OnInit {
         }
 
         if (responsibles[1]) {
-          this.responsibleOne = responsibles[1];
+          this.responsibleTwo = responsibles[1];
         }
 
         this.loadingResponsibles = false;
