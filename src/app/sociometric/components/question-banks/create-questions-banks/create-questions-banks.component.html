@@ -1,1 +1,60 @@
-<p>create-questions-banks works!</p>
+<h1>Banco de preguntas</h1>
+
+<div nz-row>
+    <div nz-col>
+        <form nz-form [formGroup]="questionBankForm" (ngSubmit)="submitForm()">
+            <div nz-row [nzGutter]="10">
+                <!-- Name -->
+                <div nz-col nzXs="24" nzLg="12" nzXl="11">
+                    <nz-form-item>
+                        <nz-form-label nzXs="9" nzLg="12" nzXl="10">Banco de preguntas</nz-form-label>
+                        <nz-form-control [nzErrorTip]="nameErrors">
+                            <input nz-input formControlName="name" placeholder="Título" />
+                            <ng-template #nameErrors let-control>
+                                <ng-container *ngIf="control.hasError('required')">El título es requerido<br>
+                                </ng-container>
+                                <!-- <ng-container *ngIf="control.hasError('pattern')">El título se compone de n caracteres<br></ng-container> -->
+                            </ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <!-- Questions -->
+                <nz-form-item *ngFor="let control of listOfControl; let i = index">
+                    <nz-form-label [nzXs]="24" [nzSm]="4" *ngIf="i == 0" [nzFor]="control.controlInstance">Preguntas
+                    </nz-form-label>
+                    <nz-form-control [nzXs]="24" [nzSm]="20" [nzOffset]="i == 0 ? 0 : 4"
+                        [nzErrorTip]="questionErrors">
+                        <input class="passenger-input" nz-input placeholder="Texto de la pregunta" [attr.id]="control.id"
+                            [formControlName]="control.controlInstance" />
+                        <i nz-icon nzType="minus-circle-o" class="dynamic-delete-button"
+                            (click)="removeField(control, $event)"></i>
+                        <ng-template #questionErrors let-control>
+                            <ng-container *ngIf="control.hasError('required')">
+                                <ng-container *ngIf="i > 0;else firstQuestion">
+                                    El contenido de la pregunta es requerido
+                                </ng-container>
+                                <ng-template #firstQuestion>Debe agregar al menos una pregunta a la prueba
+                                </ng-template><br>
+                            </ng-container>
+                            <!-- <ng-container *ngIf="control.hasError('pattern')">El título se compone de n caracteres<br></ng-container> -->
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 20, offset: 4 }">
+                        <button nz-button nzType="dashed" class="add-button" (click)="addField($event)">
+                            <i nz-icon nzType="plus"></i>
+                            Agregar pregunta
+                        </button>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 20, offset: 4 }">
+                        <button nz-button nzType="primary">Guardar</button>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </form>
+    </div>
+</div>

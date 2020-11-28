@@ -1,0 +1,20 @@
+<h1>Bancos de preguntas</h1>
+
+<div nz-row nzJustify="center">
+    <div nz-col nzXs="24" nzSm="24" nzLg="18" nzXl="16" nzXxl="12">
+        <div class="search-bar" nz-row nzJustify="space-between" [nzGutter]="[10, 10]">
+            <div nz-col nzXs="24" nzMd="18" nzLg="14">
+                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                    <input type="text" nz-input placeholder="Buscar banco de preguntas" />
+                </nz-input-group>
+                <ng-template #suffixIconButton>
+                    <button class="search" nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+                </ng-template>
+            </div>
+        
+            <div nz-col nzXs="24" nzMd="4">
+                <button nz-button nzType="primary" routerLink="/pruebas-sociometricas/bancos-de-preguntas/nuevo">Crear</button>
+            </div>
+        </div>
+    </div>
+</div>

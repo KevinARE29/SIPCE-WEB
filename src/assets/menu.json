@@ -199,6 +199,26 @@
                 }
 
             ]
+        },
+        {
+            "title": "Prueba sociométrica",
+            "icon": "form",
+            "permissions": [30],
+            "allowed": false,
+            "children": [
+                {
+                    "route": "pruebas-sociometricas/bancos-de-preguntas",
+                    "name": "Bancos de preguntas",
+                    "permission": 30,
+                    "allowed": false
+                }, {
+                    "route": "pruebas-sociometricas/tests",
+                    "name": "Pruebas sociométricas",
+                    "permission": 30,
+                    "allowed": false
+                }
+
+            ]
         }
     ]  
 }
