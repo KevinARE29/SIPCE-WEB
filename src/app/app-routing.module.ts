@@ -92,6 +92,11 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'historial',
+    loadChildren: () => import('./history/history.module').then((m) => m.HistoryModule),
+    canLoad: [AuthGuard]
+  },
+  {
     path: 'reportes',
     loadChildren: () => import('./reports/reports.module').then((m) => m.ReportsModule),
     canLoad: [AuthGuard]
