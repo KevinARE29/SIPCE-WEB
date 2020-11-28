@@ -7,13 +7,13 @@
 
         <div nz-col *ngIf="!loadingExpedients">
             <p class="navigator">
-                <a nz-button nzType="link" [disabled]="selectedExpedientIsFirst" (click)="setSelectedExpedient(this.selectedExpedientIndex - 1)">
+                <a nz-button nzType="link" [disabled]="selectedExpedientIsLast" (click)="setSelectedExpedient(this.selectedExpedientIndex + 1)">
                     <i nz-icon nzType="left" nzTheme="outline"></i>
                 </a>
 
                 {{selectedExpedientExists ? selectedExpedient.expedientGrade : 'Abrir expediente'}}
 
-                <a nz-button nzType="link" [disabled]="selectedExpedientIsLast" (click)="setSelectedExpedient(this.selectedExpedientIndex + 1)">
+                <a nz-button nzType="link" [disabled]="selectedExpedientIsFirst" (click)="setSelectedExpedient(this.selectedExpedientIndex - 1)">
                     <i nz-icon nzType="right" nzTheme="outline"></i>
                 </a>
             </p>
