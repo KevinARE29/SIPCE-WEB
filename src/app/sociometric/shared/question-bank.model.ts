@@ -1,6 +1,6 @@
 import { Question } from './question.model';
 
-export class QuestionsBank {
+export class QuestionBank {
   name: string;
   questions: Question[];
 }

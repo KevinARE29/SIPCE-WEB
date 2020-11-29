@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard } from '../login/guards/auth.guard';
-import { CreateQuestionsBanksComponent } from './components/question-banks/create-questions-banks/create-questions-banks.component';
+import { CreateQuestionBankComponent } from './components/question-banks/create-question-bank/create-question-bank.component';
 
 import { QuestionBanksComponent } from './components/question-banks/question-banks/question-banks.component';
 
@@ -18,7 +18,7 @@ const routes: Routes = [
       },
       {
         path: 'nuevo',
-        component: CreateQuestionsBanksComponent,
+        component: CreateQuestionBankComponent,
         canActivate: [AuthGuard],
         data: { permission: 30 }
       }
