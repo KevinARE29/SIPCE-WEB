@@ -75,7 +75,7 @@ const routes: Routes = [
     path: 'programas',
     component: InterventionProgramsListComponent,
     canActivate: [AuthGuard],
-    data: { permission: 33 } // TODO: Change permission if necessary.
+    data: { permission: 33 }
   }
 ];
 
