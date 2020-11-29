@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-import { differenceInCalendarDays } from 'date-fns';
-
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
@@ -10,7 +8,6 @@ import { SessionService } from '../../../shared/session.service';
 
 import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 import { Pagination } from 'src/app/shared/pagination.model';
-import { Permission } from 'src/app/shared/permission.model';
 import { Session } from '../../../shared/session.model';
 import { StudentWithSessions } from '../../../shared/student-with-sessions.model';
 
@@ -29,9 +26,6 @@ export interface Shift {
   styleUrls: ['./sessions.component.css']
 })
 export class SessionsComponent implements OnInit {
-  permissions: Permission[] = [];
-  actions: unknown[] = [];
-
   // Search params
   searchParams: StudentWithSessions;
   shifts: Shift[];
@@ -113,9 +107,4 @@ export class SessionsComponent implements OnInit {
     this.getSessions(null);
     this.searchParams.grade.id = null;
   }
-
-  disabledDate = (current: Date): boolean => {
-    // Can not select days after today
-    return differenceInCalendarDays(current, new Date()) > 0;
-  };
 }
