@@ -21,7 +21,7 @@ export class QuestionBankService {
 
   createQuestionsBank(questionBank: QuestionBank): Observable<QuestionBank> {
     return this.http
-      .post<QuestionBank>(`${this.baseUrl}sociometrics/question-banks`, JSON.stringify(questionBank))
+      .post<QuestionBank>(`${this.baseUrl}sociometric/question-banks`, JSON.stringify(questionBank))
       .pipe(catchError(this.handleError()));
   }
 

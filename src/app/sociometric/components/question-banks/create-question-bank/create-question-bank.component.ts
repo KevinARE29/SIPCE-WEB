@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+
 import { QuestionTypes } from '../../../shared/question-types.enum';
 import { Question } from 'src/app/sociometric/shared/question.model';
 import { QuestionBank } from 'src/app/sociometric/shared/question-bank.model';
@@ -12,11 +15,17 @@ import { QuestionBankService } from 'src/app/sociometric/shared/question-bank.se
   styleUrls: ['./create-question-bank.component.css']
 })
 export class CreateQuestionBankComponent implements OnInit {
+  loading = false;
   questionBankForm!: FormGroup;
   questionBank: QuestionBank;
   listOfControl: Array<{ id: number; controlInstance: string; type: string; counter: number }> = [];
 
-  constructor(private fb: FormBuilder, private questionBankService: QuestionBankService) {}
+  constructor(
+    private fb: FormBuilder,
+    private questionBankService: QuestionBankService,
+    private message: NzMessageService,
+    private notification: NzNotificationService
+  ) {}
 
   ngOnInit(): void {
     this.questionBank = new QuestionBank();
@@ -116,6 +125,8 @@ export class CreateQuestionBankComponent implements OnInit {
     this.questionBank.name = this.questionBankForm.value.name;
     this.questionBank.questions = new Array<Question>();
 
+    this.loading = true;
+
     while (i < this.listOfControl.length) {
       switch (this.listOfControl[i].type) {
         case 'leadership':
@@ -138,11 +149,34 @@ export class CreateQuestionBankComponent implements OnInit {
           break;
       }
     }
+
+    this.createQuestionBank();
   }
 
   createQuestionBank(): void {
-    this.questionBankService.createQuestionsBank(this.questionBank).subscribe(() => {
-    });
+    this.questionBankService.createQuestionsBank(this.questionBank).subscribe(
+      () => {
+        this.loading = false;
+        this.message.success(`El banco de preguntas '${this.questionBank.name}' ha sido creado`);
+        this.questionBankForm.reset();
+      },
+      (error) => {
+        this.loading = false;
+        const statusCode = error.statusCode;
+        const notIn = [401, 403];
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create(
+            'error',
+            'Ocurrió un error al intentar crear el banco de preguntas.',
+            error.message,
+            {
+              nzDuration: 30000
+            }
+          );
+        }
+      }
+    );
   }
 
   reorderCounters(): void {

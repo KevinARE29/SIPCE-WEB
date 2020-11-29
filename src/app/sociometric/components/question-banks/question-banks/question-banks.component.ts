@@ -17,5 +17,4 @@ export class QuestionBanksComponent implements OnInit {
   getQuestionBanks(params: NzTableQueryParams): void {
     console.log('loading...', params);
   }
-  
 }

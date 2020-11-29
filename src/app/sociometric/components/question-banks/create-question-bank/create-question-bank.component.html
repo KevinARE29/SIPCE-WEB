@@ -49,8 +49,9 @@
                         </div>
                     </ng-container>
 
-                    <input nz-input placeholder="Texto de la pregunta" [attr.id]="control.id"
-                        [formControlName]="control.controlInstance" />
+                    <!-- <input nz-input placeholder="Texto de la pregunta" [attr.id]="control.id"
+                        [formControlName]="control.controlInstance" /> -->
+                    <textarea nz-input placeholder="Texto de la pregunta" [attr.id]="control.id" [formControlName]="control.controlInstance" [nzAutosize]="{ minRows: 1, maxRows: 5 }"></textarea>
                     <ng-template #questionErrors let-control>
                         <ng-container *ngIf="control.hasError('required')">
                             <ng-container *ngIf="i > 0;else firstQuestion">
@@ -83,7 +84,7 @@
 
             <nz-form-item nz-row>
                 <nz-form-control>
-                    <button nz-button nzType="primary">Guardar</button>
+                    <button nz-button nzType="primary" [nzLoading]="loading">Guardar</button>
                 </nz-form-control>
             </nz-form-item>
         </div>
