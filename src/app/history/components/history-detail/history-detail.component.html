@@ -11,4 +11,22 @@
     </div>
 
     <app-student-details [id]="studentId"></app-student-details>
+
+    <br><br>
+
+    <app-history-summary></app-history-summary>
+
+    <br><br>
+
+    <nz-tabset>
+        <nz-tab nzTitle="DIario de clases">
+            <app-history-annotations></app-history-annotations>
+        </nz-tab>
+        <nz-tab nzTitle="Faltas y sanciones">
+            <app-history-fouls-sanctions></app-history-fouls-sanctions>
+        </nz-tab>
+        <nz-tab nzTitle="Comentarios finales de años previos">
+            <app-history-comments></app-history-comments>
+        </nz-tab>
+      </nz-tabset>
 </nz-spin>
