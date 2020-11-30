@@ -1,1 +1,14 @@
-<p>history-detail works!</p>
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loadingHistory">
+
+    <div nz-row nzJustify="space-between">
+        <div nz-col>
+            <h1>Historial académico y conductual</h1>
+        </div>
+
+        <div nz-col>
+            <a nz-button nzType="primary">Generar reporte</a>
+        </div>
+    </div>
+
+    <app-student-details [id]="studentId"></app-student-details>
+</nz-spin>
