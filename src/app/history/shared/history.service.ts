@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { StudentWithHistory } from './student-with-history.model';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { History } from './history.model';
 
 @Injectable({
   providedIn: 'root'
@@ -68,6 +69,17 @@ export class HistoryService {
     url += queryParams;
 
     return this.http.get<StudentWithHistory[]>(url).pipe(catchError(this.handleError()));
+  }
+
+  getStudentHistory(studentId: number): Observable<History[]> {
+    const url = environment.apiURL + 'students/' + studentId + '/histories';
+
+    return this.http.get(url).pipe(
+      map((response) => {
+        return response['data'];
+      }),
+      catchError(this.handleError())
+    );
   }
 
   /**

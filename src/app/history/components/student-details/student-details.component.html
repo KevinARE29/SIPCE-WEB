@@ -19,8 +19,8 @@
             <div nz-row nzJustify="center" class="links">
                 <div nz-col>
                     <a [routerLink]="['/estudiantes', student.id, 'detalle']">Perfil</a>
-                    <nz-divider nzType="vertical"></nz-divider>
-                    <a><i nz-icon nzType="alert" nzTheme="outline"></i></a>
+                    <nz-divider *ngIf="showAlert" nzType="vertical"></nz-divider>
+                    <a *ngIf="showAlert"><i nz-icon nzType="alert" nzTheme="outline"></i></a>
                 </div>
             </div>
         </div>
@@ -32,6 +32,7 @@
             <p>Edad:  <strong>{{student.age}} años</strong></p>
             <p>Grado y sección:  <strong>{{student.grade?.name}} {{student.section?.name || '-'}}</strong></p>
             <p>Ingreso:  <strong>{{student.registrationYear}} ({{student.startedGrade?.name}})</strong></p>
+            <p *ngIf="history">Docente Títular:  <strong>{{history.author}}</strong></p>
         </div>
 
         <!-- Student siblings and responsibles -->

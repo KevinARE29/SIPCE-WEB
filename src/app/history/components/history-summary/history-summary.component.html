@@ -2,13 +2,24 @@
     <div nz-col nzXs="24" nzSm="12">
         <nz-card>
             <p><strong>Resultados generales al final del año</strong></p>
-            <p>En proceso</p>
+
+            <!-- Show existing final conclusion, if exists. -->
+            <p *ngIf="history.finalConclusion">{{history.finalConclusion}}</p>
+            <nz-empty *ngIf="!history.finalConclusion" [nzNotFoundContent]="null"></nz-empty>
         </nz-card>
     </div>
     <div nz-col nzXs="24" nzSm="12">
         <nz-card>
-            <p><strong>Resultados generales al final del año</strong></p>
-            <p>En proceso</p>
+            <p><strong>Seguimiento de consejería</strong></p>
+
+            <ng-container *ngIf="history.expedients && history.expedients.length">
+                <div *ngFor="let expedient of history.expedients">
+                    <p class="expedient-comment">{{expedient.finalConclussion || 'Sin comentario'}}</p>
+                    <p class="expedient-author">Autor: {{expedient.author}}</p>
+                </div>
+            </ng-container>
+
+            <nz-empty *ngIf="!history.expedients || !history.expedients.length" nzNotFoundContent="Sin comentario final de consejeria"></nz-empty>
         </nz-card>
     </div>
 </div> 
