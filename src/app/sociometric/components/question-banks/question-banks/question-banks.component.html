@@ -45,7 +45,7 @@
                         </a>
                         <ng-container *ngIf="data.editable">
                             <nz-divider nzType="vertical"></nz-divider>
-                            <a [routerLink]="['/pruebas-sociometricas/bancos-de-preguntas/', data.id]">
+                            <a [routerLink]="['/pruebas-sociometricas', 'bancos-de-preguntas', data.id]">
                                 <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
                             </a>
 
@@ -67,6 +67,7 @@
     [nzTitle]="modalTitle"
     [nzContent]="modalContent"
     [nzFooter]="modalFooter"
+    (nzOnCancel)="isVisible = false"
 >
     <ng-template #modalTitle> Banco de preguntas </ng-template>
 

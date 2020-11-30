@@ -70,7 +70,6 @@ export class QuestionBanksComponent implements OnInit {
   }
 
   showConfirm(questionBank: QuestionBank): void {
-    console.log(questionBank);
     this.confirmModal = this.modal.confirm({
       nzTitle: `¿Desea eliminar el banco de preguntas "${questionBank.name}"?`,
       nzContent: `Eliminará el banco de preguntas. La acción no puede deshacerse. ¿Desea confirmar la acción?`,

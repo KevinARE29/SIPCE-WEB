@@ -19,7 +19,7 @@
 
             <!-- Questions -->
             <div nz-row class="questions-title"><strong>Preguntas</strong></div>
-            <nz-form-item *ngFor="let control of listOfControl; let i = index">
+            <nz-form-item nz-row nzJustify="center" *ngFor="let control of listOfControl; let i = index">
                 <!-- Controls -->
                 <nz-form-control [nzXs]="24" [nzSm]="20" [nzErrorTip]="questionErrors">
                     <ng-container [ngSwitch]="control.type">
@@ -62,10 +62,9 @@
                             caracteres.<br></ng-container>
                     </ng-template>
                 </nz-form-control>
-
             </nz-form-item>
 
-            <nz-form-item nz-row>
+            <nz-form-item nz-row nzJustify="space-between">
                 <nz-form-control nz-col>
                     <button nz-button nzGhost nzType="primary" class="add-button"
                         (click)="addField('leadership', $event)">
@@ -80,8 +79,8 @@
                 </nz-form-control>
             </nz-form-item>
 
-            <nz-form-item nz-row>
-                <nz-form-control>
+            <nz-form-item nz-row nzJustify="center">
+                <nz-form-control nz-col nzSpan="2">
                     <button nz-button nzType="primary" [nzLoading]="loading">Guardar</button>
                 </nz-form-control>
             </nz-form-item>

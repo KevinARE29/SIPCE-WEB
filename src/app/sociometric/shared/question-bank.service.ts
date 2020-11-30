@@ -27,7 +27,7 @@ export class QuestionBankService {
       .pipe(catchError(this.handleError()));
   }
 
-  getQuestionBanks(params: NzTableQueryParams, search: string, paginate: boolean): Observable<QuestionBank> {
+  getQuestionBanks(params: NzTableQueryParams, search: string, paginate: boolean): Observable<QuestionBank[]> {
     let url = this.baseUrl + 'sociometric/question-banks';
     let queryParams = '';
 
@@ -63,7 +63,19 @@ export class QuestionBankService {
 
     url += queryParams;
 
-    return this.http.get<QuestionBank>(url).pipe(catchError(this.handleError()));
+    return this.http.get<QuestionBank[]>(url).pipe(catchError(this.handleError()));
+  }
+
+  getQuestionBank(id: number): Observable<QuestionBank> {
+    return this.http
+      .get<QuestionBank>(`${this.baseUrl}sociometric/question-banks/${id}`)
+      .pipe(catchError(this.handleError()));
+  }
+
+  updateQuestionBank(questionBank: QuestionBank): Observable<QuestionBank> {
+    return this.http
+      .put<QuestionBank>(`${this.baseUrl}sociometric/question-banks/${questionBank.id}`, JSON.stringify(questionBank))
+      .pipe(catchError(this.handleError()));
   }
 
   deleteQuestionBank(id: number): Observable<void> {
@@ -78,7 +90,7 @@ export class QuestionBankService {
    */
   private handleError() {
     return (error: any) => {
-      error.error.message = this.errorMessageService.transformMessage('questionsBank', error.error.message);
+      error.error.message = this.errorMessageService.transformMessage('question-banks', error.error.message);
       return throwError(error.error);
     };
   }
