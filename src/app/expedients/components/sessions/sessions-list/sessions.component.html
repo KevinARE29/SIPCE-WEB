@@ -104,8 +104,8 @@
                         <td>{{data.currentGrade.name}}</td>
                         <td [nzAlign]="'center'">{{data.expedient?.id ? data.sessionsCounter : '-'}}</td>
                         <td [nzAlign]="'center'">
-                            <a [routerLink]="['/estudiantes', data.id, 'detalle']">
-                                Perfil
+                            <a [routerLink]="['/historial', data.id]">
+                                Historial
                             </a>
                             <nz-divider nzType="vertical"></nz-divider>
                             <a [routerLink]="[data.id]">Expediente</a>
