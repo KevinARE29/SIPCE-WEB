@@ -97,6 +97,11 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'pruebas-sociometricas',
+    loadChildren: () => import('./sociometric/sociometric.module').then((m) => m.SociometricModule),
+    canLoad: [AuthGuard]
+  },
+  {
     path: '**',
     redirectTo: '/error404',
     pathMatch: 'full'

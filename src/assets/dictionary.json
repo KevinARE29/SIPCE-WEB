@@ -75,6 +75,9 @@
         },
         "counseling": {
             "confirmationToken": "Token de confirmación"
+        },
+        "question-banks": {
+            "name": "Nombre"
         }
     }
 }

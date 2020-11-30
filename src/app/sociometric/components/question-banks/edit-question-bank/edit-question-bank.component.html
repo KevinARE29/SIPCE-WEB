@@ -1,0 +1,93 @@
+<h1>Banco de preguntas</h1>
+
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+    <ng-container *ngIf="this.questionBankForm">
+        <form nz-form [formGroup]="questionBankForm" (ngSubmit)="submitForm()">
+            <div nz-row nzJustify="center">
+                <div nz-col nzXs="24" nzMd="16">
+                    <!-- Name -->
+                    <nz-form-item>
+                        <nz-form-label>Banco de preguntas</nz-form-label>
+                        <nz-form-control [nzErrorTip]="nameErrors">
+                            <input nz-input formControlName="name" placeholder="Título" />
+                            <ng-template #nameErrors let-control>
+                                <ng-container *ngIf="control.hasError('required')">El título es requerido<br>
+                                </ng-container>
+                                <ng-container *ngIf="control.hasError('maxlength')">El título debe contener máximo 128
+                                    caracteres.<br></ng-container>
+                            </ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
+        
+                    <!-- Questions -->
+                    <div nz-row class="questions-title"><strong>Preguntas</strong></div>
+                    <nz-form-item nz-row nzJustify="center" *ngFor="let control of listOfControl; let i = index">
+                        <!-- Controls -->
+                        <nz-form-control [nzXs]="24" [nzSm]="20" [nzErrorTip]="questionErrors">
+                            <ng-container [ngSwitch]="control.type">
+                                <div nz-row class="identifier" *ngSwitchCase="'leadership'" nzJustify="space-between">
+                                    <div nz-col>
+                                        <strong>{{ control.counter }}.</strong>
+                                        <nz-tag [nzColor]="'geekblue'">Liderazgo</nz-tag>
+                                    </div>
+                                    <div nz-col>
+                                        <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ef6c00'" (click)="removeField(control, $event)"></i>
+                                    </div>
+                                </div>
+                                <div nz-row class="identifier" *ngSwitchCase="'acceptance'" nzJustify="space-between">
+                                    <div nz-col>
+                                        <strong>{{ control.counter }}.</strong>
+                                        <nz-tag [nzColor]="'green'">Aceptación</nz-tag>
+                                    </div>
+                                    <div nz-col>
+                                        <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ef6c00'" (click)="removeField(control, $event)"></i>
+                                    </div>
+                                </div>
+                                <div nz-row class="identifier" *ngSwitchCase="'rejection'" nzJustify="space-between">
+                                    <div nz-col>
+                                        <div class="left-space"></div>
+                                        <nz-tag [nzColor]="'red'">Rechazo</nz-tag>
+                                    </div>
+                                </div>
+                            </ng-container>
+        
+                            <textarea nz-input placeholder="Texto de la pregunta" [attr.id]="control.id" [formControlName]="control.controlInstance" [nzAutosize]="{ minRows: 1, maxRows: 5 }"></textarea>
+                            <ng-template #questionErrors let-control>
+                                <ng-container *ngIf="control.hasError('required')">
+                                    <ng-container *ngIf="i > 0;else firstQuestion">
+                                        El contenido de la pregunta es requerido
+                                    </ng-container>
+                                    <ng-template #firstQuestion>Debe agregar al menos una pregunta a la prueba
+                                    </ng-template><br>
+                                </ng-container>
+                                <ng-container *ngIf="control.hasError('maxlength')">El título debe contener máximo 256
+                                    caracteres.<br></ng-container>
+                            </ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
+        
+                    <nz-form-item nz-row nzJustify="space-between">
+                        <nz-form-control nz-col>
+                            <button nz-button nzGhost nzType="primary" class="add-button"
+                                (click)="addField('leadership', $event)">
+                                Agregar pregunta de liderazgo
+                            </button>
+                        </nz-form-control>
+                        <nz-form-control nz-col>
+                            <button nz-button nzGhost nzType="primary" class="add-button"
+                                (click)="addField('acceptance-rejection', $event)">
+                                Agregar pregunta de elección-rechazo
+                            </button>
+                        </nz-form-control>
+                    </nz-form-item>
+        
+                    <nz-form-item nz-row nzJustify="center">
+                        <nz-form-control nz-col nzSpan="2">
+                            <button nz-button nzType="primary" [nzLoading]="btnLoading">Actualizar</button>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+</nz-spin>
