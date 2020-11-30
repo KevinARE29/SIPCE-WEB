@@ -66,6 +66,12 @@ export class QuestionBankService {
     return this.http.get<QuestionBank>(url).pipe(catchError(this.handleError()));
   }
 
+  deleteQuestionBank(id: number): Observable<void> {
+    return this.http
+      .delete<void>(`${this.baseUrl}sociometric/question-banks/${id}`)
+      .pipe(catchError(this.handleError()));
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.

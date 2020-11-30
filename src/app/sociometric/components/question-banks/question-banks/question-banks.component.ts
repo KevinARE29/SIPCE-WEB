@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
@@ -22,10 +23,12 @@ export class QuestionBanksComponent implements OnInit {
 
   // Modal
   isVisible = false;
+  confirmModal?: NzModalRef;
   currentQuestionBank: QuestionBank;
 
   constructor(
     private questionBankService: QuestionBankService,
+    private message: NzMessageService,
     private modal: NzModalService,
     private notification: NzNotificationService
   ) {}
@@ -66,8 +69,31 @@ export class QuestionBanksComponent implements OnInit {
     this.isVisible = true;
   }
 
-  showConfirm(id: number) {
-    console.log(id);
+  showConfirm(questionBank: QuestionBank): void {
+    console.log(questionBank);
+    this.confirmModal = this.modal.confirm({
+      nzTitle: `¿Desea eliminar el banco de preguntas "${questionBank.name}"?`,
+      nzContent: `Eliminará el banco de preguntas. La acción no puede deshacerse. ¿Desea confirmar la acción?`,
+
+      nzOnOk: () =>
+        this.questionBankService
+          .deleteQuestionBank(questionBank.id)
+          .toPromise()
+          .then(() => {
+            this.message.success(`El banco de preguntas ${questionBank.name} ha sido eliminado`);
+            this.getQuestionBanks(null);
+          })
+          .catch((err) => {
+            const statusCode = err.statusCode;
+            const notIn = [401, 403];
+
+            if (!notIn.includes(statusCode) && statusCode < 500) {
+              this.notification.create('error', 'Ocurrió un error al eliminar el banco de preguntas.', err.message, {
+                nzDuration: 30000
+              });
+            }
+          })
+    });
   }
   //#endregion
 }
