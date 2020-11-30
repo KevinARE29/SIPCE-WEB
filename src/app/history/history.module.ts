@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AntDesignModule } from '../ant-design/ant-design.module';
+import { NzTimelineModule } from 'ng-zorro-antd/timeline';
 
 import { HistoryRoutingModule } from './history-routing.module';
 
@@ -24,6 +25,6 @@ import { HistoryCommentsComponent } from './components/history-comments/history-
     HistoryFoulsSanctionsComponent,
     HistoryCommentsComponent
   ],
-  imports: [CommonModule, ReactiveFormsModule, AntDesignModule, HistoryRoutingModule]
+  imports: [CommonModule, ReactiveFormsModule, AntDesignModule, NzTimelineModule, HistoryRoutingModule]
 })
 export class HistoryModule {}

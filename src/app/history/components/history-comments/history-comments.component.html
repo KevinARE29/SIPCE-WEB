@@ -1,1 +1,5 @@
-En proceso
+<nz-timeline [nzReverse]="true">
+    <nz-timeline-item *ngFor="let history of histories">
+        <p>{{history.behavioralHistoryYear}}</p>
+    </nz-timeline-item>
+  </nz-timeline>
