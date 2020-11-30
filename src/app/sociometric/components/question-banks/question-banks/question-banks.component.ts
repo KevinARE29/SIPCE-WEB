@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { QuestionBank } from 'src/app/sociometric/shared/question-bank.model';
 import { QuestionBankService } from 'src/app/sociometric/shared/question-bank.service';
 
 import { Pagination } from './../../../../shared/pagination.model';
@@ -18,7 +20,15 @@ export class QuestionBanksComponent implements OnInit {
   searchBankParam: string;
   pagination: Pagination;
 
-  constructor(private questionBankService: QuestionBankService, private notification: NzNotificationService) {}
+  // Modal
+  isVisible = false;
+  currentQuestionBank: QuestionBank;
+
+  constructor(
+    private questionBankService: QuestionBankService,
+    private modal: NzModalService,
+    private notification: NzNotificationService
+  ) {}
 
   ngOnInit(): void {
     this.pagination = new Pagination();
@@ -50,7 +60,14 @@ export class QuestionBanksComponent implements OnInit {
     );
   }
 
+  //#region Modals
+  showModal(questionBank: QuestionBank): void {
+    this.currentQuestionBank = questionBank;
+    this.isVisible = true;
+  }
+
   showConfirm(id: number) {
     console.log(id);
   }
+  //#endregion
 }

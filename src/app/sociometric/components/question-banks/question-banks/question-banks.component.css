@@ -5,3 +5,11 @@
 nz-table {
   margin-top: 25px;
 }
+
+nz-tag {
+  border-radius: 7px;
+}
+
+.question {
+  margin-bottom: 5px;
+}

@@ -40,7 +40,7 @@
                     <td>{{ data.name }}</td>
                     <td [nzAlign]="'center'">{{ data.questions.length }}</td>
                     <td [nzAlign]="'center'">
-                        <a>
+                        <a (click)="showModal(data)">
                             <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
                         </a>
                         <ng-container *ngIf="data.editable">
@@ -60,3 +60,44 @@
         </nz-table>
     </nz-spin>
 </div>
+
+<!-- Question bank -->
+<nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]="modalTitle"
+    [nzContent]="modalContent"
+    [nzFooter]="modalFooter"
+>
+    <ng-template #modalTitle> Banco de preguntas </ng-template>
+
+    <ng-template #modalContent>
+        <div nz-row nzJustify="center">
+            <h3>{{ currentQuestionBank.name }}</h3>
+        </div>
+
+        <div><strong>Preguntas:</strong></div>
+
+        <!-- NgFor -->
+        <div nz-row class="question" *ngFor="let question of currentQuestionBank.questions; let i = index">
+            <div nz-col nzSpan="1"><strong>{{ i + 1 }}.</strong></div>
+            <ng-container [ngSwitch]="question.type">
+                <ng-container *ngSwitchCase="'Liderazgo'">
+                    <div nz-col nzSpan="5"><nz-tag [nzColor]="'geekblue'">Liderazgo</nz-tag></div>
+                    <div nz-col nzSpan="18">{{ question.questionP }}</div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'Aceptación/Rechazo'">
+                    <div nz-col nzSpan="5"><nz-tag [nzColor]="'green'">Aceptación</nz-tag></div>
+                    <div nz-col nzSpan="18">{{ question.questionP }}</div>
+                    <br>
+                    <div nz-col nzSpan="5" nzOffset="1"><nz-tag [nzColor]="'red'">Rechazo</nz-tag></div>
+                    <div nz-col nzSpan="18">{{ question.questionN }}</div>
+                </ng-container>
+            </ng-container>
+        </div>
+
+    </ng-template>
+
+    <ng-template #modalFooter>
+        <button nz-button nzType="primary" (click)="isVisible = false">Regresar</button>
+    </ng-template>
+</nz-modal>

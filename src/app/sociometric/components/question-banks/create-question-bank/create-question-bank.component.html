@@ -22,7 +22,7 @@
             <nz-form-item *ngFor="let control of listOfControl; let i = index">
                 <!-- Controls -->
                 <nz-form-control [nzXs]="24" [nzSm]="20" [nzErrorTip]="questionErrors">
-                    <ng-container <div [ngSwitch]="control.type">
+                    <ng-container [ngSwitch]="control.type">
                         <div nz-row class="identifier" *ngSwitchCase="'leadership'" nzJustify="space-between">
                             <div nz-col>
                                 <strong>{{ control.counter }}.</strong>
@@ -49,8 +49,6 @@
                         </div>
                     </ng-container>
 
-                    <!-- <input nz-input placeholder="Texto de la pregunta" [attr.id]="control.id"
-                        [formControlName]="control.controlInstance" /> -->
                     <textarea nz-input placeholder="Texto de la pregunta" [attr.id]="control.id" [formControlName]="control.controlInstance" [nzAutosize]="{ minRows: 1, maxRows: 5 }"></textarea>
                     <ng-template #questionErrors let-control>
                         <ng-container *ngIf="control.hasError('required')">
