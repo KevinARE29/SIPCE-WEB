@@ -18,9 +18,11 @@ export class DisciplinaryCatalogService {
     this.baseUrl = environment.apiURL;
   }
 
-  searchSanctions(params: NzTableQueryParams, paginate: boolean): Observable<Sanction[]> {
+  searchSanctions(params: NzTableQueryParams, search: string, paginate: boolean): Observable<Sanction[]> {
     let url = this.baseUrl + 'sanctions';
     let queryParams = '';
+
+    if (search) queryParams += '?name=' + search;
 
     if (paginate) queryParams += '&page=' + params.pageIndex;
 
@@ -52,9 +54,9 @@ export class DisciplinaryCatalogService {
     return this.http.delete<any>(`${this.baseUrl}sanctions/${id}`).pipe(catchError(this.handleError()));
   }
 
-  updateSanction(sanction: Sanction): Observable<Sanction> {
+  updateSanction(sanction: Sanction, sanctionId: number): Observable<Sanction> {
     return this.http
-      .put<Sanction>(`${this.baseUrl}sanctions/${sanction.id}`, sanction)
+      .put<Sanction>(`${this.baseUrl}sanctions/${sanctionId}`, sanction)
       .pipe(catchError(this.handleError()));
   }
   /**

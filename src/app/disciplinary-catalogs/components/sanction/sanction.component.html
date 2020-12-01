@@ -23,7 +23,7 @@
                             El nombre debe contener solo letras. <br>
                         </ng-container>
                         <ng-container *ngIf="control.hasError('maxlength')">
-                            El nombre debe contener máximo 32 caracteres.
+                            El nombre debe contener máximo 128 caracteres.
                         </ng-container>
                     </ng-template>
                   </div>
@@ -32,7 +32,7 @@
                 <nz-form-label nzRequired>Descripción</nz-form-label>
                 <nz-form-control [nzSpan]="16" [nzErrorTip]="errorTplTwo">
                   <div nz-row>
-                  <textarea rows="4" nz-input formControlName="description" placeholder="Descripción de la sanción"></textarea>
+                  <textarea rows="6" nz-input formControlName="description" placeholder="Descripción de la sanción"></textarea>
                     <ng-template #errorTplTwo let-control>
                         <ng-container *ngIf="control.hasError('required')">
                             La descripción es requerida. <br>
@@ -53,27 +53,23 @@
     </ng-template>
 </nz-modal>
 
-<div nz-row nzJustify="center">
-    <div nz-col nzXs="24" nzSm="24" nzMd="20" nzLg="16" nzXl="12">
-      <div class="search-bar" nz-row nzJustify="space-between" [nzGutter]="[10, 10]">
+<!--Sanction searcher an create button-->
+<div nz-row nzJustify="space-between">
+      <div nz-col nzSpan="6">
+         <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+             <input type="text" nz-input placeholder="Buscar sanción" [(ngModel)]="searchValue"/>
+         </nz-input-group>
+         <ng-template #suffixIconButton>
+              <button nz-button nzType="{{color}}" nzSearch (click)="search()"><i nz-icon nzType="{{icon}}"></i></button>
+         </ng-template> 
+      </div>
+      <div nz-col>
+             <a nz-button nzType="primary" *ngIf="checkPermission(28)" (click)="showModal()">Crear sanción</a>
+      </div>
+</div>
 
-        <div nz-col>
-          <label>Nombre: </label>
-          <nz-input-group [nzSuffix]="inputClearUsername">
-              <input nz-input [(ngModel)]="searchValue" placeholder="Buscar usuario" />
-          </nz-input-group>
-          <ng-template #inputClearUsername>
-              <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchValue" (click)="searchValue = null; search()"></i>
-          </ng-template>
-        </div>
-        <div nz-col nzFlex="110px">
-          <a nz-button nzType="primary" (click)="showModal()">Crear sanción</a>
-      </div>
-        <div class="search" nz-col>
-          <button nz-button nzType="primary" (click)="search()">Buscar</button>
-        </div>
-      </div>
-      <!-- Sanctions table -->
+<!--Table-->
+<div nz-row >
       <div class="sanctions" nz-row>
         <div nz-col>
           <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
@@ -90,29 +86,21 @@
               <thead>
               <tr>
                 <th nzColumnKey="name" [nzSortFn]="true">Nombre</th>
-                <th>Descripción</th>
-                <th>Acción</th>
+                <th >Descripción</th>
+                <th *ngIf="checkPermission(28)" [nzAlign]="'center'">Acción</th>
               </tr>
               </thead> 
               <tbody>
                 <tr *ngFor="let data of filterTable.data">
                   <td>{{ data.name }}</td>
                   <td>{{ data.description }}</td>
-                  <td>
+                  <td  [nzAlign]="'center'">    
                                 <span>
-                                    <a nz-tooltip nzTooltipTitle="Ver">
-                                        <i nz-icon nzType="eye" nzTheme="outline"></i>
-                                    </a>
-                                    <nz-divider nzType="vertical"></nz-divider>
-                                </span>
-    
-                    <span>
-                                    <!--
-                                    <a nz-tooltip nzTooltipTitle="Actualizar">
+                                    <a nz-tooltip *ngIf="checkPermission(28)" nzTooltipTitle="Actualizar">
                                         <i nz-icon nzType="edit" nzTheme="outline" (click)="AllowEditing(data)"></i>
                                     </a>
-                                    <nz-divider nzType="vertical"></nz-divider>-->
-                                    <a nz-tooltip nzTooltipTitle="Eliminar"  (click)="showConfirm(data.id, data.name, data.description)">
+                                    <nz-divider *ngIf="checkPermission(28)" nzType="vertical"></nz-divider>
+                                    <a nz-tooltip nzTooltipTitle="Eliminar" *ngIf="checkPermission(28)"  (click)="showConfirm(data.id, data.name, data.description)">
                                         <i nz-icon nzType="delete" nzTheme="outline"></i>
                                     </a>
                                 </span>
@@ -122,6 +110,5 @@
               </nz-table>
             </nz-spin>
         </div>
-      </div>
     </div> 
 </div>

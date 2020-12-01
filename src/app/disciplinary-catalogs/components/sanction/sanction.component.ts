@@ -21,6 +21,8 @@ import { Sanction } from '../../shared/sanction.model';
 export class SanctionComponent implements OnInit {
   permissions: Array<Permission> = [];
   sanctions: Sanction[];
+  sanctionsUpdated: Sanction;
+  idSanction: number;
   isVisible = false;
   pagination: Pagination;
   loading = false;
@@ -52,7 +54,7 @@ export class SanctionComponent implements OnInit {
     this.sanctionForm = this.fb.group({
       name: [
         '',
-        [Validators.required, Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$'), Validators.maxLength(32)]
+        [Validators.required, Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$'), Validators.maxLength(128)]
       ],
       description: ['', [Validators.required, Validators.maxLength(256)]]
     });
@@ -86,25 +88,27 @@ export class SanctionComponent implements OnInit {
   recharge(params: NzTableQueryParams): void {
     this.loading = true;
 
-    this.disciplinaryService.searchSanctions(params, params.pageIndex !== this.pagination.page).subscribe(
-      (data) => {
-        this.sanctions = data['data'];
-        console.log(this.sanctions);
-        this.pagination = data['pagination'];
-        this.listOfDisplayData = [...this.sanctions];
-        this.loading = false;
-      },
-      (err) => {
-        const statusCode = err.statusCode;
-        const notIn = [401, 403];
+    this.disciplinaryService
+      .searchSanctions(params, this.searchValue, params.pageIndex !== this.pagination.page)
+      .subscribe(
+        (data) => {
+          this.sanctions = data['data'];
+          console.log(this.sanctions);
+          this.pagination = data['pagination'];
+          this.listOfDisplayData = [...this.sanctions];
+          this.loading = false;
+        },
+        (err) => {
+          const statusCode = err.statusCode;
+          const notIn = [401, 403];
 
-        if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al obtener las sanciones.', err.message, {
-            nzDuration: 30000
-          });
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create('error', 'Ocurrió un error al obtener las sanciones.', err.message, {
+              nzDuration: 30000
+            });
+          }
         }
-      }
-    );
+      );
   }
 
   showModal(): void {
@@ -113,7 +117,9 @@ export class SanctionComponent implements OnInit {
   }
 
   AllowEditing(data: Sanction): void {
+    this.idSanction = null;
     this.editValue = true;
+    this.idSanction = data.id;
     this.resetForm();
     console.log(data);
     this.sanctionForm.get('name').setValue(data.name);
@@ -129,19 +135,22 @@ export class SanctionComponent implements OnInit {
     }
   }
 
-  // Create sanction
+  /* ---  Create and update sanction  ---- */
   handleOk(): void {
     if (this.sanctionForm.valid) {
       if (this.editValue === true) {
-        this.isConfirmLoading = true;
-        this.disciplinaryService.updateSanction(this.sanctionForm.value).subscribe(
+        this.sanctionsUpdated = this.sanctionForm.value;
+        console.log(this.sanctionsUpdated, this.idSanction);
+        this.disciplinaryService.updateSanction(this.sanctionsUpdated, this.idSanction).subscribe(
           () => {
+            this.editValue = false;
             this.isConfirmLoading = false;
             this.isVisible = false;
             this.message.success('Sanción actualizada con éxito');
             this.search();
           },
           (error) => {
+            this.editValue = false;
             this.isConfirmLoading = false;
             this.notification.create(
               'error',
@@ -182,7 +191,7 @@ export class SanctionComponent implements OnInit {
   search(): void {
     this.loading = true;
 
-    this.disciplinaryService.searchSanctions(null, false).subscribe(
+    this.disciplinaryService.searchSanctions(null, this.searchValue, false).subscribe(
       (data) => {
         this.sanctions = data['data'];
         this.pagination = data['pagination'];

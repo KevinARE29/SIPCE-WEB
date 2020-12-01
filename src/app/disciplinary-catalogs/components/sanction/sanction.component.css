@@ -10,4 +10,11 @@
   .search {
     padding-top: 30%;
     border-top: 20px;
+    
   }
+
+  .searchSanction {
+    float: right;
+    justify-content: flex-end
+  }
+
