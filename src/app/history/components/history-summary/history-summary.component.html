@@ -14,8 +14,12 @@
 
             <ng-container *ngIf="history.expedients && history.expedients.length">
                 <div *ngFor="let expedient of history.expedients">
-                    <p class="expedient-comment">{{expedient.finalConclussion || 'Sin comentario'}}</p>
-                    <p class="expedient-author">Autor: {{expedient.author}}</p>
+                    <ng-container *ngIf="expedient.finalConclusion">
+                        <p class="expedient-comment">{{expedient.finalConclusion}}</p>
+                        <p class="expedient-author">Autor: {{expedient.author}}</p>
+                    </ng-container>
+
+                    <nz-empty *ngIf="!expedient.finalConclusion" nzNotFoundContent="Sin comentario final de consejeria"></nz-empty>
                 </div>
             </ng-container>
 
