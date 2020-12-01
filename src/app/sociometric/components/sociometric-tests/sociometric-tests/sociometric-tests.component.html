@@ -6,3 +6,98 @@
         <a nz-button nzType="primary" routerLink="/pruebas-sociometricas/tests/nuevo">Crear</a>
     </div>
 </div>
+
+<nz-spin nzTip="Cargando..." [nzSpinning]="filtersLoading">
+    <div nz-row [nzGutter]="[10, 10]">
+        <!-- Shift -->
+        <div nz-col nzXs="24" nzMd="8" nzLg="6">
+            <label>Turno: </label>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar"
+                [(ngModel)]="searchParams.shiftId" (ngModelChange)="getTests(null)">
+                <nz-option *ngFor="let shift of shifts" [nzLabel]="shift.name" [nzValue]="shift.id"></nz-option>
+            </nz-select>
+        </div>
+    
+        <!-- Grade -->
+        <div nz-col nzXs="24" nzMd="8" nzLg="6">
+            <label>Grado: </label>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar"
+                [(ngModel)]="searchParams.gradeId" (ngModelChange)="getTests(null)">
+                <nz-option *ngFor="let grade of grades" [nzLabel]="grade.name" [nzValue]="grade.id"></nz-option>
+            </nz-select>
+        </div>
+    
+        <!-- Section -->
+        <div nz-col nzXs="24" nzMd="8" nzLg="6">
+            <label>Sección: </label>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar"
+                [(ngModel)]="searchParams.sectionId" (ngModelChange)="getTests(null)">
+                <nz-option *ngFor="let section of sections" [nzLabel]="section.name" [nzValue]="section.id"></nz-option>
+            </nz-select>
+        </div>
+    
+        <!-- Status -->
+        <div nz-col nzXs="24" nzMd="8" nzLg="6">
+            <label>Estado: </label>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar"
+                [(ngModel)]="searchParams.status" (ngModelChange)="getTests(null)">
+                <nz-option *ngFor="let state of status" [nzLabel]="state" [nzValue]="state"></nz-option>
+            </nz-select>
+        </div>
+    
+        <!-- Current tests? -->
+        <div nz-col nzXs="24" nzMd="8" nzLg="6">
+            <nz-switch [(ngModel)]="searchParams.current" [nzCheckedChildren]="'Activas'" [nzUnCheckedChildren]="'Históricas'"
+                (ngModelChange)="getTests(null)"></nz-switch>
+        </div>
+    
+        <!-- Search button-->
+        <div nz-col nzXs="24" nzMd="8" nzLg="4" nzXl="4">
+            <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+                <button nz-button nzType="primary" (click)="getTests(null)">Buscar</button>
+            </div>
+        </div>
+    </div>
+</nz-spin>
+
+<div nz-row>
+    <div nz-col nzSpan="24">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <nz-table #filterTable
+                [nzData]="listOfDisplayData"
+                nzTableLayout="fixed"
+                [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems"
+                [nzPageSize]="pagination.perPage"
+                [nzPageIndex]="pagination.page"
+                nzSize="small"
+                (nzQueryParams)="getTests($event)"
+            >
+                <thead>
+                    <tr>
+                        <th nzColumnKey="shift" [nzSortFn]="true" [nzSortPriority]="1">Turno</th>
+                        <th nzColumnKey="grade" [nzSortFn]="true" [nzSortPriority]="2">Grado</th>
+                        <th nzColumnKey="section" [nzSortFn]="true" [nzSortPriority]="3">Sección</th>
+                        <th nzColumnKey="status" [nzSortFn]="true" [nzSortPriority]="4">Estado</th>
+                        <!-- <th *ngIf="searchParam && !searchParam.current">Año</th> -->
+                        <th>Estudiantes</th>
+                        <th [nzAlign]="'center'">Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let data of filterTable.data">
+                        <td>{{ data.shift.name }}</td>
+                        <td>{{ data.grade.name }}</td>
+                        <td>{{ data.section.name }}</td>
+                        <td>{{ data.status }}</td>
+                        <!-- <td *ngIf="!searchParam.current">{{ data.createdAt }}</td> -->
+                        <td>{{ data.completedStudents }} / {{ data.totalStudents }}</td>
+                        <td [nzAlign]="'center'">
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>

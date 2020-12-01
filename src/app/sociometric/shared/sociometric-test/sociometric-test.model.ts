@@ -7,6 +7,8 @@ export class SociometricTest {
   grade: ShiftPeriodGrade;
   section: ShiftPeriodGrade;
   answersPerQuestion: number;
-
+  status: string;
+  completedEstudents: number;
+  totalEstudents: number;
   questionBank: QuestionBank;
 }

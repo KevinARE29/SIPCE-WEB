@@ -21,10 +21,7 @@ export class CreateSociometricTestComponent implements OnInit {
   sociometricTestForm!: FormGroup;
   sociometricTest: SociometricTest;
 
-  assignation: { shiftId: number; gradeId: number; sectionId: number };
-
   // Filters
-  counselorAssignation: unknown[] = [];
   shifts: {
     id: number;
     name: string;
@@ -32,7 +29,6 @@ export class CreateSociometricTestComponent implements OnInit {
   }[] = [];
   grades: unknown[];
   sections: ShiftPeriodGrade[];
-
   questionBanks: QuestionBank[] = [];
 
   constructor(
@@ -60,19 +56,21 @@ export class CreateSociometricTestComponent implements OnInit {
     this.questionBankService.mergeQuestionBanksAndCatalogs().subscribe((data) => {
       this.loading = false;
 
-      this.counselorAssignation = data['profile']['counselorAssignation'];
+      const counselorAssignation = data['profile']['counselorAssignation'];
       this.questionBanks = data['questionBanks']['data'];
 
-      if (this.counselorAssignation) {
-        Object.values(this.counselorAssignation).forEach((assignation) => {
+      if (counselorAssignation) {
+        Object.values(counselorAssignation).forEach((assignation) => {
           const grades = new Array<{ id: number; name: string; sections: ShiftPeriodGrade[] }>();
           assignation[0]['gradeDetails'].forEach((grade) => {
-            const sections = new Array<ShiftPeriodGrade>();
+            let sections = new Array<ShiftPeriodGrade>();
 
             grade.sectionDetails.forEach((section) => {
               sections.push(section.section);
             });
 
+            sections = sections.sort((a, b) => a.id - b.id);
+            sections = sections.filter((x) => x.name.length === 1).concat(sections.filter((x) => x.name.length > 1));
             grades.push({ id: grade.grade.id, name: grade.grade.name, sections: sections });
           });
 
@@ -101,11 +99,6 @@ export class CreateSociometricTestComponent implements OnInit {
           const shift = this.shifts.filter((x) => x.id === this.sociometricTestForm.controls['shift'].value);
           const grade = shift[0]['grades'].filter((x) => x.id === id);
           this.sections = grade[0]['sections'];
-
-          this.sections = this.sections.sort((a, b) => a.id - b.id);
-          this.sections = this.sections
-            .filter((x) => x.name.length === 1)
-            .concat(this.sections.filter((x) => x.name.length > 1));
         } else {
           this.sections = [];
           this.sociometricTestForm.get('section').setValue(null);

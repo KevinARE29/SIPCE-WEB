@@ -1,12 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { SociometricTest } from './sociometric-test.model';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +32,55 @@ export class SociometricTestService {
     return this.http
       .post<SociometricTest>(`${this.baseUrl}sociometric/tests`, data)
       .pipe(catchError(this.handleError()));
+  }
+
+  getSociometricTests(params: NzTableQueryParams, search: unknown, paginate: boolean): Observable<SociometricTest[]> {
+    let url = this.baseUrl + 'sociometric/tests';
+    let queryParams = '';
+
+    // Paginate?
+    if (paginate) queryParams += '?page=' + params.pageIndex;
+
+    // Params
+    if (params) {
+      let sort = '&sort=';
+      params.sort.forEach((param) => {
+        if (param.value) {
+          sort += param.key;
+          switch (param.value) {
+            case 'ascend':
+              sort += '-' + param.value.substring(0, 3) + ',';
+              break;
+            case 'descend':
+              sort += '-' + param.value.substring(0, 4) + ',';
+              break;
+          }
+        }
+      });
+
+      if (sort.length > 6) {
+        if (sort.charAt(sort.length - 1) === ',') sort = sort.slice(0, -1);
+
+        queryParams += sort;
+      }
+    }
+
+    if (search) {
+      if (search['shiftId']) queryParams += '&shift=' + search['shiftId'];
+
+      if (search['gradeId']) queryParams += '&grade=' + search['gradeId'];
+
+      if (search['sectionId']) queryParams += '&section=' + search['sectionId'];
+
+      if (search['status']) queryParams += '&status=' + search['status'];
+
+      queryParams += '&historical' + !search['current'];
+    }
+    if (queryParams.charAt(0) === '&') queryParams = queryParams.replace('&', '?');
+
+    url += queryParams;
+
+    return this.http.get<SociometricTest[]>(url).pipe(catchError(this.handleError()));
   }
 
   /**
