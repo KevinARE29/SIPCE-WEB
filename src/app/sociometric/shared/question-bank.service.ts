@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { throwError } from 'rxjs/internal/observable/throwError';
 import { catchError, map } from 'rxjs/operators';
 
@@ -10,6 +10,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { QuestionBank } from './question-bank.model';
+import { UserService } from 'src/app/users/shared/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,11 @@ import { QuestionBank } from './question-bank.model';
 export class QuestionBankService {
   baseUrl: string;
 
-  constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
+  constructor(
+    private http: HttpClient,
+    private errorMessageService: ErrorMessageService,
+    private userService: UserService
+  ) {
     this.baseUrl = environment.apiURL;
   }
 
@@ -66,6 +71,12 @@ export class QuestionBankService {
     return this.http.get<QuestionBank[]>(url).pipe(catchError(this.handleError()));
   }
 
+  getAllQuestionBanks(): Observable<QuestionBank[]> {
+    return this.http
+      .get<QuestionBank[]>(`${this.baseUrl}sociometric/question-banks?paginate=false`)
+      .pipe(catchError(this.handleError()));
+  }
+
   getQuestionBank(id: number): Observable<QuestionBank> {
     return this.http
       .get<QuestionBank>(`${this.baseUrl}sociometric/question-banks/${id}`)
@@ -84,11 +95,19 @@ export class QuestionBankService {
       .pipe(catchError(this.handleError()));
   }
 
+  mergeQuestionBanksAndCatalogs(): Observable<unknown> {
+    return forkJoin({
+      profile: this.userService.getUserProfile(),
+      questionBanks: this.getAllQuestionBanks()
+    });
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.
    */
   private handleError() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (error: any) => {
       error.error.message = this.errorMessageService.transformMessage('question-banks', error.error.message);
       return throwError(error.error);

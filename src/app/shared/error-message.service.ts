@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 
 import DictionaryJson from '../../assets/dictionary.json';
-import { typeofExpr } from '@angular/compiler/src/output/output_ast';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ErrorMessageService {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   transformMessage(module: string, error: any): any {
     let dictionary: any;
     let response = error;

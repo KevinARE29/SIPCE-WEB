@@ -45,7 +45,7 @@ const routes: Routes = [
         data: { permission: 30 }
       },
       {
-        path: 'nueva',
+        path: 'nuevo',
         component: CreateSociometricTestComponent,
         canActivate: [AuthGuard],
         data: { permission: 30 }
