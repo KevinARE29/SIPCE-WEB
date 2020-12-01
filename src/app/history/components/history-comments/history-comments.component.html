@@ -1,7 +1,7 @@
 <div nz-row nzJustify="center">
     <div nz-col nzXs="24" nzSm="20" nzMd="22" nzLg="18" nzXl="16">
         <nz-timeline [nzReverse]="true">
-            <nz-timeline-item *ngFor="let history of histories">
+            <nz-timeline-item *ngFor="let history of showHistories">
                 <p class="history-year">{{history.behavioralHistoryYear}}</p>
                 <div>
                     <p class="expedient-comment">{{history.finalConclusion || 'Sin conclusión final'}}</p>

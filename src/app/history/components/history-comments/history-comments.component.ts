@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { History } from '../../shared/history.model';
 
 @Component({
@@ -6,6 +6,15 @@ import { History } from '../../shared/history.model';
   templateUrl: './history-comments.component.html',
   styleUrls: ['./history-comments.component.css']
 })
-export class HistoryCommentsComponent {
+export class HistoryCommentsComponent implements OnChanges {
   @Input() histories: History[];
+  @Input() index: number;
+
+  showHistories: History[];
+
+  ngOnChanges(): void {
+    if (this.histories) {
+      this.showHistories = this.histories.slice(this.index);
+    }
+  }
 }
