@@ -183,13 +183,13 @@
         {
             "title": "Historial acádemido y conductual",
             "icon": "history",
-            "permissions": [33],
+            "permissions": [47],
             "allowed": null,
             "children": [
                 {
                     "route": "historial",
                     "name": "Estudiantes",
-                    "permission": 33,
+                    "permission": 47,
                     "allowed": false
                 }
             ]

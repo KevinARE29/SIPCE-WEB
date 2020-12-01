@@ -10,13 +10,13 @@ const routes: Routes = [
     path: '',
     component: HistoryListComponent,
     canActivate: [AuthGuard],
-    data: { permission: 32 }
+    data: { permission: 47 }
   },
   {
     path: ':studentId',
     component: HistoryDetailComponent,
     canActivate: [AuthGuard],
-    data: { permission: 32 }
+    data: { permission: 47 }
   }
 ];
 
