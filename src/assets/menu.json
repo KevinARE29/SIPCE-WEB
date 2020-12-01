@@ -181,6 +181,20 @@
             ]
         },
         {
+            "title": "Historial acádemido y conductual",
+            "icon": "history",
+            "permissions": [33],
+            "allowed": null,
+            "children": [
+                {
+                    "route": "historial",
+                    "name": "Estudiantes",
+                    "permission": 33,
+                    "allowed": false
+                }
+            ]
+        },
+        {
             "title": "Reportes",
             "icon": "book",
             "permissions": [34],

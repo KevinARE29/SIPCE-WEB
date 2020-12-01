@@ -1,0 +1,16 @@
+p.history-year {
+    color: #ef6c00;
+}
+
+p.expedient-comment {
+    text-align: left;
+}
+
+p.expedient-author {
+    text-align: right;
+    font-style: italic;
+}
+
+p.expedient-author strong {
+    font-style: normal;
+}

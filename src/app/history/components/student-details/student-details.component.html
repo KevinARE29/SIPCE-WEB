@@ -11,11 +11,17 @@
                     <nz-avatar [nzSize]="100" nzIcon="user"></nz-avatar>
                 </ng-template>
             </div>
-            <div nz-row nzJustify="center" class="links">
-                <a [routerLink]="['/estudiantes', student.id, 'detalle']">Perfil</a>
+
+            <div nz-row nzJustify="center">
+                <span class="status">{{ student.status }}</span>
             </div>
+
             <div nz-row nzJustify="center" class="links">
-                <a [routerLink]="['/historial', student.id]">Historial académico y conductual</a>
+                <div nz-col>
+                    <a [routerLink]="['/estudiantes', student.id, 'detalle']">Perfil</a>
+                    <nz-divider *ngIf="showAlert" nzType="vertical"></nz-divider>
+                    <a *ngIf="showAlert"><i nz-icon nzType="alert" nzTheme="outline"></i></a>
+                </div>
             </div>
         </div>
     
@@ -26,6 +32,7 @@
             <p>Edad:  <strong>{{student.age}} años</strong></p>
             <p>Grado y sección:  <strong>{{student.grade?.name}} {{student.section?.name || '-'}}</strong></p>
             <p>Ingreso:  <strong>{{student.registrationYear}} ({{student.startedGrade?.name}})</strong></p>
+            <p *ngIf="history">Docente Títular:  <strong>{{history.author}}</strong></p>
         </div>
 
         <!-- Student siblings and responsibles -->
