@@ -5,3 +5,11 @@
     padding: 2px 20px;
     border-radius: 5px;
 }
+
+.counter, .counter-header {
+    text-align: center;
+}
+
+.counter-header {
+    margin-bottom: 0px;
+}
