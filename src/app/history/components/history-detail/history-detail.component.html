@@ -30,7 +30,7 @@
     <!-- Student details -->
     <app-student-details [id]="studentId"
                          [history]="selectedHistory"
-                         [showAlert]="selectedHistoryIsActive"   
+                         [showAlert]="selectedHistoryIsActive && checkPermission(46)"   
     ></app-student-details>
 
     <br><br>
@@ -46,7 +46,7 @@
     <app-history-summary *ngIf="selectedHistory"
                          [studentId]="studentId"
                          [history]="selectedHistory"
-                         [isEditable]="selectedHistoryIsActive"
+                         [isEditable]="selectedHistoryIsActive && checkPermission(31) && (selectedHistory.authorId === this.userId)"
     ></app-history-summary>
 
     <br><br>

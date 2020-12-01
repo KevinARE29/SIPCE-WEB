@@ -8,6 +8,7 @@ export class History {
   id: number;
   finalConclusion: string;
   author: string;
+  authorId: number;
   behavioralHistoryGrade: string;
   behavioralHistoryYear: number;
   foulsCounter: number;
