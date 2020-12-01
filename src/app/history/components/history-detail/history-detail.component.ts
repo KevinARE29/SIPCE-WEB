@@ -36,7 +36,7 @@ export class HistoryDetailComponent implements OnInit {
   getHistories(): void {
     this.loadingHistory = true;
     this.historyService.getStudentHistory(this.studentId).subscribe((r) => {
-      this.histories = r;
+      this.histories = r.sort((a, b) => b.behavioralHistoryYear - a.behavioralHistoryYear);
       this.setHistory(0);
       this.loadingHistory = false;
     });
