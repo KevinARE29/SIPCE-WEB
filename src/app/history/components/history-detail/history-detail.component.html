@@ -44,7 +44,9 @@
 
     <!-- History comments summary. -->
     <app-history-summary *ngIf="selectedHistory"
+                         [studentId]="studentId"
                          [history]="selectedHistory"
+                         [isEditable]="selectedHistoryIsActive"
     ></app-history-summary>
 
     <br><br>

@@ -72,7 +72,7 @@ export class HistoryService {
   }
 
   getStudentHistory(studentId: number): Observable<History[]> {
-    const url = environment.apiURL + 'students/' + studentId + '/histories';
+    const url = this.baseUrl + 'students/' + studentId + '/histories';
 
     return this.http.get(url).pipe(
       map((response) => {
@@ -80,6 +80,16 @@ export class HistoryService {
       }),
       catchError(this.handleError())
     );
+  }
+
+  updateHistory(studentId: number, history: History): Observable<void> {
+    const url = this.baseUrl + 'students/' + studentId + '/histories/' + history.id;
+
+    const data = {
+      finalConclusion: history.finalConclusion
+    };
+
+    return this.http.patch<void>(url, JSON.stringify(data)).pipe(catchError(this.handleError));
   }
 
   /**

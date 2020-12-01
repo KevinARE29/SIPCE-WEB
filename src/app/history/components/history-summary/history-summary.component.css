@@ -14,3 +14,16 @@ nz-card p.expedient-author {
     text-align: right;
     font-style: italic;
 }
+
+.btn-editing-conclusion {
+    text-align: right;
+}
+
+.btn-cancel-editing {
+    margin-right: 10px;
+    color: gray;
+}
+
+i {
+    cursor: pointer;
+}
