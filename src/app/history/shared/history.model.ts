@@ -1,5 +1,5 @@
 export class ExpedientHistory {
-  finalConclussion: string;
+  finalConclusion: string;
   author: string;
   grade: string;
 }
