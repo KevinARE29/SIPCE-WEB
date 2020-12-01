@@ -12,18 +12,18 @@
         <nz-card>
             <p><strong>Seguimiento de consejería</strong></p>
 
-            <ng-container *ngIf="history.expedients && history.expedients.length">
+            <ng-container *ngIf="history.expedients && history.expedients.length; else noConclusion">
                 <div *ngFor="let expedient of history.expedients">
-                    <ng-container *ngIf="expedient.finalConclusion">
+                    <ng-container *ngIf="expedient.finalConclusion; else noConclusion">
                         <p class="expedient-comment">{{expedient.finalConclusion}}</p>
                         <p class="expedient-author">Autor: {{expedient.author}}</p>
                     </ng-container>
-
-                    <nz-empty *ngIf="!expedient.finalConclusion" nzNotFoundContent="Sin comentario final de consejeria"></nz-empty>
                 </div>
             </ng-container>
 
-            <nz-empty *ngIf="!history.expedients || !history.expedients.length" nzNotFoundContent="Sin comentario final de consejeria"></nz-empty>
+            <ng-template #noConclusion>
+                <nz-empty nzNotFoundContent="Sin comentario final de consejeria"></nz-empty>
+            </ng-template>
         </nz-card>
     </div>
 </div> 
