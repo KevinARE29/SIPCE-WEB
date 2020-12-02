@@ -53,7 +53,7 @@ export class FaultComponent implements OnInit {
     this.foulForm = this.fb.group({
       foulsType: ['', [Validators.required]],
       description: ['', [Validators.required, Validators.maxLength(256)]],
-      numeral: ['', [Validators.required, Validators.maxLength(128)]]
+      numeral: ['', [Validators.required, Validators.maxLength(8)]]
     });
   }
 
