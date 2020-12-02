@@ -90,6 +90,20 @@ export class SociometricTestService {
       .pipe(catchError(this.handleError()));
   }
 
+  updateSociometricTest(sociometricTest: SociometricTest): Observable<SociometricTest>{
+    const data = JSON.stringify({
+      shiftId: sociometricTest.shift.id,
+      gradeId: sociometricTest.grade.id,
+      sectionId: sociometricTest.section.id,
+      questionBankId: sociometricTest.questionBank.id,
+      answersPerQuestion: sociometricTest.answersPerQuestion
+    });
+
+    return this.http
+      .put<SociometricTest>(`${this.baseUrl}sociometric/tests/${sociometricTest.id}`, data)
+      .pipe(catchError(this.handleError()));
+  }
+
   deleteSociometricTest(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}sociometric/tests/${id}`).pipe(catchError(this.handleError()));
   }
