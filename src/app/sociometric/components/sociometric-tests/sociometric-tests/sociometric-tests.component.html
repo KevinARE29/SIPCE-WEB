@@ -7,13 +7,13 @@
     </div>
 </div>
 
-<nz-spin nzTip="Cargando..." [nzSpinning]="filtersLoading">
+<nz-spin [nzSpinning]="filtersLoading">
     <div nz-row [nzGutter]="[10, 10]">
         <!-- Shift -->
         <div nz-col nzXs="24" nzMd="8" nzLg="6">
             <label>Turno: </label>
             <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar"
-                [(ngModel)]="searchParams.shiftId" (ngModelChange)="getTests(null)">
+                [(ngModel)]="searchParams.shiftId" (ngModelChange)="updateSelectors('shift', $event);">
                 <nz-option *ngFor="let shift of shifts" [nzLabel]="shift.name" [nzValue]="shift.id"></nz-option>
             </nz-select>
         </div>
@@ -22,7 +22,7 @@
         <div nz-col nzXs="24" nzMd="8" nzLg="6">
             <label>Grado: </label>
             <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar"
-                [(ngModel)]="searchParams.gradeId" (ngModelChange)="getTests(null)">
+                [(ngModel)]="searchParams.gradeId" (ngModelChange)="updateSelectors('grade', $event);">
                 <nz-option *ngFor="let grade of grades" [nzLabel]="grade.name" [nzValue]="grade.id"></nz-option>
             </nz-select>
         </div>
@@ -46,13 +46,15 @@
         </div>
     
         <!-- Current tests? -->
-        <div nz-col nzXs="24" nzMd="8" nzLg="6">
-            <nz-switch [(ngModel)]="searchParams.current" [nzCheckedChildren]="'Activas'" [nzUnCheckedChildren]="'Históricas'"
+        <div nz-col nzXs="12" nzMd="8" nzLg="20">
+            <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+                <nz-switch [(ngModel)]="searchParams.current" [nzCheckedChildren]="'Activas'" [nzUnCheckedChildren]="'Históricas'"
                 (ngModelChange)="getTests(null)"></nz-switch>
+            </div>
         </div>
     
         <!-- Search button-->
-        <div nz-col nzXs="24" nzMd="8" nzLg="4" nzXl="4">
+        <div nz-col nzXs="12" nzMd="8" nzLg="4">
             <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
                 <button nz-button nzType="primary" (click)="getTests(null)">Buscar</button>
             </div>
@@ -94,6 +96,15 @@
                         <!-- <td *ngIf="!searchParam.current">{{ data.createdAt }}</td> -->
                         <td>{{ data.completedStudents }} / {{ data.totalStudents }}</td>
                         <td [nzAlign]="'center'">
+                            <a [routerLink]="['/pruebas-sociometricas', 'tests', data.id]">
+                                <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
+                            </a>
+                            <ng-container *ngIf="data.status === 'Creada'">
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <a (click)="showConfirm(data)">
+                                    <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
+                                </a>
+                            </ng-container>
                         </td>
                     </tr>
                 </tbody>

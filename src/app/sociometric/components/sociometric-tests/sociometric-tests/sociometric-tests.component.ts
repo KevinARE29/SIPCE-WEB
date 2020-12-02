@@ -10,6 +10,7 @@ import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGr
 import { Pagination } from 'src/app/shared/pagination.model';
 import { SociometricTestService } from 'src/app/sociometric/shared/sociometric-test/sociometric-test.service';
 import { UserService } from 'src/app/users/shared/user.service';
+import { SociometricTest } from 'src/app/sociometric/shared/sociometric-test/sociometric-test.model';
 
 @Component({
   selector: 'app-sociometric-tests',
@@ -91,7 +92,6 @@ export class SociometricTestsComponent implements OnInit {
     this.sociometricTestService.getSociometricTests(params, this.searchParams, paginate).subscribe(
       (data) => {
         this.listOfDisplayData = data['data'];
-        console.log(this.listOfDisplayData);
         this.pagination = data['pagination'];
         this.loading = false;
       },
@@ -107,5 +107,40 @@ export class SociometricTestsComponent implements OnInit {
         }
       }
     );
+  }
+
+  updateSelectors(level: string, id: number): void {
+    switch (level) {
+      case 'shift':
+        if (id) {
+          const shift = this.shifts.filter((x) => x.id === id);
+          this.grades = shift[0]['grades'];
+        } else {
+          this.grades = [];
+        }
+
+        this.searchParams.gradeId = null;
+        this.searchParams.sectionId = null;
+        this.sections = [];
+        break;
+
+      case 'grade':
+        this.searchParams.sectionId = null;
+
+        if (id) {
+          const shift = this.shifts.filter((x) => x.id === this.searchParams.shiftId);
+          const grade = shift[0]['grades'].filter((x) => x.id === id);
+          this.sections = grade[0]['sections'];
+        } else {
+          this.sections = [];
+        }
+        break;
+    }
+
+    this.getTests(null);
+  }
+
+  showConfirm(sociometricTest: SociometricTest): void {
+    // TODO: Delete
   }
 }

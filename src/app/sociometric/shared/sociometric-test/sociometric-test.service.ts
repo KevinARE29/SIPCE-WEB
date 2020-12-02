@@ -74,8 +74,9 @@ export class SociometricTestService {
 
       if (search['status']) queryParams += '&status=' + search['status'];
 
-      queryParams += '&historical' + !search['current'];
+      // queryParams += '&historical=' + !search['current'];
     }
+
     if (queryParams.charAt(0) === '&') queryParams = queryParams.replace('&', '?');
 
     url += queryParams;
