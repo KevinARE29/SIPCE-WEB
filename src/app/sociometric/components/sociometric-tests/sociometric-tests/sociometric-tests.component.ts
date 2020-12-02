@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
-import { NzModalRef } from 'ng-zorro-antd/modal';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
@@ -42,6 +42,7 @@ export class SociometricTestsComponent implements OnInit {
     private sociometricTestService: SociometricTestService,
     private userService: UserService,
     private message: NzMessageService,
+    private modal: NzModalService,
     private notification: NzNotificationService
   ) {}
 
@@ -141,6 +142,30 @@ export class SociometricTestsComponent implements OnInit {
   }
 
   showConfirm(sociometricTest: SociometricTest): void {
-    // TODO: Delete
+    this.confirmModal = this.modal.confirm({
+      nzTitle: `¿Desea eliminar la prueba de ${sociometricTest.grade.name} ${sociometricTest.section.name} (${sociometricTest.shift.name})?`,
+      nzContent: `La acción no puede deshacerse. ¿Desea continuar con la acción?`,
+
+      nzOnOk: () =>
+        this.sociometricTestService
+          .deleteSociometricTest(sociometricTest.id)
+          .toPromise()
+          .then(() => {
+            this.message.success(
+              `La prueba sociométrica de ${sociometricTest.grade.name} ${sociometricTest.section.name} (${sociometricTest.shift.name}) ha sido eliminada`
+            );
+            this.getTests(null);
+          })
+          .catch((err) => {
+            const statusCode = err.statusCode;
+            const notIn = [401, 403];
+
+            if (!notIn.includes(statusCode) && statusCode < 500) {
+              this.notification.create('error', 'Ocurrió un error al eliminar la prueba sociométrica.', err.message, {
+                nzDuration: 30000
+              });
+            }
+          })
+    });
   }
 }

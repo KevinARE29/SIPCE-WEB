@@ -84,6 +84,10 @@ export class SociometricTestService {
     return this.http.get<SociometricTest[]>(url).pipe(catchError(this.handleError()));
   }
 
+  deleteSociometricTest(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}sociometric/tests/${id}`).pipe(catchError(this.handleError()));
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.
