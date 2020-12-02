@@ -6,7 +6,7 @@ import { Observable, throwError } from 'rxjs';
 import { ErrorMessageService } from '../../shared/error-message.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { Sanction } from './sanction.model';
-import { SanctionComponent } from '../components/sanction/sanction.component';
+import { Foul } from './foul.model';
 
 @Injectable({
   providedIn: 'root'
@@ -59,13 +59,71 @@ export class DisciplinaryCatalogService {
       .put<Sanction>(`${this.baseUrl}sanctions/${sanctionId}`, sanction)
       .pipe(catchError(this.handleError()));
   }
+
+  /* Fouls services */
+  getFouls(params: NzTableQueryParams, search: Foul, paginate: boolean): Observable<Foul[]> {
+    let url = this.baseUrl + 'fouls';
+    let queryParams = '';
+
+    // Paginate
+    if (paginate) queryParams += '?page=' + params.pageIndex;
+
+    // Params
+    if (params) {
+      let sort = '&sort=';
+      params.sort.forEach((param) => {
+        if (param.value) {
+          sort += param.key;
+          switch (param.value) {
+            case 'ascend':
+              sort += '-' + param.value.substring(0, 3) + ',';
+              break;
+            case 'descend':
+              sort += '-' + param.value.substring(0, 4) + ',';
+              break;
+          }
+        }
+      });
+
+      if (sort.length > 6) {
+        if (sort.charAt(sort.length - 1) === ',') sort = sort.slice(0, -1);
+
+        queryParams += sort;
+      }
+    }
+
+    if (search) {
+      if (search.numeral) queryParams += '&numeral=' + search.numeral;
+
+      if (search.foulsType) queryParams += '&foulsType=' + search.foulsType;
+    }
+
+    if (queryParams.charAt(0) === '&') queryParams = queryParams.replace('&', '?');
+
+    url += queryParams;
+
+    return this.http.get<Foul[]>(url).pipe(catchError(this.handleError()));
+  }
+
+  createFoul(foul: Foul): Observable<Foul> {
+    return this.http.post<Foul>(`${this.baseUrl}fouls`, foul).pipe(catchError(this.handleError()));
+  }
+
+  deleteFoul(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}fouls/${id}`).pipe(catchError(this.handleError()));
+  }
+
+  updateFoul(foul: Foul, foulId: number): Observable<Foul> {
+    return this.http.put<Foul>(`${this.baseUrl}fouls/${foulId}`, foul).pipe(catchError(this.handleError()));
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.
    */
   private handleError() {
     return (error: any) => {
-      error.error.message = this.errorMessageService.transformMessage('catalogs', error.error.message);
+      error.error.message = this.errorMessageService.transformMessage('disciplinary-catalog', error.error.message);
       return throwError(error.error);
     };
   }

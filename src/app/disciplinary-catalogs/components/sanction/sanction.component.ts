@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
@@ -66,9 +64,6 @@ export class SanctionComponent implements OnInit {
     const content = this.authService.jwtDecoder(token);
 
     const permissions = content.permissions;
-    console.log(permissions);
-    this.permissions.push(new Permission(26, 'Gestionar faltas'));
-    this.permissions.push(new Permission(27, 'Listar faltas'));
     this.permissions.push(new Permission(28, 'Gestionar sanciones'));
     this.permissions.push(new Permission(29, 'Listar sanciones'));
 
@@ -93,7 +88,6 @@ export class SanctionComponent implements OnInit {
       .subscribe(
         (data) => {
           this.sanctions = data['data'];
-          console.log(this.sanctions);
           this.pagination = data['pagination'];
           this.listOfDisplayData = [...this.sanctions];
           this.loading = false;
@@ -121,7 +115,6 @@ export class SanctionComponent implements OnInit {
     this.editValue = true;
     this.idSanction = data.id;
     this.resetForm();
-    console.log(data);
     this.sanctionForm.get('name').setValue(data.name);
     this.sanctionForm.get('description')?.setValue(data.description);
     this.isVisible = true;
@@ -140,7 +133,6 @@ export class SanctionComponent implements OnInit {
     if (this.sanctionForm.valid) {
       if (this.editValue === true) {
         this.sanctionsUpdated = this.sanctionForm.value;
-        console.log(this.sanctionsUpdated, this.idSanction);
         this.disciplinaryService.updateSanction(this.sanctionsUpdated, this.idSanction).subscribe(
           () => {
             this.editValue = false;
