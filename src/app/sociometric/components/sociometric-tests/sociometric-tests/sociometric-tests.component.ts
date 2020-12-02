@@ -68,16 +68,19 @@ export class SociometricTestsComponent implements OnInit {
       if (counselorAssignation) {
         Object.values(counselorAssignation).forEach((assignation) => {
           const grades = new Array<{ id: number; name: string; sections: ShiftPeriodGrade[] }>();
-          assignation[0]['gradeDetails'].forEach((grade) => {
-            let sections = new Array<ShiftPeriodGrade>();
 
-            grade.sectionDetails.forEach((section) => {
-              sections.push(section.section);
+          Object.values(assignation).forEach((assignation) => {
+            assignation['gradeDetails'].forEach((grade) => {
+              let sections = new Array<ShiftPeriodGrade>();
+
+              grade.sectionDetails.forEach((section) => {
+                sections.push(section.section);
+              });
+
+              sections = sections.sort((a, b) => a.id - b.id);
+              sections = sections.filter((x) => x.name.length === 1).concat(sections.filter((x) => x.name.length > 1));
+              grades.push({ id: grade.grade.id, name: grade.grade.name, sections: sections });
             });
-
-            sections = sections.sort((a, b) => a.id - b.id);
-            sections = sections.filter((x) => x.name.length === 1).concat(sections.filter((x) => x.name.length > 1));
-            grades.push({ id: grade.grade.id, name: grade.grade.name, sections: sections });
           });
 
           this.shifts.push({ id: assignation[0]['shift'].id, name: assignation[0]['shift'].name, grades });
