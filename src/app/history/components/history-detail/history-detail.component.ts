@@ -57,6 +57,12 @@ export class HistoryDetailComponent implements OnInit {
     this.permissions.push(new Permission(31, ''));
     this.permissions.push(new Permission(46, ''));
 
+    // Annotation permissions
+    this.permissions.push(new Permission(44, ''));
+    this.permissions.push(new Permission(36, ''));
+    this.permissions.push(new Permission(37, ''));
+    this.permissions.push(new Permission(38, ''));
+
     this.permissions.forEach((p) => {
       const index = permissions.indexOf(p.id);
       p.allow = index == -1 ? false : true;
