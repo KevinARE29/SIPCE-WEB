@@ -1,1 +1,72 @@
-<p>sociometric-test works!</p>
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+    <div nz-row nzJustify="space-around">
+        <div nz-col nzFlex="auto">
+            <h1>Prueba sociométrica</h1>
+        </div>
+        <div nz-col nzFlex="110px">
+            <a nz-button nzGhost nzType="primary">Generar reporte</a>
+        </div>
+    </div>
+
+    <!-- View -->
+    <div nz-row *ngIf="sociometricTest.id">
+        <div nz-col nzSpan="24">
+            <h3 class="principal">{{ sociometricTest.grade.name }} {{ sociometricTest.section.name }}
+                ({{ sociometricTest.shift.name }})</h3>
+        </div>
+        <div nz-col nzSpan="24">
+            <h4>{{ sociometricTest.questionBank.name }}</h4>
+        </div>
+        <div nz-col nzSpan="24">
+            <ul>
+                <li>Cantidad de preguntas: <strong>{{sociometricTest.questionBank.questions.length }}</strong></li>
+                <li>Respuestas por pregunta: <strong>{{ sociometricTest.answersPerQuestion }}</strong></li>
+            </ul>
+        </div>
+    </div>
+    <!-- Edit -->
+
+    <!-- Schedule -->
+    <!-- TODO: grade.id > 6 -->
+
+    <!-- Students -->
+    <nz-divider nzText="Estudiantes" nzOrientation="left"></nz-divider>
+    <div nz-col nzXs="24" [nzMd]="{ span: 20, offset: 2}" [nzLg]="{ span: 18, offset: 3}" [nzXl]="{ span: 16, offset: 4}">
+        <nz-table #sortTable [nzData]="sociometricTest.students" nzSize="small" nzTableLayout="fixed" nzShowSizeChanger="true">
+            <thead>
+                <tr>
+                    <th *ngFor="let column of listOfColumn" [nzSortFn]="column.compare" [nzSortPriority]="column.priority">
+                        {{ column.title }}</th>
+                    <th [nzAlign]="'center'">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of sortTable.data">
+                    <td>{{ data.code }}</td>
+                    <td>{{ data.firstname }}</td>
+                    <td>{{ data.lastname }}</td>
+                    <td [nzAlign]="'center'">
+                        <ng-container *ngIf="data['completed'];else emptyTest">
+                            <a>
+                                <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver resultados" nzTheme="outline"></i>
+                            </a>
+                        </ng-container>
+                        <ng-template #emptyTest>
+                            <ng-container *ngIf="sociometricTest.grade.id > 6;else minorStudents">
+                                <a disabled>
+                                    <i nz-icon nzType="eye" nzTheme="outline"></i>
+                                </a>
+                            </ng-container>
+                            <ng-template #minorStudents>
+                                <a>
+                                    <i nz-icon nzType="form" nz-tooltip nzTooltipTitle="Realizar prueba" nzTheme="outline"></i>
+                                </a>
+                            </ng-template>
+                        </ng-template>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+    
+</nz-spin>
