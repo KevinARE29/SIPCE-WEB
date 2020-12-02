@@ -22,7 +22,24 @@ export class FoulsSanctionsService {
 
     return this.http.get<FoulsCounter[]>(url).pipe(
       map((r) => {
-        return r['data'];
+        let data = r['data'];
+
+        if (Array.isArray(data) && data.length) {
+          data = data.map((counter: FoulsCounter) => {
+            counter.foulsCounter.minorFoulsAlert = counter.foulsCounter.minorFouls >= 3;
+            counter.foulsCounter.seriousFoulsAlert = counter.foulsCounter.seriousFouls >= 1;
+            counter.foulsCounter.verySeriousFoulsAlert = counter.foulsCounter.verySeriousFouls >= 1;
+
+            counter.displayAlert =
+              counter.foulsCounter.minorFoulsAlert ||
+              counter.foulsCounter.seriousFoulsAlert ||
+              counter.foulsCounter.verySeriousFoulsAlert;
+
+            return counter;
+          });
+        }
+
+        return data;
       }),
       catchError(this.handleError)
     );
