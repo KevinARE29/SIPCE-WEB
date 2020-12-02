@@ -8,7 +8,6 @@ import { DisciplinaryCatalogRoutingModule } from './disciplinary-catalog-routing
 import { SanctionComponent } from './components/sanction/sanction.component';
 import { FaultComponent } from './components/fault/fault.component';
 
-
 @NgModule({
   declarations: [SanctionComponent, FaultComponent],
   imports: [

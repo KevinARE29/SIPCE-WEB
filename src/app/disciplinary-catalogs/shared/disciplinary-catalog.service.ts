@@ -50,8 +50,8 @@ export class DisciplinaryCatalogService {
     return this.http.post<Sanction>(`${this.baseUrl}sanctions`, sanction).pipe(catchError(this.handleError()));
   }
 
-  deleteSanction(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}sanctions/${id}`).pipe(catchError(this.handleError()));
+  deleteSanction(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}sanctions/${id}`).pipe(catchError(this.handleError()));
   }
 
   updateSanction(sanction: Sanction, sanctionId: number): Observable<Sanction> {
@@ -109,8 +109,8 @@ export class DisciplinaryCatalogService {
     return this.http.post<Foul>(`${this.baseUrl}fouls`, foul).pipe(catchError(this.handleError()));
   }
 
-  deleteFoul(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}fouls/${id}`).pipe(catchError(this.handleError()));
+  deleteFoul(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}fouls/${id}`).pipe(catchError(this.handleError()));
   }
 
   updateFoul(foul: Foul, foulId: number): Observable<Foul> {
@@ -122,6 +122,7 @@ export class DisciplinaryCatalogService {
    * Let the app continue.
    */
   private handleError() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (error: any) => {
       error.error.message = this.errorMessageService.transformMessage('disciplinary-catalog', error.error.message);
       return throwError(error.error);
