@@ -1,5 +1,12 @@
 <h1>Crear estudiante</h1>
 
+<div nz-row *ngIf="!shifts.length">
+    <nz-alert nz-col nzXs="24" [nzMd]="{ span: 18, offset: 3 }" [nzLg]="{ span: 16, offset: 4 }"
+        [nzXl]="{ span: 14, offset: 5 }" nzType="warning" nzCloseable nzShowIcon
+        nzMessage="No se encontraron grados asignados a su usuario.">
+    </nz-alert>
+</div>
+
 <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
     <form nz-form [formGroup]="sociometricTestForm" nzLayout="vertical" (ngSubmit)="submitForm()">
         <div nz-row [nzGutter]="10">
