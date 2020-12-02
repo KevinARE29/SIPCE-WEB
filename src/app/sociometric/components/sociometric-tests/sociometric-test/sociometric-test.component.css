@@ -1,0 +1,18 @@
+h4 {
+    margin-bottom: 10px;
+    display: block;
+}
+
+h3 {
+    display: inline;
+    margin-right: 15px;
+}
+
+nz-input-number {
+    border-radius: 7px;
+    width: 100%;
+}
+
+.btn-cancel {
+    margin-right: 10px;
+}
