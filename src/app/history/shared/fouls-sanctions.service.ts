@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
+import { FoulsCounter } from './fouls-counter.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,34 @@ export class FoulsSanctionsService {
 
   constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
     this.baseUrl = environment.apiURL;
+  }
+
+  getFoulsCounter(studentId: number, historyId: number): Observable<FoulsCounter[]> {
+    const url = this.baseUrl + 'students/' + studentId + '/histories/' + historyId + '/fouls/counter';
+
+    return this.http.get<FoulsCounter[]>(url).pipe(
+      map((r) => {
+        let data = r['data'];
+
+        if (Array.isArray(data) && data.length) {
+          data = data.map((counter: FoulsCounter) => {
+            counter.foulsCounter.minorFoulsAlert = counter.foulsCounter.minorFouls >= 3;
+            counter.foulsCounter.seriousFoulsAlert = counter.foulsCounter.seriousFouls >= 1;
+            counter.foulsCounter.verySeriousFoulsAlert = counter.foulsCounter.verySeriousFouls >= 1;
+
+            counter.displayAlert =
+              counter.foulsCounter.minorFoulsAlert ||
+              counter.foulsCounter.seriousFoulsAlert ||
+              counter.foulsCounter.verySeriousFoulsAlert;
+
+            return counter;
+          });
+        }
+
+        return data;
+      }),
+      catchError(this.handleError)
+    );
   }
 
   /**

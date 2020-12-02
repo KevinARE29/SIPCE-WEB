@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+import { Permission } from 'src/app/shared/permission.model';
 import { History } from '../../shared/history.model';
 import { HistoryService } from '../../shared/history.service';
+import { AuthService } from 'src/app/login/shared/auth.service';
 
 @Component({
   selector: 'app-history-detail',
@@ -22,7 +24,15 @@ export class HistoryDetailComponent implements OnInit {
   selectedHistoryIsLast: boolean;
   selectedHistoryIsActive: boolean;
 
-  constructor(private route: ActivatedRoute, private historyService: HistoryService) {}
+  // History permissions.
+  permissions: Permission[] = [];
+  userId: number;
+
+  constructor(
+    private route: ActivatedRoute,
+    private historyService: HistoryService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     const paramStudent = this.route.snapshot.params['studentId'];
@@ -30,7 +40,36 @@ export class HistoryDetailComponent implements OnInit {
       this.studentId = Number(paramStudent);
     }
 
+    this.setPermissions();
     this.getHistories();
+  }
+
+  /* ------      Control page permissions      ------ */
+  setPermissions(): void {
+    const token = this.authService.getToken();
+    const content = this.authService.jwtDecoder(token);
+
+    const permissions = content.permissions;
+
+    // To check if current user is the author of a history.
+    this.userId = content.id;
+
+    this.permissions.push(new Permission(31, ''));
+    this.permissions.push(new Permission(46, ''));
+
+    this.permissions.forEach((p) => {
+      const index = permissions.indexOf(p.id);
+      p.allow = index == -1 ? false : true;
+    });
+  }
+
+  checkPermission(id: number): boolean {
+    if (this.permissions) {
+      const index = this.permissions.find((p) => p.id === id);
+      return index.allow;
+    }
+
+    return false;
   }
 
   getHistories(): void {
