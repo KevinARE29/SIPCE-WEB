@@ -10,6 +10,21 @@
     text-align: center;
 }
 
+.counter {
+    font-weight: bold;
+}
+
 .counter-header {
     margin-bottom: 0px;
+}
+
+.alert .counter {
+    color: red;
+}
+
+.alert .counter-header::after {
+    content: "!";
+    font-size: 18px;
+    color: red;
+    font-weight: bold;
 }
