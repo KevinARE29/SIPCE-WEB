@@ -6,6 +6,7 @@ export class Annotation {
   description: string;
   annotationDate: Date;
   reporter: User;
+  createdAt: Date;
 
   // Frontend field.
   editable: boolean;

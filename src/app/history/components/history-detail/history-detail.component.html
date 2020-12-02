@@ -55,8 +55,14 @@
     <nz-tabset *ngIf="selectedHistory">
 
         <!-- Annotations -->
-        <nz-tab nzTitle="Diario de clases">
-            <app-history-annotations></app-history-annotations>
+        <nz-tab nzTitle="Diario de clases" *ngIf="checkPermission(44)">
+            <app-history-annotations [studentId]="studentId"
+                                     [historyId]="selectedHistory.id"
+                                     [isEditable]="selectedHistoryIsActive && !selectedHistory.finalConclusion"
+                                     [showAdd]="checkPermission(36)"
+                                     [showEdit]="checkPermission(37)"
+                                     [showDelete]="checkPermission(38)"
+                                     [currentUser]="userId"></app-history-annotations>
         </nz-tab>
 
         <!-- Fouls and sanctions -->
