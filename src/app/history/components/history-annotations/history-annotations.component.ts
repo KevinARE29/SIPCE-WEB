@@ -197,7 +197,7 @@ export class HistoryAnnotationsComponent implements OnInit, OnChanges {
             this.notification.create(
               'success',
               'La anotación ha sido creada.',
-              'La edicición y eliminación de la anotación se deshabilitará en 24 horas',
+              'La edición y eliminación de la anotación se deshabilitará en 24 horas',
               {
                 nzDuration: 30000
               }
