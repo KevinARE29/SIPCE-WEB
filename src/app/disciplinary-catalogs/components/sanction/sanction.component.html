@@ -85,12 +85,12 @@
   </div>
 </div>
 
-<!-- Create cycle modal -->
+<!-- Create sanction modal -->
 <nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()">
     
   <!-- Modal content -->
   <ng-template #modalContent>
-    <form nz-form nzLayout="vertical"[formGroup]="sanctionForm">
+    <form nz-form nzLayout="vertical" [formGroup]="sanctionForm">
       <div nz-row nzJustify="center" [nzGutter]="10">
 
         <!-- Name -->

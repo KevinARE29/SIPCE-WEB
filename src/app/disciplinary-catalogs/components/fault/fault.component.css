@@ -1,19 +1,17 @@
-.fouls {
-  margin-top: 25px;
+nz-table {
+  margin-top: 30px;
 }
 
-.form {
-  padding-bottom: 5%;
-  padding-left: 0%;
+nz-select {
+  border-radius: 7px;
+  width: 100%;
 }
 
-.search {
-  padding-top: 30%;
-  border-top: 20px;
+.btn-container {
+  height: 100%;
 }
 
-.searchSanction {
+.float-right {
   float: right;
-  justify-content: flex-end;
 }
 

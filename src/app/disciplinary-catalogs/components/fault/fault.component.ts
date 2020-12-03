@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { DisciplinaryCatalogService } from './../../shared/disciplinary-catalog.service';
 import { AuthService } from '../../../login/shared/auth.service';
 import { Permission } from '../../../shared/permission.model';
-
 import { Pagination } from './../../../shared/pagination.model';
 import { Foul } from '../../shared/foul.model';
 
@@ -19,20 +20,24 @@ import { Foul } from '../../shared/foul.model';
 export class FaultComponent implements OnInit {
   permissions: Array<Permission> = [];
   fouls: Foul[];
-  foulUpdated: Foul;
-  idFoul: number;
-  isVisible = false;
+
+  // Table.
+  listOfDisplayData: Foul[];
   pagination: Pagination;
   loading = false;
-  listOfDisplayData: Foul[];
-  tableSize = 'small';
-  icon = 'search';
-  color = 'primary';
-  confirmModal?: NzModalRef;
-  foulForm: FormGroup;
-  isConfirmLoading = false;
-  editValue: boolean;
   searchParams: Foul;
+  isConfirmLoading = false;
+
+  // Update / delete modal.
+  isVisible = false;
+  modalTitle: string;
+  editValue: boolean;
+  foulForm: FormGroup;
+  foulUpdated: Foul;
+  idFoul: number;
+
+  // Expant table
+  expandSet = new Set<number>();
 
   constructor(
     private modal: NzModalService,
@@ -44,8 +49,8 @@ export class FaultComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.searchParams = new Foul();
     this.editValue = false;
+    this.searchParams = new Foul();
     this.pagination = new Pagination();
     this.pagination.perPage = 10;
     this.pagination.page = 1;
@@ -78,14 +83,73 @@ export class FaultComponent implements OnInit {
     return index.allow;
   }
 
-  showModal(): void {
+  /* ---      Main options      --- */
+  getFouls(params: NzTableQueryParams): void {
+    this.loading = true;
+
+    this.disciplinaryService.getFouls(params, this.searchParams, params.pageIndex !== this.pagination.page).subscribe(
+      (data) => {
+        this.pagination = data['pagination'];
+        this.listOfDisplayData = data['data'];
+
+        this.loading = false;
+      },
+      (error) => {
+        this.loading = false;
+        const statusCode = error.statusCode;
+        const notIn = [401, 403];
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
+            nzDuration: 30000
+          });
+        }
+      }
+    );
+  }
+
+  search(): void {
+    this.loading = true;
+
+    this.disciplinaryService.getFouls(null, this.searchParams, false).subscribe(
+      (data) => {
+        this.pagination = data['pagination'];
+        this.listOfDisplayData = data['data'];
+        this.loading = false;
+      },
+      (err) => {
+        this.loading = false;
+        const statusCode = err.statusCode;
+        const notIn = [401, 403];
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create('error', 'Ocurrió un error al filtrar las faltas.', err.message, {
+            nzDuration: 30000
+          });
+        }
+      }
+    );
+  }
+
+  // Expand table
+  onExpandChange(id: number, checked: boolean): void {
+    if (checked) {
+      this.expandSet.add(id);
+    } else {
+      this.expandSet.delete(id);
+    }
+  }
+
+  // Create / update modal.
+  create(): void {
     this.isVisible = true;
+    this.modalTitle = 'Crear falta';
     this.resetForm();
   }
 
-  AllowEditing(data: Foul): void {
-    this.idFoul = null;
+  edit(data: Foul): void {
     this.editValue = true;
+    this.modalTitle = 'Editar falta';
     this.idFoul = data.id;
     this.resetForm();
     this.foulForm.get('numeral').setValue(data.numeral);
@@ -102,10 +166,21 @@ export class FaultComponent implements OnInit {
     }
   }
 
-  /* ---  Create and update sanction  ---- */
+  handleCancel(): void {
+    this.isVisible = false;
+    this.resetForm();
+  }
+
+  /* ---  Create and update foul  ---- */
   handleOk(): void {
+    for (const i in this.foulForm.controls) {
+      this.foulForm.controls[i].markAsDirty();
+      this.foulForm.controls[i].updateValueAndValidity();
+    }
+
     if (this.foulForm.valid) {
       if (this.editValue === true) {
+        this.isConfirmLoading = true;
         this.foulUpdated = this.foulForm.value;
         this.disciplinaryService.updateFoul(this.foulUpdated, this.idFoul).subscribe(
           () => {
@@ -149,72 +224,18 @@ export class FaultComponent implements OnInit {
     }
   }
 
-  handleCancel(): void {
-    this.isVisible = false;
-    this.resetForm();
-  }
-
-  getFouls(params: NzTableQueryParams): void {
-    this.loading = true;
-
-    this.disciplinaryService.getFouls(params, this.searchParams, params.pageIndex !== this.pagination.page).subscribe(
-      (data) => {
-        this.pagination = data['pagination'];
-        this.listOfDisplayData = data['data'];
-
-        this.loading = false;
-      },
-      (error) => {
-        this.loading = false;
-        const statusCode = error.statusCode;
-        const notIn = [401, 403];
-
-        if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
-            nzDuration: 30000
-          });
-        }
-      }
-    );
-  }
-
-  search(): void {
-    this.loading = true;
-
-    this.disciplinaryService.getFouls(null, this.searchParams, false).subscribe(
-      (data) => {
-        this.fouls = data['data'];
-        this.pagination = data['pagination'];
-        this.listOfDisplayData = [...this.fouls];
-        this.loading = false;
-      },
-      (err) => {
-        this.loading = false;
-        const statusCode = err.statusCode;
-        const notIn = [401, 403];
-
-        if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al filtrar las faltas.', err.message, {
-            nzDuration: 30000
-          });
-        }
-      }
-    );
-  }
-
-  showConfirm(id: number, numeral: string, description: string): void {
-    this.confirmModal = this.modal.confirm({
-      nzTitle: `¿Desea eliminar la falta "${numeral}"?`,
-      nzContent: `Descripción: "${description}". ¿Desea continuar con la acción?`,
-      nzOnOk: () =>
-        this.disciplinaryService
-          .deleteFoul(id)
-          .toPromise()
-          .then(() => {
-            this.message.success(`La falta ${numeral} ha sido eliminada`);
+  // Delete.
+  showConfirm(data: Foul): void {
+    this.modal.confirm({
+      nzTitle: `¿Desea eliminar la falta "${data.numeral}"?`,
+      nzContent: `Esta acción no puede deshacerse. ¿Desea continuar con la acción?`,
+      nzOnOk: () => {
+        this.disciplinaryService.deleteFoul(data.id).subscribe(
+          () => {
+            this.message.success(`La falta ${data.numeral} ha sido eliminada`);
             this.search();
-          })
-          .catch((err) => {
+          },
+          (err) => {
             const statusCode = err.statusCode;
             const notIn = [401, 403];
 
@@ -223,7 +244,9 @@ export class FaultComponent implements OnInit {
                 nzDuration: 30000
               });
             }
-          })
+          }
+        );
+      }
     });
   }
 }
