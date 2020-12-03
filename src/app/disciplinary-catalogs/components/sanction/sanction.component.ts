@@ -29,6 +29,7 @@ export class SanctionComponent implements OnInit {
 
   // Update / delete modal.
   isVisible = false;
+  modalTitle: string;
   editValue: boolean;
   sanctionForm: FormGroup;
   sanctionsUpdated: Sanction;
@@ -142,11 +143,13 @@ export class SanctionComponent implements OnInit {
   // Create / update modal.
   create(): void {
     this.isVisible = true;
+    this.modalTitle = 'Crear sanción';
     this.resetForm();
   }
 
   edit(data: Sanction): void {
     this.editValue = true;
+    this.modalTitle = 'Editar sanción';
     this.idSanction = data.id;
     this.resetForm();
     this.sanctionForm.get('name').setValue(data.name);
