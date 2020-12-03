@@ -92,44 +92,54 @@
     
   <!-- Modal content -->
   <ng-template #modalContent>
-    <form nz-form [formGroup]="sanctionForm">
+    <form nz-form nzLayout="vertical"[formGroup]="sanctionForm">
+      <div nz-row nzJustify="center" [nzGutter]="10">
 
-      <!-- Name -->
-      <nz-form-item nzJustify="space-around">
-        <nz-form-label nzRequired>Nombre</nz-form-label>
-        <nz-form-control [nzSpan]="16" [nzErrorTip]="errorTpl">
-          <div nz-row>
-            <input nz-input formControlName="name" placeholder="Nombre de la sanción" />
-            <ng-template #errorTpl let-control>
-              <ng-container *ngIf="control.hasError('required')">
-                El nombre es requerido. <br>
-              </ng-container>
-              <ng-container *ngIf="control.hasError('pattern')">
-                El nombre debe contener solo letras. <br>
-              </ng-container>
-              <ng-container *ngIf="control.hasError('maxlength')">
-                El nombre debe contener máximo 128 caracteres.
-              </ng-container>
-            </ng-template>
-          </div>
-        </nz-form-control>
+        <!-- Name -->
+        <div nz-col nzXs="24">
+          <nz-form-item>
+            <nz-form-label><strong>Nombre</strong></nz-form-label>
+            <nz-form-control [nzErrorTip]="errorName">
+
+              <input nz-input formControlName="name" placeholder="Nombre de la sanción" />
+              
+              <ng-template #errorName let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                  El nombre es requerido. <br>
+                </ng-container>
+                <ng-container *ngIf="control.hasError('pattern')">
+                  El nombre debe contener solo letras. <br>
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                  El nombre debe contener máximo 128 caracteres.
+                </ng-container>
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
 
         <!-- Description -->
-        <nz-form-label nzRequired>Descripción</nz-form-label>
-        <nz-form-control [nzSpan]="16" [nzErrorTip]="errorTplTwo">
-          <div nz-row>
-          <textarea rows="6" nz-input formControlName="description" placeholder="Descripción de la sanción"></textarea>
-            <ng-template #errorTplTwo let-control>
-              <ng-container *ngIf="control.hasError('required')">
-                La descripción es requerida. <br>
-              </ng-container>
-              <ng-container *ngIf="control.hasError('maxlength')">
-                El nombre debe contener máximo 256 caracteres.
-              </ng-container>
-            </ng-template>
-          </div>
-        </nz-form-control>
-      </nz-form-item>
+        <div nz-col nzXs="24">
+          <nz-form-item>
+            <nz-form-label><strong>Descripción</strong></nz-form-label>
+            <nz-form-control [nzErrorTip]="errorDescription">
+              
+              <textarea rows="6" nz-input formControlName="description" placeholder="Descripción de la sanción"></textarea>
+              
+              <ng-template #errorDescription let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                  La descripción es requerida. <br>
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                  La descripción debe contener máximo 256 caracteres.
+                </ng-container>
+              </ng-template>
+              
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      
+      </div>
     </form>
   </ng-template>
   

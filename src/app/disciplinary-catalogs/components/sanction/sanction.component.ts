@@ -169,8 +169,14 @@ export class SanctionComponent implements OnInit {
 
   /* ---  Create and update sanction  ---- */
   handleOk(): void {
+    for (const i in this.sanctionForm.controls) {
+      this.sanctionForm.controls[i].markAsDirty();
+      this.sanctionForm.controls[i].updateValueAndValidity();
+    }
+
     if (this.sanctionForm.valid) {
       if (this.editValue === true) {
+        this.isConfirmLoading = true;
         this.sanctionsUpdated = this.sanctionForm.value;
         this.disciplinaryService.updateSanction(this.sanctionsUpdated, this.idSanction).subscribe(
           () => {
