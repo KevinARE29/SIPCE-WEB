@@ -25,9 +25,9 @@
     <div nz-col nzXs="24" nzSm="12" nzLg="8" nzXl="6">
         <label>Tipo de falta: </label>
         <nz-select nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.foulsType" (ngModelChange)="search()">
-            <nz-option nzValue="Leves" nzLabel="Leve"></nz-option>
-            <nz-option nzValue="Graves" nzLabel="Grave"></nz-option>
-            <nz-option nzValue="Muy Graves" nzLabel="Muy Grave"></nz-option>
+            <nz-option nzValue="Leves" nzLabel="Leves"></nz-option>
+            <nz-option nzValue="Graves" nzLabel="Graves"></nz-option>
+            <nz-option nzValue="Muy Graves" nzLabel="Muy Graves"></nz-option>
         </nz-select>
     </div>
 
@@ -89,7 +89,7 @@
 
 
 <!-- Create foul modal -->
-<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" (nzOnCancel)="handleCancel()">
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()">
     
     <!-- Modal content -->
     <ng-template #modalContent>
