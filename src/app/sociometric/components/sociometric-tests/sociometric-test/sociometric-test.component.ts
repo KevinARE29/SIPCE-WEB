@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
+import lastDayOfYear from 'date-fns/lastDayOfYear';
+
 import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 import { QuestionBank } from 'src/app/sociometric/shared/question-bank.model';
 import { QuestionBankService } from 'src/app/sociometric/shared/question-bank.service';
-
+import { Preset } from 'src/app/sociometric/shared/sociometric-test/preset.model';
 import { SociometricTest } from 'src/app/sociometric/shared/sociometric-test/sociometric-test.model';
 import { SociometricTestService } from 'src/app/sociometric/shared/sociometric-test/sociometric-test.service';
 import { Student } from 'src/app/students/shared/student.model';
@@ -32,6 +35,20 @@ export class SociometricTestComponent implements OnInit {
   editing = false;
   sociometricTestForm!: FormGroup;
 
+  // Presets
+  presetsForm!: FormGroup;
+  listOfPresets: Array<{
+    startedAtId: number;
+    durationId: number;
+    startedAtControlInstance: string;
+    durationControlInstance: string;
+    preset: Preset;
+  }> = [];
+
+  // Duration input.
+  durationFormatter = (value: number): string => (value ? `${value} min` : '');
+  durationParser = (value: string): string => value.replace(' min', '');
+
   // Filters
   shifts: {
     id: number;
@@ -53,7 +70,6 @@ export class SociometricTestComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.sociometricTest = new SociometricTest();
     this.getSociometricTest();
 
     this.setTableSettings();
@@ -64,14 +80,18 @@ export class SociometricTestComponent implements OnInit {
       const param: string = params.get('sociometrictest');
       let id: number;
 
+      this.loading = true;
+
       if (typeof param === 'string' && !Number.isNaN(Number(param))) {
-        this.loading = true;
         id = Number(param);
 
         this.sociometricTestService.getSociometricTest(id).subscribe(
           (data) => {
             this.loading = false;
             this.sociometricTest = data['data'];
+            this.presetsForm = this.fb.group({});
+
+            this.setPresets();
             this.getCatalogs();
           },
           () => {
@@ -82,6 +102,7 @@ export class SociometricTestComponent implements OnInit {
           }
         );
       } else {
+        this.loading = false;
         this.router.navigateByUrl('/pruebas-sociometrica/tests/' + param, { skipLocationChange: true });
       }
     });
@@ -107,6 +128,7 @@ export class SociometricTestComponent implements OnInit {
     ];
   }
 
+  //#region Update
   setForm(): void {
     this.sociometricTestForm = this.fb.group({
       shift: [this.sociometricTest.shift.id, Validators.required],
@@ -236,4 +258,118 @@ export class SociometricTestComponent implements OnInit {
       }
     );
   }
+  //#endregion
+
+  //#region Presets
+  setPresets(): void {
+    let id = 0;
+
+    this.sociometricTest.presets.forEach((preset) => {
+      let index = 0;
+      let control = null;
+
+      control = {
+        startedAtId: id,
+        durationId: id + 1,
+        startedAtControlInstance: `startedAt${id}`,
+        durationControlInstance: `duration${id + 1}`,
+        preset
+      };
+
+      index = this.listOfPresets.push(control);
+
+      // Add startedAt control
+      this.presetsForm.addControl(
+        this.listOfPresets[index - 1].startedAtControlInstance,
+        new FormControl(preset.startedAt, Validators.required)
+      );
+
+      // Add duration control
+      this.presetsForm.addControl(
+        this.listOfPresets[index - 1].durationControlInstance,
+        new FormControl(preset.duration, [Validators.required, Validators.min(30), Validators.max(120)])
+      );
+      id++;
+    });
+  }
+
+  addField(e?: MouseEvent): void {
+    if (e) {
+      e.preventDefault();
+    }
+
+    const lastQuestion = this.listOfPresets.length > 0 ? this.listOfPresets[this.listOfPresets.length - 1] : null;
+    const id = lastQuestion ? lastQuestion.durationId + 1 : 0;
+    let index = 0;
+    let control = null;
+
+    control = {
+      startedAtId: id,
+      durationId: id + 1,
+      startedAtControlInstance: `startedAt${id}`,
+      durationControlInstance: `duration${id + 1}`,
+      preset: new Preset()
+    };
+
+    control.preset.edit = true;
+
+    index = this.listOfPresets.push(control);
+
+    // Add startedAt control
+    this.presetsForm.addControl(
+      this.listOfPresets[index - 1].startedAtControlInstance,
+      new FormControl(null, Validators.required)
+    );
+
+    // Add duration control
+    this.presetsForm.addControl(
+      this.listOfPresets[index - 1].durationControlInstance,
+      new FormControl(null, [Validators.required, Validators.min(30), Validators.max(120)])
+    );
+  }
+
+  createPreset(control: {
+    startedAtId: number;
+    durationId: number;
+    startedAtControlInstance: string;
+    durationControlInstance: string;
+    preset: Preset;
+  }): void {
+    console.log(control);
+
+    this.presetsForm.controls[control.startedAtControlInstance].markAsDirty();
+    this.presetsForm.controls[control.startedAtControlInstance].updateValueAndValidity();
+
+    this.presetsForm.controls[control.durationControlInstance].markAsDirty();
+    this.presetsForm.controls[control.durationControlInstance].updateValueAndValidity();
+
+    // if (this.questionBankForm.valid) {
+    //   this.transformBody();
+    // }
+  }
+
+  updatePreset(): void {}
+  deletePreset(): void {}
+
+  // removeField(i: { id: number; controlInstance: string; type: string; counter: number }, e: MouseEvent): void {
+  //   e.preventDefault();
+  //   const elementsToRemove = this.listOfControl.filter((item) => item.counter == i.counter);
+
+  //   elementsToRemove.forEach((element) => {
+  //     const index = this.listOfControl.indexOf(element);
+  //     this.listOfControl.splice(index, 1);
+  //     this.questionBankForm.removeControl(element.controlInstance);
+  //   });
+
+  //   if (elementsToRemove.length) this.reorderCounters();
+  // }
+
+  disabledDate = (current: Date): boolean => {
+    // Can not select days after today
+    return (
+      differenceInCalendarDays(current, new Date()) > 0 &&
+      differenceInCalendarDays(current, lastDayOfYear(new Date())) > 0
+    );
+  };
+  //#endregion
 }

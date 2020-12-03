@@ -84,7 +84,7 @@ export class SociometricTestService {
     return this.http.get<SociometricTest[]>(url).pipe(catchError(this.handleError()));
   }
 
-  getSociometricTest(id: number): Observable<SociometricTest>{
+  getSociometricTest(id: number): Observable<SociometricTest> {
     return this.http
       .get<SociometricTest>(`${this.baseUrl}sociometric/tests/${id}`)
       .pipe(catchError(this.handleError()));

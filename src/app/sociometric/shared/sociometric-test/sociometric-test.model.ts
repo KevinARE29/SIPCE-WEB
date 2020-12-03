@@ -1,6 +1,7 @@
 import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 import { Student } from 'src/app/students/shared/student.model';
 import { QuestionBank } from '../question-bank.model';
+import { Preset } from './preset.model';
 
 export class SociometricTest {
   id: number;
@@ -14,5 +15,6 @@ export class SociometricTest {
   totalEstudents: number;
   questionBank: QuestionBank;
   students: Student[];
+  presets: Preset[];
   createdAt: Date;
 }
