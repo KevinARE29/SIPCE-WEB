@@ -8,7 +8,7 @@
 <div nz-row [nzGutter]="[20, 20]">
 
   <!-- Filters -->
-  <div nz-col nzXs="24" nzSm="16" nzMd="12" nzLg="8">
+  <div nz-col nzXs="24" nzSm="16" [nzLg]="{ span: 8, offset: 2}" [nzXl]="{ span: 10, offset: 4}">
     <label>Nombre: </label>
     <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
       <input type="text" nz-input placeholder="Buscar sanción" [(ngModel)]="searchValue"/>
@@ -19,7 +19,7 @@
   </div>
 
   <!-- Create button -->
-  <div nz-col nzXs="24" nzSm="8" nzMd="12" nzLg="16" *ngIf="checkPermission(28)">
+  <div nz-col nzXs="24" nzSm="8" nzLg="12" nzXl="6" *ngIf="checkPermission(28)">
     <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
       <a nz-button nzType="primary" (click)="create()">Crear sanción</a>
     </div>
@@ -28,67 +28,65 @@
 
 <!--Table-->
 <div nz-row >
-  <div nz-row>
-    <div nz-col>
-      <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-        <nz-table #filterTable
-                  nzTableLayout="fixed"
-                  nzSize="small"
-                  [nzData]="listOfDisplayData"
-                  [nzFrontPagination]="false"
-                  [nzTotal]="pagination.totalItems"
-                  [nzPageSize]="pagination.perPage"
-                  [nzPageIndex]="pagination.page"
-                  (nzQueryParams)="getSanctions($event)"
-        >
-          <thead>
+  <div nz-col nzXs="24" [nzLg]="{ span: 20, offset: 2}" [nzXl]="{ span: 16, offset: 4}">
+    <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+      <nz-table #filterTable
+                nzTableLayout="fixed"
+                nzSize="small"
+                [nzData]="listOfDisplayData"
+                [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems"
+                [nzPageSize]="pagination.perPage"
+                [nzPageIndex]="pagination.page"
+                (nzQueryParams)="getSanctions($event)"
+      >
+        <thead>
+          <tr>
+            <th nzWidth="60px"></th>
+            <th nzColumnKey="name" [nzSortFn]="true">Nombre</th>
+            <th>Descripción</th>
+            <th *ngIf="checkPermission(28)" [nzAlign]="'center'">Acción</th>
+          </tr>
+        </thead> 
+
+        <!-- Table body -->
+        <tbody>
+          <ng-container *ngFor="let data of filterTable.data">
             <tr>
-              <th nzWidth="60px"></th>
-              <th nzColumnKey="name" [nzSortFn]="true">Nombre</th>
-              <th>Descripción</th>
-              <th *ngIf="checkPermission(28)" [nzAlign]="'center'">Acción</th>
+              <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
+              <td>{{ data.name }}</td>
+              <td nzEllipsis>{{ data.description }}</td>
+
+              <!-- Actions -->
+              <td *ngIf="checkPermission(28)" [nzAlign]="'center'">    
+                <span>
+                  <a nz-tooltip  nzTooltipTitle="Actualizar">
+                    <i nz-icon nzType="edit" nzTheme="outline" (click)="edit(data)"></i>
+                  </a>
+                  <nz-divider nzType="vertical"></nz-divider>
+                  <a nz-tooltip nzTooltipTitle="Eliminar" (click)="showConfirm(data)">
+                    <i nz-icon nzType="delete" nzTheme="outline"></i>
+                  </a>
+                </span>
+              </td>
+              <!-- / Actions -->
             </tr>
-          </thead> 
 
-          <!-- Table body -->
-          <tbody>
-            <ng-container *ngFor="let data of filterTable.data">
-              <tr>
-                <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
-                <td>{{ data.name }}</td>
-                <td nzEllipsis>{{ data.description }}</td>
-  
-                <!-- Actions -->
-                <td *ngIf="checkPermission(28)" [nzAlign]="'center'">    
-                  <span>
-                    <a nz-tooltip  nzTooltipTitle="Actualizar">
-                      <i nz-icon nzType="edit" nzTheme="outline" (click)="edit(data)"></i>
-                    </a>
-                    <nz-divider nzType="vertical"></nz-divider>
-                    <a nz-tooltip nzTooltipTitle="Eliminar" (click)="showConfirm(data)">
-                      <i nz-icon nzType="delete" nzTheme="outline"></i>
-                    </a>
-                  </span>
-                </td>
-                <!-- / Actions -->
-              </tr>
-  
-              <!-- Expandable content -->
-              <tr [nzExpand]="expandSet.has(data.id)">
-                <strong>Descripción: </strong><span>{{ data.description }}</span>
-              </tr>
+            <!-- Expandable content -->
+            <tr [nzExpand]="expandSet.has(data.id)">
+              <strong>Descripción: </strong><span>{{ data.description }}</span>
+            </tr>
 
-            </ng-container>
-          </tbody>
-          <!-- / Table body -->
-        </nz-table>
-      </nz-spin>
-    </div>
-  </div> 
+          </ng-container>
+        </tbody>
+        <!-- / Table body -->
+      </nz-table>
+    </nz-spin>
+  </div>
 </div>
 
 <!-- Create cycle modal -->
-<nz-modal [(nzVisible)]="isVisible" nzTitle="Crear sanción" [nzContent]="modalContent" [nzFooter]="modalFooter">
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()">
     
   <!-- Modal content -->
   <ng-template #modalContent>
