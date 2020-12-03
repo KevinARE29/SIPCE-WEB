@@ -8,11 +8,15 @@ h3 {
     margin-right: 15px;
 }
 
-nz-input-number {
+nz-input-number, nz-date-picker {
     border-radius: 7px;
     width: 100%;
 }
 
 .btn-cancel {
     margin-right: 10px;
+}
+
+button.add-button {
+    display: block;
 }

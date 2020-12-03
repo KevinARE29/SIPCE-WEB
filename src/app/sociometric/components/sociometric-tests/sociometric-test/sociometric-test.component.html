@@ -120,46 +120,54 @@
         <!-- #region Schedule -->
         <ng-container *ngIf="sociometricTest.grade.id > 6">
             <nz-divider nzText="Pruebas programadas" nzOrientation="left"></nz-divider>
-            <div nz-col nzXs="24" [nzMd]="{ span: 20, offset: 2}" [nzLg]="{ span: 18, offset: 3}"
+            <div nz-col nzXs="24" [nzLg]="{ span: 18, offset: 3}"
                 [nzXl]="{ span: 16, offset: 4}">
 
-                <form nz-form [formGroup]="presetsForm" nzLayout="horizontal">
+                <form nz-form [formGroup]="presetsForm" nzLayout="inline">
                     <ng-container *ngFor="let control of listOfPresets">
                         <!-- Is editable? -->
                         <ng-container *ngIf="control.preset.edit;else presetTemplate">
                             <!-- Started at -->
-                            <nz-form-item>
-                                <nz-form-label>Fecha y hora</nz-form-label>
-                                <nz-form-control [nzErrorTip]="startedAtErrors">
-                                    <nz-date-picker [attr.id]="control.startedAtId"
-                                        [formControlName]="control.startedAtControlInstance"
-                                        [nzShowTime]="{nzHideDisabledOptions: true, nzFormat: 'HH:mm'}"
-                                        nzFormat="dd/MM/yyyy HH:mm" [nzDisabledDate]="disabledDate"
-                                        nzPlaceHolder="Seleccionar">
-                                    </nz-date-picker>
-                                    <ng-template #startedAtErrors let-control>
-                                        <ng-container *ngIf="control.hasError('required')">La fecha y hora son
-                                            requeridas<br>
-                                        </ng-container>
-                                    </ng-template>
-                                </nz-form-control>
-                            </nz-form-item>
+                            <div nz-col nzXs="24" nzMd="8">
+                                <nz-form-item>
+                                    <nz-form-label>Fecha y hora</nz-form-label>
+                                    <nz-form-control [nzErrorTip]="startedAtErrors">
+                                        <nz-date-picker [attr.id]="control.startedAtId"
+                                            [formControlName]="control.startedAtControlInstance"
+                                            [nzShowTime]="{nzHideDisabledOptions: true, nzFormat: 'HH:mm'}"
+                                            nzFormat="dd/MM/yyyy HH:mm" [nzDisabledDate]="disabledDate"
+                                            nzPlaceHolder="Seleccionar">
+                                        </nz-date-picker>
+                                        <ng-template #startedAtErrors let-control>
+                                            <ng-container *ngIf="control.hasError('required')">La fecha y hora son
+                                                requeridas<br>
+                                            </ng-container>
+                                        </ng-template>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
 
                             <!-- Duration -->
-                            <nz-form-item>
-                                <nz-form-label nzFor="duration">Duración</nz-form-label>
-                                <nz-form-control [nzErrorTip]="durationErrors">
-                                    <nz-input-number [nzMin]="15" [nzMax]="120" [nzStep]="1"
-                                        [attr.id]="control.durationId"
-                                        [formControlName]="control.durationControlInstance"
-                                        [nzFormatter]="durationFormatter" [nzParser]="durationParser"
-                                        nzPlaceHolder="Seleccionar"></nz-input-number>
-                                    <ng-template #durationErrors let-control>
-                                        <ng-container *ngIf="control.hasError('required')">La duración es requerida<br>
-                                        </ng-container>
-                                    </ng-template>
-                                </nz-form-control>
-                            </nz-form-item>
+                            <div nz-col nzXs="24" nzMd="6">
+                                <nz-form-item>
+                                    <nz-form-label nzFor="duration">Duración</nz-form-label>
+                                    <nz-form-control [nzErrorTip]="durationErrors">
+                                        <nz-input-number [nzStep]="1"
+                                            [attr.id]="control.durationId"
+                                            [formControlName]="control.durationControlInstance"
+                                            [nzFormatter]="durationFormatter" [nzParser]="durationParser"
+                                            nzPlaceHolder="Seleccionar"></nz-input-number>
+                                        <ng-template #durationErrors let-control>
+                                            <ng-container *ngIf="control.hasError('required')">La duración es requerida<br>
+                                            </ng-container>
+                                            <ng-container *ngIf="control.hasError('min')">La duración mínima es de 15min<br>
+                                            </ng-container>
+                                            <ng-container *ngIf="control.hasError('max')">La duración máxima es de 2h (60min)<br>
+                                            </ng-container>
+                                        </ng-template>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
                         </ng-container>
 
                         <!-- Read only -->

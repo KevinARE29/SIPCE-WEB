@@ -324,7 +324,7 @@ export class SociometricTestComponent implements OnInit {
     // Add duration control
     this.presetsForm.addControl(
       this.listOfPresets[index - 1].durationControlInstance,
-      new FormControl(null, [Validators.required, Validators.min(30), Validators.max(120)])
+      new FormControl(null, [Validators.required, Validators.min(15), Validators.max(120)])
     );
   }
 
@@ -335,21 +335,36 @@ export class SociometricTestComponent implements OnInit {
     durationControlInstance: string;
     preset: Preset;
   }): void {
-    console.log(control);
-
-    this.presetsForm.controls[control.startedAtControlInstance].markAsDirty();
-    this.presetsForm.controls[control.startedAtControlInstance].updateValueAndValidity();
-
-    this.presetsForm.controls[control.durationControlInstance].markAsDirty();
-    this.presetsForm.controls[control.durationControlInstance].updateValueAndValidity();
-
-    // if (this.questionBankForm.valid) {
-    //   this.transformBody();
-    // }
+    console.log('Create?')
+    // Verify if control values are valid
+    if (this.checkValues(control)) {
+      console.log('Creating...');
+    }
   }
 
   updatePreset(): void {}
   deletePreset(): void {}
+
+  checkValues(control: {
+    startedAtId: number;
+    durationId: number;
+    startedAtControlInstance: string;
+    durationControlInstance: string;
+    preset: Preset;
+  }): boolean {
+    const startedAtControl = this.presetsForm.controls[control.startedAtControlInstance];
+    const durationControl = this.presetsForm.controls[control.durationControlInstance];
+
+    // Display errors if needed
+    startedAtControl.markAsDirty();
+    startedAtControl.updateValueAndValidity();
+
+    durationControl.markAsDirty();
+    durationControl.updateValueAndValidity();
+    console.log(durationControl.valid, startedAtControl.valid, durationControl.valid && startedAtControl.valid)
+    // Verify if control values are valid
+    return durationControl.valid && startedAtControl.valid;
+  }
 
   // removeField(i: { id: number; controlInstance: string; type: string; counter: number }, e: MouseEvent): void {
   //   e.preventDefault();
