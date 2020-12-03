@@ -18,6 +18,7 @@ export class DisciplinaryCatalogService {
     this.baseUrl = environment.apiURL;
   }
 
+  /* Sanctions services */
   searchSanctions(params: NzTableQueryParams, search: string, paginate: boolean): Observable<Sanction[]> {
     let url = this.baseUrl + 'sanctions';
     let queryParams = '';

@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { DisciplinaryCatalogService } from './../../shared/disciplinary-catalog.service';
 import { AuthService } from '../../../login/shared/auth.service';
 import { Permission } from '../../../shared/permission.model';
-
 import { Pagination } from './../../../shared/pagination.model';
 import { Sanction } from '../../shared/sanction.model';
 
@@ -18,21 +19,20 @@ import { Sanction } from '../../shared/sanction.model';
 })
 export class SanctionComponent implements OnInit {
   permissions: Array<Permission> = [];
-  sanctions: Sanction[];
-  sanctionsUpdated: Sanction;
-  idSanction: number;
-  isVisible = false;
+
+  // Table.
+  listOfDisplayData: Sanction[];
   pagination: Pagination;
   loading = false;
   searchValue = '';
-  listOfDisplayData: Sanction[];
-  tableSize = 'small';
-  icon = 'search';
-  color = 'primary';
-  confirmModal?: NzModalRef;
-  sanctionForm: FormGroup;
   isConfirmLoading = false;
+
+  // Update / delete modal.
+  isVisible = false;
   editValue: boolean;
+  sanctionForm: FormGroup;
+  sanctionsUpdated: Sanction;
+  idSanction: number;
 
   constructor(
     private modal: NzModalService,
@@ -80,16 +80,15 @@ export class SanctionComponent implements OnInit {
   }
 
   /* ---      Main options      --- */
-  recharge(params: NzTableQueryParams): void {
+  getSanctions(params: NzTableQueryParams): void {
     this.loading = true;
 
     this.disciplinaryService
       .searchSanctions(params, this.searchValue, params.pageIndex !== this.pagination.page)
       .subscribe(
         (data) => {
-          this.sanctions = data['data'];
           this.pagination = data['pagination'];
-          this.listOfDisplayData = [...this.sanctions];
+          this.listOfDisplayData = data['data'];
           this.loading = false;
         },
         (err) => {
@@ -105,13 +104,36 @@ export class SanctionComponent implements OnInit {
       );
   }
 
-  showModal(): void {
+  search(): void {
+    this.loading = true;
+
+    this.disciplinaryService.searchSanctions(null, this.searchValue, false).subscribe(
+      (data) => {
+        this.pagination = data['pagination'];
+        this.listOfDisplayData = data['data'];
+        this.loading = false;
+      },
+      (err) => {
+        this.loading = false;
+        const statusCode = err.statusCode;
+        const notIn = [401, 403];
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create('error', 'Ocurrió un error al filtrar las sanciones.', err.message, {
+            nzDuration: 30000
+          });
+        }
+      }
+    );
+  }
+
+  // Create / update modal.
+  create(): void {
     this.isVisible = true;
     this.resetForm();
   }
 
-  AllowEditing(data: Sanction): void {
-    this.idSanction = null;
+  edit(data: Sanction): void {
     this.editValue = true;
     this.idSanction = data.id;
     this.resetForm();
@@ -126,6 +148,11 @@ export class SanctionComponent implements OnInit {
       this.sanctionForm.controls[key].markAsPristine();
       this.sanctionForm.controls[key].updateValueAndValidity();
     }
+  }
+
+  handleCancel(): void {
+    this.isVisible = false;
+    this.resetForm();
   }
 
   /* ---  Create and update sanction  ---- */
@@ -175,48 +202,18 @@ export class SanctionComponent implements OnInit {
     }
   }
 
-  handleCancel(): void {
-    this.isVisible = false;
-    this.resetForm();
-  }
-
-  search(): void {
-    this.loading = true;
-
-    this.disciplinaryService.searchSanctions(null, this.searchValue, false).subscribe(
-      (data) => {
-        this.sanctions = data['data'];
-        this.pagination = data['pagination'];
-        this.listOfDisplayData = [...this.sanctions];
-        this.loading = false;
-      },
-      (err) => {
-        this.loading = false;
-        const statusCode = err.statusCode;
-        const notIn = [401, 403];
-
-        if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create('error', 'Ocurrió un error al filtrar las sanciones.', err.message, {
-            nzDuration: 30000
-          });
-        }
-      }
-    );
-  }
-
-  showConfirm(id: number, name: string, description: string): void {
-    this.confirmModal = this.modal.confirm({
-      nzTitle: `¿Desea eliminar la sanción "${name}"?`,
-      nzContent: `Descripción: "${description}". ¿Desea continuar con la acción?`,
-      nzOnOk: () =>
-        this.disciplinaryService
-          .deleteSanction(id)
-          .toPromise()
-          .then(() => {
-            this.message.success(`La sanción ${name} ha sido eliminada`);
+  // Delete.
+  showConfirm(data: Sanction): void {
+    this.modal.confirm({
+      nzTitle: `¿Desea eliminar la sanción "${data.name}"?`,
+      nzContent: `Esta acción no puede deshacerse. ¿Desea continuar con la acción?`,
+      nzOnOk: () => {
+        this.disciplinaryService.deleteSanction(data.id).subscribe(
+          () => {
+            this.message.success(`La sanción ${data.name} ha sido eliminada`);
             this.search();
-          })
-          .catch((err) => {
+          },
+          (err) => {
             const statusCode = err.statusCode;
             const notIn = [401, 403];
 
@@ -225,7 +222,9 @@ export class SanctionComponent implements OnInit {
                 nzDuration: 30000
               });
             }
-          })
+          }
+        );
+      }
     });
   }
 }
