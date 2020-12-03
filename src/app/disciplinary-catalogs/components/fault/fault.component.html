@@ -50,7 +50,7 @@
                         <th nzWidth="60px"></th>
                         <th nzColumnKey="numeral" [nzSortFn]="true">Numeral</th>
                         <th>Descripción</th>
-                        <th>Tipo de falta</th>
+                        <th nzColumnKey="foulsType" [nzSortFn]="true">Tipo de falta</th>
                         <th *ngIf="checkPermission(26)" [nzAlign]="'center'">Acción</th>
                     </tr>
                 </thead>
