@@ -401,6 +401,15 @@ export class SchoolYearComponent implements OnInit {
       
     }
   }
+
+  updateTeachers(content: unknown): void {
+    const shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === content['shift']['id']);
+    const cycle = shift['shift']['cycles'].find((x) => x['cycle'].id === content['grade']['cycle']['id']);
+    const grade = cycle['gradeDetails'].find((x) => x['grade'].id === content['grade']['grade']['id']);
+    const section = grade['sectionDetails'].find((x) => x['section'].id === content['section']['section']['id']);
+
+    section['auxTeachers'] = content['aux_teachers'] ? content['aux_teachers'] : new Array<User>();
+  }
   //#endregion
 
   //#region Steps
@@ -615,6 +624,30 @@ export class SchoolYearComponent implements OnInit {
       );
     }
   }
+
+  teachersTab(): void {
+      this.loading = true;
+      this.schoolYearService.saveTeachers(this.schoolYear).subscribe(
+        () => {
+          this.loading = false;
+          this.message.success(`La asignación de docentes auxiliares se ha guardado con éxito`);
+        },
+        (error) => {
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
+              nzDuration: 30000
+            });
+          } else if (typeof error === 'string') {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
+              nzDuration: 30000
+            });
+          }
+          this.loading = false;
+        }
+      );
+    }
 
   counselorsStep(next: boolean): void {
     this.checkEmptyCounselors();

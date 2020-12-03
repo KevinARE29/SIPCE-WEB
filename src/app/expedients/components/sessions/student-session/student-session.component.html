@@ -12,7 +12,7 @@
 <app-students-details [id]="studentId"></app-students-details>
 
 <nz-spin nzTip="Cargando ..." [nzSpinning]="loadingSession">
-<form nz-form nzLayout="vertical" [formGroup]="sessionForm" (ngSubmit)="submitForm($event)">
+<form nz-form nzLayout="vertical" [formGroup]="sessionForm" (ngSubmit)="submitForm($event.submitter.id)">
 
     <div nz-row nzJustify="center" [nzGutter]="10">
 
@@ -62,7 +62,7 @@
             </div>
         </div>
 
-        <!-- Service type and intervention -->
+        <!-- Service type and intervention program -->
         <div nz-col nzXs="24" [nzLg]="{span: 9, offset: 2}" [nzXl]="{span: 8, offset: 4}">
             <div nz-row [nzGutter]="10">
 
@@ -84,6 +84,24 @@
 
                         <ng-container *ngIf="session && !session.draft">
                             {{session.serviceType}}
+                        </ng-container>
+                    </nz-form-item>
+                </div>
+
+                <!-- Participants -->
+                <div nz-col nzXs="24">
+                    <nz-form-item>
+                        <nz-form-label><strong>Programa de intervención</strong></nz-form-label>
+                        <nz-form-control *ngIf="!loadingSession && (!session || session.draft)">
+                            <nz-select formControlName="interventionProgram" nzPlaceHolder="Seleccionar" [nzDropdownMatchSelectWidth]="false" nzAllowClear [nzLoading]="loadingPrograms">
+                                <ng-container *ngFor="let program of programs">
+                                    <nz-option [nzLabel]="program.name" [nzValue]="program.id"></nz-option>
+                                </ng-container>
+                            </nz-select>
+                        </nz-form-control>
+
+                        <ng-container *ngIf="session && !session.draft">
+                            {{session.interventionProgram?.name || 'No se registró el programa de intervención'}}
                         </ng-container>
                     </nz-form-item>
                 </div>

@@ -1,0 +1,126 @@
+<!-- If expedient exists, shows its data. -->
+<ng-container *ngIf="expedient">
+
+    <!-- Edit button -->
+    <nz-divider *ngIf="isEditable" [nzText]="text" nzOrientation="right">
+        <ng-template #text><i (click)="onInitEditing()" nz-icon nzType="edit" nzTheme="outline"></i></ng-template>
+    </nz-divider>
+
+    <div nz-row [nzGutter]="[20, 20]">
+        <!-- General data -->
+        <div nz-col nzXs="24">
+            <p><strong>Fue referido por:</strong> {{expedient.referrerName}}</p>
+            <p><strong>Motivo:</strong> {{expedient.reason}}</p>
+            <p><strong>Descripción de la problemática:</strong> {{expedient.problemDescription}}</p>
+        </div>
+
+        <!-- Evaluations, diagnosticImpression and actionPlan -->
+        <div nz-col nzXs="24" nzLg="12">
+
+            <nz-collapse [nzBordered]="false">
+                <!-- Evaluations -->
+                <nz-collapse-panel nzHeader="Evaluaciones realizadas" [nzActive]="true">
+                    <p>
+                        {{expedient.evaluations && expedient.evaluations.length ? '' : 'No se han registrado evaluaciones'}}
+                    </p>
+
+                    <ul class="evaluations">
+                        <li *ngFor="let evaluation of expedient.evaluations">{{evaluation.description}}</li>
+                    </ul>    
+                </nz-collapse-panel>
+
+                <!-- Diagnostic Impressions -->
+                <nz-collapse-panel nzHeader="Impresión diagnóstica" [nzActive]="true">
+                    <nz-tag *ngFor="let category of expedient.diagnosticImpressionCategories"> {{ category }}</nz-tag>
+                    
+                    <nz-tag *ngIf="expedient.otherDiagnosticImpressionCategory"> {{ expedient.otherDiagnosticImpressionCategory }}</nz-tag> 
+
+                    <p>
+                        {{expedient.diagnosticImpression || 'No se ha registrado una impresión diagnóstica'}}
+                    </p>
+                  </nz-collapse-panel>
+
+                  <!-- Action plan -->
+                  <nz-collapse-panel nzHeader="Plan de acción" [nzActive]="true">
+                    <p>
+                        {{expedient.actionPlan || 'No se ha registrado un plan de acción'}}
+                    </p>
+                  </nz-collapse-panel>
+            </nz-collapse>
+        </div>
+
+        <!-- Treatments, intervention programs and final comment -->
+        <div nz-col nzXs="24" nzLg="12">
+
+            <!-- Treatments. -->
+            <div nz-row>
+                <div nz-col nzXs="24">
+                    <p><strong>Tratamiento psicológicos externos:</strong>
+                        {{expedient.externalPsychologicalTreatments && expedient.externalPsychologicalTreatments.length ? '' : 'No se han registrado tratamientos psicológicos externos'}}
+                    </p>
+                    <ul>
+                        <li *ngFor="let treatment of expedient.externalPsychologicalTreatments">{{treatment}}</li>
+                        <li *ngIf="expedient.otherExternalPsychologicalTreatment"> {{ expedient.otherExternalPsychologicalTreatment }}</li> 
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Intervention programs -->
+            <div nz-row>
+                <div nz-col nzXs="24">
+                    <p><strong>Programas de intervención activos:</strong>
+                        {{expedient.activeInterventionPrograms && expedient.activeInterventionPrograms.length ? '' : 'No se han registrado programas de intervención'}}
+                    </p>
+
+                    <ul>
+                        <li *ngFor="let program of expedient.activeInterventionPrograms">{{program.name}}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Final conclussion -->
+            <div nz-row>
+                <div nz-col nzXs="24">
+                    <p><strong>Comentario final:</strong></p>
+
+                    <ng-container *ngIf="expedient.finalConclusion && !editing">
+                        <p class="text-center">{{expedient.finalConclusion}} <i *ngIf="isEditable" (click)="onInitiEditingFinalConclusion()" nz-icon nzType="edit" nzTheme="outline"></i></p>
+                    </ng-container>
+
+                    <ng-container *ngIf="!expedient.finalConclusion && !editing">
+                        <nz-empty [nzNotFoundContent]="null"></nz-empty>
+                        <p class="text-center"><a *ngIf="isEditable" (click)="onInitiEditingFinalConclusion()">Agregar comentario final</a></p>
+                    </ng-container>
+
+                    <ng-container *ngIf="editing">
+                        <nz-spin nzTip="Cargando ..." [nzSpinning]="loadingAction">
+                            <textarea nz-input [(ngModel)]="finalConclusion" placeholder="Comentario final"></textarea>
+                            <p class="btn-editing-conclusion">
+                                <a class="btn-cancel-editing" (click)="cancelEditignFinalConclusion()">Cancelar</a>
+                                <a (click)="saveExpedient()">Guardar</a>
+                            </p>
+                        </nz-spin>
+                    </ng-container>
+                    
+                </div>
+            </div>
+
+        </div>
+
+    </div> 
+
+</ng-container>
+
+
+<!-- If expedient does not exist, show creation button. -->
+<ng-container *ngIf="!expedient">
+    <br><br>
+    <div nz-row nzJustify="center">  
+        <div nz-col>
+            <button nz-button nzType="default" (click)="onInitEditing()">
+                Abrir expediente
+            </button>
+        </div>
+    </div>
+
+</ng-container>

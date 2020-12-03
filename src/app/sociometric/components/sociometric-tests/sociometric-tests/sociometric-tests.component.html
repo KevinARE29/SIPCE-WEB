@@ -1,0 +1,115 @@
+<div nz-row nzJustify="space-around">
+    <div nz-col nzFlex="auto">
+        <h1>Pruebas sociométricas</h1>
+    </div>
+    <div nz-col nzFlex="110px">
+        <a nz-button nzType="primary" routerLink="/pruebas-sociometricas/tests/nuevo">Crear</a>
+    </div>
+</div>
+
+<div nz-row *ngIf="!shifts.length">
+    <nz-alert nz-col nzXs="24" [nzMd]="{ span: 18, offset: 3 }" [nzLg]="{ span: 16, offset: 4 }"
+        [nzXl]="{ span: 14, offset: 5 }" nzType="warning" nzCloseable nzShowIcon
+        nzMessage="No se encontraron grados asignados a su usuario.">
+    </nz-alert>
+</div>
+
+<nz-spin [nzSpinning]="filtersLoading">
+    <div nz-row [nzGutter]="[10, 10]">
+        <!-- Shift -->
+        <div nz-col nzXs="24" nzMd="8" nzLg="6">
+            <label>Turno: </label>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.shiftId"
+                (ngModelChange)="updateSelectors('shift', $event);">
+                <nz-option *ngFor="let shift of shifts" [nzLabel]="shift.name" [nzValue]="shift.id"></nz-option>
+            </nz-select>
+        </div>
+
+        <!-- Grade -->
+        <div nz-col nzXs="24" nzMd="8" nzLg="6">
+            <label>Grado: </label>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.gradeId"
+                (ngModelChange)="updateSelectors('grade', $event);">
+                <nz-option *ngFor="let grade of grades" [nzLabel]="grade.name" [nzValue]="grade.id"></nz-option>
+            </nz-select>
+        </div>
+
+        <!-- Section -->
+        <div nz-col nzXs="24" nzMd="8" nzLg="6">
+            <label>Sección: </label>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.sectionId"
+                (ngModelChange)="getTests(null)">
+                <nz-option *ngFor="let section of sections" [nzLabel]="section.name" [nzValue]="section.id"></nz-option>
+            </nz-select>
+        </div>
+
+        <!-- Status -->
+        <div nz-col nzXs="24" nzMd="8" nzLg="6">
+            <label>Estado: </label>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.status"
+                (ngModelChange)="getTests(null)">
+                <nz-option *ngFor="let state of status" [nzLabel]="state" [nzValue]="state"></nz-option>
+            </nz-select>
+        </div>
+
+        <!-- Current tests? -->
+        <div nz-col nzXs="12" nzMd="8" nzLg="20">
+            <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+                <nz-switch [(ngModel)]="searchParams.current" [nzCheckedChildren]="'Activas'"
+                    [nzUnCheckedChildren]="'Históricas'" (ngModelChange)="getTests(null)"></nz-switch>
+            </div>
+        </div>
+
+        <!-- Search button-->
+        <div nz-col nzXs="12" nzMd="8" nzLg="4">
+            <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+                <button nz-button nzType="primary" (click)="getTests(null)">Buscar</button>
+            </div>
+        </div>
+    </div>
+</nz-spin>
+
+<div nz-row>
+    <div nz-col nzSpan="24">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <nz-table #filterTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems" [nzPageSize]="pagination.perPage" [nzPageIndex]="pagination.page"
+                nzSize="small" (nzQueryParams)="getTests($event)">
+                <thead>
+                    <tr>
+                        <th [nzAlign]="'center'" nzColumnKey="shift" [nzSortFn]="true" [nzSortPriority]="1">Turno</th>
+                        <th [nzAlign]="'center'" nzColumnKey="grade" [nzSortFn]="true" [nzSortPriority]="2">Grado</th>
+                        <th [nzAlign]="'center'" nzColumnKey="section" [nzSortFn]="true" [nzSortPriority]="3">Sección</th>
+                        <th [nzAlign]="'center'" nzColumnKey="status" [nzSortFn]="true" [nzSortPriority]="4">Estado</th>
+                        <th [nzAlign]="'center'" *ngIf="!searchParams.current">Año</th>
+                        <th [nzAlign]="'center'">Estudiantes</th>
+                        <th [nzAlign]="'center'">Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let data of filterTable.data">
+                        <td [nzAlign]="'center'">{{ data.shift.name }}</td>
+                        <td [nzAlign]="'center'">{{ data.grade.name }}</td>
+                        <td [nzAlign]="'center'">{{ data.section.name }}</td>
+                        <td [nzAlign]="'center'">{{ data.status }}</td>
+                        <td [nzAlign]="'center'" *ngIf="!searchParams.current">{{ data.createdAt | date:'yyyy' }}</td>
+                        <td [nzAlign]="'center'">{{ data.completedStudents }} / {{ data.totalStudents }}</td>
+                        <td [nzAlign]="'center'">
+                            <a [routerLink]="['/pruebas-sociometricas', 'tests', data.id]">
+                                <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
+                            </a>
+                            <ng-container *ngIf="data.status === 'Creada'">
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <a (click)="showConfirm(data)">
+                                    <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar"
+                                        nzTheme="outline"></i>
+                                </a>
+                            </ng-container>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>

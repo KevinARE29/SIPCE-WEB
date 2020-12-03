@@ -16,6 +16,16 @@ import { StudentSessionComponent } from './components/sessions/student-session/s
 import { ResponsibleInterviewComponent } from './components/sessions/responsible-interview/responsible-interview.component';
 import { TeacherInterviewComponent } from './components/sessions/teacher-interview/teacher-interview.component';
 
+// Intervention programs.
+import { InterventionProgramsListComponent } from './components/intervention-programs/intervention-programs-list/intervention-programs-list.component';
+import { InterventionProgramsFormComponent } from './components/intervention-programs/intervention-programs-form/intervention-programs-form.component';
+
+// Expedient
+import { ExpedientComponent } from './components/expedient/expedient/expedient.component';
+import { StudentsDetailsComponent as StudentsDetailsExpedientComponent } from './components/expedient/students-details/students-details.component';
+import { SessionsCounterComponent } from './components/expedient/sessions-counter/sessions-counter.component';
+import { ExpedientViewComponent } from './components/expedient/expedient-view/expedient-view.component';
+import { ExpedientFormComponent } from './components/expedient/expedient-form/expedient-form.component';
 
 @NgModule({
   declarations: [
@@ -24,14 +34,15 @@ import { TeacherInterviewComponent } from './components/sessions/teacher-intervi
     StudentsDetailsComponent,
     StudentSessionComponent,
     ResponsibleInterviewComponent,
-    TeacherInterviewComponent
+    TeacherInterviewComponent,
+    InterventionProgramsListComponent,
+    InterventionProgramsFormComponent,
+    ExpedientComponent,
+    StudentsDetailsExpedientComponent,
+    SessionsCounterComponent,
+    ExpedientViewComponent,
+    ExpedientFormComponent
   ],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    AntDesignModule,
-    CKEditorModule,
-    ExpedientsRoutingModule
-  ]
+  imports: [CommonModule, ReactiveFormsModule, AntDesignModule, CKEditorModule, ExpedientsRoutingModule]
 })
-export class ExpedientsModule { }
+export class ExpedientsModule {}

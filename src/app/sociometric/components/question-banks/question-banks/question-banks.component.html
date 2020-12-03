@@ -1,0 +1,104 @@
+<h1>Bancos de preguntas</h1>
+
+<div nz-row nzJustify="center">
+    <div nz-col nzXs="24" nzSm="24" nzLg="18" nzXl="16" nzXxl="12">
+        <div class="search-bar" nz-row nzJustify="space-between" [nzGutter]="[10, 10]">
+            <div nz-col nzXs="24" nzMd="18" nzLg="14">
+                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                    <input type="text" nz-input [(ngModel)]="searchBankParam" placeholder="Buscar banco de preguntas" />
+                </nz-input-group>
+                <ng-template #suffixIconButton>
+                    <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchBankParam"
+                        (click)="searchBankParam = null; getQuestionBanks(null)"></i>
+                    <button class="search" nz-button nzType="primary" nzSearch (click)="getQuestionBanks(null)"><i nz-icon nzType="search"></i></button>
+                </ng-template>
+            </div>
+
+            <div nz-col nzXs="24" nzMd="4">
+                <button nz-button nzType="primary"
+                    routerLink="/pruebas-sociometricas/bancos-de-preguntas/nuevo">Crear</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div nz-row>
+    <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+        <nz-table #filterTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzFrontPagination]="false"
+            [nzTotal]="pagination.totalItems" [nzPageSize]="pagination.perPage" [nzPageIndex]="pagination.page"
+            nzSize="small" (nzQueryParams)="getQuestionBanks($event)">
+            <thead>
+                <tr>
+                    <th nzColumnKey="name" [nzSortFn]="true" [nzSortPriority]="1">Título</th>
+                    <th [nzAlign]="'center'" nzColumnKey="counter">Cantidad de preguntas</th>
+                    <th [nzAlign]="'center'">Acción</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let data of filterTable.data">
+                    <td>{{ data.name }}</td>
+                    <td [nzAlign]="'center'">{{ data.questions.length }}</td>
+                    <td [nzAlign]="'center'">
+                        <a (click)="showModal(data)">
+                            <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver" nzTheme="outline"></i>
+                        </a>
+                        <ng-container *ngIf="data.editable">
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a [routerLink]="['/pruebas-sociometricas', 'bancos-de-preguntas', data.id]">
+                                <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
+                            </a>
+
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a (click)="showConfirm(data)">
+                                <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
+                            </a>
+                        </ng-container>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </nz-spin>
+</div>
+
+<!-- Question bank -->
+<nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]="modalTitle"
+    [nzContent]="modalContent"
+    [nzFooter]="modalFooter"
+    (nzOnCancel)="isVisible = false"
+>
+    <ng-template #modalTitle> Banco de preguntas </ng-template>
+
+    <ng-template #modalContent>
+        <div nz-row nzJustify="center">
+            <h3>{{ currentQuestionBank.name }}</h3>
+        </div>
+
+        <div><strong>Preguntas:</strong></div>
+
+        <!-- NgFor -->
+        <div nz-row class="question" *ngFor="let question of currentQuestionBank.questions; let i = index">
+            <div nz-col nzSpan="1"><strong>{{ i + 1 }}.</strong></div>
+            <ng-container [ngSwitch]="question.type">
+                <ng-container *ngSwitchCase="'Liderazgo'">
+                    <div nz-col nzSpan="5"><nz-tag [nzColor]="'geekblue'">Liderazgo</nz-tag></div>
+                    <div nz-col nzSpan="18">{{ question.questionP }}</div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'Aceptación/Rechazo'">
+                    <div nz-col nzSpan="5"><nz-tag [nzColor]="'green'">Aceptación</nz-tag></div>
+                    <div nz-col nzSpan="18">{{ question.questionP }}</div>
+                    <br>
+                    <div nz-col nzSpan="5" nzOffset="1"><nz-tag [nzColor]="'red'">Rechazo</nz-tag></div>
+                    <div nz-col nzSpan="18">{{ question.questionN }}</div>
+                </ng-container>
+            </ng-container>
+        </div>
+
+    </ng-template>
+
+    <ng-template #modalFooter>
+        <button nz-button nzType="primary" (click)="isVisible = false">Regresar</button>
+    </ng-template>
+</nz-modal>

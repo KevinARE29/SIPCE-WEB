@@ -76,6 +76,10 @@
         "counseling": {
             "confirmationToken": "Token de confirmación"
         },
+        "question-banks": {
+            "name": "Nombre"
+        },
+        "sociometric-tests": {},
         "disciplinary-catalog": {
             "name": "Nombre de la sanción",
             "description": "Descripción",

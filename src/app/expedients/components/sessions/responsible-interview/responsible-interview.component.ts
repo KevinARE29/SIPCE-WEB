@@ -48,8 +48,8 @@ export class ResponsibleInterviewComponent implements OnInit {
   kinshipRelationships = Object.keys(KinshipRelationship).filter((k) => isNaN(Number(k)));
 
   // Duration input.
-  durationFormatter = (value: number) => value ? `${value} min` : '';
-  durationParser = (value: string) => value.replace(' min', '');
+  durationFormatter = (value: number): string => (value ? `${value} min` : '');
+  durationParser = (value: string): string => value.replace(' min', '');
 
   // Service types
   serviceTypes = Object.keys(ServiceTypes).filter((k) => isNaN(Number(k)));
@@ -58,10 +58,7 @@ export class ResponsibleInterviewComponent implements OnInit {
   editor = ClassicEditor;
   editorConfig = {
     language: 'es',
-    toolbar: [ 'heading', '|', 'bold', 'italic', '|', 'bulletedList', 'numberedList', '|' ,'undo', 'redo' ]
-  };
-  model = {
-    editorData: '<p>Hello, world!</p>'
+    toolbar: ['heading', '|', 'bold', 'italic', '|', 'bulletedList', 'numberedList', '|', 'undo', 'redo']
   };
 
   constructor(
@@ -73,7 +70,7 @@ export class ResponsibleInterviewComponent implements OnInit {
     private message: NzMessageService,
     private notification: NzNotificationService,
     private modal: NzModalService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const paramStudent = this.route.snapshot.params['student'];
@@ -116,8 +113,8 @@ export class ResponsibleInterviewComponent implements OnInit {
       responsibleOne: [false],
       responsibleTwo: [false],
       otherResponsible: [false],
-      otherResponsibleName: this.fb.control({value: '', disabled: true}),
-      otherResponsibleRelationship: this.fb.control({value: '', disabled: true}),
+      otherResponsibleName: this.fb.control({ value: '', disabled: true }),
+      otherResponsibleRelationship: this.fb.control({ value: '', disabled: true }),
       serviceType: [this.session ? this.session.serviceType : null, [Validators.required]],
       agreements: [this.session ? this.session.agreements : null, [Validators.required]],
       treatedTopics: [this.session ? this.session.treatedTopics : null, [Validators.required]],
@@ -145,30 +142,33 @@ export class ResponsibleInterviewComponent implements OnInit {
       this.sessionForm.get('responsibleOne').setValue(this.session.sessionResponsibleAssistence.responsible1Assistence);
       this.sessionForm.get('responsibleTwo').setValue(this.session.sessionResponsibleAssistence.responsible2Assistence);
 
-      const otherResponsible = !!this.session.sessionResponsibleAssistence.otherResponsibleName && !!this.session.sessionResponsibleAssistence.otherResponsibleRelationship;
+      const otherResponsible =
+        !!this.session.sessionResponsibleAssistence.otherResponsibleName &&
+        !!this.session.sessionResponsibleAssistence.otherResponsibleRelationship;
       this.sessionForm.get('otherResponsible').setValue(otherResponsible);
 
       if (otherResponsible) {
-        this.otherResponsibleRelationshipControl.setValue(this.session.sessionResponsibleAssistence.otherResponsibleRelationship);
+        this.otherResponsibleRelationshipControl.setValue(
+          this.session.sessionResponsibleAssistence.otherResponsibleRelationship
+        );
         this.otherResponsibleNameControl.setValue(this.session.sessionResponsibleAssistence.otherResponsibleName);
-        
+
         this.onChangeOtherResponsible(otherResponsible);
       }
 
       this.loadingResponsibles = false;
-
     } else {
       this.responsibleService.getResponsibles(this.studentId).subscribe((r) => {
         const responsibles = r['data'];
-  
+
         if (responsibles[0]) {
           this.responsibleOne = responsibles[0];
         }
-  
+
         if (responsibles[1]) {
-          this.responsibleOne = responsibles[1];
+          this.responsibleTwo = responsibles[1];
         }
-  
+
         this.loadingResponsibles = false;
       });
     }
@@ -229,7 +229,7 @@ export class ResponsibleInterviewComponent implements OnInit {
     return differenceInCalendarDays(current, new Date()) > 0;
   };
 
-  submitForm(event: any): void {
+  submitForm(submitter: string): void {
     for (const i in this.sessionForm.controls) {
       this.sessionForm.controls[i].markAsDirty();
       this.sessionForm.controls[i].updateValueAndValidity();
@@ -243,7 +243,7 @@ export class ResponsibleInterviewComponent implements OnInit {
       }
     });
 
-    const isDraft = event.submitter.id === 'draft';
+    const isDraft = submitter === 'draft';
 
     if (this.sessionForm.valid) {
       if (isDraft) {
@@ -253,7 +253,7 @@ export class ResponsibleInterviewComponent implements OnInit {
           nzTitle: '¿Desea registrar la sesión?',
           nzContent: 'La sesión ya no se podrá editar luego de realizar esta acción. ¿Desea continuar?',
           nzOnOk: () => {
-            this.saveSession(false)
+            this.saveSession(false);
           }
         });
       }
@@ -294,24 +294,33 @@ export class ResponsibleInterviewComponent implements OnInit {
       });
     }
 
-    if (formValue['otherResponsible']) {
+    // In PATCH, set null to the values.
+    if (this.session) {
       session.otherResponsible = {
-        otherResponsibleName: formValue['otherResponsibleName'],
-        otherResponsibleRelationship: formValue['otherResponsibleRelationship']
-      }
+        otherResponsibleName: formValue['otherResponsible'] ? formValue['otherResponsibleName'] : null,
+        otherResponsibleRelationship: formValue['otherResponsible'] ? formValue['otherResponsibleRelationship'] : null
+      };
     } else {
-      session.otherResponsible = null;
+      // If POST, set empty null to the object
+      if (formValue['otherResponsible']) {
+        session.otherResponsible = {
+          otherResponsibleName: formValue['otherResponsibleName'],
+          otherResponsibleRelationship: formValue['otherResponsibleRelationship']
+        };
+      } else {
+        session.otherResponsible = null;
+      }
     }
 
     if (this.session) {
-      session.id = this.session.id
+      session.id = this.session.id;
     }
 
     this.sessionService.saveSession(this.expedientId, this.studentId, session).subscribe(
       () => {
         const message = isDraft ? 'La sesión se ha guardado como borrador.' : 'La sesión ha sido registrada';
         this.message.success(message);
-        this.router.navigate(['expedientes', this.expedientId, 'estudiantes', this.studentId, 'sesiones']);
+        this.router.navigate(['expedientes', 'estudiantes', this.expedientId, this.studentId, 'sesiones']);
       },
       (error) => {
         this.actionLoading = false;

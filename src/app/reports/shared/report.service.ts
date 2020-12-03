@@ -56,6 +56,8 @@ export class ReportService {
     if (search) {
       if (search['sessionType']) queryParams += '&sessionType=' + search['sessionType'];
 
+      if (search['serviceType']) queryParams += '&serviceType=' + search['serviceType'];
+
       if (search['shiftId']) queryParams += '&shiftId=' + search['shiftId'];
 
       if (search['cycleId']) queryParams += '&cycleId=' + search['cycleId'];

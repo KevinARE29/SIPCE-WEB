@@ -19,10 +19,7 @@ import { Session } from './session.model';
 export class SessionService {
   baseUrl: string;
 
-  constructor(
-    private http: HttpClient,
-    private errorMessageService: ErrorMessageService
-  ) {
+  constructor(private http: HttpClient, private errorMessageService: ErrorMessageService) {
     this.baseUrl = environment.apiURL;
   }
 
@@ -73,9 +70,7 @@ export class SessionService {
 
     url += queryParams;
 
-    return this.http.get<StudentWithSessions[]>(url).pipe(
-      catchError(this.handleError())
-    );
+    return this.http.get<StudentWithSessions[]>(url).pipe(catchError(this.handleError()));
   }
 
   getStudentSessions(
@@ -126,23 +121,19 @@ export class SessionService {
 
     url += queryParams;
 
-    return this.http.get<Session[]>(url).pipe(
-      catchError(this.handleError())
-    );
+    return this.http.get<Session[]>(url).pipe(catchError(this.handleError()));
   }
 
   getSession(expedientId: number, studentId: number, sessionId: number): Observable<Session> {
-    let url = this.baseUrl + 'students/' + studentId + '/expedients/' + expedientId + '/sessions/' + sessionId;
+    const url = this.baseUrl + 'students/' + studentId + '/expedients/' + expedientId + '/sessions/' + sessionId;
 
-    return this.http.get<Session>(url).pipe(
-      catchError(this.handleError())
-    );
+    return this.http.get<Session>(url).pipe(catchError(this.handleError()));
   }
 
   saveSession(expedientId: number, studentId: number, session: Session): Observable<unknown> {
     let url = this.baseUrl + 'students/' + studentId + '/expedients/' + expedientId + '/sessions';
 
-    const data: any = {
+    const data = {
       sessionType: session.sessionType,
       serviceType: session.serviceType,
       evaluations: session.evaluations,
@@ -152,16 +143,20 @@ export class SessionService {
       draft: session.draft
     };
 
+    if (session.sessionType === SessionTypes.SESION) {
+      data['interventionProgramId'] = session.interventionProgramId;
+    }
+
     if (session.sessionType === SessionTypes.ENTREVISTA_DOCENTE) {
-      data.participants = session.participants;
+      data['participants'] = session.participants;
     }
 
     if (session.sessionType === SessionTypes.ENTREVISTA_PADRES) {
-      data.startHour = session.startHour;
-      data.agreements = session.agreements;
-      data.treatedTopics = session.treatedTopics;
-      data.responsibles = session.responsibles;
-      data.otherResponsible = session.otherResponsible;
+      data['startHour'] = session.startHour;
+      data['agreements'] = session.agreements;
+      data['treatedTopics'] = session.treatedTopics;
+      data['responsibles'] = session.responsibles;
+      data['otherResponsible'] = session.otherResponsible;
     }
 
     if (session.id) {
@@ -173,11 +168,9 @@ export class SessionService {
   }
 
   deleteSession(expedientId: number, studentId: number, sessionId: number): Observable<void> {
-    let url = this.baseUrl + 'students/' + studentId + '/expedients/' + expedientId + '/sessions/' + sessionId;
+    const url = this.baseUrl + 'students/' + studentId + '/expedients/' + expedientId + '/sessions/' + sessionId;
 
-    return this.http.delete<void>(url).pipe(
-      catchError(this.handleError())
-    );
+    return this.http.delete<void>(url).pipe(catchError(this.handleError()));
   }
 
   /**
@@ -185,6 +178,7 @@ export class SessionService {
    * Let the app continue.
    */
   private handleError() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (error: any) => {
       error.error.message = this.errorMessageService.transformMessage('sessions', error.error.message);
       return throwError(error.error);

@@ -167,9 +167,29 @@
             "allowed": null,
             "children": [
                 {
-                    "route": "expedientes",
+                    "route": "expedientes/estudiantes",
                     "name": "Estudiantes",
                     "permission": 33,
+                    "allowed": false
+                },
+                {
+                    "route": "expedientes/programas",
+                    "name": "Programas de intervención",
+                    "permission": 33,
+                    "allowed": false
+                }
+            ]
+        },
+        {
+            "title": "Historial acádemido y conductual",
+            "icon": "history",
+            "permissions": [47],
+            "allowed": null,
+            "children": [
+                {
+                    "route": "historial",
+                    "name": "Estudiantes",
+                    "permission": 47,
                     "allowed": false
                 }
             ]
@@ -177,15 +197,41 @@
         {
             "title": "Reportes",
             "icon": "book",
-            "permissions": [0],
+            "permissions": [34],
             "allowed": false,
             "children": [
                 {
                     "route": "reportes/tipos-de-sesion",
                     "name": "Citas por tipo de sesión",
-                    "permission": 0,
+                    "permission": 34,
+                    "allowed": false
+                }, {
+                    "route": "reportes/tipos-de-servicio",
+                    "name": "Citas por tipo de servicio",
+                    "permission": 34,
                     "allowed": false
                 }
+
+            ]
+        },
+        {
+            "title": "Prueba sociométrica",
+            "icon": "form",
+            "permissions": [30],
+            "allowed": false,
+            "children": [
+                {
+                    "route": "pruebas-sociometricas/bancos-de-preguntas",
+                    "name": "Bancos de preguntas",
+                    "permission": 30,
+                    "allowed": false
+                }, {
+                    "route": "pruebas-sociometricas/tests",
+                    "name": "Pruebas sociométricas",
+                    "permission": 30,
+                    "allowed": false
+                }
+
             ]
         },
         {

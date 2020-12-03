@@ -8,8 +8,10 @@ import { differenceInCalendarDays } from 'date-fns';
 import { ServiceTypes } from './../../../../shared/enums/service-types.enum';
 import { Session } from '../../../shared/session.model';
 import { SessionTypes } from 'src/app/shared/enums/session-types.enum';
+import { InterventionProgram } from 'src/app/expedients/shared/intervention-program.model';
 
 import { SessionService } from '../../../shared/session.service';
+import { InterventionProgramService } from 'src/app/expedients/shared/intervention-program.service';
 
 // Editor.
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -39,20 +41,21 @@ export class StudentSessionComponent implements OnInit {
   actionLoading = false;
 
   // Duration input.
-  durationFormatter = (value: number) => value ? `${value} min` : '';
-  durationParser = (value: string) => value.replace(' min', '');
+  durationFormatter = (value: number): string => (value ? `${value} min` : '');
+  durationParser = (value: string): string => value.replace(' min', '');
 
   // Service types
   serviceTypes = Object.keys(ServiceTypes).filter((k) => isNaN(Number(k)));
+
+  // Intervention program
+  loadingPrograms = false;
+  programs: InterventionProgram[];
 
   // Editor.
   editor = ClassicEditor;
   editorConfig = {
     language: 'es',
-    toolbar: [ 'heading', '|', 'bold', 'italic', '|', 'bulletedList', 'numberedList', '|' ,'undo', 'redo' ]
-  };
-  model = {
-    editorData: '<p>Hello, world!</p>'
+    toolbar: ['heading', '|', 'bold', 'italic', '|', 'bulletedList', 'numberedList', '|', 'undo', 'redo']
   };
 
   constructor(
@@ -60,10 +63,11 @@ export class StudentSessionComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private sessionService: SessionService,
+    private programService: InterventionProgramService,
     private message: NzMessageService,
     private notification: NzNotificationService,
     private modal: NzModalService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const paramStudent = this.route.snapshot.params['student'];
@@ -103,6 +107,7 @@ export class StudentSessionComponent implements OnInit {
       date: [this.session ? this.session.startedAt : null, [Validators.required]],
       duration: [this.session ? this.session.duration : null, [Validators.required]],
       serviceType: [this.session ? this.session.serviceType : null, [Validators.required]],
+      interventionProgram: [this.session ? this.session.interventionProgram?.id : null],
       evaluations: this.fb.array([]),
       comments: [this.session ? this.session.comments : null, [Validators.required]]
     });
@@ -112,6 +117,17 @@ export class StudentSessionComponent implements OnInit {
         this.addEvaluation(evaluation.id, evaluation.description);
       });
     }
+
+    this.getPrograms();
+  }
+
+  // Intervention program.
+  getPrograms(): void {
+    this.loadingPrograms = true;
+    this.programService.getAvailablePrograms().subscribe((r) => {
+      this.programs = r;
+      this.loadingPrograms = false;
+    });
   }
 
   // Evaluations
@@ -141,7 +157,7 @@ export class StudentSessionComponent implements OnInit {
     return differenceInCalendarDays(current, new Date()) > 0;
   };
 
-  submitForm(event: any): void {
+  submitForm(submitter: string): void {
     for (const i in this.sessionForm.controls) {
       this.sessionForm.controls[i].markAsDirty();
       this.sessionForm.controls[i].updateValueAndValidity();
@@ -155,7 +171,7 @@ export class StudentSessionComponent implements OnInit {
       }
     });
 
-    const isDraft = event.submitter.id === 'draft';
+    const isDraft = submitter === 'draft';
 
     if (this.sessionForm.valid) {
       if (isDraft) {
@@ -165,7 +181,7 @@ export class StudentSessionComponent implements OnInit {
           nzTitle: '¿Desea registrar la sesión?',
           nzContent: 'La sesión ya no se podrá editar luego de realizar esta acción. ¿Desea continuar?',
           nzOnOk: () => {
-            this.saveSession(false)
+            this.saveSession(false);
           }
         });
       }
@@ -183,18 +199,19 @@ export class StudentSessionComponent implements OnInit {
     session.startedAt = formValue['date'];
     session.duration = Number.parseInt(formValue['duration']);
     session.serviceType = formValue['serviceType'];
+    session.interventionProgramId = formValue['interventionProgram'];
     session.comments = formValue['comments'];
     session.evaluations = formValue['evaluations'];
 
     if (this.session) {
-      session.id = this.session.id
+      session.id = this.session.id;
     }
 
     this.sessionService.saveSession(this.expedientId, this.studentId, session).subscribe(
       () => {
         const message = isDraft ? 'La sesión se ha guardado como borrador.' : 'La sesión ha sido registrada';
         this.message.success(message);
-        this.router.navigate(['expedientes', this.expedientId, 'estudiantes', this.studentId, 'sesiones']);
+        this.router.navigate(['expedientes', 'estudiantes', this.expedientId, this.studentId, 'sesiones']);
       },
       (error) => {
         this.actionLoading = false;
@@ -209,5 +226,4 @@ export class StudentSessionComponent implements OnInit {
       }
     );
   }
-
 }

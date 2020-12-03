@@ -1,0 +1,101 @@
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loadingStudent">
+    <div nz-row [nzGutter]="[20, 10]">
+
+        <!-- Photo and links -->
+        <div nz-col nzXs="8">
+            <div nz-row nzJustify="center">
+                <ng-container *ngIf="student.currentPhoto; else defaultPhoto">
+                    <nz-avatar [nzSize]="100" [nzSrc]="student.currentPhoto['path']"></nz-avatar>
+                </ng-container>
+                <ng-template #defaultPhoto>
+                    <nz-avatar [nzSize]="100" nzIcon="user"></nz-avatar>
+                </ng-template>
+            </div>
+
+            <div nz-row nzJustify="center">
+                <span class="status">{{ student.status }}</span>
+            </div>
+
+            <div nz-row nzJustify="center" class="links">
+                <div nz-col>
+                    <a [routerLink]="['/estudiantes', student.id, 'detalle']">Perfil</a>
+                    <nz-divider *ngIf="showAlert" nzType="vertical"></nz-divider>
+                    <nz-badge [nzDot]="showCounterAlert">
+                        <a *ngIf="showAlert" (click)="setShowModal(true)"><i nz-icon nzType="alert" nzTheme="outline"></i></a>
+                    </nz-badge>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Student basic data -->
+        <div class="student-data" nz-col nzXs="8">
+            <p>{{student.firstname}} {{student.lastname}}</p>
+            <p>{{student.code}}</p>
+            <p>Edad:  <strong>{{student.age}} años</strong></p>
+            <p>Grado y sección:  <strong>{{student.grade?.name}} {{student.section?.name || '-'}}</strong></p>
+            <p>Ingreso:  <strong>{{student.registrationYear}} ({{student.startedGrade?.name}})</strong></p>
+            <p *ngIf="history">Docente Títular:  <strong>{{history.author}}</strong></p>
+        </div>
+
+        <!-- Student siblings and responsibles -->
+        <div class="student-data" nz-col nzXs="8">
+            <div *ngIf="student.siblings.length">
+                <strong>Hermanos</strong>
+                <ul type="square">
+                    <li *ngFor="let sibling of student.siblings">{{ sibling.firstname }} {{ sibling.lastname }} ({{ sibling.status }})</li>    
+                </ul>
+            </div>
+
+            <div *ngIf="student.responsibles.length">
+                <strong>Responsables</strong>
+                <ul type="square">
+                    <li *ngFor="let responsible of student.responsibles">{{ responsible.firstname }} {{ responsible.lastname }} ({{ responsible.relationship }})</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</nz-spin>
+
+<nz-modal [(nzVisible)]="showModal" nzTitle="Resumen de faltas y sanciones asignadas"
+            [nzCancelText]="null" nzOkText="Regresar" (nzOnOk)="setShowModal(false)" (nzOnCancel)="setShowModal(false)">
+    <nz-spin [nzSpinning]="loadingCounters">
+        <ng-container *ngIf="!loadingCounters && counters">
+            
+            <ng-container *ngFor="let counter of counters">
+                <p><strong>{{counter.period}}</strong></p>
+                <div nz-row>
+                    <ng-container *ngIf="counter.foulsCounter; else noCounter">
+                        <div [class.alert]="counter.foulsCounter.minorFoulsAlert" nz-col nzSpan="6">
+                            <p class="counter-header">Faltas leves</p>
+                            <p class="counter">{{counter.foulsCounter.minorFouls}}</p>
+                        </div>
+                        <div [class.alert]="counter.foulsCounter.seriousFoulsAlert" nz-col nzSpan="6">
+                            <p class="counter-header">Faltas graves</p>
+                            <p class="counter">{{counter.foulsCounter.seriousFouls}}</p>
+                        </div>
+                        <div [class.alert]="counter.foulsCounter.verySeriousFoulsAlert" nz-col nzSpan="6">
+                            <p class="counter-header">Faltas muy graves</p>
+                            <p class="counter">{{counter.foulsCounter.verySeriousFouls}}</p>
+                        </div>
+                        <div nz-col nzSpan="6">
+                            <p class="counter-header">Sanciones</p>
+                            <p class="counter">{{counter.foulsCounter.totalSanctions}}</p>
+                        </div>
+                    </ng-container>
+
+                    <ng-template #noCounter>
+                        <div nz-col>
+                            Sin datos registrados
+                        </div>
+                    </ng-template>
+                </div> 
+            </ng-container>
+
+            <ng-container *ngIf="!counters.length">
+                Sin datos registrados
+            </ng-container>
+
+        </ng-container>
+    </nz-spin>
+</nz-modal>

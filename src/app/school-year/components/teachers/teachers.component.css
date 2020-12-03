@@ -1,0 +1,13 @@
+nz-tabset {
+    margin-top: 25px;
+}
+
+nz-collapse {
+    background-color: #fff;
+    margin-bottom: 20px;
+}
+
+.label {
+    color: #ef6c00;
+    font-weight: 500;
+}

@@ -1,0 +1,78 @@
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loadingHistory">
+
+    <div nz-row nzJustify="space-between">
+        <div nz-col>
+            <h1>Historial académico y conductual</h1>
+        </div>
+
+        <div nz-col>
+            <a nz-button nzType="primary">Generar reporte</a>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div nz-row nzJustify="center" *ngIf="selectedHistory">
+        <div nz-col>
+            <p class="navigator">
+                <a nz-button nzType="link" [disabled]="selectedHistoryIsLast" (click)="setHistory(this.selectedHistoryIndex + 1)">
+                    <i nz-icon nzType="left" nzTheme="outline"></i>
+                </a>
+
+                {{selectedHistory.behavioralHistoryGrade}}
+
+                <a nz-button nzType="link" [disabled]="selectedHistoryIsFirst" (click)="setHistory(this.selectedHistoryIndex - 1)">
+                    <i nz-icon nzType="right" nzTheme="outline"></i>
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Student details -->
+    <app-student-details [id]="studentId"
+                         [history]="selectedHistory"
+                         [showAlert]="selectedHistoryIsActive && checkPermission(46)"   
+    ></app-student-details>
+
+    <br><br>
+
+    <!-- If there is not history -->
+    <div nz-row nzJustify="center" *ngIf="!loadingHistory && !selectedHistory">
+        <div nz-col>
+            <nz-empty [nzNotFoundContent]="null"></nz-empty>
+        </div>
+    </div>
+
+    <!-- History comments summary. -->
+    <app-history-summary *ngIf="selectedHistory"
+                         [studentId]="studentId"
+                         [history]="selectedHistory"
+                         [isEditable]="selectedHistoryIsActive && checkPermission(31) && (selectedHistory.authorId === this.userId)"
+    ></app-history-summary>
+
+    <br><br>
+
+    <!-- History tabs. -->
+    <nz-tabset *ngIf="selectedHistory">
+
+        <!-- Annotations -->
+        <nz-tab nzTitle="Diario de clases" *ngIf="checkPermission(44)">
+            <app-history-annotations [studentId]="studentId"
+                                     [historyId]="selectedHistory.id"
+                                     [isEditable]="selectedHistoryIsActive && !selectedHistory.finalConclusion"
+                                     [showAdd]="checkPermission(36)"
+                                     [showEdit]="checkPermission(37)"
+                                     [showDelete]="checkPermission(38)"
+                                     [currentUser]="userId"></app-history-annotations>
+        </nz-tab>
+
+        <!-- Fouls and sanctions -->
+        <nz-tab nzTitle="Faltas y sanciones">
+            <app-history-fouls-sanctions></app-history-fouls-sanctions>
+        </nz-tab>
+
+        <!-- Comments -->
+        <nz-tab nzTitle="Comentarios finales de años previos">
+            <app-history-comments [histories]="histories" [index]="selectedHistoryIndex"></app-history-comments>
+        </nz-tab>
+      </nz-tabset>
+</nz-spin>
