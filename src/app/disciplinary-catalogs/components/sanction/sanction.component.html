@@ -43,6 +43,7 @@
         >
           <thead>
             <tr>
+              <th nzWidth="60px"></th>
               <th nzColumnKey="name" [nzSortFn]="true">Nombre</th>
               <th>Descripción</th>
               <th *ngIf="checkPermission(28)" [nzAlign]="'center'">Acción</th>
@@ -51,24 +52,33 @@
 
           <!-- Table body -->
           <tbody>
-            <tr *ngFor="let data of filterTable.data">
-              <td>{{ data.name }}</td>
-              <td nzEllipsis>{{ data.description }}</td>
+            <ng-container *ngFor="let data of filterTable.data">
+              <tr>
+                <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
+                <td>{{ data.name }}</td>
+                <td nzEllipsis>{{ data.description }}</td>
+  
+                <!-- Actions -->
+                <td *ngIf="checkPermission(28)" [nzAlign]="'center'">    
+                  <span>
+                    <a nz-tooltip  nzTooltipTitle="Actualizar">
+                      <i nz-icon nzType="edit" nzTheme="outline" (click)="edit(data)"></i>
+                    </a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a nz-tooltip nzTooltipTitle="Eliminar" (click)="showConfirm(data)">
+                      <i nz-icon nzType="delete" nzTheme="outline"></i>
+                    </a>
+                  </span>
+                </td>
+                <!-- / Actions -->
+              </tr>
+  
+              <!-- Expandable content -->
+              <tr [nzExpand]="expandSet.has(data.id)">
+                <strong>Descripción: </strong><span>{{ data.description }}</span>
+              </tr>
 
-              <!-- Actions -->
-              <td *ngIf="checkPermission(28)" [nzAlign]="'center'">    
-                <span>
-                  <a nz-tooltip  nzTooltipTitle="Actualizar">
-                    <i nz-icon nzType="edit" nzTheme="outline" (click)="edit(data)"></i>
-                  </a>
-                  <nz-divider nzType="vertical"></nz-divider>
-                  <a nz-tooltip nzTooltipTitle="Eliminar" (click)="showConfirm(data)">
-                    <i nz-icon nzType="delete" nzTheme="outline"></i>
-                  </a>
-                </span>
-              </td>
-              <!-- / Actions -->
-            </tr>
+            </ng-container>
           </tbody>
           <!-- / Table body -->
         </nz-table>

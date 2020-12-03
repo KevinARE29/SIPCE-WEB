@@ -34,6 +34,9 @@ export class SanctionComponent implements OnInit {
   sanctionsUpdated: Sanction;
   idSanction: number;
 
+  // Expant table
+  expandSet = new Set<number>();
+
   constructor(
     private modal: NzModalService,
     private message: NzMessageService,
@@ -125,6 +128,15 @@ export class SanctionComponent implements OnInit {
         }
       }
     );
+  }
+
+  // Expand table
+  onExpandChange(id: number, checked: boolean): void {
+    if (checked) {
+      this.expandSet.add(id);
+    } else {
+      this.expandSet.delete(id);
+    }
   }
 
   // Create / update modal.
