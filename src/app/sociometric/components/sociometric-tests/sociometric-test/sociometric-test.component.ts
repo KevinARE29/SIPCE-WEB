@@ -83,12 +83,12 @@ export class SociometricTestComponent implements OnInit {
 
       if (typeof param === 'string' && !Number.isNaN(Number(param))) {
         id = Number(param);
-        console.log(id);
+
         this.sociometricTestService.getSociometricTest(id).subscribe(
           (data) => {
             this.loading = false;
             this.sociometricTest = data['data'];
-            console.log(data);
+
             this.presetForm = this.fb.group({
               startedAt: [null, Validators.required],
               duration: [null, [Validators.required, Validators.min(15), Validators.max(240)]]
