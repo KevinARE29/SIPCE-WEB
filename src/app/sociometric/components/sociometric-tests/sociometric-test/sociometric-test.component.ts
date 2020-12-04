@@ -348,7 +348,7 @@ export class SociometricTestComponent implements OnInit {
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create(
             'error',
-            'Ocurrió un error al actualizar la programación la prueba sociométrica. Por favor verifique lo siguiente:',
+            'Ocurrió un error al actualizar la programación de la prueba sociométrica. Por favor verifique lo siguiente:',
             error.message,
             { nzDuration: 30000 }
           );
