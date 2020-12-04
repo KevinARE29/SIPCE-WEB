@@ -334,10 +334,9 @@ export class SociometricTestComponent implements OnInit {
     this.presetService.updatePreset(this.sociometricTest.id, this.preset).subscribe(
       (data) => {
         this.isConfirmLoading = false;
-        this.resetForm();
-        console.log(data);
-        const id = this.sociometricTest.presets.findIndex((x) => x.id === this.preset.id)[0];
+        const id = this.sociometricTest.presets.findIndex((x) => x.id === this.preset.id);
         this.sociometricTest.presets[id] = data;
+        this.resetForm();
 
         this.message.success(`La programación de la prueba sociométrica ha sido actualizada con éxito`);
       },
