@@ -14,6 +14,7 @@ import { Preset } from 'src/app/sociometric/shared/sociometric-test/preset.model
 import { SociometricTest } from 'src/app/sociometric/shared/sociometric-test/sociometric-test.model';
 import { SociometricTestService } from 'src/app/sociometric/shared/sociometric-test/sociometric-test.service';
 import { Student } from 'src/app/students/shared/student.model';
+import { PresetService } from 'src/app/sociometric/shared/sociometric-test/preset.service';
 
 @Component({
   selector: 'app-sociometric-test',
@@ -31,19 +32,15 @@ export class SociometricTestComponent implements OnInit {
   }[];
 
   // Update
-  btnLoading = false;
   editing = false;
+  btnLoading = false;
   sociometricTestForm!: FormGroup;
 
   // Presets
-  presetsForm!: FormGroup;
-  listOfPresets: Array<{
-    startedAtId: number;
-    durationId: number;
-    startedAtControlInstance: string;
-    durationControlInstance: string;
-    preset: Preset;
-  }> = [];
+  preset: Preset;
+  isVisible = false;
+  presetForm!: FormGroup;
+  isConfirmLoading = false;
 
   // Duration input.
   durationFormatter = (value: number): string => (value ? `${value} min` : '');
@@ -65,13 +62,15 @@ export class SociometricTestComponent implements OnInit {
     private fb: FormBuilder,
     private message: NzMessageService,
     private notification: NzNotificationService,
+    private presetService: PresetService,
     private questionBankService: QuestionBankService,
     private sociometricTestService: SociometricTestService
   ) {}
 
   ngOnInit(): void {
-    this.getSociometricTest();
+    this.preset = new Preset();
 
+    this.getSociometricTest();
     this.setTableSettings();
   }
 
@@ -84,14 +83,17 @@ export class SociometricTestComponent implements OnInit {
 
       if (typeof param === 'string' && !Number.isNaN(Number(param))) {
         id = Number(param);
-
+        console.log(id);
         this.sociometricTestService.getSociometricTest(id).subscribe(
           (data) => {
             this.loading = false;
             this.sociometricTest = data['data'];
-            this.presetsForm = this.fb.group({});
+            console.log(data);
+            this.presetForm = this.fb.group({
+              startedAt: [null, Validators.required],
+              duration: [null, [Validators.required, Validators.min(15), Validators.max(120)]]
+            });
 
-            this.setPresets();
             this.getCatalogs();
           },
           () => {
@@ -261,99 +263,28 @@ export class SociometricTestComponent implements OnInit {
   //#endregion
 
   //#region Presets
-  setPresets(): void {
-    let id = 0;
+  openModal(preset: Preset): void {
+    this.isVisible = true;
 
-    this.sociometricTest.presets.forEach((preset) => {
-      let index = 0;
-      let control = null;
+    if (preset) {
+      this.preset = preset;
 
-      control = {
-        startedAtId: id,
-        durationId: id + 1,
-        startedAtControlInstance: `startedAt${id}`,
-        durationControlInstance: `duration${id + 1}`,
-        preset
-      };
-
-      index = this.listOfPresets.push(control);
-
-      // Add startedAt control
-      this.presetsForm.addControl(
-        this.listOfPresets[index - 1].startedAtControlInstance,
-        new FormControl(preset.startedAt, Validators.required)
-      );
-
-      // Add duration control
-      this.presetsForm.addControl(
-        this.listOfPresets[index - 1].durationControlInstance,
-        new FormControl(preset.duration, [Validators.required, Validators.min(30), Validators.max(120)])
-      );
-      id++;
-    });
-  }
-
-  addField(e?: MouseEvent): void {
-    if (e) {
-      e.preventDefault();
-    }
-
-    const lastQuestion = this.listOfPresets.length > 0 ? this.listOfPresets[this.listOfPresets.length - 1] : null;
-    const id = lastQuestion ? lastQuestion.durationId + 1 : 0;
-    let index = 0;
-    let control = null;
-
-    control = {
-      startedAtId: id,
-      durationId: id + 1,
-      startedAtControlInstance: `startedAt${id}`,
-      durationControlInstance: `duration${id + 1}`,
-      preset: new Preset()
-    };
-
-    control.preset.edit = true;
-
-    index = this.listOfPresets.push(control);
-
-    // Add startedAt control
-    this.presetsForm.addControl(
-      this.listOfPresets[index - 1].startedAtControlInstance,
-      new FormControl(null, Validators.required)
-    );
-
-    // Add duration control
-    this.presetsForm.addControl(
-      this.listOfPresets[index - 1].durationControlInstance,
-      new FormControl(null, [Validators.required, Validators.min(15), Validators.max(120)])
-    );
-  }
-
-  createPreset(control: {
-    startedAtId: number;
-    durationId: number;
-    startedAtControlInstance: string;
-    durationControlInstance: string;
-    preset: Preset;
-  }): void {
-    console.log('Create?')
-    // Verify if control values are valid
-    if (this.checkValues(control)) {
-      console.log('Creating...');
+      this.presetForm.setValue({
+        startedAt: preset.startedAt,
+        duration: preset.duration
+      });
     }
   }
 
-  updatePreset(): void {}
-  deletePreset(): void {}
+  resetForm(): void {
+    this.isVisible = false;
+    this.preset = new Preset();
+    this.presetForm.reset();
+  }
 
-  checkValues(control: {
-    startedAtId: number;
-    durationId: number;
-    startedAtControlInstance: string;
-    durationControlInstance: string;
-    preset: Preset;
-  }): boolean {
-    const startedAtControl = this.presetsForm.controls[control.startedAtControlInstance];
-    const durationControl = this.presetsForm.controls[control.durationControlInstance];
+  handleOk(): void {
+    const startedAtControl = this.presetForm.controls['startedAt'];
+    const durationControl = this.presetForm.controls['duration'];
 
     // Display errors if needed
     startedAtControl.markAsDirty();
@@ -361,23 +292,94 @@ export class SociometricTestComponent implements OnInit {
 
     durationControl.markAsDirty();
     durationControl.updateValueAndValidity();
-    console.log(durationControl.valid, startedAtControl.valid, durationControl.valid && startedAtControl.valid)
-    // Verify if control values are valid
-    return durationControl.valid && startedAtControl.valid;
+
+    if (this.presetForm.valid) {
+      this.preset.startedAt = this.presetForm.controls['startedAt'].value;
+      this.preset.duration = this.presetForm.controls['duration'].value;
+
+      this.preset.id ? this.updatePreset() : this.createPreset();
+    }
   }
 
-  // removeField(i: { id: number; controlInstance: string; type: string; counter: number }, e: MouseEvent): void {
-  //   e.preventDefault();
-  //   const elementsToRemove = this.listOfControl.filter((item) => item.counter == i.counter);
+  createPreset(): void {
+    this.isConfirmLoading = true;
 
-  //   elementsToRemove.forEach((element) => {
-  //     const index = this.listOfControl.indexOf(element);
-  //     this.listOfControl.splice(index, 1);
-  //     this.questionBankForm.removeControl(element.controlInstance);
-  //   });
+    this.presetService.createPreset(this.sociometricTest.id, this.preset).subscribe(
+      (data) => {
+        this.isConfirmLoading = false;
+        this.resetForm();
 
-  //   if (elementsToRemove.length) this.reorderCounters();
-  // }
+        this.sociometricTest.presets.push(data);
+        this.message.success(`La prueba sociométrica ha sido programada con éxito`);
+      },
+      (error) => {
+        const statusCode = error.statusCode;
+        const notIn = [401, 403];
+        this.isConfirmLoading = false;
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create(
+            'error',
+            'Ocurrió un error al programar la prueba sociométrica. Por favor verifique lo siguiente:',
+            error.message,
+            { nzDuration: 30000 }
+          );
+        }
+      }
+    );
+  }
+
+  updatePreset(): void {
+    this.isConfirmLoading = true;
+    this.presetService.updatePreset(this.sociometricTest.id, this.preset).subscribe(
+      (data) => {
+        this.isConfirmLoading = false;
+        this.resetForm();
+        console.log(data);
+        const id = this.sociometricTest.presets.findIndex((x) => x.id === this.preset.id)[0];
+        this.sociometricTest.presets[id] = data;
+
+        this.message.success(`La programación de la prueba sociométrica ha sido actualizada con éxito`);
+      },
+      (error) => {
+        const statusCode = error.statusCode;
+        const notIn = [401, 403];
+        this.isConfirmLoading = false;
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create(
+            'error',
+            'Ocurrió un error al actualizar la programación la prueba sociométrica. Por favor verifique lo siguiente:',
+            error.message,
+            { nzDuration: 30000 }
+          );
+        }
+      }
+    );
+  }
+
+  deletePreset(presetId: number): void {
+    this.presetService.deletePreset(this.sociometricTest.id, presetId).subscribe(
+      () => {
+        this.sociometricTest.presets = this.sociometricTest.presets.filter((x) => x.id !== presetId);
+        this.message.success(`La programación ha sido eliminada con éxito`);
+      },
+      (error) => {
+        const statusCode = error.statusCode;
+        const notIn = [401, 403];
+        this.isConfirmLoading = false;
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create(
+            'error',
+            'Ocurrió un error al eliminar la programación de la prueba sociométrica. Por favor verifique lo siguiente:',
+            error.message,
+            { nzDuration: 30000 }
+          );
+        }
+      }
+    );
+  }
 
   disabledDate = (current: Date): boolean => {
     // Can not select days after today

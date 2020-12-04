@@ -79,6 +79,7 @@
         "question-banks": {
             "name": "Nombre"
         },
-        "sociometric-tests": {}
+        "sociometric-tests": {},
+        "presets": {}
     }
 }

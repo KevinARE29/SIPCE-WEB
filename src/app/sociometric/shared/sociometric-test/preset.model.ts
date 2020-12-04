@@ -5,5 +5,8 @@ export class Preset {
   startedAt: Date;
   endedAt: Date;
   isPassVisible: boolean;
-  edit: boolean;
+
+  // Formated values
+  durationInWords: string;
+  startedAtInWords: string;
 }

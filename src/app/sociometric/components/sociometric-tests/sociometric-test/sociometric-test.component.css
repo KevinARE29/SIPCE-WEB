@@ -13,10 +13,29 @@ nz-input-number, nz-date-picker {
     width: 100%;
 }
 
-.btn-cancel {
+.btn-cancel, .right {
     margin-right: 10px;
 }
 
-button.add-button {
-    display: block;
+form i {
+    padding: 5px;
+    font-size: 25px;
+}
+
+.nz-form-item{
+    margin-bottom: 5px!important;
+}
+
+.add-button {
+    margin-top: 10px;
+}
+
+div#presets div {
+    margin-right: 10px;
+    margin-bottom: 7px;
+    /* color: #000000; */
+}
+
+.grey {
+    color: #333333;
 }

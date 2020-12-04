@@ -120,126 +120,45 @@
         <!-- #region Schedule -->
         <ng-container *ngIf="sociometricTest.grade.id > 6">
             <nz-divider nzText="Pruebas programadas" nzOrientation="left"></nz-divider>
-            <div nz-col nzXs="24" [nzLg]="{ span: 18, offset: 3}"
-                [nzXl]="{ span: 16, offset: 4}">
-
-                <form nz-form [formGroup]="presetsForm" nzLayout="inline">
-                    <ng-container *ngFor="let control of listOfPresets">
-                        <!-- Is editable? -->
-                        <ng-container *ngIf="control.preset.edit;else presetTemplate">
-                            <!-- Started at -->
-                            <div nz-col nzXs="24" nzMd="8">
-                                <nz-form-item>
-                                    <nz-form-label>Fecha y hora</nz-form-label>
-                                    <nz-form-control [nzErrorTip]="startedAtErrors">
-                                        <nz-date-picker [attr.id]="control.startedAtId"
-                                            [formControlName]="control.startedAtControlInstance"
-                                            [nzShowTime]="{nzHideDisabledOptions: true, nzFormat: 'HH:mm'}"
-                                            nzFormat="dd/MM/yyyy HH:mm" [nzDisabledDate]="disabledDate"
-                                            nzPlaceHolder="Seleccionar">
-                                        </nz-date-picker>
-                                        <ng-template #startedAtErrors let-control>
-                                            <ng-container *ngIf="control.hasError('required')">La fecha y hora son
-                                                requeridas<br>
-                                            </ng-container>
-                                        </ng-template>
-                                    </nz-form-control>
-                                </nz-form-item>
-                            </div>
-
-                            <!-- Duration -->
-                            <div nz-col nzXs="24" nzMd="6">
-                                <nz-form-item>
-                                    <nz-form-label nzFor="duration">Duración</nz-form-label>
-                                    <nz-form-control [nzErrorTip]="durationErrors">
-                                        <nz-input-number [nzStep]="1"
-                                            [attr.id]="control.durationId"
-                                            [formControlName]="control.durationControlInstance"
-                                            [nzFormatter]="durationFormatter" [nzParser]="durationParser"
-                                            nzPlaceHolder="Seleccionar"></nz-input-number>
-                                        <ng-template #durationErrors let-control>
-                                            <ng-container *ngIf="control.hasError('required')">La duración es requerida<br>
-                                            </ng-container>
-                                            <ng-container *ngIf="control.hasError('min')">La duración mínima es de 15min<br>
-                                            </ng-container>
-                                            <ng-container *ngIf="control.hasError('max')">La duración máxima es de 2h (60min)<br>
-                                            </ng-container>
-                                        </ng-template>
-                                    </nz-form-control>
-                                </nz-form-item>
-                            </div>
+            <div id="presets" nz-row *ngFor="let item of sociometricTest.presets">
+                <ng-container *ngIf="item">
+                    <div>
+                        <i class="right" nz-icon nzType="calendar" nzTheme="outline"></i> 
+                        <strong>Fecha y hora:</strong> {{ item.startedAtInWords }}
+                    </div>
+                    <div>
+                        <strong>Duración:</strong> {{ item.durationInWords }}
+                    </div>
+                    <div>
+                        <strong>Contraseña:</strong>
+                        <ng-container *ngIf="item.isPassVisible; else hidePass">
+                            {{ item.password }}
+                            <a class="grey right" (click)="item.isPassVisible = false"><i nz-icon nzType="eye-invisible"
+                                    nzTheme="outline"></i></a>
                         </ng-container>
-
-                        <!-- Read only -->
-                        <ng-template #presetTemplate>
-                            <div>
-                                <i nz-icon nzType="calendar" nzTheme="outline"></i> Fecha y hora:
-                                {{ control.preset.startedAt }}
-                            </div>
-                            <div>
-                                Duración: {{ control.preset.duration }}
-                            </div>
-                        </ng-template>
-
-                        <!-- Password -->
-                        <div *ngIf="control.preset.password">
-                            Contraseña:
-                            <ng-container *ngIf="control.preset.isPassVisible; else hidePass">
-                                {{ control.preset.password }}
-                                <a (click)="control.preset.isPassVisible = false"><i nz-icon nzType="eye-invisible"
-                                        nzTheme="outline"></i></a>
-                            </ng-container>
-                            <ng-template #hidePass>
-                                ********
-                                <a (click)="control.preset.isPassVisible = true"><i nz-icon nzType="eye"
-                                        nzTheme="outline"></i></a>
-                            </ng-template>
-                        </div>
-
-                        <!-- Actions -->
-                        <ng-container *ngIf="control.preset.id;else createTemplate">
-                            <!-- Updating -->
-                            <ng-container *ngIf="control.preset.edit;else viewTemplate">
-                                <a nz-tooltip nzTooltipTitle="Actualizar" (click)="updatePreset()">
-                                    <i nz-icon nzType="save" nzTheme="outline"></i>
-                                </a>
-                                <a nz-popconfirm
-                                    nzPopconfirmTitle="¿Desea descartar los cambios?" nzOkText="Sí" nzCancelText="No"
-                                    (nzOnConfirm)="control.preset.edit = false;">
-                                    <i nz-icon nzType="close-circle" nzTheme="outline"></i>
-                                </a>
-                            </ng-container>
-                            <!-- Read only -->
-                            <ng-template #viewTemplate>
-                                <a nz-tooltip nzTooltipTitle="Editar">
-                                    <i nz-icon nzType="edit" nzTheme="outline"></i>
-                                </a>
-                                <a nz-tooltip nzTooltipTitle="Eliminar" nz-popconfirm
-                                    nzPopconfirmTitle="¿Desea eliminar la programación?" nzOkText="Sí" nzCancelText="No"
-                                    (nzOnConfirm)="deletePreset()">
-                                    <i nz-icon nzType="close-circle" nzTheme="outline"></i>
-                                </a>                                        
-                            </ng-template>
-                        </ng-container>
-                        <!-- Creating -->
-                        <ng-template #createTemplate>
-                            <a nz-tooltip nzTooltipTitle="Guardar" (click)="createPreset(control)">
-                                <i nz-icon nzType="save" nzTheme="outline"></i>
-                            </a>
-                            <a nz-popconfirm
-                                nzPopconfirmTitle="¿Desea descartar los cambios?" nzOkText="Sí" nzCancelText="No"
-                                (nzOnConfirm)="control.preset.edit = false">
-                                <i nz-icon nzType="close-circle" nzTheme="outline"></i>
+                        <ng-template #hidePass>
+                            ********
+                            <a class="grey right" (click)="item.isPassVisible = true">
+                                <i nz-icon nzType="eye" nzTheme="outline"></i>
                             </a>
                         </ng-template>
-                    </ng-container>
-
-                    <nz-form-control nz-col>
-                        <button nz-button nzGhost nzType="primary" class="add-button" (click)="addField($event)">
-                            Agregar programación
-                        </button>
-                    </nz-form-control>
-                </form>
+                    </div>
+                    <div>
+                        <a class="right" nz-tooltip nzTooltipTitle="Editar" (click)="openModal(item)">
+                            <i nz-icon nzType="edit" nzTheme="outline"></i>
+                        </a>
+                        <a class="right" nz-tooltip nzTooltipTitle="Eliminar" nz-popconfirm
+                            nzPopconfirmTitle="¿Desea eliminar la programación?" nzOkText="Sí" nzCancelText="No"
+                            (nzOnConfirm)="deletePreset(item.id)">
+                            <i nz-icon nzType="delete" nzTheme="outline"></i>
+                        </a>
+                    </div>
+                </ng-container>
+            </div>
+            <div nz-col nzSpan="24">
+                <button nz-button nzGhost nzType="primary" class="add-button" (click)="openModal(null)">
+                    Agregar programación
+                </button>
             </div>
         </ng-container>
         <!-- #endregion -->
@@ -292,3 +211,61 @@
     </ng-container>
 
 </nz-spin>
+
+<!-- Create/Update modal -->
+<nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]="modalTitle"
+    [nzContent]="modalContent"
+    [nzFooter]="modalFooter"
+    (nzOnCancel)="resetForm()"
+>
+    <ng-template #modalTitle> Programación de prueba sociométrica </ng-template>
+
+    <ng-template #modalContent>
+        <form nz-form [formGroup]="presetForm">
+            <nz-form-item>
+                <nz-form-label>Fecha y hora</nz-form-label>
+                <nz-form-control [nzErrorTip]="startedAtErrors">
+                    <nz-date-picker 
+                        formControlName="startedAt"
+                        [nzShowTime]="{nzHideDisabledOptions: true, nzFormat: 'HH:mm'}"
+                        nzFormat="dd/MM/yyyy HH:mm" [nzDisabledDate]="disabledDate"
+                        nzPlaceHolder="Seleccionar">
+                    </nz-date-picker>
+                    <ng-template #startedAtErrors let-control>
+                        <ng-container *ngIf="control.hasError('required')">La fecha y hora son
+                            requeridas<br>
+                        </ng-container>
+                    </ng-template>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label nzFor="duration">Duración</nz-form-label>
+                <nz-form-control [nzErrorTip]="durationErrors">
+                    <nz-input-number [nzStep]="5"
+                        formControlName="duration"
+                        [nzFormatter]="durationFormatter" [nzParser]="durationParser"
+                        nzPlaceHolder="Seleccionar"></nz-input-number>
+                    <ng-template #durationErrors let-control>
+                        <ng-container *ngIf="control.hasError('required')">La duración es
+                            requerida<br>
+                        </ng-container>
+                        <ng-container *ngIf="control.hasError('min')">
+                            La duración mínima es de 15min<br>
+                        </ng-container>
+                        <ng-container *ngIf="control.hasError('max')">
+                            La duración máxima es de 2h (60min)<br>
+                        </ng-container>
+                    </ng-template>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </ng-template>
+
+    <ng-template #modalFooter>
+        <button nz-button nzType="default" (click)="resetForm()">Cancelar</button>
+        <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">Guardar</button>
+    </ng-template>
+</nz-modal>
