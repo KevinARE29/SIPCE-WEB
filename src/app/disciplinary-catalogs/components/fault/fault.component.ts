@@ -207,7 +207,7 @@ export class FaultComponent implements OnInit {
           () => {
             this.isConfirmLoading = false;
             this.isVisible = false;
-            this.message.success('falta creada con éxito');
+            this.message.success('Falta creada con éxito');
             this.search();
           },
           (error) => {
