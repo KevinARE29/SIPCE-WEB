@@ -121,7 +121,7 @@ export class FoulsSanctionsService {
 
     if (assignation.id) {
       url += '/' + assignation.id;
-      return this.http.patch<FoulAssignation>(url, JSON.stringify(data)).pipe(catchError(this.handleError()));
+      return this.http.put<FoulAssignation>(url, JSON.stringify(data)).pipe(catchError(this.handleError()));
     } else {
       return this.http.post<FoulAssignation>(url, JSON.stringify(data)).pipe(catchError(this.handleError()));
     }

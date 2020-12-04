@@ -186,7 +186,7 @@ export class HistoryFoulsSanctionsComponent implements OnInit, OnChanges {
     this.form = this.fb.group({
       foul: [this.assignationModal ? this.assignationModal.foul.id : null, [Validators.required]],
       foulType: [this.assignationModal ? this.assignationModal.foul.foulsType : null, [Validators.required]],
-      sanction: [this.assignationModal ? this.assignationModal.sanction.id : null],
+      sanction: [this.assignationModal && this.assignationModal.sanction ? this.assignationModal.sanction.id : null],
       period: [this.assignationModal ? this.assignationModal.period.id : null, [Validators.required]],
       issueDate: [this.assignationModal ? this.assignationModal.issueDate : null, [Validators.required]]
     });
