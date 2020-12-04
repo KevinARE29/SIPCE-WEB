@@ -5,7 +5,7 @@
                 <h1>Prueba sociométrica</h1>
             </div>
             <div nz-col nzFlex="110px">
-                <a nz-button nzGhost nzType="primary">Generar reporte</a>
+                <a class="report" nz-button nzGhost nzType="primary">Generar reporte</a>
             </div>
         </div>
 
@@ -122,14 +122,14 @@
             <nz-divider nzText="Pruebas programadas" nzOrientation="left"></nz-divider>
             <div id="presets" nz-row *ngFor="let item of sociometricTest.presets">
                 <ng-container *ngIf="item">
-                    <div>
+                    <div nz-col nzXs="24" nzXl="10" nzXXl="7">
                         <i class="right" nz-icon nzType="calendar" nzTheme="outline"></i> 
                         <strong>Fecha y hora:</strong> {{ item.startedAtInWords }}
                     </div>
-                    <div>
+                    <div nz-col nzXl="24" nzSm="11" nzMd="9" nzXl="5" nzXXl="3">
                         <strong>Duración:</strong> {{ item.durationInWords }}
                     </div>
-                    <div>
+                    <div nz-col nzXl="24" nzSm="13" nzMd="12" nzXl="6" nzXXl="4">
                         <strong>Contraseña:</strong>
                         <ng-container *ngIf="item.isPassVisible; else hidePass">
                             {{ item.password }}
@@ -143,7 +143,7 @@
                             </a>
                         </ng-template>
                     </div>
-                    <div>
+                    <div nz-col nzXs="24" nzMd="3">
                         <a class="right" nz-tooltip nzTooltipTitle="Editar" (click)="openModal(item)">
                             <i nz-icon nzType="edit" nzTheme="outline"></i>
                         </a>

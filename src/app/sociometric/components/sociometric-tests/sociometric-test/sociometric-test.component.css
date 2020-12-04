@@ -22,18 +22,16 @@ form i {
     font-size: 25px;
 }
 
-.nz-form-item{
+/* .nz-form-item{
     margin-bottom: 5px!important;
+} */
+
+.report, #presets {
+    margin-bottom: 10px;
 }
 
 .add-button {
     margin-top: 10px;
-}
-
-div#presets div {
-    margin-right: 10px;
-    margin-bottom: 7px;
-    /* color: #000000; */
 }
 
 .grey {
