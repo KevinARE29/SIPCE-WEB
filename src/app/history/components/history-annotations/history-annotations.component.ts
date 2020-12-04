@@ -211,7 +211,7 @@ export class HistoryAnnotationsComponent implements OnInit, OnChanges {
           const notIn = [401, 403];
 
           if (!notIn.includes(statusCode) && statusCode < 500) {
-            this.notification.create('error', 'Ocurrió un error al intentar registrar la sesión.', error.message, {
+            this.notification.create('error', 'Ocurrió un error al intentar registrar la anotación.', error.message, {
               nzDuration: 30000
             });
           }
