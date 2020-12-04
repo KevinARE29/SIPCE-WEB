@@ -120,16 +120,16 @@
     <ng-template #modalContent>
         <ng-container *ngIf="showModal">
             <form nz-form nzLayout="vertical" [formGroup]="form">
-                <div nz-row nzJustify="center" [nzGutter]="10">
+                <div nz-row [nzGutter]="10">
 
                     <!-- Creation date -->
-                    <div nz-col nzXs="24" *ngIf="assignationModal && assignationModal.createdAt">
+                    <div nz-col nzXs="22" *ngIf="assignationModal && assignationModal.createdAt">
                         <i nz-icon nzType="calendar" nzTheme="outline"></i> {{ this.assignationModal.createdAt | date: 'dd/MM/yyyy' }}
                         <br><br>
                     </div>
             
                     <!-- Date -->
-                    <div nz-col nzXs="24">
+                    <div nz-col nzXs="22">
                         <nz-form-item>
                             <nz-form-label><strong>Fecha del incidente</strong></nz-form-label>
                             <nz-form-control [nzErrorTip]="dateErrors">
@@ -143,7 +143,7 @@
                     </div>
 
                     <!-- Period -->
-                    <div nz-col nzXs="24">
+                    <div nz-col nzXs="22">
                         <nz-form-item>
                             <nz-form-label><strong>Periodo</strong></nz-form-label>
                             <nz-form-control [nzErrorTip]="periodErrors">
@@ -161,7 +161,7 @@
                     </div>
 
                     <!-- Foul type -->
-                    <div nz-col nzXs="24">
+                    <div nz-col nzXs="22">
                         <nz-form-item>
                             <nz-form-label><strong>Tipo de falta</strong></nz-form-label>
                             <nz-form-control [nzErrorTip]="foulTypeErrors">
@@ -178,12 +178,12 @@
                     </div>
 
                     <!-- Foul -->
-                    <div nz-col nzXs="24">
+                    <div nz-col nzXs="22">
                         <nz-form-item>
                             <nz-form-label><strong>Falta a asignar</strong></nz-form-label>
                             <nz-form-control [nzErrorTip]="foulErrors">
                                 
-                                <nz-select nzShowSearch nzAllowClear formControlName="foul" nzPlaceHolder="Seleccionar" [nzLoading]="loadingFouls">
+                                <nz-select nzShowSearch nzAllowClear formControlName="foul" nzPlaceHolder="Seleccionar" [nzLoading]="loadingFouls" (ngModelChange)="changeSelectedFoul($event)">
                                     <nz-option *ngFor="let foul of foulsFiltered" [nzValue]="foul.id" [nzLabel]="foul.numeral">
                                     </nz-option>
                                 </nz-select>
@@ -194,14 +194,19 @@
                             </nz-form-control>
                         </nz-form-item>
                     </div>
+                    <div nz-col nzXs="2">
+                        <div *ngIf="selectedFoul" class="btn-container" nz-row nzAlign="middle" nzJustify="center">
+                            <i nz-icon nzType="info-circle" nzTheme="outline" nz-tooltip [nzTooltipTitle]="selectedFoul.description"></i>
+                        </div>
+                    </div>
 
                     <!-- Sanction -->
-                    <div nz-col nzXs="24">
+                    <div nz-col nzXs="22">
                         <nz-form-item>
                             <nz-form-label><strong>Sanción a asignar</strong></nz-form-label>
                             <nz-form-control [nzErrorTip]="sanctionErrors">
                                 
-                                <nz-select nzShowSearch nzAllowClear formControlName="sanction" nzPlaceHolder="Seleccionar" [nzLoading]="loadingSanctions">
+                                <nz-select nzShowSearch nzAllowClear formControlName="sanction" nzPlaceHolder="Seleccionar" [nzLoading]="loadingSanctions" (ngModelChange)="changeSelectedSanction($event)">
                                     <nz-option *ngFor="let sanction of sanctions" [nzValue]="sanction.id" [nzLabel]="sanction.name">
                                     </nz-option>
                                 </nz-select>
@@ -211,6 +216,11 @@
                                 </ng-template>
                             </nz-form-control>
                         </nz-form-item>
+                    </div>
+                    <div nz-col nzXs="2">
+                        <div *ngIf="selectedSanction" class="btn-container" nz-row nzAlign="middle" nzJustify="center">
+                            <i nz-icon nzType="info-circle" nzTheme="outline" nz-tooltip [nzTooltipTitle]="selectedSanction.description"></i>
+                        </div>
                     </div>
         
                 </div>

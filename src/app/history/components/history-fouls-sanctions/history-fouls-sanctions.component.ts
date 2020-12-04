@@ -47,9 +47,11 @@ export class HistoryFoulsSanctionsComponent implements OnInit, OnChanges {
 
   fouls: Foul[];
   foulsFiltered: Foul[];
+  selectedFoul: Foul;
   loadingFouls = false;
 
   sanctions: Sanction[];
+  selectedSanction: Sanction;
   loadingSanctions = false;
 
   foulTypes = Object.values(FoulTypes).filter((k) => isNaN(Number(k)));
@@ -199,8 +201,12 @@ export class HistoryFoulsSanctionsComponent implements OnInit, OnChanges {
 
     if (this.assignationModal) {
       this.filterFouls(this.assignationModal.foul.foulsType);
+      this.selectedFoul = this.assignationModal.foul;
+      this.selectedSanction = this.assignationModal.sanction;
     } else {
       this.filterFouls();
+      this.selectedFoul = null;
+      this.selectedSanction = null;
     }
 
     this.setShowModal(true);
@@ -310,5 +316,14 @@ export class HistoryFoulsSanctionsComponent implements OnInit, OnChanges {
         }
       }
     );
+  }
+
+  // Show selected foul and sanction info.
+  changeSelectedFoul(id: number): void {
+    this.selectedFoul = this.fouls.find((foul) => foul.id === id);
+  }
+
+  changeSelectedSanction(id: number): void {
+    this.selectedSanction = this.sanctions.find((sanction) => sanction.id === id);
   }
 }
