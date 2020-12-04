@@ -1,0 +1,149 @@
+<div nz-row>
+  <div nz-col>
+      <h1>Sanciones</h1>
+  </div>
+</div>
+
+<!--Sanction searcher an create button-->
+<div nz-row [nzGutter]="[20, 20]">
+
+  <!-- Filters -->
+  <div nz-col nzXs="24" nzSm="16" [nzLg]="{ span: 8, offset: 2}" [nzXl]="{ span: 10, offset: 4}">
+    <label>Nombre: </label>
+    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+      <input type="text" nz-input placeholder="Buscar sanción" [(ngModel)]="searchValue"/>
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzType="primary" nzSearch (click)="search()"><i nz-icon nzType="search"></i></button>
+    </ng-template> 
+  </div>
+
+  <!-- Create button -->
+  <div nz-col nzXs="24" nzSm="8" nzLg="12" nzXl="6" *ngIf="checkPermission(28)">
+    <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+      <a nz-button nzType="primary" (click)="create()">Crear sanción</a>
+    </div>
+  </div>
+</div>
+
+<!--Table-->
+<div nz-row >
+  <div nz-col nzXs="24" [nzLg]="{ span: 20, offset: 2}" [nzXl]="{ span: 16, offset: 4}">
+    <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+      <nz-table #filterTable
+                nzTableLayout="fixed"
+                nzSize="small"
+                [nzData]="listOfDisplayData"
+                [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems"
+                [nzPageSize]="pagination.perPage"
+                [nzPageIndex]="pagination.page"
+                (nzQueryParams)="getSanctions($event)"
+      >
+        <thead>
+          <tr>
+            <th nzWidth="60px"></th>
+            <th nzColumnKey="name" [nzSortFn]="true">Nombre</th>
+            <th>Descripción</th>
+            <th *ngIf="checkPermission(28)" [nzAlign]="'center'">Acción</th>
+          </tr>
+        </thead> 
+
+        <!-- Table body -->
+        <tbody>
+          <ng-container *ngFor="let data of filterTable.data">
+            <tr>
+              <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
+              <td>{{ data.name }}</td>
+              <td nzEllipsis>{{ data.description }}</td>
+
+              <!-- Actions -->
+              <td *ngIf="checkPermission(28)" [nzAlign]="'center'">    
+                <span>
+                  <a nz-tooltip  nzTooltipTitle="Actualizar">
+                    <i nz-icon nzType="edit" nzTheme="outline" (click)="edit(data)"></i>
+                  </a>
+                  <nz-divider nzType="vertical"></nz-divider>
+                  <a nz-tooltip nzTooltipTitle="Eliminar" (click)="showConfirm(data)">
+                    <i nz-icon nzType="delete" nzTheme="outline"></i>
+                  </a>
+                </span>
+              </td>
+              <!-- / Actions -->
+            </tr>
+
+            <!-- Expandable content -->
+            <tr [nzExpand]="expandSet.has(data.id)">
+              <strong>Descripción: </strong><span>{{ data.description }}</span>
+            </tr>
+
+          </ng-container>
+        </tbody>
+        <!-- / Table body -->
+      </nz-table>
+    </nz-spin>
+  </div>
+</div>
+
+<!-- Create sanction modal -->
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()">
+    
+  <!-- Modal content -->
+  <ng-template #modalContent>
+    <form nz-form nzLayout="vertical" [formGroup]="sanctionForm">
+      <div nz-row nzJustify="center" [nzGutter]="10">
+
+        <!-- Name -->
+        <div nz-col nzXs="24">
+          <nz-form-item>
+            <nz-form-label><strong>Nombre</strong></nz-form-label>
+            <nz-form-control [nzErrorTip]="errorName">
+
+              <input nz-input formControlName="name" placeholder="Nombre de la sanción" />
+              
+              <ng-template #errorName let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                  El nombre es requerido. <br>
+                </ng-container>
+                <ng-container *ngIf="control.hasError('pattern')">
+                  El nombre debe contener solo letras. <br>
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                  El nombre debe contener máximo 128 caracteres.
+                </ng-container>
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Description -->
+        <div nz-col nzXs="24">
+          <nz-form-item>
+            <nz-form-label><strong>Descripción</strong></nz-form-label>
+            <nz-form-control [nzErrorTip]="errorDescription">
+              
+              <textarea rows="6" nz-input formControlName="description" placeholder="Descripción de la sanción"></textarea>
+              
+              <ng-template #errorDescription let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                  La descripción es requerida. <br>
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                  La descripción debe contener máximo 256 caracteres.
+                </ng-container>
+              </ng-template>
+              
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      
+      </div>
+    </form>
+  </ng-template>
+  
+  <!-- Modal footer -->
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Cancelar</button>
+    <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">Guardar</button>
+  </ng-template>
+</nz-modal>

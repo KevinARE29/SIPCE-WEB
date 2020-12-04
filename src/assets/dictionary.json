@@ -79,7 +79,13 @@
         "question-banks": {
             "name": "Nombre"
         },
+        "presets": {},
         "sociometric-tests": {},
-        "presets": {}
+        "disciplinary-catalog": {
+            "name": "Nombre de la sanción",
+            "description": "Descripción",
+            "numeral": "Numeral de la falta",
+            "fousType": "Tipo de la falta"
+        }
     }
 }

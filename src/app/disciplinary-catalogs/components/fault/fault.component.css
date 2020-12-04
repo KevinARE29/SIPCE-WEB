@@ -1,0 +1,17 @@
+nz-table {
+  margin-top: 30px;
+}
+
+nz-select {
+  border-radius: 7px;
+  width: 100%;
+}
+
+.btn-container {
+  height: 100%;
+}
+
+.float-right {
+  float: right;
+}
+
