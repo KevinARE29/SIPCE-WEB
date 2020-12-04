@@ -121,6 +121,12 @@
         <ng-container *ngIf="showModal">
             <form nz-form nzLayout="vertical" [formGroup]="form">
                 <div nz-row nzJustify="center" [nzGutter]="10">
+
+                    <!-- Creation date -->
+                    <div nz-col nzXs="24" *ngIf="assignationModal && assignationModal.createdAt">
+                        <i nz-icon nzType="calendar" nzTheme="outline"></i> {{ this.assignationModal.createdAt | date: 'dd/MM/yyyy' }}
+                        <br><br>
+                    </div>
             
                     <!-- Date -->
                     <div nz-col nzXs="24">
