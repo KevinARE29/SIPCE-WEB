@@ -1,1 +1,231 @@
-En proceso
+<div nz-row nzJustify="end">
+    <div nz-col>
+        <a *ngIf="isEditable && showAdd" nz-button nzType="primary" (click)="openModal(null)">Asignar falta y sanción</a>
+    </div>
+</div>
+
+<div nz-row [nzGutter]="[10, 10]">
+    <!-- Numeral -->
+    <div nz-col nzXs="24" nzSm="12" nzLg="8">
+        <label>Numeral: </label>
+        <nz-input-group [nzSuffix]="inputClearName">
+            <input nz-input [(ngModel)]="search.foul.numeral" placeholder="Buscar numeral" />
+        </nz-input-group>
+        <ng-template #inputClearName>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="search.foul.numeral" (click)="search.foul.numeral = null; getAssignations(null)"></i>
+        </ng-template>
+    </div>
+
+    <!-- Period -->
+    <div nz-col nzXs="24" nzSm="12" nzLg="8">
+        <label>Periodo: </label>
+        <nz-input-group>
+            <nz-select nzShowSearch nzAllowClear [(ngModel)]="search.period.id"
+                (ngModelChange)="getAssignations(null)" nzPlaceHolder="Seleccionar" [nzLoading]="loadingPeriods">
+                <nz-option *ngFor="let period of periods" [nzValue]="period.id" [nzLabel]="period.name">
+                </nz-option>
+            </nz-select>
+        </nz-input-group>
+    </div>
+
+    <!-- Foul type -->
+    <div nz-col nzXs="24" nzSm="12" nzLg="8">
+        <label>Tipo de falta: </label>
+        <nz-input-group>
+            <nz-select nzAllowClear [(ngModel)]="search.foul.foulsType" (ngModelChange)="getAssignations(null)" nzPlaceHolder="Seleccionar el tipo de falta">
+                <nz-option *ngFor="let type of foulTypes" [nzValue]="type" [nzLabel]="type"></nz-option>
+            </nz-select>
+        </nz-input-group>
+    </div>
+
+    <!-- Date -->
+    <div nz-col nzXs="24" nzLg="10" nzXl="10">
+        <label>Fecha de reporte: </label>
+        <nz-input-group>
+            <nz-range-picker nzFormat="dd/MM/yyyy" [nzDisabledDate]="disabledDate" [(ngModel)]="createdDateRangeSearch" (ngModelChange)="onChangeCreatedDatePicker()"></nz-range-picker>
+        </nz-input-group>
+    </div>
+
+    <!-- Date -->
+    <div nz-col nzXs="24" nzLg="10" nzXl="10">
+        <label>Fecha de incidente: </label>
+        <nz-input-group>
+            <nz-range-picker nzFormat="dd/MM/yyyy" [nzDisabledDate]="disabledDate" [(ngModel)]="issueDateRangeSearch" (ngModelChange)="onChangeIssueDatePicker()"></nz-range-picker>
+        </nz-input-group>
+    </div>
+
+    <!-- Search button-->
+    <div nz-col nzXs="24" nzLg="4">
+        <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+            <button nz-button nzType="primary" (click)="getAssignations(null)">Buscar</button>
+        </div>
+    </div>
+</div>
+
+<div nz-row>
+    <div nz-col nzSpan="24">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loadingData">
+            <nz-table #filterTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems" [nzPageSize]="pagination.perPage" [nzPageIndex]="pagination.page"
+                nzSize="small" (nzQueryParams)="getAssignations($event)">
+                <thead>
+                    <tr>
+                        <th nzWidth="60px"></th>
+                        <th nzColumnKey="issueDate" [nzSortFn]="true" [nzSortPriority]="1">Fecha de incidente</th>
+                        <th nzColumnKey="createdAt" [nzSortFn]="true" [nzSortPriority]="2">Fecha de reporte</th>
+                        <th nzColumnKey="numeral" [nzSortFn]="true" [nzSortPriority]="3">Falta</th>
+                        <th nzColumnKey="name" [nzSortFn]="true" [nzSortPriority]="4">Sanción</th>
+                        <th [nzAlign]="'center'">Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <ng-container *ngFor="let data of filterTable.data">
+                        <tr>
+                            <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
+                            <td>{{data.issueDate | date: 'dd/MM/yyyy'}}</td>
+                            <td>{{data.createdAt | date: 'dd/MM/yyyy'}}</td>
+                            <td>{{data.foul.numeral}}</td>
+                            <td>{{data.sanction ? data.sanction.name : '-'}}</td>
+                            <td [nzAlign]="'center'">
+                                <a *ngIf="showEdit && data.editable" (click)="openModal(data)">
+                                    <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
+                                </a>
+                                <nz-divider *ngIf="showDelete && data.editable" nzType="vertical"></nz-divider>
+                                <a *ngIf="showDelete && data.editable" (click)="confirmDelete(data)">
+                                    <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
+                                </a> 
+                            </td>
+                        </tr>
+                        <tr [nzExpand]="expandSet.has(data.id)">
+                            <p class="assignation-header">
+                                {{data.period.name}}
+                                <nz-tag> {{ data.foul.foulsType }}</nz-tag>
+                            </p>
+                            <p><strong>Descripción de la falta: </strong> {{ data.foul.description }}</p>
+                            <p><strong>Descripción de la sanción: </strong> {{ data.sanction ? data.sanction.description : '-' }}</p>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>
+
+<!-- Create / update modal -->
+<nz-modal [(nzVisible)]="showModal" [nzTitle]="modalTitle" [nzContent]="modalContent"
+    nzOkText="Guardar" nzCancelText="Cancelar" (nzOnOk)="onModalOk()" (nzOnCancel)="setShowModal(false)">
+    
+    <!-- Modal content -->
+    <ng-template #modalContent>
+        <ng-container *ngIf="showModal">
+            <form nz-form nzLayout="vertical" [formGroup]="form">
+                <div nz-row [nzGutter]="10">
+
+                    <!-- Creation date -->
+                    <div nz-col nzXs="22" *ngIf="assignationModal && assignationModal.createdAt">
+                        <i nz-icon nzType="calendar" nzTheme="outline"></i> {{ this.assignationModal.createdAt | date: 'dd/MM/yyyy' }}
+                        <br><br>
+                    </div>
+            
+                    <!-- Date -->
+                    <div nz-col nzXs="22">
+                        <nz-form-item>
+                            <nz-form-label><strong>Fecha del incidente</strong></nz-form-label>
+                            <nz-form-control [nzErrorTip]="dateErrors">
+                                <nz-date-picker formControlName="issueDate" nzFormat="dd/MM/yyyy" [nzDisabledDate]="disabledDate" nzPlaceHolder="Seleccionar">
+                                </nz-date-picker>
+                                <ng-template #dateErrors let-control>
+                                    <ng-container *ngIf="control.hasError('required')">La fecha del incidente es requerida<br></ng-container>
+                                </ng-template>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+
+                    <!-- Period -->
+                    <div nz-col nzXs="22">
+                        <nz-form-item>
+                            <nz-form-label><strong>Periodo</strong></nz-form-label>
+                            <nz-form-control [nzErrorTip]="periodErrors">
+                                
+                                <nz-select nzShowSearch nzAllowClear formControlName="period" nzPlaceHolder="Seleccionar" [nzLoading]="loadingPeriods">
+                                    <nz-option *ngFor="let period of periods" [nzValue]="period.id" [nzLabel]="period.name">
+                                    </nz-option>
+                                </nz-select>
+        
+                                <ng-template #periodErrors let-control>
+                                    <ng-container *ngIf="control.hasError('required')">El periodo es requerido<br></ng-container>
+                                </ng-template>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+
+                    <!-- Foul type -->
+                    <div nz-col nzXs="22">
+                        <nz-form-item>
+                            <nz-form-label><strong>Tipo de falta</strong></nz-form-label>
+                            <nz-form-control [nzErrorTip]="foulTypeErrors">
+                                
+                                <nz-select formControlName="foulType" nzPlaceHolder="Seleccionar el tipo de falta" (ngModelChange)="changeFoulType($event)">
+                                    <nz-option *ngFor="let type of foulTypes" [nzValue]="type" [nzLabel]="type"></nz-option>
+                                </nz-select>
+                                
+                                <ng-template #foulTypeErrors let-control>
+                                    <ng-container *ngIf="control.hasError('required')">El tipo de falta es requerido<br></ng-container>
+                                </ng-template>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+
+                    <!-- Foul -->
+                    <div nz-col nzXs="22">
+                        <nz-form-item>
+                            <nz-form-label><strong>Falta a asignar</strong></nz-form-label>
+                            <nz-form-control [nzErrorTip]="foulErrors">
+                                
+                                <nz-select nzShowSearch nzAllowClear formControlName="foul" nzPlaceHolder="Seleccionar" [nzLoading]="loadingFouls" (ngModelChange)="changeSelectedFoul($event)">
+                                    <nz-option *ngFor="let foul of foulsFiltered" [nzValue]="foul.id" [nzLabel]="foul.numeral">
+                                    </nz-option>
+                                </nz-select>
+        
+                                <ng-template #foulErrors let-control>
+                                    <ng-container *ngIf="control.hasError('required')">La falta es requerida<br></ng-container>
+                                </ng-template>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                    <div nz-col nzXs="2">
+                        <div *ngIf="selectedFoul" class="btn-container" nz-row nzAlign="middle" nzJustify="center">
+                            <i nz-icon nzType="info-circle" nzTheme="outline" nz-tooltip [nzTooltipTitle]="selectedFoul.description"></i>
+                        </div>
+                    </div>
+
+                    <!-- Sanction -->
+                    <div nz-col nzXs="22">
+                        <nz-form-item>
+                            <nz-form-label><strong>Sanción a asignar</strong></nz-form-label>
+                            <nz-form-control [nzErrorTip]="sanctionErrors">
+                                
+                                <nz-select nzShowSearch nzAllowClear formControlName="sanction" nzPlaceHolder="Seleccionar" [nzLoading]="loadingSanctions" (ngModelChange)="changeSelectedSanction($event)">
+                                    <nz-option *ngFor="let sanction of sanctions" [nzValue]="sanction.id" [nzLabel]="sanction.name">
+                                    </nz-option>
+                                </nz-select>
+        
+                                <ng-template #sanctionErrors let-control>
+                                    <ng-container *ngIf="control.hasError('required')">La sanción es requerida<br></ng-container>
+                                </ng-template>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                    <div nz-col nzXs="2">
+                        <div *ngIf="selectedSanction" class="btn-container" nz-row nzAlign="middle" nzJustify="center">
+                            <i nz-icon nzType="info-circle" nzTheme="outline" nz-tooltip [nzTooltipTitle]="selectedSanction.description"></i>
+                        </div>
+                    </div>
+        
+                </div>
+            </form>
+        </ng-container>
+    </ng-template>
+
+</nz-modal>

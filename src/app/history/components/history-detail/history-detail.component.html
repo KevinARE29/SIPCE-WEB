@@ -66,8 +66,13 @@
         </nz-tab>
 
         <!-- Fouls and sanctions -->
-        <nz-tab nzTitle="Faltas y sanciones">
-            <app-history-fouls-sanctions></app-history-fouls-sanctions>
+        <nz-tab nzTitle="Faltas y sanciones" *ngIf="checkPermission(46)">
+            <app-history-fouls-sanctions [studentId]="studentId"
+                                         [historyId]="selectedHistory.id"
+                                         [isEditable]="selectedHistoryIsActive && (selectedHistory.authorId === this.userId) && !selectedHistory.finalConclusion"
+                                         [showAdd]="checkPermission(41)"
+                                         [showEdit]="checkPermission(42)"
+                                         [showDelete]="checkPermission(43)"></app-history-fouls-sanctions>
         </nz-tab>
 
         <!-- Comments -->
