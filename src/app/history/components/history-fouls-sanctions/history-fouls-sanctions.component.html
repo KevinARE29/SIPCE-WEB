@@ -33,9 +33,7 @@
         <label>Tipo de falta: </label>
         <nz-input-group>
             <nz-select nzAllowClear [(ngModel)]="search.foul.foulsType" (ngModelChange)="getAssignations(null)" nzPlaceHolder="Seleccionar el tipo de falta">
-                <nz-option nzValue="Leves" nzLabel="Leve"></nz-option>
-                <nz-option nzValue="Graves" nzLabel="Grave"></nz-option>
-                <nz-option nzValue="Muy Graves" nzLabel="Muy Grave"></nz-option>
+                <nz-option *ngFor="let type of foulTypes" [nzValue]="type" [nzLabel]="type"></nz-option>
             </nz-select>
         </nz-input-group>
     </div>
@@ -163,9 +161,7 @@
                             <nz-form-control [nzErrorTip]="foulTypeErrors">
                                 
                                 <nz-select formControlName="foulType" nzPlaceHolder="Seleccionar el tipo de falta">
-                                    <nz-option nzValue="Leves" nzLabel="Leve"></nz-option>
-                                    <nz-option nzValue="Graves" nzLabel="Grave"></nz-option>
-                                    <nz-option nzValue="Muy Graves" nzLabel="Muy Grave"></nz-option>
+                                    <nz-option *ngFor="let type of foulTypes" [nzValue]="type" [nzLabel]="type"></nz-option>
                                 </nz-select>
                                 
                                 <ng-template #foulTypeErrors let-control>

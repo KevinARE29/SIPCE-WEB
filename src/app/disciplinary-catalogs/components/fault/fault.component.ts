@@ -12,6 +12,8 @@ import { Permission } from '../../../shared/permission.model';
 import { Pagination } from './../../../shared/pagination.model';
 import { Foul } from '../../shared/foul.model';
 
+import { FoulTypes } from 'src/app/shared/enums/foul-types.enum';
+
 @Component({
   selector: 'app-fault',
   templateUrl: './fault.component.html',
@@ -27,6 +29,8 @@ export class FaultComponent implements OnInit {
   loading = false;
   searchParams: Foul;
   isConfirmLoading = false;
+
+  foulTypes = Object.values(FoulTypes).filter((k) => isNaN(Number(k)));
 
   // Update / delete modal.
   isVisible = false;

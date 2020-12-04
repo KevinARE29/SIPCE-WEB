@@ -20,6 +20,8 @@ import { DisciplinaryCatalogService } from 'src/app/disciplinary-catalogs/shared
 import { Foul } from 'src/app/disciplinary-catalogs/shared/foul.model';
 import { Sanction } from 'src/app/disciplinary-catalogs/shared/sanction.model';
 
+import { FoulTypes } from 'src/app/shared/enums/foul-types.enum';
+
 @Component({
   selector: 'app-history-fouls-sanctions',
   templateUrl: './history-fouls-sanctions.component.html',
@@ -48,6 +50,8 @@ export class HistoryFoulsSanctionsComponent implements OnInit, OnChanges {
 
   sanctions: Sanction[];
   loadingSanctions = false;
+
+  foulTypes = Object.values(FoulTypes).filter((k) => isNaN(Number(k)));
 
   // Expant table
   expandSet = new Set<number>();
