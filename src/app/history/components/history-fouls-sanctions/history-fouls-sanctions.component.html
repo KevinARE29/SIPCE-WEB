@@ -166,7 +166,7 @@
                             <nz-form-label><strong>Tipo de falta</strong></nz-form-label>
                             <nz-form-control [nzErrorTip]="foulTypeErrors">
                                 
-                                <nz-select formControlName="foulType" nzPlaceHolder="Seleccionar el tipo de falta">
+                                <nz-select formControlName="foulType" nzPlaceHolder="Seleccionar el tipo de falta" (ngModelChange)="changeFoulType($event)">
                                     <nz-option *ngFor="let type of foulTypes" [nzValue]="type" [nzLabel]="type"></nz-option>
                                 </nz-select>
                                 
@@ -184,7 +184,7 @@
                             <nz-form-control [nzErrorTip]="foulErrors">
                                 
                                 <nz-select nzShowSearch nzAllowClear formControlName="foul" nzPlaceHolder="Seleccionar" [nzLoading]="loadingFouls">
-                                    <nz-option *ngFor="let foul of fouls" [nzValue]="foul.id" [nzLabel]="foul.numeral">
+                                    <nz-option *ngFor="let foul of foulsFiltered" [nzValue]="foul.id" [nzLabel]="foul.numeral">
                                     </nz-option>
                                 </nz-select>
         

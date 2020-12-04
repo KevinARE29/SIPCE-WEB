@@ -46,6 +46,7 @@ export class HistoryFoulsSanctionsComponent implements OnInit, OnChanges {
   loadingPeriods = false;
 
   fouls: Foul[];
+  foulsFiltered: Foul[];
   loadingFouls = false;
 
   sanctions: Sanction[];
@@ -97,6 +98,7 @@ export class HistoryFoulsSanctionsComponent implements OnInit, OnChanges {
     this.loadingFouls = true;
     this.disciplinaryService.getFouls(null, null, false).subscribe((r) => {
       this.fouls = r['data'];
+      this.foulsFiltered = this.fouls;
       this.loadingFouls = false;
     });
 
@@ -195,7 +197,29 @@ export class HistoryFoulsSanctionsComponent implements OnInit, OnChanges {
       issueDate: [this.assignationModal ? this.assignationModal.issueDate : null, [Validators.required]]
     });
 
+    if (this.assignationModal) {
+      this.filterFouls(this.assignationModal.foul.foulsType);
+    } else {
+      this.filterFouls();
+    }
+
     this.setShowModal(true);
+  }
+
+  // Filter fouls.
+  changeFoulType(foulType: string): void {
+    this.form.get('foul').setValue(null);
+    this.form.get('foul').updateValueAndValidity();
+
+    this.filterFouls(foulType);
+  }
+
+  filterFouls(foulType?: string): void {
+    if (foulType) {
+      this.foulsFiltered = this.fouls.filter((foul) => foul.foulsType === foulType);
+    } else {
+      this.foulsFiltered = this.fouls;
+    }
   }
 
   // Date.
