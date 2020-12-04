@@ -234,8 +234,8 @@
                         nzPlaceHolder="Seleccionar">
                     </nz-date-picker>
                     <ng-template #startedAtErrors let-control>
-                        <ng-container *ngIf="control.hasError('required')">La fecha y hora son
-                            requeridas<br>
+                        <ng-container *ngIf="control.hasError('required')">
+                            La fecha y hora son requeridas<br>
                         </ng-container>
                     </ng-template>
                 </nz-form-control>
@@ -244,19 +244,19 @@
             <nz-form-item>
                 <nz-form-label nzFor="duration">Duración</nz-form-label>
                 <nz-form-control [nzErrorTip]="durationErrors">
-                    <nz-input-number [nzStep]="5"
+                    <nz-input-number [nzStep]="15"
                         formControlName="duration"
                         [nzFormatter]="durationFormatter" [nzParser]="durationParser"
                         nzPlaceHolder="Seleccionar"></nz-input-number>
                     <ng-template #durationErrors let-control>
-                        <ng-container *ngIf="control.hasError('required')">La duración es
-                            requerida<br>
+                        <ng-container *ngIf="control.hasError('required')">
+                            La duración es requerida<br>
                         </ng-container>
                         <ng-container *ngIf="control.hasError('min')">
                             La duración mínima es de 15min<br>
                         </ng-container>
                         <ng-container *ngIf="control.hasError('max')">
-                            La duración máxima es de 2h (120min)<br>
+                            La duración máxima es de 4h (240min)<br>
                         </ng-container>
                     </ng-template>
                 </nz-form-control>

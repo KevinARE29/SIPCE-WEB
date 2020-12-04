@@ -91,7 +91,7 @@ export class SociometricTestComponent implements OnInit {
             console.log(data);
             this.presetForm = this.fb.group({
               startedAt: [null, Validators.required],
-              duration: [null, [Validators.required, Validators.min(15), Validators.max(120)]]
+              duration: [null, [Validators.required, Validators.min(15), Validators.max(240)]]
             });
 
             this.getCatalogs();
