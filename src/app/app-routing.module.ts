@@ -102,6 +102,12 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'reglamento',
+    loadChildren: () =>
+      import('./disciplinary-catalogs/disciplinary-catalog.module').then((m) => m.DisciplinaryCatalogModule)
+    // canLoad: [AuthGuard]
+  },
+  {
     path: 'pruebas-sociometricas',
     loadChildren: () => import('./sociometric/sociometric.module').then((m) => m.SociometricModule),
     canLoad: [AuthGuard]
