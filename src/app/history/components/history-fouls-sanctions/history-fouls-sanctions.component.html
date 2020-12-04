@@ -100,7 +100,12 @@
                             </td>
                         </tr>
                         <tr [nzExpand]="expandSet.has(data.id)">
-                            <strong>Descripción de la falta: </strong><span>{{ data.foul.description }}</span>
+                            <p class="assignation-header">
+                                {{data.period.name}}
+                                <nz-tag> {{ data.foul.foulsType }}</nz-tag>
+                            </p>
+                            <p><strong>Descripción de la falta: </strong> {{ data.foul.description }}</p>
+                            <p><strong>Descripción de la sanción: </strong> {{ data.sanction ? data.sanction.description : '-' }}</p>
                         </tr>
                     </ng-container>
                 </tbody>
