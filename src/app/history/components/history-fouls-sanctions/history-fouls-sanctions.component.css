@@ -1,0 +1,12 @@
+nz-date-picker, nz-select, nz-range-picker {
+    width: 100%;
+    border-radius: 7px;
+}
+
+nz-table {
+    margin-top: 15px;
+}
+
+.btn-container {
+    height: 100%;
+}
