@@ -33,7 +33,7 @@ export class Session {
   // Individual session request
   interventionProgramId: number;
 
-  // Teach interview request
+  // Teacher interview request
   participants: number[];
 
   // Teacher interview response
