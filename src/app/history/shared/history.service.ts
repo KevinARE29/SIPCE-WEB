@@ -107,7 +107,7 @@ export class HistoryService {
       historyId +
       '?token=' +
       token +
-      '&filters=' +
+      '&filter=' +
       filters.join(',');
 
     return this.http.get<StudentWithHistory>(url).pipe(

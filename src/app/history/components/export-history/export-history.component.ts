@@ -22,6 +22,11 @@ export class ExportHistoryComponent implements OnInit {
   data: StudentWithHistory;
   date: string;
 
+  // List of filters.
+  availableFilters = ['finalConclusion', 'expedients', 'annotations', 'p1', 'p2', 'p3', 'p4'];
+
+  filters: string[] = [];
+
   constructor(private route: ActivatedRoute, private router: Router, private historyService: HistoryService) {}
 
   ngOnInit(): void {
@@ -40,8 +45,14 @@ export class ExportHistoryComponent implements OnInit {
       this.historyId = Number(paramHistory);
     }
 
+    const paramFilters: string = this.route.snapshot.queryParams['filter'];
+    if (paramFilters) {
+      const requestFilters = paramFilters.split(',');
+      this.filters = requestFilters.filter((f) => this.availableFilters.includes(f));
+    }
+
     this.loadingData = true;
-    this.historyService.exportHistory(this.studentId, this.historyId, token, []).subscribe((data) => {
+    this.historyService.exportHistory(this.studentId, this.historyId, token, this.filters).subscribe((data) => {
       this.data = data;
       console.log(data);
 

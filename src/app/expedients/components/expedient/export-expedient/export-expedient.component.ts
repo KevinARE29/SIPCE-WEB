@@ -22,6 +22,17 @@ export class ExportExpedientComponent implements OnInit {
   data: StudentWithExpedient;
   date: string;
 
+  // List of filters.
+  availableFilters = [
+    'references',
+    'externalPsychologicalTreatments',
+    'diagnosticImpression',
+    'actionPlan',
+    'evaluations'
+  ];
+
+  filters: string[] = [];
+
   constructor(private route: ActivatedRoute, private router: Router, private expedientService: ExpedientService) {}
 
   ngOnInit(): void {
@@ -40,8 +51,14 @@ export class ExportExpedientComponent implements OnInit {
       this.expedientId = Number(paramExpedient);
     }
 
+    const paramFilters: string = this.route.snapshot.queryParams['filter'];
+    if (paramFilters) {
+      const requestFilters = paramFilters.split(',');
+      this.filters = requestFilters.filter((f) => this.availableFilters.includes(f));
+    }
+
     this.loadingData = true;
-    this.expedientService.exportExpedient(this.studentId, this.expedientId, token, []).subscribe((data) => {
+    this.expedientService.exportExpedient(this.studentId, this.expedientId, token, this.filters).subscribe((data) => {
       this.data = data;
 
       console.log(data);

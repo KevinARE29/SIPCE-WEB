@@ -89,7 +89,7 @@ export class ExpedientService {
       expedientId +
       '?token=' +
       token +
-      '&filters=' +
+      '&filter=' +
       filters.join(',');
 
     return this.http.get<StudentWithExpedient>(url).pipe(
