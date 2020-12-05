@@ -60,4 +60,11 @@ export class Session {
     responsible1: Responsible;
     responsible2: Responsible;
   };
+
+  // To create report
+  expedient: {
+    gradeDetail: {
+      counselor: User;
+    };
+  };
 }
