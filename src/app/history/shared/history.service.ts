@@ -8,6 +8,7 @@ import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { StudentWithCounters } from './student-with-counters.model';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { History } from './history.model';
+import { StudentWithHistory } from './student-with-history.model';
 
 @Injectable({
   providedIn: 'root'
@@ -90,6 +91,33 @@ export class HistoryService {
     };
 
     return this.http.patch<void>(url, JSON.stringify(data)).pipe(catchError(this.handleError));
+  }
+
+  exportHistory(
+    studentId: number,
+    historyId: number,
+    token: string,
+    filters: string[]
+  ): Observable<StudentWithHistory> {
+    const url =
+      this.baseUrl +
+      'reporting/students/' +
+      studentId +
+      '/histories/' +
+      historyId +
+      '?token=' +
+      token +
+      '&filters=' +
+      filters.join(',');
+
+    return this.http.get<StudentWithHistory>(url).pipe(
+      map((r) => {
+        const data = r['data'];
+        data.student.section = data.student.sectionDetails ? data.student.sectionDetails[0].section : null;
+        return data;
+      }),
+      catchError(this.handleError())
+    );
   }
 
   /**

@@ -9,6 +9,7 @@ import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { Expedient } from './expedient.model';
 import { DiagnosticImpressionCategories } from 'src/app/shared/enums/diagnostic-impression-categories.enum';
 import { PsychologicalTreatmentTypes } from 'src/app/shared/enums/psychological-treatment-types.enum';
+import { StudentWithExpedient } from './student-with-expedient.model';
 
 @Injectable({
   providedIn: 'root'
@@ -72,6 +73,33 @@ export class ExpedientService {
         catchError(this.handleError())
       );
     }
+  }
+
+  exportExpedient(
+    studentId: number,
+    expedientId: number,
+    token: string,
+    filters: string[]
+  ): Observable<StudentWithExpedient> {
+    const url =
+      this.baseUrl +
+      'reporting/students/' +
+      studentId +
+      'expedients/' +
+      expedientId +
+      '?token=' +
+      token +
+      '&filters=' +
+      filters.join(',');
+
+    return this.http.get<StudentWithExpedient>(url).pipe(
+      map((r) => {
+        const data = r['data'];
+        data.student.section = data.student.sectionDetails ? data.student.sectionDetails[0].section : null;
+        return data;
+      }),
+      catchError(this.handleError())
+    );
   }
 
   private mapExpedient(expedient: Expedient): Expedient {
