@@ -72,7 +72,7 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
       // Is the user allowed to manage requests?
       hasPermission = this.checkPermission(25);
       // Is the user allowed to view notifications of the upcoming events?
-      hasPermissionForNotifications = this.checkPermission(19);
+      hasPermissionForNotifications = this.checkPermission(22);
     } else if (!!!this.token) {
       this.username = null;
       this.connectionOn = false;
