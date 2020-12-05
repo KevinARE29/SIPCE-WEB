@@ -11,9 +11,10 @@ import { EditQuestionBankComponent } from './components/question-banks/edit-ques
 import { SociometricTestsComponent } from './components/sociometric-tests/sociometric-tests/sociometric-tests.component';
 import { SociometricTestComponent } from './components/sociometric-tests/sociometric-test/sociometric-test.component';
 import { CreateSociometricTestComponent } from './components/sociometric-tests/create-sociometric-test/create-sociometric-test.component';
+import { StudentSociometricTestComponent } from './components/sociometric-test/student-sociometric-test/student-sociometric-test.component';
 
 @NgModule({
-  declarations: [QuestionBanksComponent, CreateQuestionBankComponent, EditQuestionBankComponent, SociometricTestsComponent, SociometricTestComponent, CreateSociometricTestComponent],
+  declarations: [QuestionBanksComponent, CreateQuestionBankComponent, EditQuestionBankComponent, SociometricTestsComponent, SociometricTestComponent, CreateSociometricTestComponent, StudentSociometricTestComponent],
   imports: [AntDesignModule, CommonModule, FormsModule, ReactiveFormsModule, SociometricRoutingModule]
 })
 export class SociometricModule {}
