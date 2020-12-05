@@ -1,0 +1,36 @@
+.ant-card-body {
+    width: 791px;
+    background-color: white;
+    margin: 0 auto;
+    padding: 50px;
+}
+
+.logo {
+    height: 115px;
+}
+
+p {
+    margin-bottom: 10px;
+}
+
+.document-institution {
+    color: rgb(0, 82, 136);
+    margin-bottom: 0px;
+    line-height: 25px;
+}
+
+.document-content {
+    min-height: 400px;
+}
+
+.main-divider {
+    height: 2px;
+    background-color: rgb(0, 82, 136);
+    margin-top: 5px;
+}
+
+.signature-divider {
+    background-color: black;
+    margin-bottom: 5px;
+    height: 1px;
+}

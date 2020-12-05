@@ -33,7 +33,7 @@ export class Session {
   // Individual session request
   interventionProgramId: number;
 
-  // Teach interview request
+  // Teacher interview request
   participants: number[];
 
   // Teacher interview response
@@ -59,5 +59,12 @@ export class Session {
     otherResponsibleRelationship: string;
     responsible1: Responsible;
     responsible2: Responsible;
+  };
+
+  // To create report
+  expedient: {
+    gradeDetail: {
+      counselor: User;
+    };
   };
 }

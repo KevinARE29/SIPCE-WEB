@@ -21,6 +21,8 @@ import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { ReportService } from 'src/app/shared/report.service';
+import { ReportTypes } from 'src/app/shared/enums/report-types.enum';
 
 @Component({
   selector: 'app-responsible-interview',
@@ -61,6 +63,9 @@ export class ResponsibleInterviewComponent implements OnInit {
     toolbar: ['heading', '|', 'bold', 'italic', '|', 'bulletedList', 'numberedList', '|', 'undo', 'redo']
   };
 
+  // Report
+  loadingReport: boolean;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -69,7 +74,8 @@ export class ResponsibleInterviewComponent implements OnInit {
     private responsibleService: ResponsibleService,
     private message: NzMessageService,
     private notification: NzNotificationService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private reportService: ReportService
   ) {}
 
   ngOnInit(): void {
@@ -334,5 +340,20 @@ export class ResponsibleInterviewComponent implements OnInit {
         }
       }
     );
+  }
+
+  exportSession(): void {
+    const path = this.router.url + '/exportar';
+
+    this.loadingReport = true;
+    this.reportService.createReport(ReportTypes.BITACORA_ENTREVISTA, path).subscribe((r) => {
+      const downloadURL = window.URL.createObjectURL(r);
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = ReportTypes.BITACORA_ENTREVISTA;
+      link.click();
+
+      this.loadingReport = false;
+    });
   }
 }

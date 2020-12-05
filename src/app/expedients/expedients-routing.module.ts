@@ -3,12 +3,15 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard } from '../login/guards/auth.guard';
 
+// Sessions
 import { SessionsComponent } from './components/sessions/sessions-list/sessions.component';
 import { StudentSessionsComponent } from './components/sessions/student-sessions/student-sessions.component';
 
 import { StudentSessionComponent } from './components/sessions/student-session/student-session.component';
 import { ResponsibleInterviewComponent } from './components/sessions/responsible-interview/responsible-interview.component';
 import { TeacherInterviewComponent } from './components/sessions/teacher-interview/teacher-interview.component';
+
+import { ExportResposiblesInterviewComponent } from './components/sessions/export-resposibles-interview/export-resposibles-interview.component';
 
 // Intervention programs.
 import { InterventionProgramsListComponent } from './components/intervention-programs/intervention-programs-list/intervention-programs-list.component';
@@ -70,6 +73,10 @@ const routes: Routes = [
     component: ResponsibleInterviewComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
+  },
+  {
+    path: 'estudiantes/:expedient/:student/sesiones/entrevista-responsable/:session/exportar',
+    component: ExportResposiblesInterviewComponent
   },
   {
     path: 'programas',

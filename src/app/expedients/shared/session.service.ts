@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
@@ -12,6 +12,7 @@ import { SessionTypes } from './../../shared/enums/session-types.enum';
 
 import { StudentWithSessions } from './student-with-sessions.model';
 import { Session } from './session.model';
+import { StudentWithSession } from './student-with-session.model';
 
 @Injectable({
   providedIn: 'root'
@@ -171,6 +172,33 @@ export class SessionService {
     const url = this.baseUrl + 'students/' + studentId + '/expedients/' + expedientId + '/sessions/' + sessionId;
 
     return this.http.delete<void>(url).pipe(catchError(this.handleError()));
+  }
+
+  exportSession(
+    expedientId: number,
+    studentId: number,
+    sessionId: number,
+    token: string
+  ): Observable<StudentWithSession> {
+    const url =
+      this.baseUrl +
+      'reporting/students/' +
+      studentId +
+      '/expedients/' +
+      expedientId +
+      '/sessions/' +
+      sessionId +
+      '?token=' +
+      token;
+
+    return this.http.get<StudentWithSession>(url).pipe(
+      map((r) => {
+        const data = r['data'];
+        data.student.section = data.student.sectionDetails ? data.student.sectionDetails[0].section : null;
+        return data;
+      }),
+      catchError(this.handleError())
+    );
   }
 
   /**

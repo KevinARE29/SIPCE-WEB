@@ -6,6 +6,10 @@
                 : 'Nueva entrevista con padres de familia'}}
         </h1>
     </div>
+
+    <div nz-col *ngIf="session && !session.draft">
+        <button nz-button nzGhost [nzLoading]="loadingReport" nzType="primary" (click)="exportSession()">Generar bitácora</button>
+    </div>
 </div>
 
 <app-students-details [id]="studentId"></app-students-details>
