@@ -85,7 +85,7 @@ export class ExpedientService {
       this.baseUrl +
       'reporting/students/' +
       studentId +
-      'expedients/' +
+      '/expedients/' +
       expedientId +
       '?token=' +
       token +

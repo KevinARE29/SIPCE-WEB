@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../login/guards/auth.guard';
 import { HistoryDetailComponent } from './components/history-detail/history-detail.component';
 import { HistoryListComponent } from './components/history-list/history-list.component';
+import { ExportHistoryComponent } from './components/export-history/export-history.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
     component: HistoryDetailComponent,
     canActivate: [AuthGuard],
     data: { permission: 47 }
+  },
+  {
+    path: ':student/:history/exportar',
+    component: ExportHistoryComponent
   }
 ];
 

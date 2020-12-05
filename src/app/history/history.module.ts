@@ -14,6 +14,7 @@ import { HistorySummaryComponent } from './components/history-summary/history-su
 import { HistoryAnnotationsComponent } from './components/history-annotations/history-annotations.component';
 import { HistoryFoulsSanctionsComponent } from './components/history-fouls-sanctions/history-fouls-sanctions.component';
 import { HistoryCommentsComponent } from './components/history-comments/history-comments.component';
+import { ExportHistoryComponent } from './components/export-history/export-history.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { HistoryCommentsComponent } from './components/history-comments/history-
     HistorySummaryComponent,
     HistoryAnnotationsComponent,
     HistoryFoulsSanctionsComponent,
-    HistoryCommentsComponent
+    HistoryCommentsComponent,
+    ExportHistoryComponent
   ],
   imports: [CommonModule, ReactiveFormsModule, AntDesignModule, NzTimelineModule, HistoryRoutingModule]
 })

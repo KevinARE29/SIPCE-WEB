@@ -15,6 +15,7 @@ import { StudentsDetailsComponent } from './components/sessions/students-details
 import { StudentSessionComponent } from './components/sessions/student-session/student-session.component';
 import { ResponsibleInterviewComponent } from './components/sessions/responsible-interview/responsible-interview.component';
 import { TeacherInterviewComponent } from './components/sessions/teacher-interview/teacher-interview.component';
+import { ExportResposiblesInterviewComponent } from './components/sessions/export-resposibles-interview/export-resposibles-interview.component';
 
 // Intervention programs.
 import { InterventionProgramsListComponent } from './components/intervention-programs/intervention-programs-list/intervention-programs-list.component';
@@ -26,7 +27,7 @@ import { StudentsDetailsComponent as StudentsDetailsExpedientComponent } from '.
 import { SessionsCounterComponent } from './components/expedient/sessions-counter/sessions-counter.component';
 import { ExpedientViewComponent } from './components/expedient/expedient-view/expedient-view.component';
 import { ExpedientFormComponent } from './components/expedient/expedient-form/expedient-form.component';
-import { ExportResposiblesInterviewComponent } from './components/sessions/export-resposibles-interview/export-resposibles-interview.component';
+import { ExportExpedientComponent } from './components/expedient/export-expedient/export-expedient.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { ExportResposiblesInterviewComponent } from './components/sessions/expor
     StudentSessionComponent,
     ResponsibleInterviewComponent,
     TeacherInterviewComponent,
+    ExportResposiblesInterviewComponent,
     InterventionProgramsListComponent,
     InterventionProgramsFormComponent,
     ExpedientComponent,
@@ -43,7 +45,7 @@ import { ExportResposiblesInterviewComponent } from './components/sessions/expor
     SessionsCounterComponent,
     ExpedientViewComponent,
     ExpedientFormComponent,
-    ExportResposiblesInterviewComponent
+    ExportExpedientComponent
   ],
   imports: [CommonModule, ReactiveFormsModule, AntDesignModule, CKEditorModule, ExpedientsRoutingModule]
 })
