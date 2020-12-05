@@ -175,8 +175,8 @@ export class SessionService {
   }
 
   exportSession(
-    expedientId: number,
     studentId: number,
+    expedientId: number,
     sessionId: number,
     token: string
   ): Observable<StudentWithSession> {

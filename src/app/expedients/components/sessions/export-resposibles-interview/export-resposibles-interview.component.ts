@@ -48,7 +48,7 @@ export class ExportResposiblesInterviewComponent implements OnInit {
     }
 
     this.loadingData = true;
-    this.sessionService.exportSession(this.expedientId, this.studentId, this.sessionId, token).subscribe((data) => {
+    this.sessionService.exportSession(this.studentId, this.expedientId, this.sessionId, token).subscribe((data) => {
       this.data = data;
 
       this.sessionStartDate = format(new Date(this.data.session.startedAt), 'd/MMMM/yyyy', { locale: es });
