@@ -26,6 +26,7 @@ import { StudentsDetailsComponent as StudentsDetailsExpedientComponent } from '.
 import { SessionsCounterComponent } from './components/expedient/sessions-counter/sessions-counter.component';
 import { ExpedientViewComponent } from './components/expedient/expedient-view/expedient-view.component';
 import { ExpedientFormComponent } from './components/expedient/expedient-form/expedient-form.component';
+import { ExportResposiblesInterviewComponent } from './components/sessions/export-resposibles-interview/export-resposibles-interview.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { ExpedientFormComponent } from './components/expedient/expedient-form/ex
     StudentsDetailsExpedientComponent,
     SessionsCounterComponent,
     ExpedientViewComponent,
-    ExpedientFormComponent
+    ExpedientFormComponent,
+    ExportResposiblesInterviewComponent
   ],
   imports: [CommonModule, ReactiveFormsModule, AntDesignModule, CKEditorModule, ExpedientsRoutingModule]
 })

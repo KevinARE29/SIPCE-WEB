@@ -1,0 +1,92 @@
+<div *ngIf="!loadingData" class="ant-card-body">
+    <div nz-row nzGutter="30">
+        <div nz-col nzOffset="1">
+            <img class="logo" src="assets/logo-maristas-color.png" alt="">
+        </div>
+        <div nz-col>
+            <h2 class="document-institution">LICEO SALVADOREÑO</h2>
+            <h3>ASISTENCIA A ENTREVISTA PADRES DE FAMILIA</h3>
+
+            <div nz-row nzGutter="20">
+                <div nz-col>
+                    <p>Fecha: {{sessionStartDate}}</p>
+                    <p>Hora de inicio: {{data.session.startHour | date: 'hh:mm aaa'}}</p>
+                </div>
+
+                <div nz-col>
+                    <p>Hora de cita: {{data.session.startedAt | date: 'hh:mm aaa'}}</p>
+                    <p>Hora de cierre de entrevista: {{ sessionEndDate | date: 'hh:mm aaa'}}</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <nz-divider class="main-divider"></nz-divider>
+
+    <div nz-row>
+        <div nz-col nzOffset="1" nzSpan="22">
+
+            <div nz-row nzJustify="space-between">
+                <div nz-col>
+                    <p><strong>Nombre del alumno/a: </strong> {{data.student.firstname}} {{data.student.lastname}}</p>
+                </div>
+
+                <div nz-col>
+                    <p><strong>Grado: </strong> {{data.student.currentGrade.name}} {{data.student.section.name}}</p>
+                </div>
+            </div>
+
+            <br>
+
+            <div class="document-content">
+                <div nz-row>
+                    <div nz-col>
+                        <p><strong>Puntos tratados con los padres o responsables: </strong></p>
+                        <p>{{data.session.treatedTopics}}</p>
+                    </div>
+                </div>
+    
+                <br>
+    
+                <div nz-row>
+                    <div nz-col>
+                        <p><strong>Acuerdos: </strong></p>
+                        <p>{{data.session.agreements}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div nz-row [nzGutter]="[30, 30]">
+                <div *ngIf="data.session.sessionResponsibleAssistence.responsible1Assistence" nz-col nzSpan="8">
+                    <nz-divider class="signature-divider"></nz-divider>
+                    {{data.session.sessionResponsibleAssistence.responsible1.firstname}} {{data.session.sessionResponsibleAssistence.responsible1.lastname}} <br>
+                    Responsable del estudiante
+                </div>
+
+                <div *ngIf="data.session.sessionResponsibleAssistence.responsible2Assistence" nz-col nzSpan="8">
+                    <nz-divider class="signature-divider"></nz-divider>
+                    {{data.session.sessionResponsibleAssistence.responsible2.firstname}} {{data.session.sessionResponsibleAssistence.responsible2.lastname}} <br>
+                    Responsable del estudiante
+                </div>
+
+                <div *ngIf="data.session.sessionResponsibleAssistence.otherResponsibleName" nz-col nzSpan="8">
+                    <nz-divider class="signature-divider"></nz-divider>
+                    {{data.session.sessionResponsibleAssistence.otherResponsibleName}} <br>
+                    Responsable del estudiante
+                </div>
+
+                <div nz-col nzSpan="8">
+                    <nz-divider class="signature-divider"></nz-divider>
+                    {{data.student.firstname}} {{data.student.lastname}} <br>
+                    Estudiante
+                </div>
+
+                <!-- <div nz-col nzSpan="8">
+                    <nz-divider class="signature-divider"></nz-divider>
+                    Nombre del orientador
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>
