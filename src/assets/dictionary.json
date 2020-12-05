@@ -79,6 +79,7 @@
         "question-banks": {
             "name": "Nombre"
         },
+        "presets": {},
         "sociometric-tests": {},
         "disciplinary-catalog": {
             "name": "Nombre de la sanción",

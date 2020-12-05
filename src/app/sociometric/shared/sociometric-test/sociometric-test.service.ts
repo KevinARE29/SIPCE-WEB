@@ -1,14 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
+import { es } from 'date-fns/locale';
 import { environment } from 'src/environments/environment';
+import { differenceInMinutes, format, formatDistanceStrict } from 'date-fns';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { SociometricTest } from './sociometric-test.model';
-
 
 @Injectable({
   providedIn: 'root'
@@ -84,13 +85,26 @@ export class SociometricTestService {
     return this.http.get<SociometricTest[]>(url).pipe(catchError(this.handleError()));
   }
 
-  getSociometricTest(id: number): Observable<SociometricTest>{
-    return this.http
-      .get<SociometricTest>(`${this.baseUrl}sociometric/tests/${id}`)
-      .pipe(catchError(this.handleError()));
+  getSociometricTest(id: number): Observable<SociometricTest> {
+    return this.http.get<SociometricTest>(`${this.baseUrl}sociometric/tests/${id}`).pipe(
+      map((result) => {
+
+        result['data'].presets.forEach((preset) => {
+          preset.duration = differenceInMinutes(new Date(preset.endedAt), new Date(preset.startedAt));
+          preset.durationInWords = formatDistanceStrict(new Date(preset.endedAt), new Date(preset.startedAt), {
+            locale: es
+          });
+          preset.startedAtInWords = format(new Date(preset.startedAt), 'iii d/MMMM/yyyy K:mm a', { locale: es });
+          preset.isPassVisible = false;
+        });
+
+        return result;
+      }),
+      catchError(this.handleError())
+    );
   }
 
-  updateSociometricTest(sociometricTest: SociometricTest): Observable<SociometricTest>{
+  updateSociometricTest(sociometricTest: SociometricTest): Observable<SociometricTest> {
     const data = JSON.stringify({
       shiftId: sociometricTest.shift.id,
       gradeId: sociometricTest.grade.id,

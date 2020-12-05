@@ -1,16 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
+import lastDayOfYear from 'date-fns/lastDayOfYear';
+
 import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 import { QuestionBank } from 'src/app/sociometric/shared/question-bank.model';
 import { QuestionBankService } from 'src/app/sociometric/shared/question-bank.service';
-
+import { Preset } from 'src/app/sociometric/shared/sociometric-test/preset.model';
 import { SociometricTest } from 'src/app/sociometric/shared/sociometric-test/sociometric-test.model';
 import { SociometricTestService } from 'src/app/sociometric/shared/sociometric-test/sociometric-test.service';
 import { Student } from 'src/app/students/shared/student.model';
+import { PresetService } from 'src/app/sociometric/shared/sociometric-test/preset.service';
 
 @Component({
   selector: 'app-sociometric-test',
@@ -28,9 +32,19 @@ export class SociometricTestComponent implements OnInit {
   }[];
 
   // Update
-  btnLoading = false;
   editing = false;
+  btnLoading = false;
   sociometricTestForm!: FormGroup;
+
+  // Presets
+  preset: Preset;
+  isVisible = false;
+  presetForm!: FormGroup;
+  isConfirmLoading = false;
+
+  // Duration input.
+  durationFormatter = (value: number): string => (value ? `${value} min` : '');
+  durationParser = (value: string): string => value.replace(' min', '');
 
   // Filters
   shifts: {
@@ -48,14 +62,15 @@ export class SociometricTestComponent implements OnInit {
     private fb: FormBuilder,
     private message: NzMessageService,
     private notification: NzNotificationService,
+    private presetService: PresetService,
     private questionBankService: QuestionBankService,
     private sociometricTestService: SociometricTestService
   ) {}
 
   ngOnInit(): void {
-    this.sociometricTest = new SociometricTest();
-    this.getSociometricTest();
+    this.preset = new Preset();
 
+    this.getSociometricTest();
     this.setTableSettings();
   }
 
@@ -64,14 +79,21 @@ export class SociometricTestComponent implements OnInit {
       const param: string = params.get('sociometrictest');
       let id: number;
 
+      this.loading = true;
+
       if (typeof param === 'string' && !Number.isNaN(Number(param))) {
-        this.loading = true;
         id = Number(param);
 
         this.sociometricTestService.getSociometricTest(id).subscribe(
           (data) => {
             this.loading = false;
             this.sociometricTest = data['data'];
+
+            this.presetForm = this.fb.group({
+              startedAt: [null, Validators.required],
+              duration: [null, [Validators.required, Validators.min(15), Validators.max(240)]]
+            });
+
             this.getCatalogs();
           },
           () => {
@@ -82,6 +104,7 @@ export class SociometricTestComponent implements OnInit {
           }
         );
       } else {
+        this.loading = false;
         this.router.navigateByUrl('/pruebas-sociometrica/tests/' + param, { skipLocationChange: true });
       }
     });
@@ -107,6 +130,7 @@ export class SociometricTestComponent implements OnInit {
     ];
   }
 
+  //#region Update
   setForm(): void {
     this.sociometricTestForm = this.fb.group({
       shift: [this.sociometricTest.shift.id, Validators.required],
@@ -236,4 +260,132 @@ export class SociometricTestComponent implements OnInit {
       }
     );
   }
+  //#endregion
+
+  //#region Presets
+  openModal(preset: Preset): void {
+    this.isVisible = true;
+
+    if (preset) {
+      this.preset = preset;
+
+      this.presetForm.setValue({
+        startedAt: preset.startedAt,
+        duration: preset.duration
+      });
+    }
+  }
+
+  resetForm(): void {
+    this.isVisible = false;
+    this.preset = new Preset();
+    this.presetForm.reset();
+  }
+
+  handleOk(): void {
+    const startedAtControl = this.presetForm.controls['startedAt'];
+    const durationControl = this.presetForm.controls['duration'];
+
+    // Display errors if needed
+    startedAtControl.markAsDirty();
+    startedAtControl.updateValueAndValidity();
+
+    durationControl.markAsDirty();
+    durationControl.updateValueAndValidity();
+
+    if (this.presetForm.valid) {
+      this.preset.startedAt = this.presetForm.controls['startedAt'].value;
+      this.preset.duration = this.presetForm.controls['duration'].value;
+
+      this.preset.id ? this.updatePreset() : this.createPreset();
+    }
+  }
+
+  createPreset(): void {
+    this.isConfirmLoading = true;
+
+    this.presetService.createPreset(this.sociometricTest.id, this.preset).subscribe(
+      (data) => {
+        this.isConfirmLoading = false;
+        this.resetForm();
+
+        this.sociometricTest.presets.push(data);
+        this.message.success(`La prueba sociométrica ha sido programada con éxito`);
+      },
+      (error) => {
+        const statusCode = error.statusCode;
+        const notIn = [401, 403];
+        this.isConfirmLoading = false;
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create(
+            'error',
+            'Ocurrió un error al programar la prueba sociométrica. Por favor verifique lo siguiente:',
+            error.message,
+            { nzDuration: 30000 }
+          );
+        }
+      }
+    );
+  }
+
+  updatePreset(): void {
+    this.isConfirmLoading = true;
+    this.presetService.updatePreset(this.sociometricTest.id, this.preset).subscribe(
+      (data) => {
+        this.isConfirmLoading = false;
+        const id = this.sociometricTest.presets.findIndex((x) => x.id === this.preset.id);
+        this.sociometricTest.presets[id] = data;
+        this.resetForm();
+
+        this.message.success(`La programación de la prueba sociométrica ha sido actualizada con éxito`);
+      },
+      (error) => {
+        const statusCode = error.statusCode;
+        const notIn = [401, 403];
+        this.isConfirmLoading = false;
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create(
+            'error',
+            'Ocurrió un error al actualizar la programación de la prueba sociométrica. Por favor verifique lo siguiente:',
+            error.message,
+            { nzDuration: 30000 }
+          );
+        }
+      }
+    );
+  }
+
+  deletePreset(presetId: number): void {
+    this.presetService.deletePreset(this.sociometricTest.id, presetId).subscribe(
+      () => {
+        this.sociometricTest.presets = this.sociometricTest.presets.filter((x) => x.id !== presetId);
+        this.message.success(`La programación ha sido eliminada con éxito`);
+      },
+      (error) => {
+        const statusCode = error.statusCode;
+        const notIn = [401, 403];
+        this.isConfirmLoading = false;
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create(
+            'error',
+            'Ocurrió un error al eliminar la programación de la prueba sociométrica. Por favor verifique lo siguiente:',
+            error.message,
+            { nzDuration: 30000 }
+          );
+        }
+      }
+    );
+  }
+
+  disabledDate = (current: Date): boolean => {
+    // Can not select days after today
+    return (
+      differenceInCalendarDays(current, new Date()) > 0 &&
+      differenceInCalendarDays(current, lastDayOfYear(new Date())) > 0
+    );
+  };
+  //#endregion
 }
