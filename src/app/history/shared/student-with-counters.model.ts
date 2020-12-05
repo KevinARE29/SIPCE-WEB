@@ -1,6 +1,6 @@
 import { Student } from 'src/app/students/shared/student.model';
 
-export class StudentWithHistory extends Student {
+export class StudentWithCounters extends Student {
   annotationsCounter: number;
   sanctionsCounter: number;
 }

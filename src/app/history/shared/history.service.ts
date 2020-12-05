@@ -5,7 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
-import { StudentWithHistory } from './student-with-history.model';
+import { StudentWithCounters } from './student-with-counters.model';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { History } from './history.model';
 
@@ -19,7 +19,7 @@ export class HistoryService {
     this.baseUrl = environment.apiURL;
   }
 
-  getStudents(params: NzTableQueryParams, search: StudentWithHistory): Observable<StudentWithHistory[]> {
+  getStudents(params: NzTableQueryParams, search: StudentWithCounters): Observable<StudentWithCounters[]> {
     let url = this.baseUrl + 'behavioral-histories';
     let queryParams = '';
 
@@ -68,7 +68,7 @@ export class HistoryService {
 
     url += queryParams;
 
-    return this.http.get<StudentWithHistory[]>(url).pipe(catchError(this.handleError()));
+    return this.http.get<StudentWithCounters[]>(url).pipe(catchError(this.handleError()));
   }
 
   getStudentHistory(studentId: number): Observable<History[]> {
