@@ -12,7 +12,7 @@
         <div nz-col nzXs="24" nzMd="2">
             <ng-container *ngFor="let question of questions">
                 <div
-                    [ngClass]="{'completed': question.status === 'Completed', 'current': question.status === 'Current', 'partial': question.status === 'Partial', 'incomplete': question.status === 'Incomplete'}">
+                    [ngClass]="{'completed': question.status === 'Completed', 'current': question.status === 'Current', 'incomplete': question.status === 'Incomplete'}">
                 {{ question.sequentialNumber + 1 }}
                 </div>
             </ng-container>
@@ -47,11 +47,11 @@
                 <span>Previa</span>
             </button>
             <button nz-button nzGhost nzType="primary" (click)="next()"
-                *ngIf="currentQuestion.sequentialNumber < questions.length">
+                *ngIf="currentQuestion.sequentialNumber < questions.length - 1">
                 <span>Siguiente</span>
             </button>
             <button nz-button nzType="primary" (click)="done()"
-                *ngIf="currentQuestion.sequentialNumber === questions.length">
+                *ngIf="currentQuestion.sequentialNumber === questions.length - 1">
                 <span>Finalizar</span>
             </button>
         </div>

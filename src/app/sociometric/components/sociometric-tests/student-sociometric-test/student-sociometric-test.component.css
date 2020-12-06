@@ -67,3 +67,7 @@ student {
 .student-name {
   text-align: center;
 }
+
+.steps-action button {
+  margin-right: 10px;
+}

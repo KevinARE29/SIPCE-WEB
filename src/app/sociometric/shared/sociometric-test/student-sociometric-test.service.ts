@@ -73,6 +73,27 @@ export class StudentSociometricTestService {
     );
   }
 
+  saveAnswer(question: Question, test: unknown): Observable<void> {
+    const sociometricTestId = test['sociometricTest'].id;
+    const studentId = test['student'].id;
+    const studentIds = new Array<number>();
+
+    let students = question.students.filter((x) => x.position !== 0);
+    students = students.sort((a, b) => a.position - b.position);
+
+    students.forEach((student) => studentIds.push(student.id));
+
+    const data = JSON.stringify({
+      connotation: question.connotation,
+      questionId: question.id,
+      studentIds: studentIds
+    });
+
+    return this.http
+      .put<void>(`${this.baseUrl}sociometric/test/${sociometricTestId}/students/${studentId}`, data)
+      .pipe(catchError(this.handleError()));
+  }
+
   mergeTestData(testId: number, sectionId: number, studentId: number): Observable<unknown> {
     return forkJoin({
       test: this.getSociometricTest(testId, studentId),

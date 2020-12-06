@@ -20,6 +20,8 @@ export class StudentSociometricTestComponent implements OnInit {
   questions: Question[];
   sectionStudents: Student[];
   currentQuestion: Question;
+  currentIndex = 0;
+  emptyPosition = true;
   test: { id: number; finished: boolean; answers: unknown[]; sociometricTest: SociometricTest; student: Student };
 
   constructor(
@@ -76,12 +78,10 @@ export class StudentSociometricTestComponent implements OnInit {
             };
 
             this.questions = data['test']['questions'];
-            this.currentQuestion = this.questions[0];
-            this.questions[0].status = 'Current';
             this.sectionStudents = Object.values(data['students']['students']);
             this.sectionStudents = this.sectionStudents.filter((x) => x.id !== this.test.student.id);
 
-            this.checkSeleted(this.currentQuestion.sequentialNumber);
+            this.checkSeleted();
 
             this.loading = false;
             // console.log(this.test, this.questions, this.currentQuestion, this.sectionStudents);
@@ -100,19 +100,30 @@ export class StudentSociometricTestComponent implements OnInit {
     });
   }
 
-  prev(): void {}
-  next(): void {}
-  done(): void {}
-
-  changeCurrentQuestion(id: number): void {
-    this.currentQuestion = this.questions[id];
-    // TODO: check questions status
+  prev(): void {
+    if (this.checkPositions()) {
+      this.currentQuestion.status = 'Completed';
+      this.currentIndex--;
+      this.currentQuestion = this.questions[this.currentIndex];
+      this.questions[this.currentIndex].status = 'Current';
+    }
+    console.log(this.currentQuestion, this.test, false);
   }
+  next(): void {
+    if (this.checkPositions()) {
+      this.currentQuestion.status = 'Completed';
+      this.currentIndex++;
+      this.currentQuestion = this.questions[this.currentIndex];
+      this.questions[this.currentIndex].status = 'Current';
+    }
+    console.log(this.currentQuestion, this.test, true, `Is it complete? ${this.checkPositions()}`);
+  }
+  done(): void {}
 
   selectStudent(student: Student): void {
     for (let i = 0; i < this.test.sociometricTest.answersPerQuestion; i++) {
       const pos = i + 1;
-      const studentPositionI = this.sectionStudents.find((x) => x.position == pos);
+      const studentPositionI = this.currentQuestion.students.find((x) => x.position == pos);
 
       if (studentPositionI && studentPositionI.id === student.id) {
         studentPositionI.position = 0;
@@ -123,7 +134,24 @@ export class StudentSociometricTestComponent implements OnInit {
     }
   }
 
-  checkSeleted(index: number): void {
-    this.currentQuestion.students = this.sectionStudents;
+  checkSeleted(): void {
+    // Add logic to add initial data
+    this.questions.forEach((question) => {
+      question.students = JSON.parse(JSON.stringify(this.sectionStudents));
+    });
+
+    this.currentQuestion = this.questions[this.currentIndex];
+    this.questions[this.currentIndex].status = 'Current';
+  }
+
+  checkPositions(): boolean {
+    for (let i = 0; i < this.test.sociometricTest.answersPerQuestion; i++) {
+      const pos = i + 1;
+      const studentPositionI = this.currentQuestion.students.find((x) => x.position == pos);
+      if (!studentPositionI) {
+        return false;
+      }
+    }
+    return true;
   }
 }
