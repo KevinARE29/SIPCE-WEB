@@ -97,7 +97,8 @@ export class HistoryService {
     studentId: number,
     historyId: number,
     token: string,
-    filters: string[]
+    filters: string[],
+    userId: string
   ): Observable<StudentWithHistory> {
     const url =
       this.baseUrl +
@@ -107,6 +108,8 @@ export class HistoryService {
       historyId +
       '?token=' +
       token +
+      '&userId=' +
+      userId +
       '&filter=' +
       filters.join(',');
 

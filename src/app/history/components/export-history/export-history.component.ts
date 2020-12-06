@@ -31,7 +31,9 @@ export class ExportHistoryComponent implements OnInit {
 
   ngOnInit(): void {
     const token = this.route.snapshot.queryParams['token'];
-    if (!token) {
+    const userId = this.route.snapshot.queryParams['userId'];
+
+    if (!token || !userId) {
       this.router.navigate(['/login/error403']);
     }
 
@@ -52,7 +54,7 @@ export class ExportHistoryComponent implements OnInit {
     }
 
     this.loadingData = true;
-    this.historyService.exportHistory(this.studentId, this.historyId, token, this.filters).subscribe((data) => {
+    this.historyService.exportHistory(this.studentId, this.historyId, token, this.filters, userId).subscribe((data) => {
       this.data = data;
       console.log(data);
 
