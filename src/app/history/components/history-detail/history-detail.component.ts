@@ -6,6 +6,9 @@ import { History } from '../../shared/history.model';
 import { HistoryService } from '../../shared/history.service';
 import { AuthService } from 'src/app/login/shared/auth.service';
 
+import { ReportService } from 'src/app/shared/report.service';
+import { ReportTypes } from 'src/app/shared/enums/report-types.enum';
+
 @Component({
   selector: 'app-history-detail',
   templateUrl: './history-detail.component.html',
@@ -28,10 +31,24 @@ export class HistoryDetailComponent implements OnInit {
   permissions: Permission[] = [];
   userId: number;
 
+  // Report
+  showReportModal = false;
+  filterFinalConclusion = true;
+  filterExpedients = true;
+  filterAnnotations = true;
+  filterPeriods = true;
+  filterPeriodsIndeterminate = false;
+  filterPeriod1 = true;
+  filterPeriod2 = true;
+  filterPeriod3 = true;
+  filterPeriod4 = true;
+  loadingReport: boolean;
+
   constructor(
     private route: ActivatedRoute,
     private historyService: HistoryService,
-    private authService: AuthService
+    private authService: AuthService,
+    private reportService: ReportService
   ) {}
 
   ngOnInit(): void {
@@ -100,5 +117,58 @@ export class HistoryDetailComponent implements OnInit {
       this.selectedHistoryIsFirst = index === 0;
       this.selectedHistoryIsLast = index === this.histories.length - 1;
     }
+  }
+
+  setShowReportModal(show: boolean): void {
+    this.showReportModal = show;
+  }
+
+  updateAllPeriods(): void {
+    this.filterPeriodsIndeterminate = false;
+
+    this.filterPeriod1 = this.filterPeriods;
+    this.filterPeriod2 = this.filterPeriods;
+    this.filterPeriod3 = this.filterPeriods;
+    this.filterPeriod4 = this.filterPeriods;
+  }
+
+  updateSinglePeriod(): void {
+    if (this.filterPeriod1 && this.filterPeriod2 && this.filterPeriod3 && this.filterPeriod4) {
+      this.filterPeriodsIndeterminate = false;
+      this.filterPeriods = true;
+    } else if (!this.filterPeriod1 && !this.filterPeriod2 && !this.filterPeriod3 && !this.filterPeriod4) {
+      this.filterPeriodsIndeterminate = false;
+      this.filterPeriods = false;
+    } else {
+      this.filterPeriodsIndeterminate = true;
+    }
+  }
+
+  exportHistory(): void {
+    this.loadingReport = true;
+    this.setShowReportModal(false);
+
+    const filters = [];
+    if (this.filterFinalConclusion) filters.push('finalConclusion');
+    if (this.filterExpedients) filters.push('expedients');
+    if (this.filterAnnotations) filters.push('annotations');
+    if (this.filterPeriod1) filters.push('p1');
+    if (this.filterPeriod2) filters.push('p2');
+    if (this.filterPeriod3) filters.push('p3');
+    if (this.filterPeriod4) filters.push('p4');
+
+    const path = '/historial/' + this.studentId + '/' + this.selectedHistory.id + '/exportar';
+
+    this.reportService
+      .createReport(ReportTypes.HISTORIAL_ACADÉMICO_CONDUCTUAL, path, filters, this.userId)
+      .subscribe((r) => {
+        const downloadURL = window.URL.createObjectURL(r);
+        const link = document.createElement('a');
+        link.href = downloadURL;
+        link.download = ReportTypes.HISTORIAL_ACADÉMICO_CONDUCTUAL;
+        link.click();
+
+        this.loadingReport = false;
+      });
   }
 }

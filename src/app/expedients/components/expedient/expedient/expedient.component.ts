@@ -5,6 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Expedient } from 'src/app/expedients/shared/expedient.model';
 import { ExpedientService } from 'src/app/expedients/shared/expedient.service';
 
+import { ReportService } from 'src/app/shared/report.service';
+import { ReportTypes } from 'src/app/shared/enums/report-types.enum';
+
 @Component({
   selector: 'app-expedient',
   templateUrl: './expedient.component.html',
@@ -24,7 +27,20 @@ export class ExpedientComponent implements OnInit {
   selectedExpedientIsEditable: boolean;
   editing = false;
 
-  constructor(private route: ActivatedRoute, private expedientService: ExpedientService) {}
+  // Report
+  showReportModal = false;
+  filterReferences = true;
+  filterTreatments = true;
+  filterEvaluations = true;
+  filterDiagnosticImpression = true;
+  filterActionPlan = true;
+  loadingReport: boolean;
+
+  constructor(
+    private route: ActivatedRoute,
+    private expedientService: ExpedientService,
+    private reportService: ReportService
+  ) {}
 
   ngOnInit(): void {
     const paramStudent = this.route.snapshot.params['student'];
@@ -59,5 +75,33 @@ export class ExpedientComponent implements OnInit {
   onExpedientSaved(expedient: Expedient): void {
     this.expedients[this.selectedExpedientIndex] = expedient;
     this.setSelectedExpedient(this.selectedExpedientIndex);
+  }
+
+  setShowReportModal(show: boolean): void {
+    this.showReportModal = show;
+  }
+
+  exportExpedient(): void {
+    this.loadingReport = true;
+    this.setShowReportModal(false);
+
+    const filters = [];
+    if (this.filterReferences) filters.push('references');
+    if (this.filterTreatments) filters.push('externalPsychologicalTreatments');
+    if (this.filterEvaluations) filters.push('evaluations');
+    if (this.filterDiagnosticImpression) filters.push('diagnosticImpression');
+    if (this.filterActionPlan) filters.push('actionPlan');
+
+    const path = '/expedientes/estudiantes/' + this.selectedExpedient.id + '/' + this.studentId + '/exportar';
+
+    this.reportService.createReport(ReportTypes.EXPEDIENTE_PSICOLÓGICO, path, filters).subscribe((r) => {
+      const downloadURL = window.URL.createObjectURL(r);
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = ReportTypes.EXPEDIENTE_PSICOLÓGICO;
+      link.click();
+
+      this.loadingReport = false;
+    });
   }
 }

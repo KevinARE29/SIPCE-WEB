@@ -18,8 +18,8 @@ export class ReportService {
     this.baseUrl = environment.apiURL;
   }
 
-  createReport(type: string, path: string): Observable<Blob | ArrayBuffer> {
-    const url = this.baseUrl + 'reporting';
+  createReport(type: string, path: string, filters?: string[], userId?: number): Observable<Blob | ArrayBuffer> {
+    const url = this.baseUrl + 'reporting?filter=' + filters.join(',') + '&userId=' + userId;
 
     let headers = new HttpHeaders();
     headers = headers.set('Accept', 'application/pdf');
