@@ -62,6 +62,8 @@ export class Session {
   };
 
   // To create report
+  startDateString: string;
+  finishAt: Date;
   expedient: {
     gradeDetail: {
       counselor: User;

@@ -6,6 +6,9 @@ import { catchError, map } from 'rxjs/operators';
 
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
+import { format, addMinutes } from 'date-fns';
+import { es } from 'date-fns/locale';
+
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 
 import { SessionTypes } from './../../shared/enums/session-types.enum';
@@ -195,6 +198,9 @@ export class SessionService {
       map((r) => {
         const data = r['data'];
         data.student.section = data.student.sectionDetails ? data.student.sectionDetails[0].section : null;
+        data.session.startDateString = format(new Date(data.session.startedAt), 'd/MMMM/yyyy', { locale: es });
+        data.session.finishAt = addMinutes(new Date(data.session.startHour), data.session.duration);
+
         return data;
       }),
       catchError(this.handleError())
