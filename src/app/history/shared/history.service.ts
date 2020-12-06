@@ -132,7 +132,7 @@ export class HistoryService {
 
         data.behavioralHistory.behavioralHistoryfouls.forEach((period) => {
           period.fouls.forEach((foul) => {
-            foul.issueDateString = format(new Date(foul.issueDate), 'd/MMMMM/yyyy', { locale: es });
+            foul.issueDateString = format(new Date(foul.issueDate), 'd/MMMM/yyyy', { locale: es });
           });
         });
 
