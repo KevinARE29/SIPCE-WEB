@@ -350,7 +350,7 @@ export class ResponsibleInterviewComponent implements OnInit {
       const downloadURL = window.URL.createObjectURL(r);
       const link = document.createElement('a');
       link.href = downloadURL;
-      link.download = ReportTypes.BITACORA_ENTREVISTA;
+      link.download = ReportTypes.BITACORA_ENTREVISTA + '.pdf';
       link.click();
 
       this.loadingReport = false;

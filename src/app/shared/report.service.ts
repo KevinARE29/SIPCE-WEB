@@ -19,7 +19,14 @@ export class ReportService {
   }
 
   createReport(type: string, path: string, filters?: string[], userId?: number): Observable<Blob | ArrayBuffer> {
-    const url = this.baseUrl + 'reporting?filter=' + filters.join(',') + '&userId=' + userId;
+    let url = this.baseUrl + 'reporting';
+
+    const params = [];
+    if (filters && filters.length) params.push('filter=' + filters.join(','));
+    if (userId) params.push('userId=' + userId);
+    const urlParams = params.join('&');
+
+    if (urlParams) url += '?' + urlParams;
 
     let headers = new HttpHeaders();
     headers = headers.set('Accept', 'application/pdf');

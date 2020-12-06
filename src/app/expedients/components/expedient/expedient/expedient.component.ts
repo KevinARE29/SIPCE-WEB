@@ -98,7 +98,7 @@ export class ExpedientComponent implements OnInit {
       const downloadURL = window.URL.createObjectURL(r);
       const link = document.createElement('a');
       link.href = downloadURL;
-      link.download = ReportTypes.EXPEDIENTE_PSICOLÓGICO;
+      link.download = ReportTypes.EXPEDIENTE_PSICOLÓGICO + '.pdf';
       link.click();
 
       this.loadingReport = false;

@@ -165,7 +165,7 @@ export class HistoryDetailComponent implements OnInit {
         const downloadURL = window.URL.createObjectURL(r);
         const link = document.createElement('a');
         link.href = downloadURL;
-        link.download = ReportTypes.HISTORIAL_ACADÉMICO_CONDUCTUAL;
+        link.download = ReportTypes.HISTORIAL_ACADÉMICO_CONDUCTUAL + '.pdf';
         link.click();
 
         this.loadingReport = false;
