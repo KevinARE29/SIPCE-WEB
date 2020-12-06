@@ -4,6 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+import { format, differenceInYears } from 'date-fns';
+import { es } from 'date-fns/locale';
+
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 
 import { Expedient } from './expedient.model';
@@ -94,8 +97,23 @@ export class ExpedientService {
 
     return this.http.get<StudentWithExpedient>(url).pipe(
       map((r) => {
-        const data = r['data'];
-        data.student.section = data.student.sectionDetails ? data.student.sectionDetails[0].section : null;
+        const data: StudentWithExpedient = r['data'];
+        data.date = format(new Date(), 'd/MMMM/yyyy', { locale: es });
+        data.student.section = data.student['sectionDetails'] ? data.student['sectionDetails'][0].section : null;
+        data.student.age = differenceInYears(new Date(), new Date(data.student.birthdate));
+        data.expedient = this.mapExpedient(data.expedient);
+
+        // data.expedient.createdAtString = format(new Date(data.expedient['createdAt']), 'd/MMMM/yyyy', { locale: es });
+        data.expedient.expedientYear = data.expedient.expedientGrade.substring(
+          data.expedient.expedientGrade.indexOf('(') + 1,
+          data.expedient.expedientGrade.indexOf(')')
+        );
+
+        if (data.expedient.sessions) {
+          data.expedient.sessions.forEach((session) => {
+            session.startDateString = format(new Date(session.startedAt), 'd/MMMM/yyyy', { locale: es });
+          });
+        }
         return data;
       }),
       catchError(this.handleError())

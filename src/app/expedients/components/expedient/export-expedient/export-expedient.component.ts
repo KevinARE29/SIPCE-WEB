@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
-
 import { ExpedientService } from 'src/app/expedients/shared/expedient.service';
 import { StudentWithExpedient } from 'src/app/expedients/shared/student-with-expedient.model';
 
@@ -60,10 +57,6 @@ export class ExportExpedientComponent implements OnInit {
     this.loadingData = true;
     this.expedientService.exportExpedient(this.studentId, this.expedientId, token, this.filters).subscribe((data) => {
       this.data = data;
-
-      console.log(data);
-
-      this.date = format(new Date(), 'd/MMMM/yyyy', { locale: es });
 
       this.loadingData = false;
     });

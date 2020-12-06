@@ -34,4 +34,6 @@ export class Expedient {
   // Report fields
   sessions: Session[];
   expedientCounselor: User;
+  createdAtString: string;
+  expedientYear: string;
 }
