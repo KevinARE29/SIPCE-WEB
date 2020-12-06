@@ -1,0 +1,32 @@
+<h1>Prueba sociométrica</h1>
+
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+    <span class="principal">{{ test.sociometricTest.grade.name }} {{ test.sociometricTest.section.name }}</span>
+        
+    <div nz-row *ngIf="test">
+        <div nz-col [nzXs]="24" [nzMd]="{ span: 23, offset: 1 }">
+            <h3>{{ test.student.firstname }} {{ test.student.lastname }}</h3> 
+        </div>
+    </div>
+    
+    <div nz-row>
+        <div nz-col [nzXs]="24" [nzMd]="{ span: 23, offset: 1 }">
+    
+        </div>
+    </div>
+    
+    <div nz-row nzJustify="center">
+        <!-- Steps actions -->
+        <div class="steps-action">
+            <button nz-button nzGhost nzType="primary" (click)="prev()" *ngIf="currentQuestion.sequentialNumber > 0">
+                <span>Previa</span>
+            </button>
+            <button nz-button nzType="primary" (click)="next()" *ngIf="currentQuestion.sequentialNumber < questions.length">
+                <span>Siguiente</span>
+            </button>
+            <button nz-button nzType="primary" (click)="done()" *ngIf="currentQuestion.sequentialNumber === questions.length">
+                <span>Finalizar</span>
+            </button>
+        </div>
+    </div>
+</nz-spin>

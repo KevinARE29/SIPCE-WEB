@@ -6,9 +6,9 @@ import { AuthGuard } from '../login/guards/auth.guard';
 import { CreateQuestionBankComponent } from './components/question-banks/create-question-bank/create-question-bank.component';
 import { EditQuestionBankComponent } from './components/question-banks/edit-question-bank/edit-question-bank.component';
 import { QuestionBanksComponent } from './components/question-banks/question-banks/question-banks.component';
-import { StudentSociometricTestComponent } from './components/sociometric-test/student-sociometric-test/student-sociometric-test.component';
 
 import { CreateSociometricTestComponent } from './components/sociometric-tests/create-sociometric-test/create-sociometric-test.component';
+import { StudentSociometricTestComponent } from './components/sociometric-tests/student-sociometric-test/student-sociometric-test.component';
 import { SociometricTestComponent } from './components/sociometric-tests/sociometric-test/sociometric-test.component';
 import { SociometricTestsComponent } from './components/sociometric-tests/sociometric-tests/sociometric-tests.component';
 
@@ -61,7 +61,7 @@ const routes: Routes = [
             data: { permission: 30 }
           },
           {
-            path: 'estudiante/:student',
+            path: 'estudiante/:section/:student',
             children: [
               {
                 path: '',

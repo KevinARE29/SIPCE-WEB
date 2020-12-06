@@ -196,7 +196,7 @@
                                     </a>
                                 </ng-container>
                                 <ng-template #minorStudents>
-                                    <a>
+                                    <a [routerLink]="['estudiante', sociometricTest.sectionDetailId, data.id]">
                                         <i nz-icon nzType="form" nz-tooltip nzTooltipTitle="Realizar prueba"
                                             nzTheme="outline"></i>
                                     </a>

@@ -8,9 +8,8 @@ describe('StudentSociometricTestComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StudentSociometricTestComponent ]
-    })
-    .compileComponents();
+      declarations: [StudentSociometricTestComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

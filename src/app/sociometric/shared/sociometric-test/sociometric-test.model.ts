@@ -16,5 +16,6 @@ export class SociometricTest {
   questionBank: QuestionBank;
   students: Student[];
   presets: Preset[];
+  sectionDetailId: number;
   createdAt: Date;
 }
