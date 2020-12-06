@@ -17,7 +17,6 @@ export class ExportExpedientComponent implements OnInit {
   // Data.
   loadingData: boolean;
   data: StudentWithExpedient;
-  date: string;
 
   // List of filters.
   availableFilters = [

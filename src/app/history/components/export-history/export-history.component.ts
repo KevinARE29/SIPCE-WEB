@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
-
 import { HistoryService } from 'src/app/history/shared/history.service';
 import { StudentWithHistory } from 'src/app/history/shared/student-with-history.model';
 
@@ -20,7 +17,6 @@ export class ExportHistoryComponent implements OnInit {
   // Data.
   loadingData: boolean;
   data: StudentWithHistory;
-  date: string;
 
   // List of filters.
   availableFilters = ['finalConclusion', 'expedients', 'annotations', 'p1', 'p2', 'p3', 'p4'];
@@ -56,9 +52,6 @@ export class ExportHistoryComponent implements OnInit {
     this.loadingData = true;
     this.historyService.exportHistory(this.studentId, this.historyId, token, this.filters, userId).subscribe((data) => {
       this.data = data;
-      console.log(data);
-
-      this.date = format(new Date(), 'd/MMMM/yyyy', { locale: es });
 
       this.loadingData = false;
     });

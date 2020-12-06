@@ -18,6 +18,7 @@ export class History {
   expedients: ExpedientHistory[];
 
   // For reports.
+  createdAtString: string;
   annotations: Annotation[];
   behavioralHistoryfouls: FoulsCounter[];
 }

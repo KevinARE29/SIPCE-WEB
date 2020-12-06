@@ -4,6 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { StudentWithCounters } from './student-with-counters.model';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
@@ -115,8 +118,24 @@ export class HistoryService {
 
     return this.http.get<StudentWithHistory>(url).pipe(
       map((r) => {
-        const data = r['data'];
-        data.student.section = data.student.sectionDetails ? data.student.sectionDetails[0].section : null;
+        const data: StudentWithHistory = r['data'];
+        data.date = format(new Date(), 'd/MMMM/yyyy', { locale: es });
+        data.student.section = data.student['sectionDetails'] ? data.student['sectionDetails'][0].section : null;
+
+        data.behavioralHistory.createdAtString = format(new Date(data.behavioralHistory['createdAt']), 'd/MMMM/yyyy', {
+          locale: es
+        });
+
+        data.behavioralHistory.annotations.forEach((annotation) => {
+          annotation.annotationDateString = format(new Date(annotation.annotationDate), 'd/MMMM/yyyy', { locale: es });
+        });
+
+        data.behavioralHistory.behavioralHistoryfouls.forEach((period) => {
+          period.fouls.forEach((foul) => {
+            foul.issueDateString = format(new Date(foul.issueDate), 'd/MMMMM/yyyy', { locale: es });
+          });
+        });
+
         return data;
       }),
       catchError(this.handleError())
