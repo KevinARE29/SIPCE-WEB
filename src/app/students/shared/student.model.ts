@@ -24,5 +24,5 @@ export class Student {
   currentGrade: ShiftPeriodGrade;
   currentPhoto: unknown;
 
-  selected: boolean; // sociometric question
+  position: number; // sociometric question
 }

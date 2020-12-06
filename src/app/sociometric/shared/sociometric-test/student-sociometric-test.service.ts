@@ -38,7 +38,7 @@ export class StudentSociometricTestService {
                 question.id,
                 i,
                 true,
-                new Array<Student>(),
+                question.questionP,
                 new Array<Student>(),
                 'Incomplete'
               );
@@ -50,7 +50,7 @@ export class StudentSociometricTestService {
                 question.id,
                 i,
                 true,
-                new Array<Student>(),
+                question.questionP,
                 new Array<Student>(),
                 'Incomplete'
               );
@@ -58,14 +58,7 @@ export class StudentSociometricTestService {
               questions.push(newQuestion);
               i++;
 
-              newQuestion = new Question(
-                question.id,
-                i,
-                true,
-                new Array<Student>(),
-                new Array<Student>(),
-                'Incomplete'
-              );
+              newQuestion = new Question(question.id, i, false, question.questionN, new Array<Student>(), 'Incomplete');
 
               questions.push(newQuestion);
               break;

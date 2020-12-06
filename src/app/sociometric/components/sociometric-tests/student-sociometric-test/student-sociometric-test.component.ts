@@ -38,10 +38,10 @@ export class StudentSociometricTestComponent implements OnInit {
       sociometricTest: new SociometricTest(),
       student: new Student()
     };
+    this.currentQuestion = new Question(null, null, null, null, new Array<Student>(), null);
+    this.questions = new Array<Question>();
     this.test.sociometricTest.grade = new ShiftPeriodGrade();
     this.test.sociometricTest.section = new ShiftPeriodGrade();
-    this.currentQuestion = new Question(null, null, null, null, null, null);
-    this.questions = new Array<Question>();
     this.getSociometricTest();
   }
 
@@ -77,9 +77,14 @@ export class StudentSociometricTestComponent implements OnInit {
 
             this.questions = data['test']['questions'];
             this.currentQuestion = this.questions[0];
-            this.sectionStudents = data['students'];
+            this.questions[0].status = 'Current';
+            this.sectionStudents = Object.values(data['students']['students']);
+            this.sectionStudents = this.sectionStudents.filter((x) => x.id !== this.test.student.id);
+
+            this.checkSeleted(this.currentQuestion.sequentialNumber);
+
             this.loading = false;
-            console.log(this.test, this.questions, this.currentQuestion, this.sectionStudents);
+            // console.log(this.test, this.questions, this.currentQuestion, this.sectionStudents);
           },
           () => {
             this.loading = false;
@@ -101,5 +106,24 @@ export class StudentSociometricTestComponent implements OnInit {
 
   changeCurrentQuestion(id: number): void {
     this.currentQuestion = this.questions[id];
+    // TODO: check questions status
+  }
+
+  selectStudent(student: Student): void {
+    for (let i = 0; i < this.test.sociometricTest.answersPerQuestion; i++) {
+      const pos = i + 1;
+      const studentPositionI = this.sectionStudents.find((x) => x.position == pos);
+
+      if (studentPositionI && studentPositionI.id === student.id) {
+        studentPositionI.position = 0;
+      } else if (!studentPositionI && student.position === 0) {
+        student.position = pos;
+        break;
+      }
+    }
+  }
+
+  checkSeleted(index: number): void {
+    this.currentQuestion.students = this.sectionStudents;
   }
 }

@@ -68,7 +68,7 @@ export class SectionService {
     return this.http.get<Student[]>(`${this.baseUrl}academics/section-details/${sectionId}`).pipe(
       map((response) => {
         response['data'].students.forEach((student) => {
-          student.selected = false;
+          student.position = 0;
         });
         return response['data'];
       }),
