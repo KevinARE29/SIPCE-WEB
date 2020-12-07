@@ -80,7 +80,9 @@
             "name": "Nombre"
         },
         "presets": {},
-        "sociometric-tests": {},
+        "sociometric-tests": {
+            "studentsIds": "Estudiantes"
+        },
         "disciplinary-catalog": {
             "name": "Nombre de la sanción",
             "description": "Descripción",

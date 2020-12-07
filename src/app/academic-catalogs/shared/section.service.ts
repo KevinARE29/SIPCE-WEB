@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { ErrorMessageService } from '../../shared/error-message.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { ShiftPeriodGrade } from './shiftPeriodGrade.model';
+import { Student } from 'src/app/students/shared/student.model';
 
 @Injectable({
   providedIn: 'root'
@@ -63,11 +64,24 @@ export class SectionService {
       .pipe(catchError(this.handleError()));
   }
 
+  getAllSectionStudents(sectionId: number): Observable<Student[]> {
+    return this.http.get<Student[]>(`${this.baseUrl}academics/section-details/${sectionId}`).pipe(
+      map((response) => {
+        response['data'].students.forEach((student) => {
+          student.position = 0;
+        });
+        return response['data'];
+      }),
+      catchError(this.handleError())
+    );
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.
    */
   private handleError() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (error: any) => {
       error.error.message = this.errorMessageService.transformMessage('catalogs', error.error.message);
       return throwError(error.error);

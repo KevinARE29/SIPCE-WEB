@@ -23,4 +23,6 @@ export class Student {
   currentShift: ShiftPeriodGrade;
   currentGrade: ShiftPeriodGrade;
   currentPhoto: unknown;
+
+  position: number; // sociometric question
 }
