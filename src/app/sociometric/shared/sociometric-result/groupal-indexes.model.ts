@@ -1,4 +1,4 @@
-export class GrupalIndexes {
+export class GroupalIndexes {
   ia: number;
   id: number;
   ic: number;

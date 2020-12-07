@@ -5,15 +5,15 @@ import { SociometricResultService } from 'src/app/sociometric/shared/sociometric
 import { SociometricTestService } from 'src/app/sociometric/shared/sociometric-test/sociometric-test.service';
 
 import { Question } from 'src/app/sociometric/shared/question.model';
-import { GrupalResult } from 'src/app/sociometric/shared/sociometric-result/grupal-result.model';
+import { GroupalResult } from 'src/app/sociometric/shared/sociometric-result/groupal-result.model';
 import { SociometricTest } from 'src/app/sociometric/shared/sociometric-test/sociometric-test.model';
 
 @Component({
-  selector: 'app-sociometric-grupal-result',
-  templateUrl: './sociometric-grupal-result.component.html',
-  styleUrls: ['./sociometric-grupal-result.component.css']
+  selector: 'app-sociometric-groupal-result',
+  templateUrl: './sociometric-groupal-result.component.html',
+  styleUrls: ['./sociometric-groupal-result.component.css']
 })
-export class SociometricGrupalResultComponent implements OnInit {
+export class SociometricGroupalResultComponent implements OnInit {
   testId: number;
 
   sociometricTest: SociometricTest;
@@ -21,8 +21,9 @@ export class SociometricGrupalResultComponent implements OnInit {
   loadingTest: boolean;
 
   questionId: number;
+  questionIsAboutLidership: boolean;
 
-  sociometricResult: GrupalResult;
+  sociometricResult: GroupalResult;
   loadingResult: boolean;
 
   constructor(
@@ -49,8 +50,10 @@ export class SociometricGrupalResultComponent implements OnInit {
 
   onQuestionSelect(): void {
     this.loadingResult = true;
-    this.sociometricResultService.getQuestionGrupalResult(this.testId, this.questionId).subscribe((r) => {
+    this.sociometricResultService.getQuestionGroupalResult(this.testId, this.questionId).subscribe((r) => {
       this.sociometricResult = r;
+      this.questionIsAboutLidership = !this.questions.find((question) => question.id === this.questionId).questionN;
+
       this.loadingResult = false;
     });
   }

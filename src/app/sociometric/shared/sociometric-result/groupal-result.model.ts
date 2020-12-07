@@ -1,11 +1,11 @@
 import { Student } from 'src/app/students/shared/student.model';
 import { Question } from '../question.model';
 import { Answer } from './answer.model';
-import { GrupalIndexes } from './grupal-indexes.model';
+import { GroupalIndexes } from './groupal-indexes.model';
 import { SociometricArrayValues } from './sociometric-array-values.model';
 import { StudentWithSociometricIndexes } from './student-with-sociometric-indexes.model';
 
-export class GrupalResult {
+export class GroupalResult {
   year: number;
   shift: string;
   grade: string;
@@ -15,6 +15,6 @@ export class GrupalResult {
   sociomatrix: number[][];
   sociometricValues: SociometricArrayValues;
   individualIndexes: StudentWithSociometricIndexes[];
-  grupalIndexes: GrupalIndexes;
+  groupalIndexes: GroupalIndexes;
   answersPerStudent: Answer[];
 }

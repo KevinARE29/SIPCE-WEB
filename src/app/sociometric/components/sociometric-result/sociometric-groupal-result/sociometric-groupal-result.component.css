@@ -1,0 +1,44 @@
+.text-color {
+    color: #ef6c00;
+}
+
+nz-select {
+    width: 100%;
+    border-radius: 7px;
+}
+
+:host >>> .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.65);
+}
+
+nz-collapse {
+    background: transparent;
+}
+
+nz-collapse-panel p{
+    margin: 0;
+}
+
+.groupal-index {
+    border: 1px black solid;
+    border-radius: 10px;
+    min-height: 150px;
+    padding: 15px;
+}
+
+.groupal-index-title {
+    font-size: 20px;
+    margin-bottom: 2px;
+}
+
+.groupal-index-abbr {
+    font-size: 14px;
+    color: gray;
+    margin-bottom: 2px;
+}
+
+.groupal-index-value {
+    font-size: 30px;
+    text-align: center;
+}

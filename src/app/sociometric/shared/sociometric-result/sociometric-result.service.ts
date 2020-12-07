@@ -5,7 +5,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
-import { GrupalResult } from './grupal-result.model';
+import { GroupalResult } from './groupal-result.model';
 import { SociometricValues } from './sociometric-values.model';
 import { IndividualResult } from './individual-result.model';
 
@@ -19,12 +19,12 @@ export class SociometricResultService {
     this.baseUrl = environment.apiURL;
   }
 
-  getQuestionGrupalResult(testId: number, questionId: number): Observable<GrupalResult> {
+  getQuestionGroupalResult(testId: number, questionId: number): Observable<GroupalResult> {
     const url = this.baseUrl + 'sociometric/tests/' + testId + '/questions/' + questionId;
 
     return this.http.get(url).pipe(
       map((r) => {
-        const data: GrupalResult = r['data'];
+        const data: GroupalResult = r['data'];
 
         data.individualIndexes.forEach((individual, index) => {
           individual.sociometricValues = new SociometricValues();
@@ -45,13 +45,13 @@ export class SociometricResultService {
   }
 
   getQuestionIndividualResult(testId: number, questionId: number, studentId: number): Observable<IndividualResult> {
-    return this.getQuestionGrupalResult(testId, questionId).pipe(
-      map((grupalResult: GrupalResult) => {
-        const index = grupalResult.individualIndexes.findIndex((result) => result.student.id === studentId);
+    return this.getQuestionGroupalResult(testId, questionId).pipe(
+      map((groupalResult: GroupalResult) => {
+        const index = groupalResult.individualIndexes.findIndex((result) => result.student.id === studentId);
 
         const individualResult = new IndividualResult();
-        individualResult.individualIndex = grupalResult.individualIndexes[index];
-        individualResult.answer = grupalResult.answersPerStudent[index];
+        individualResult.individualIndex = groupalResult.individualIndexes[index];
+        individualResult.answer = groupalResult.answersPerStudent[index];
 
         return individualResult;
       })
