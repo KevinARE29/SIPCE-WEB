@@ -46,3 +46,17 @@ nz-collapse-panel p{
 .align-center {
     text-align: center;
 }
+
+.sociomatrix th, .sociomatrix td {
+    border: 1px rgb(211, 211, 211) solid;
+    padding: 7px;
+}
+
+.sociomatrix-data {
+    width: 40px;
+    text-align: center;
+}
+
+.gray-bg {
+    background-color: rgb(211, 211, 211);
+}

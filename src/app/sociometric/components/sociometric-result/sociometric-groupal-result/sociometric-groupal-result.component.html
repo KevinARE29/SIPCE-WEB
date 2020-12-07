@@ -26,6 +26,45 @@
             <!-- Sociomatrix -->
             <nz-collapse-panel nzHeader="Matriz sociométrica" [nzActive]="true">
 
+                <div nz-row nzJustify="center" *ngIf="!loadingResult && sociometricResult">
+                    <div nz-col>
+                        <nz-table class="sociomatrix">
+                            <tr>
+                                <th>Estudiantes</th>
+                                <th class="sociomatrix-data" *ngFor="let student of sociometricResult.participants; let i = index">{{i + 1}}</th>
+                                <th class="sociomatrix-data">Ep</th>
+                                <th *ngIf="!questionIsAboutLidership" class="sociomatrix-data">En</th>
+                                <th class="sociomatrix-data">Rp</th>
+                                <th *ngIf="!questionIsAboutLidership" class="sociomatrix-data">Rn</th>
+                            </tr>
+                            <tr *ngFor="let student of sociometricResult.participants; let i = index">
+                                <td>{{i + 1}}. {{student.firstname}} {{student.lastname}}</td>
+                                <td class="sociomatrix-data" [class.gray-bg]="i === j" *ngFor="let value of sociometricResult.sociomatrix[i]; let j = index">{{value || ''}}</td>
+                                <td class="sociomatrix-data">{{sociometricResult.sociometricValues.epArray[i]}}</td>
+                                <td *ngIf="!questionIsAboutLidership" class="sociomatrix-data">{{sociometricResult.sociometricValues.enArray[i]}}</td>
+                                <td class="sociomatrix-data">{{sociometricResult.sociometricValues.rpArray[i]}}</td>
+                                <td *ngIf="!questionIsAboutLidership" class="sociomatrix-data">{{sociometricResult.sociometricValues.rnArray[i]}}</td>
+                            </tr>
+                            <tr>
+                                <th>Sp</th>
+                                <td class="sociomatrix-data" *ngFor="let value of sociometricResult.sociometricValues.spArray">{{value}}</td>
+                            </tr>
+                            <tr>
+                                <th>Sp Val</th>
+                                <td class="sociomatrix-data" *ngFor="let value of sociometricResult.sociometricValues.spValArray">{{value}}</td>
+                            </tr>
+                            <tr *ngIf="!questionIsAboutLidership">
+                                <th>Sn</th>
+                                <td class="sociomatrix-data" *ngFor="let value of sociometricResult.sociometricValues.snArray">{{value}}</td>
+                            </tr>
+                            <tr *ngIf="!questionIsAboutLidership">
+                                <th>Sn Val</th>
+                                <td class="sociomatrix-data" *ngFor="let value of sociometricResult.sociometricValues.snValArray">{{value}}</td>
+                            </tr>
+                        </nz-table>
+                    </div>
+                </div>
+
             </nz-collapse-panel>
 
             <!-- Group Indexes -->
@@ -96,28 +135,28 @@
                                     <tr [nzExpand]="expandSet.has(data.student.id)">
                                         <div nz-row [nzGutter]="[10, 10]">
                                             <div class="align-center" nz-col nzSpan="6">
-                                                <strong>Ep = {{data.sociometricValues.ep | number: '.2'}}</strong>
+                                                <strong>Ep = {{data.sociometricValues.ep}}</strong>
                                             </div>
                                             <div *ngIf="!questionIsAboutLidership" class="align-center" nz-col nzSpan="6">
-                                                <strong>En = {{data.sociometricValues.en | number: '.2'}}</strong>
+                                                <strong>En = {{data.sociometricValues.en}}</strong>
                                             </div>
                                             <div class="align-center" nz-col nzSpan="6">
-                                                <strong>Rp = {{data.sociometricValues.rp | number: '.2'}}</strong>
+                                                <strong>Rp = {{data.sociometricValues.rp}}</strong>
                                             </div>
                                             <div *ngIf="!questionIsAboutLidership" class="align-center" nz-col nzSpan="6">
-                                                <strong>Rn = {{data.sociometricValues.rn | number: '.2'}}</strong>
+                                                <strong>Rn = {{data.sociometricValues.rn}}</strong>
                                             </div>
                                             <div class="align-center" nz-col nzSpan="6">
-                                                <strong>Sp = {{data.sociometricValues.sp | number: '.2'}}</strong>
+                                                <strong>Sp = {{data.sociometricValues.sp}}</strong>
                                             </div>
                                             <div class="align-center" nz-col nzSpan="6">
-                                                <strong>Sp val. = {{data.sociometricValues.spVal | number: '.2'}}</strong>
+                                                <strong>Sp val. = {{data.sociometricValues.spVal}}</strong>
                                             </div>
                                             <div *ngIf="!questionIsAboutLidership" class="align-center" nz-col nzSpan="6">
-                                                <strong>Sn = {{data.sociometricValues.sn | number: '.2'}}</strong>
+                                                <strong>Sn = {{data.sociometricValues.sn}}</strong>
                                             </div>
                                             <div *ngIf="!questionIsAboutLidership" class="align-center" nz-col nzSpan="6">
-                                                <strong>Sn val. = {{data.sociometricValues.snVal | number: '.2'}}</strong>
+                                                <strong>Sn val. = {{data.sociometricValues.snVal}}</strong>
                                             </div>
                                         </div>
                                     </tr>
