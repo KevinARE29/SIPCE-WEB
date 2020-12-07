@@ -106,7 +106,7 @@
     <!-- Final expedient conclusion -->
     <div nz-row *ngIf="filters.includes('expedients')">
         <div nz-col nzSpan="24">
-            <p><strong class="text-blue-light">Comentario final de consejeria</strong></p>
+            <p><strong class="text-blue-light">Comentario final de consejería</strong></p>
             <ng-container *ngIf="data.behavioralHistory.expedients && data.behavioralHistory.expedients.length">
                 <p>{{data.behavioralHistory.expedients[0].finalConclusion}}</p>
                 <p class="comment-author"><strong>Orientador: </strong>{{data.behavioralHistory.expedients[0].author}}</p>
