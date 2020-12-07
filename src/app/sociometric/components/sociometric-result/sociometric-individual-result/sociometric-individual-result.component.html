@@ -124,15 +124,18 @@
                     <br>
 
                     <p class="question">¿Quiénes lo eligen?</p>
+                    <p *ngIf="sociometricResult.answer.studentsAnswers.answersP.length === 0">Ninguno</p>
                     <ul>
                         <li *ngFor="let student of sociometricResult.answer.studentsAnswers.answersP">{{student.firstname}}  {{student.lastname}}</li>
                     </ul>
+
                 </ng-container>
             </div>
 
             <div nz-col nzXs="24" nzSm="12" nzMd="10" nzLg="8" nzXl="7">
                 <ng-container *ngIf="questionIsAboutLidership">
                     <p class="question">¿Quiénes lo consideran líder?</p>
+                    <p *ngIf="sociometricResult.answer.studentsAnswers.answersP.length === 0">Ninguno</p>
                     <ul>
                         <li *ngFor="let student of sociometricResult.answer.studentsAnswers.answersP">{{student.firstname}}  {{student.lastname}}</li>
                     </ul>
@@ -148,6 +151,7 @@
                     <br>
 
                     <p class="question">¿Quiénes lo rechazan?</p>
+                    <p *ngIf="sociometricResult.answer.studentsAnswers.answersN.length === 0">Ninguno</p>
                     <ul>
                         <li *ngFor="let student of sociometricResult.answer.studentsAnswers.answersN">{{student.firstname}}  {{student.lastname}}</li>
                     </ul>
