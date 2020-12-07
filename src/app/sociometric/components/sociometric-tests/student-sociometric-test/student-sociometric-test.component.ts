@@ -113,6 +113,7 @@ export class StudentSociometricTestComponent implements OnInit {
       );
     }
   }
+
   next(): void {
     if (this.checkPositions()) {
       this.saveResponse(true);

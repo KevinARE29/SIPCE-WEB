@@ -24,19 +24,6 @@
   margin-bottom: 5px;
 }
 
-.partial {
-  border-radius: 50%;
-  width: 29px;
-  height: 29px;
-  background: #cccccc;
-  border: 2px solid #acacac;
-  color: #ffffff;
-  text-align: center;
-  font-size: 1em;
-  padding-top: 1px;
-  margin-bottom: 5px;
-}
-
 .current {
   border-radius: 50%;
   width: 28px;
