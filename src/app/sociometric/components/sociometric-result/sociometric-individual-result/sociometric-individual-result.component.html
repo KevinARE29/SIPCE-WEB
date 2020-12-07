@@ -33,49 +33,49 @@
         <div *ngIf="!loadingResult && sociometricResult" nz-row [nzGutter]="[20, 20]">
             <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
                 <p>Expansividad positiva</p>
-                <p>Ep {{sociometricResult.individualIndex.sociometricValues.ep | number: '.2'}}</p>
+                <p>Ep {{sociometricResult.individualIndex.sociometricValues.ep}}</p>
             </div>
 
             <div *ngIf="!questionIsAboutLidership" class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
                 <p>Expansividad negativa</p>
-                <p>En {{sociometricResult.individualIndex.sociometricValues.en | number: '.2'}}</p>
+                <p>En {{sociometricResult.individualIndex.sociometricValues.en}}</p>
             </div>
 
             <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
                 <p>Elecciones recíprocas</p>
-                <p>Rp {{sociometricResult.individualIndex.sociometricValues.rp | number: '.2'}}</p>
+                <p>Rp {{sociometricResult.individualIndex.sociometricValues.rp}}</p>
             </div>
 
             <div *ngIf="!questionIsAboutLidership" class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
                 <p>Rechazos recíprocos</p>
-                <p>Rn {{sociometricResult.individualIndex.sociometricValues.rn | number: '.2'}}</p>
+                <p>Rn {{sociometricResult.individualIndex.sociometricValues.rn}}</p>
             </div>
 
             <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
                 <p>Status de elecciones</p>
-                <p>Sp {{sociometricResult.individualIndex.sociometricValues.sp | number: '.2'}}</p>
+                <p>Sp {{sociometricResult.individualIndex.sociometricValues.sp}}</p>
             </div>
 
             <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
                 <p>Status de elecciones valorizados</p>
-                <p>Sp val. {{sociometricResult.individualIndex.sociometricValues.spVal | number: '.2'}}</p>
+                <p>Sp val. {{sociometricResult.individualIndex.sociometricValues.spVal}}</p>
             </div>
 
             <div *ngIf="!questionIsAboutLidership" class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
                 <p>Status de rechazo</p>
-                <p>Sn {{sociometricResult.individualIndex.sociometricValues.sn | number: '.2'}}</p>
+                <p>Sn {{sociometricResult.individualIndex.sociometricValues.sn}}</p>
             </div>
 
             <div *ngIf="!questionIsAboutLidership" class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
                 <p>Status de rechazo valorizados</p>
-                <p>Sn val. {{sociometricResult.individualIndex.sociometricValues.snVal | number: '.2'}}</p>
+                <p>Sn val. {{sociometricResult.individualIndex.sociometricValues.snVal}}</p>
             </div>
         </div> 
 
         <br>
         <nz-divider nzText="Índices sociométricos" nzOrientation="left"></nz-divider>
 
-        <div *ngIf="!loadingResult && sociometricResult" nz-row>
+        <div *ngIf="!loadingResult && sociometricResult" nz-row nzJustify="space-around">
             <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="4">
                 <p>Popularidad</p>
                 <p>Pop. {{sociometricResult.individualIndex.pop | number: '.2'}}</p>
