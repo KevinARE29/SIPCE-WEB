@@ -71,6 +71,12 @@ export class StudentSociometricTestService {
     );
   }
 
+  getStudentTest(data: { email: string; password: string }): Observable<unknown>{
+    return this.http
+      .post<unknown>(`${this.baseUrl}sociometric/tests/student-access`, data)
+      .pipe(catchError(this.handleError()));
+  }
+
   saveResponse(question: Question, test: unknown): Observable<void> {
     const sociometricTestId = test['sociometricTest'].id;
     const studentId = test['student'].id;

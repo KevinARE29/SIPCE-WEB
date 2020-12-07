@@ -77,7 +77,7 @@
                                 <input nz-input formControlName="email" placeholder="Correo electrónico" type="email" />
                                 <ng-template #emailErrors let-control>
                                     <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres<br></ng-container>
-                                    <ng-container *ngIf="control.hasError('required')">El correo electrónico es requerido<br</ng-container>
+                                    <ng-container *ngIf="control.hasError('required')">El correo electrónico es requerido<br></ng-container>
                                     <ng-container *ngIf="control.hasError('pattern')">Ingrese un correo electrónico válido<br></ng-container>
                                 </ng-template>
                             </nz-form-control>

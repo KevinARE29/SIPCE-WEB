@@ -1,0 +1,33 @@
+<div class="test-background-image">
+    <div nz-row nzAlign="middle" nzJustify="space-around" class="test-background-color">
+
+        <!--  Form   -->
+        <form nz-form [formGroup]="studentTestForm" (submit)="access()">
+            <nz-form-item>
+                <nz-form-label>Correo electrónico</nz-form-label>
+                <nz-input-group>
+                    <input type="email" nz-input placeholder="Correo electrónico" formControlName="email" />
+                </nz-input-group>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label>Contraseña de prueba sociométrica</nz-form-label>
+                <nz-input-group [nzSuffix]="suffixTemplate">
+                    <input [type]="passwordVisible ? 'text' : 'password'" nz-input nz-input
+                        placeholder="Contraseña de prueba sociométrica" formControlName="password" />
+                </nz-input-group>
+                <ng-template #suffixTemplate>
+                    <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                        (click)="passwordVisible = !passwordVisible"></i>
+                </ng-template>
+            </nz-form-item>
+
+            <div nz-row nzJustify="center">
+                <button nz-button [nzLoading]="btnLoading" [nzType]="'primary'">
+                    Ingresar
+                </button>
+            </div>
+        </form>
+        <!--  /Form   -->
+
+    </div>
+</div>
