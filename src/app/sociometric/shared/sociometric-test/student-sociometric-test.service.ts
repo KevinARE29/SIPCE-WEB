@@ -28,42 +28,7 @@ export class StudentSociometricTestService {
   getSociometricTest(id: number, studentId: number): Observable<unknown> {
     return this.http.get<unknown>(`${this.baseUrl}sociometric/tests/${id}/students/${studentId}`).pipe(
       map((response) => {
-        const questions = new Array<Question>();
-        let i = 0;
-        response['data']['sociometricTest'].questionBank.questions.forEach((question) => {
-          switch (question.type) {
-            case 'Liderazgo':
-              const newLeadQuestion = new Question(
-                question.id,
-                i,
-                true,
-                question.questionP,
-                new Array<Student>(),
-                'Incomplete'
-              );
-
-              questions.push(newLeadQuestion);
-              break;
-            case 'Aceptación/Rechazo':
-              let newQuestion = new Question(
-                question.id,
-                i,
-                true,
-                question.questionP,
-                new Array<Student>(),
-                'Incomplete'
-              );
-
-              questions.push(newQuestion);
-              i++;
-
-              newQuestion = new Question(question.id, i, false, question.questionN, new Array<Student>(), 'Incomplete');
-
-              questions.push(newQuestion);
-              break;
-          }
-          i++;
-        });
+        const questions = this.transformQuestions(response['data']['sociometricTest'].questionBank.questions);
 
         return { response: response['data'], questions };
       }),
@@ -71,10 +36,19 @@ export class StudentSociometricTestService {
     );
   }
 
-  getStudentTest(data: { email: string; password: string }): Observable<unknown>{
-    return this.http
-      .post<unknown>(`${this.baseUrl}sociometric/tests/student-access`, data)
-      .pipe(catchError(this.handleError()));
+  getStudentTest(data: { email: string; password: string }): Observable<unknown> {
+    return this.http.post<unknown>(`${this.baseUrl}sociometric/tests/student-access`, data).pipe(
+      map((response) => {
+        const questions = this.transformQuestions(response['data']['questionBank'].questions);
+
+        response['data']['students'].forEach((student) => {
+          student.position = 0;
+        });
+        console.log(questions);
+        return { data: response['data'], questions };
+      }),
+      catchError(this.handleError())
+    );
   }
 
   saveResponse(question: Question, test: unknown): Observable<void> {
@@ -111,6 +85,39 @@ export class StudentSociometricTestService {
       test: this.getSociometricTest(testId, studentId),
       students: this.sectionService.getAllSectionStudents(sectionId)
     });
+  }
+
+  transformQuestions(apiQuestions: unknown): Question[] {
+    const questions = new Array<Question>();
+    let i = 0;
+    Object.values(apiQuestions).forEach((question) => {
+      switch (question['type']) {
+        case 'Liderazgo':
+          const newLeadQuestion = new Question(
+            question.id,
+            i,
+            true,
+            question['questionP'],
+            new Array<Student>(),
+            'Incomplete'
+          );
+
+          questions.push(newLeadQuestion);
+          break;
+        case 'Aceptación/Rechazo':
+          let newQuestion = new Question(question.id, i, true, question.questionP, new Array<Student>(), 'Incomplete');
+
+          questions.push(newQuestion);
+          i++;
+
+          newQuestion = new Question(question.id, i, false, question.questionN, new Array<Student>(), 'Incomplete');
+
+          questions.push(newQuestion);
+          break;
+      }
+      i++;
+    });
+    return questions;
   }
 
   /**
