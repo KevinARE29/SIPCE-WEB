@@ -184,7 +184,7 @@
                         <td>{{ data.lastname }}</td>
                         <td [nzAlign]="'center'">
                             <ng-container *ngIf="data['completed'];else emptyTest">
-                                <a>
+                                <a [routerLink]="['resultados', data.id]">
                                     <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver resultados"
                                         nzTheme="outline"></i>
                                 </a>
@@ -206,6 +206,12 @@
                     </tr>
                 </tbody>
             </nz-table>
+
+            <div nz-row nzJustify="center">
+                <div nz-col>
+                    <a routerLink="resultados"><strong>Ver resultados grupales</strong></a>
+                </div>
+            </div>
         </div>
         <!-- #endregion -->
     </ng-container>
