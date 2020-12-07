@@ -29,7 +29,6 @@ export class StudentSociometricTestService {
     return this.http.get<unknown>(`${this.baseUrl}sociometric/tests/${id}/students/${studentId}`).pipe(
       map((response) => {
         const questions = new Array<Question>();
-        // console.log(response);
         let i = 0;
         response['data']['sociometricTest'].questionBank.questions.forEach((question) => {
           switch (question.type) {
@@ -66,21 +65,19 @@ export class StudentSociometricTestService {
           i++;
         });
 
-        // console.log(questions);
         return { response: response['data'], questions };
       }),
       catchError(this.handleError())
     );
   }
 
-  saveAnswer(question: Question, test: unknown): Observable<void> {
+  saveResponse(question: Question, test: unknown): Observable<void> {
     const sociometricTestId = test['sociometricTest'].id;
     const studentId = test['student'].id;
     const studentIds = new Array<number>();
 
     let students = question.students.filter((x) => x.position !== 0);
     students = students.sort((a, b) => a.position - b.position);
-
     students.forEach((student) => studentIds.push(student.id));
 
     const data = JSON.stringify({
@@ -90,7 +87,16 @@ export class StudentSociometricTestService {
     });
 
     return this.http
-      .put<void>(`${this.baseUrl}sociometric/test/${sociometricTestId}/students/${studentId}`, data)
+      .put<void>(`${this.baseUrl}sociometric/tests/${sociometricTestId}/students/${studentId}`, data)
+      .pipe(catchError(this.handleError()));
+  }
+
+  completeTest(test: unknown): Observable<void> {
+    const sociometricTestId = test['sociometricTest'].id;
+    const studentId = test['student'].id;
+
+    return this.http
+      .patch<void>(`${this.baseUrl}sociometric/tests/${sociometricTestId}/students/${studentId}`, null)
       .pipe(catchError(this.handleError()));
   }
 

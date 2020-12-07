@@ -84,7 +84,6 @@ export class StudentSociometricTestComponent implements OnInit {
             this.checkSeleted();
 
             this.loading = false;
-            // console.log(this.test, this.questions, this.currentQuestion, this.sectionStudents);
           },
           () => {
             this.loading = false;
@@ -102,23 +101,101 @@ export class StudentSociometricTestComponent implements OnInit {
 
   prev(): void {
     if (this.checkPositions()) {
-      this.currentQuestion.status = 'Completed';
-      this.currentIndex--;
-      this.currentQuestion = this.questions[this.currentIndex];
-      this.questions[this.currentIndex].status = 'Current';
+      this.saveResponse(false);
+    } else {
+      this.notification.create(
+        'error',
+        'Respuesta incompleta',
+        `Se deben seleccionar ${this.test.sociometricTest.answersPerQuestion} estudiantes`,
+        {
+          nzDuration: 3000
+        }
+      );
     }
-    console.log(this.currentQuestion, this.test, false);
   }
   next(): void {
     if (this.checkPositions()) {
-      this.currentQuestion.status = 'Completed';
-      this.currentIndex++;
-      this.currentQuestion = this.questions[this.currentIndex];
-      this.questions[this.currentIndex].status = 'Current';
+      this.saveResponse(true);
+    } else {
+      this.notification.create(
+        'error',
+        'Respuesta incompleta',
+        `Se deben seleccionar ${this.test.sociometricTest.answersPerQuestion} estudiantes`,
+        {
+          nzDuration: 3000
+        }
+      );
     }
-    console.log(this.currentQuestion, this.test, true, `Is it complete? ${this.checkPositions()}`);
   }
-  done(): void {}
+
+  done(): void {
+    if (this.checkPositions()) {
+      this.saveResponse(null);
+    } else {
+      this.notification.create(
+        'error',
+        'Respuesta incompleta',
+        `Se deben seleccionar ${this.test.sociometricTest.answersPerQuestion} estudiantes`,
+        {
+          nzDuration: 3000
+        }
+      );
+    }
+  }
+
+  saveResponse(next: boolean): void {
+    this.loading = true;
+
+    this.studentSociometricTestService.saveResponse(this.currentQuestion, this.test).subscribe(
+      () => {
+        this.currentQuestion.status = 'Completed';
+        switch (next) {
+          case true:
+            this.currentIndex++;
+            this.currentQuestion = this.questions[this.currentIndex];
+            this.questions[this.currentIndex].status = 'Current';
+
+            this.loading = false;
+            break;
+          case false:
+            this.currentIndex--;
+            this.currentQuestion = this.questions[this.currentIndex];
+            this.questions[this.currentIndex].status = 'Current';
+
+            this.loading = false;
+            break;
+          default:
+            this.completeTest();
+            break;
+        }
+      },
+      (error) => {
+        const statusCode = error.statusCode;
+        const notIn = [401, 403];
+
+        this.loading = false;
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create(
+            'error',
+            'Ocurrió un error al guardar la respuesta. Por favor verifique lo siguiente:',
+            error.message,
+            { nzDuration: 30000 }
+          );
+        }
+      }
+    );
+  }
+
+  completeTest(): void {
+    this.studentSociometricTestService.completeTest(this.test).subscribe(() => {
+      this.message.success(
+        `Prueba registrada con éxito para el estudiante ${this.test.student.firstname} ${this.test.student.lastname}`
+      );
+      this.loading = false;
+      this.router.navigateByUrl(`/pruebas-sociometricas/tests/${this.test.sociometricTest.id}`);
+    });
+  }
 
   selectStudent(student: Student): void {
     for (let i = 0; i < this.test.sociometricTest.answersPerQuestion; i++) {
@@ -135,9 +212,26 @@ export class StudentSociometricTestComponent implements OnInit {
   }
 
   checkSeleted(): void {
-    // Add logic to add initial data
     this.questions.forEach((question) => {
+      let answers = this.test['answers'].filter((x) => x['question'].id == question.id);
       question.students = JSON.parse(JSON.stringify(this.sectionStudents));
+
+      if (question.connotation) {
+        answers = answers.filter((x) => x['ponderation'] > 0);
+        answers = answers.sort((a, b) => b['ponderation'] - a['ponderation']);
+      } else {
+        answers = answers.filter((x) => x['ponderation'] < 0);
+        answers = answers.sort((a, b) => a['ponderation'] - b['ponderation']);
+      }
+
+      let i = 1;
+      answers.forEach((answer) => {
+        if (i <= this.test.sociometricTest.answersPerQuestion) {
+          const student = question.students.find((x) => x.id === answer['student'].id);
+          student.position = i;
+          i++;
+        }
+      });
     });
 
     this.currentQuestion = this.questions[this.currentIndex];
