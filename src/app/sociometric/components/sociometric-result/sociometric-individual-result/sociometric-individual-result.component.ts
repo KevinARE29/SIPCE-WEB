@@ -24,6 +24,7 @@ export class SociometricIndividualResultComponent implements OnInit {
   loadingTest: boolean;
 
   questionId: number;
+  questionIsAboutLidership: boolean;
 
   sociometricResult: IndividualResult;
   loadingResult: boolean;
@@ -62,7 +63,8 @@ export class SociometricIndividualResultComponent implements OnInit {
       .getQuestionIndividualResult(this.testId, this.questionId, this.studentId)
       .subscribe((r) => {
         this.sociometricResult = r;
-        console.log(this.sociometricResult);
+        this.questionIsAboutLidership = !this.questions.find((question) => question.id === this.questionId).questionN;
+
         this.loadingResult = false;
       });
   }

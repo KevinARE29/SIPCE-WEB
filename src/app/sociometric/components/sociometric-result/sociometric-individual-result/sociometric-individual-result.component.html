@@ -29,7 +29,130 @@
 <nz-spin [nzSpinning]="loadingResult" nzTip="Cargando...">
     <ng-container *ngIf="questionId">
         <nz-divider nzText="Valores sociométricos" nzOrientation="left"></nz-divider>
+
+        <div *ngIf="!loadingResult && sociometricResult" nz-row [nzGutter]="[20, 20]">
+            <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Expansividad positiva</p>
+                <p>Ep {{sociometricResult.individualIndex.sociometricValues.ep | number: '.2'}}</p>
+            </div>
+
+            <div *ngIf="!questionIsAboutLidership" class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Expansividad negativa</p>
+                <p>En {{sociometricResult.individualIndex.sociometricValues.en | number: '.2'}}</p>
+            </div>
+
+            <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Elecciones recíprocas</p>
+                <p>Rp {{sociometricResult.individualIndex.sociometricValues.rp | number: '.2'}}</p>
+            </div>
+
+            <div *ngIf="!questionIsAboutLidership" class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Rechazos recíprocos</p>
+                <p>Rn {{sociometricResult.individualIndex.sociometricValues.rn | number: '.2'}}</p>
+            </div>
+
+            <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Status de elecciones</p>
+                <p>Sp {{sociometricResult.individualIndex.sociometricValues.sp | number: '.2'}}</p>
+            </div>
+
+            <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Status de elecciones valorizados</p>
+                <p>Sp val. {{sociometricResult.individualIndex.sociometricValues.spVal | number: '.2'}}</p>
+            </div>
+
+            <div *ngIf="!questionIsAboutLidership" class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Status de rechazo</p>
+                <p>Sn {{sociometricResult.individualIndex.sociometricValues.sn | number: '.2'}}</p>
+            </div>
+
+            <div *ngIf="!questionIsAboutLidership" class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Status de rechazo valorizados</p>
+                <p>Sn val. {{sociometricResult.individualIndex.sociometricValues.snVal | number: '.2'}}</p>
+            </div>
+        </div> 
+
+        <br>
         <nz-divider nzText="Índices sociométricos" nzOrientation="left"></nz-divider>
+
+        <div *ngIf="!loadingResult && sociometricResult" nz-row>
+            <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="4">
+                <p>Popularidad</p>
+                <p>Pop. {{sociometricResult.individualIndex.pop | number: '.2'}}</p>
+            </div>
+
+            <div *ngIf="!questionIsAboutLidership" class="index-data" nz-col nzXs="24" nzMd="12" nzLg="4">
+                <p>Antipatia</p>
+                <p>Ant. {{sociometricResult.individualIndex.ant | number: '.2'}}</p>
+            </div>
+
+            <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Expansividad positiva</p>
+                <p>Exp. p. {{sociometricResult.individualIndex.expP | number: '.2'}}</p>
+            </div>
+
+            <div *ngIf="!questionIsAboutLidership" class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Expansividad negativa</p>
+                <p>Exp. n. {{sociometricResult.individualIndex.expN | number: '.2'}}</p>
+            </div>
+
+            <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="4">
+                <p>Conexión afectiva</p>
+                <p>CA {{sociometricResult.individualIndex.ca | number: '.2'}}</p>
+            </div>
+        </div> 
+
+        <br>
         <nz-divider nzText="Respuestas" nzOrientation="left"></nz-divider>
+        
+        <div *ngIf="!loadingResult && sociometricResult" nz-row [nzGutter]="[10, 10]" nzJustify="space-around">
+            <div nz-col nzXs="24" nzSm="12" nzMd="10" nzLg="8" nzXl="7">
+                <ng-container *ngIf="questionIsAboutLidership">
+                    <p class="question">¿A quiénes considera líderes?</p>
+                    <ul>
+                        <li *ngFor="let student of sociometricResult.answer.myAnswers.answersP">{{student.firstname}}  {{student.lastname}}</li>
+                    </ul>
+                </ng-container>
+
+                <ng-container *ngIf="!questionIsAboutLidership">
+                    <nz-tag nzColor="green">Aceptación</nz-tag>
+                    <p class="question">¿A quiénes elige?</p>
+                    <ul>
+                        <li *ngFor="let student of sociometricResult.answer.myAnswers.answersP">{{student.firstname}}  {{student.lastname}}</li>
+                    </ul>
+
+                    <br>
+
+                    <p class="question">¿Quiénes lo eligen?</p>
+                    <ul>
+                        <li *ngFor="let student of sociometricResult.answer.studentsAnswers.answersP">{{student.firstname}}  {{student.lastname}}</li>
+                    </ul>
+                </ng-container>
+            </div>
+
+            <div nz-col nzXs="24" nzSm="12" nzMd="10" nzLg="8" nzXl="7">
+                <ng-container *ngIf="questionIsAboutLidership">
+                    <p class="question">¿Quiénes lo consideran líder?</p>
+                    <ul>
+                        <li *ngFor="let student of sociometricResult.answer.studentsAnswers.answersP">{{student.firstname}}  {{student.lastname}}</li>
+                    </ul>
+                </ng-container>
+
+                <ng-container *ngIf="!questionIsAboutLidership">
+                    <nz-tag nzColor="red">Rechazo</nz-tag>
+                    <p class="question">¿A quiénes rechaza?</p>
+                    <ul>
+                        <li *ngFor="let student of sociometricResult.answer.myAnswers.answersN">{{student.firstname}}  {{student.lastname}}</li>
+                    </ul>
+
+                    <br>
+
+                    <p class="question">¿Quiénes lo rechazan?</p>
+                    <ul>
+                        <li *ngFor="let student of sociometricResult.answer.studentsAnswers.answersN">{{student.firstname}}  {{student.lastname}}</li>
+                    </ul>
+                </ng-container>
+            </div>
+        </div> 
     </ng-container>
 </nz-spin>
