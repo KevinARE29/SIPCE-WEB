@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
-import { WelcomeService } from '../shared/welcome.service';
+import { WelcomeService } from '../../shared/welcome.service';
 
 @Component({
   selector: 'app-welcome',

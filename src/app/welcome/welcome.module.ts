@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AntDesignModule } from '../ant-design/ant-design.module';
 
 import { WelcomeRoutingModule } from './welcome-routing.module';
-import { WelcomeComponent } from './components/welcome.component';
+import { WelcomeComponent } from './components/welcome/welcome.component';
 import { ConfirmRequestComponent } from './components/confirm-request/confirm-request.component';
 
 @NgModule({
