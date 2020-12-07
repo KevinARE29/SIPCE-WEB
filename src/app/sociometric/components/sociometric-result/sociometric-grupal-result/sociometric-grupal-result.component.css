@@ -6,3 +6,16 @@ nz-select {
     width: 100%;
     border-radius: 7px;
 }
+
+:host >>> .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.65);
+}
+
+nz-collapse {
+    background: transparent;
+}
+
+nz-collapse-panel p{
+    margin: 0;
+}
