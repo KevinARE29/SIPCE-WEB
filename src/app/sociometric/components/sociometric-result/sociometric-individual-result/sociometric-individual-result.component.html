@@ -1,0 +1,25 @@
+<div nz-row nzGutter="20">
+    <div nz-col>
+        <h1>Prueba sociométrica</h1>
+        <p *ngIf="sociometricTest">{{sociometricTest.shift.name}}, <span class="text-color">{{sociometricTest.grade.name}} {{sociometricTest.section.name}}</span> ({{sociometricTest.createdAt | date: 'yyyy'}})</p>
+    </div>
+</div>
+
+<div nz-row nzJustify="center" *ngIf="student">
+    <div nz-col>
+        <p><strong>{{student.firstname}} {{student.lastname}}</strong></p>
+    </div>
+</div>
+
+<div nz-row nzGutter="20">
+    <div nz-col>
+        Pregunta: 
+    </div>
+    <div nz-col nzXs="24" nzMd="16">
+        <nz-select nzShowSearch [(ngModel)]="questionId"
+            (ngModelChange)="onQuestionSelect()" nzPlaceHolder="Seleccionar" [nzLoading]="loadingTest">
+            <nz-option *ngFor="let question of questions" [nzValue]="question.id" [nzLabel]="question.questionN ? question.questionP + '/' + question.questionN : question.questionP">
+            </nz-option>
+        </nz-select>
+    </div>
+</div>

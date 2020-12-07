@@ -11,6 +11,8 @@ import { CreateSociometricTestComponent } from './components/sociometric-tests/c
 import { StudentSociometricTestComponent } from './components/sociometric-tests/student-sociometric-test/student-sociometric-test.component';
 import { SociometricTestComponent } from './components/sociometric-tests/sociometric-test/sociometric-test.component';
 import { SociometricTestsComponent } from './components/sociometric-tests/sociometric-tests/sociometric-tests.component';
+import { SociometricGrupalResultComponent } from './components/sociometric-result/sociometric-grupal-result/sociometric-grupal-result.component';
+import { SociometricIndividualResultComponent } from './components/sociometric-result/sociometric-individual-result/sociometric-individual-result.component';
 
 const routes: Routes = [
   {
@@ -57,6 +59,18 @@ const routes: Routes = [
           {
             path: '',
             component: SociometricTestComponent,
+            canActivate: [AuthGuard],
+            data: { permission: 30 }
+          },
+          {
+            path: 'resultados',
+            component: SociometricGrupalResultComponent,
+            canActivate: [AuthGuard],
+            data: { permission: 30 }
+          },
+          {
+            path: 'resultados/:studentId',
+            component: SociometricIndividualResultComponent,
             canActivate: [AuthGuard],
             data: { permission: 30 }
           },
