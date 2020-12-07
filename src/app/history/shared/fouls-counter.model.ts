@@ -1,13 +1,22 @@
+import { FoulAssignation } from './foul-assignation.model';
+
 export class FoulsCounter {
   period: string;
-  displayAlert: boolean;
   foulsCounter: {
     minorFouls: number;
-    minorFoulsAlert: boolean;
     seriousFouls: number;
-    seriousFoulsAlert: boolean;
     verySeriousFouls: number;
-    verySeriousFoulsAlert: boolean;
     totalSanctions: number;
+
+    // Frontend fields.
+    minorFoulsAlert: boolean;
+    seriousFoulsAlert: boolean;
+    verySeriousFoulsAlert: boolean;
   };
+
+  // Frontend field.
+  displayAlert: boolean;
+
+  // Report field.
+  fouls: FoulAssignation[];
 }

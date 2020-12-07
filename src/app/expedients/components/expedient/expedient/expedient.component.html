@@ -20,7 +20,7 @@
         </div>
 
         <div nz-col>
-            <a nz-button nzType="primary">Generar reporte</a>
+            <button *ngIf="selectedExpedientExists" nz-button nzGhost [nzLoading]="loadingReport" nzType="primary" (click)="setShowReportModal(true)">Generar reporte</button>
         </div>
     </div>
 
@@ -51,3 +51,19 @@
 
 </nz-spin>
 
+<nz-modal [(nzVisible)]="showReportModal" nzTitle="Exportar expediente del estudiante"
+            nzCancelText="Cancelar" nzOkText="Generar reporte" (nzOnOk)="exportExpedient()" (nzOnCancel)="setShowReportModal(false)">
+
+        <p>Seleccione los elementos que desea incluir en el reporte:</p>
+        <div nz-row>
+            <div nz-col nzXs="24" nzSm="12">
+                <label nz-checkbox [(ngModel)]="filterReferences">Referencia</label><br>
+                <label nz-checkbox [(ngModel)]="filterTreatments">Tratamientos externos</label><br>
+                <label nz-checkbox [(ngModel)]="filterEvaluations">Evaluaciones</label><br>
+            </div>
+            <div nz-col nzXs="24" nzSm="12">
+                <label nz-checkbox [(ngModel)]="filterDiagnosticImpression">Impresión diagnóstica</label><br>
+                <label nz-checkbox [(ngModel)]="filterActionPlan">Plan de acción</label><br>
+            </div>
+        </div>
+</nz-modal>

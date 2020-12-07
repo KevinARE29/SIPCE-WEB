@@ -14,4 +14,7 @@ export class Annotation {
   // Search params.
   startedAt: Date;
   finishedAt: Date;
+
+  // Reports
+  annotationDateString: string;
 }

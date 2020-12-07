@@ -4,10 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
-import { StudentWithHistory } from './student-with-history.model';
+import { StudentWithCounters } from './student-with-counters.model';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { History } from './history.model';
+import { StudentWithHistory } from './student-with-history.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +23,7 @@ export class HistoryService {
     this.baseUrl = environment.apiURL;
   }
 
-  getStudents(params: NzTableQueryParams, search: StudentWithHistory): Observable<StudentWithHistory[]> {
+  getStudents(params: NzTableQueryParams, search: StudentWithCounters): Observable<StudentWithCounters[]> {
     let url = this.baseUrl + 'behavioral-histories';
     let queryParams = '';
 
@@ -68,7 +72,7 @@ export class HistoryService {
 
     url += queryParams;
 
-    return this.http.get<StudentWithHistory[]>(url).pipe(catchError(this.handleError()));
+    return this.http.get<StudentWithCounters[]>(url).pipe(catchError(this.handleError()));
   }
 
   getStudentHistory(studentId: number): Observable<History[]> {
@@ -90,6 +94,52 @@ export class HistoryService {
     };
 
     return this.http.patch<void>(url, JSON.stringify(data)).pipe(catchError(this.handleError));
+  }
+
+  exportHistory(
+    studentId: number,
+    historyId: number,
+    token: string,
+    filters: string[],
+    userId: string
+  ): Observable<StudentWithHistory> {
+    const url =
+      this.baseUrl +
+      'reporting/students/' +
+      studentId +
+      '/histories/' +
+      historyId +
+      '?token=' +
+      token +
+      '&userId=' +
+      userId +
+      '&filter=' +
+      filters.join(',');
+
+    return this.http.get<StudentWithHistory>(url).pipe(
+      map((r) => {
+        const data: StudentWithHistory = r['data'];
+        data.date = format(new Date(), 'd/MMMM/yyyy', { locale: es });
+        data.student.section = data.student['sectionDetails'] ? data.student['sectionDetails'][0].section : null;
+
+        data.behavioralHistory.createdAtString = format(new Date(data.behavioralHistory['createdAt']), 'd/MMMM/yyyy', {
+          locale: es
+        });
+
+        data.behavioralHistory.annotations.forEach((annotation) => {
+          annotation.annotationDateString = format(new Date(annotation.annotationDate), 'd/MMMM/yyyy', { locale: es });
+        });
+
+        data.behavioralHistory.behavioralHistoryfouls.forEach((period) => {
+          period.fouls.forEach((foul) => {
+            foul.issueDateString = format(new Date(foul.issueDate), 'd/MMMM/yyyy', { locale: es });
+          });
+        });
+
+        return data;
+      }),
+      catchError(this.handleError())
+    );
   }
 
   /**

@@ -1,5 +1,6 @@
+import { User } from 'src/app/users/shared/user.model';
 import { InterventionProgram } from './intervention-program.model';
-import { Evaluation } from './session.model';
+import { Evaluation, Session } from './session.model';
 
 export class SessionsCounter {
   individualSessionCounter: number;
@@ -29,4 +30,10 @@ export class Expedient {
   evaluations: Evaluation[];
 
   sessionsCounter: SessionsCounter;
+
+  // Report fields
+  sessions: Session[];
+  expedientCounselor: User;
+  createdAtString: string;
+  expedientYear: string;
 }

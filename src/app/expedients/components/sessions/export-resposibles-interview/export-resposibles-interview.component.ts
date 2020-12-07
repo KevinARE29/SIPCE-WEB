@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { format, addMinutes } from 'date-fns';
-import { es } from 'date-fns/locale';
-
 import { SessionService } from 'src/app/expedients/shared/session.service';
 import { StudentWithSession } from 'src/app/expedients/shared/student-with-session.model';
 
@@ -48,11 +45,8 @@ export class ExportResposiblesInterviewComponent implements OnInit {
     }
 
     this.loadingData = true;
-    this.sessionService.exportSession(this.expedientId, this.studentId, this.sessionId, token).subscribe((data) => {
+    this.sessionService.exportSession(this.studentId, this.expedientId, this.sessionId, token).subscribe((data) => {
       this.data = data;
-
-      this.sessionStartDate = format(new Date(this.data.session.startedAt), 'd/MMMM/yyyy', { locale: es });
-      this.sessionEndDate = addMinutes(new Date(this.data.session.startHour), this.data.session.duration);
 
       this.loadingData = false;
     });

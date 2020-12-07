@@ -6,7 +6,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { UserService } from 'src/app/users/shared/user.service';
 import { SchoolYearService } from 'src/app/school-year/shared/school-year.service';
 import { HistoryService } from '../../shared/history.service';
-import { StudentWithHistory } from '../../shared/student-with-history.model';
+import { StudentWithCounters } from '../../shared/student-with-counters.model';
 import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 import { Pagination } from 'src/app/shared/pagination.model';
 
@@ -23,10 +23,10 @@ class ShiftGradeSection {
 })
 export class HistoryListComponent implements OnInit {
   loading = false;
-  listOfDisplayData: StudentWithHistory[];
+  listOfDisplayData: StudentWithCounters[];
 
   // Search params
-  searchParams: StudentWithHistory;
+  searchParams: StudentWithCounters;
   pagination: Pagination;
 
   // Search lists
@@ -43,7 +43,7 @@ export class HistoryListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.searchParams = new StudentWithHistory();
+    this.searchParams = new StudentWithCounters();
     this.searchParams.shift = new ShiftPeriodGrade();
     this.searchParams.grade = new ShiftPeriodGrade();
     this.searchParams.section = new ShiftPeriodGrade();

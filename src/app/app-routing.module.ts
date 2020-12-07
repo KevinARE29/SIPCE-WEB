@@ -80,12 +80,6 @@ const routes: Routes = [
     loadChildren: () => import('./calendar/calendar.module').then((m) => m.CalendarModule),
     canLoad: [AuthGuard]
   },
-  // HACK: Added for testing purposes
-  {
-    path: 'documents',
-    loadChildren: () => import('./document-testing/document-testing.module').then((m) => m.DocumentTestingModule),
-    canLoad: [AuthGuard]
-  },
   {
     path: 'expedientes',
     loadChildren: () => import('./expedients/expedients.module').then((m) => m.ExpedientsModule),

@@ -9,13 +9,13 @@
 
             <div nz-row nzGutter="20">
                 <div nz-col>
-                    <p>Fecha: {{sessionStartDate}}</p>
+                    <p>Fecha: {{data.session.startDateString}}</p>
                     <p>Hora de inicio: {{data.session.startHour | date: 'hh:mm aaa'}}</p>
                 </div>
 
                 <div nz-col>
                     <p>Hora de cita: {{data.session.startedAt | date: 'hh:mm aaa'}}</p>
-                    <p>Hora de cierre de entrevista: {{ sessionEndDate | date: 'hh:mm aaa'}}</p>
+                    <p>Hora de cierre de entrevista: {{ data.session.finishAt | date: 'hh:mm aaa'}}</p>
                 </div>
             </div>
 

@@ -18,4 +18,7 @@ export class FoulAssignation {
   createdEnd: Date;
   issueDateStart: Date;
   issueDateEnd: Date;
+
+  // Reports
+  issueDateString: string;
 }

@@ -6,7 +6,7 @@
         </div>
 
         <div nz-col>
-            <a nz-button nzType="primary">Generar reporte</a>
+            <button *ngIf="selectedHistory" nz-button nzGhost [nzLoading]="loadingReport" nzType="primary" (click)="setShowReportModal(true)">Generar reporte</button>
         </div>
     </div>
 
@@ -81,3 +81,24 @@
         </nz-tab>
       </nz-tabset>
 </nz-spin>
+
+<nz-modal [(nzVisible)]="showReportModal" nzTitle="Exportar historial académico y conductual"
+            nzCancelText="Cancelar" nzOkText="Generar reporte" (nzOnOk)="exportHistory()" (nzOnCancel)="setShowReportModal(false)">
+
+        <p>Seleccione los elementos que desea incluir en el reporte:</p>
+        <div nz-row>
+            <div nz-col nzSpan="22" nzOffset="1">
+                <label nz-checkbox [(ngModel)]="filterFinalConclusion">Comentario de resultados generales al final del año</label><br>
+                <label nz-checkbox [(ngModel)]="filterExpedients">Comentario final de consejería</label><br>
+                <label nz-checkbox [(ngModel)]="filterAnnotations">Diario de clases</label><br>
+                <label nz-checkbox [(ngModel)]="filterPeriods" [nzIndeterminate]="filterPeriodsIndeterminate" (ngModelChange)="updateAllPeriods()">Faltas y sanciones</label><br>
+            </div>
+
+            <div nz-col nzSpan="20" nzOffset="2">
+                <label nz-checkbox [(ngModel)]="filterPeriod1" (ngModelChange)="updateSinglePeriod()">Primer periodo</label><br>
+                <label nz-checkbox [(ngModel)]="filterPeriod2" (ngModelChange)="updateSinglePeriod()">Segundo periodo</label><br>
+                <label nz-checkbox [(ngModel)]="filterPeriod3" (ngModelChange)="updateSinglePeriod()">Tercer periodo</label><br>
+                <label nz-checkbox [(ngModel)]="filterPeriod4" (ngModelChange)="updateSinglePeriod()">Cuarto periodo</label><br>
+            </div>
+        </div>
+</nz-modal>

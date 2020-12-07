@@ -10,7 +10,6 @@ import { StudentSessionsComponent } from './components/sessions/student-sessions
 import { StudentSessionComponent } from './components/sessions/student-session/student-session.component';
 import { ResponsibleInterviewComponent } from './components/sessions/responsible-interview/responsible-interview.component';
 import { TeacherInterviewComponent } from './components/sessions/teacher-interview/teacher-interview.component';
-
 import { ExportResposiblesInterviewComponent } from './components/sessions/export-resposibles-interview/export-resposibles-interview.component';
 
 // Intervention programs.
@@ -18,6 +17,7 @@ import { InterventionProgramsListComponent } from './components/intervention-pro
 
 // Expedient
 import { ExpedientComponent } from './components/expedient/expedient/expedient.component';
+import { ExportExpedientComponent } from './components/expedient/export-expedient/export-expedient.component';
 
 const routes: Routes = [
   {
@@ -31,6 +31,10 @@ const routes: Routes = [
     component: ExpedientComponent,
     canActivate: [AuthGuard],
     data: { permission: 33 }
+  },
+  {
+    path: 'estudiantes/:expedient/:student/exportar',
+    component: ExportExpedientComponent
   },
   {
     path: 'estudiantes/:expedient/:student/sesiones',
