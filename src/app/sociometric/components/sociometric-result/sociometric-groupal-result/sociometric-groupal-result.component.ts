@@ -7,6 +7,7 @@ import { SociometricTestService } from 'src/app/sociometric/shared/sociometric-t
 import { Question } from 'src/app/sociometric/shared/question.model';
 import { GroupalResult } from 'src/app/sociometric/shared/sociometric-result/groupal-result.model';
 import { SociometricTest } from 'src/app/sociometric/shared/sociometric-test/sociometric-test.model';
+import { StudentWithSociometricIndexes } from 'src/app/sociometric/shared/sociometric-result/student-with-sociometric-indexes.model';
 
 @Component({
   selector: 'app-sociometric-groupal-result',
@@ -25,6 +26,9 @@ export class SociometricGroupalResultComponent implements OnInit {
 
   sociometricResult: GroupalResult;
   loadingResult: boolean;
+
+  // Expand table
+  expandSet = new Set<number>();
 
   constructor(
     private route: ActivatedRoute,
@@ -56,5 +60,38 @@ export class SociometricGroupalResultComponent implements OnInit {
 
       this.loadingResult = false;
     });
+  }
+
+  sortIndexesByName(a: StudentWithSociometricIndexes, b: StudentWithSociometricIndexes): number {
+    return a.student.firstname.localeCompare(b.student.firstname);
+  }
+
+  sortIndexesByPop(a: StudentWithSociometricIndexes, b: StudentWithSociometricIndexes): number {
+    return a.pop - b.pop;
+  }
+
+  sortIndexesByAnt(a: StudentWithSociometricIndexes, b: StudentWithSociometricIndexes): number {
+    return a.ant - b.ant;
+  }
+
+  sortIndexesByExpP(a: StudentWithSociometricIndexes, b: StudentWithSociometricIndexes): number {
+    return a.expP - b.expP;
+  }
+
+  sortIndexesByExpN(a: StudentWithSociometricIndexes, b: StudentWithSociometricIndexes): number {
+    return a.expN - b.expN;
+  }
+
+  sortIndexesByCA(a: StudentWithSociometricIndexes, b: StudentWithSociometricIndexes): number {
+    return a.ca - b.ca;
+  }
+
+  // Expand table
+  onExpandChange(id: number, checked: boolean): void {
+    if (checked) {
+      this.expandSet.add(id);
+    } else {
+      this.expandSet.delete(id);
+    }
   }
 }

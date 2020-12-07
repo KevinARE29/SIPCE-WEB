@@ -39,7 +39,7 @@ export class HistoryAnnotationsComponent implements OnInit, OnChanges {
   userResults: User[] = [];
   loadingUsers = false;
 
-  // Expant table
+  // Expand table
   expandSet = new Set<number>();
 
   // Search params.

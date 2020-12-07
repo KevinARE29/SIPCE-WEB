@@ -42,3 +42,7 @@ nz-collapse-panel p{
     font-size: 30px;
     text-align: center;
 }
+
+.align-center {
+    text-align: center;
+}
