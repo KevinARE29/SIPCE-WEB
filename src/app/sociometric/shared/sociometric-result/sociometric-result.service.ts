@@ -12,6 +12,7 @@ import { GroupalResult } from './groupal-result.model';
 import { SociometricValues } from './sociometric-values.model';
 import { IndividualResult } from './individual-result.model';
 import { SociometricResult } from './sociometric-result.model';
+import { QuestionBank } from '../question-bank.model';
 
 @Injectable({
   providedIn: 'root'
@@ -69,6 +70,14 @@ export class SociometricResultService {
       map((r) => {
         const data: SociometricResult = r['data'];
         data.date = format(new Date(), 'd/MMMM/yyyy', { locale: es });
+
+        // Fix: when there is not questionBank but there is groupal data.
+        if (!data.questionBank && data.generalReports) {
+          data.questionBank = new QuestionBank();
+          data.questionBank.questions = data.individualReports
+            ? data.individualReports[0].questions.map((q) => q.question)
+            : [];
+        }
 
         return data;
       }),
