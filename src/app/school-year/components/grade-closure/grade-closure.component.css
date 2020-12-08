@@ -1,6 +1,7 @@
 h1 {
     margin-right: 10px;
 }
+
 .grade-name, nz-table, nz-progress {
   margin-top: 15px;
 }
@@ -11,4 +12,8 @@ h1 {
 
 .grey {
   color: #C4C4C4;
+}
+
+nz-select {
+  width: 100%;
 }

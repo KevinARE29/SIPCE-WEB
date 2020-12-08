@@ -43,9 +43,15 @@
                     <tr *ngFor="let data of filterTable.data">
                         <td>{{ data.firstname }}</td>
                         <td>{{ data.lastname }}</td>
-                        <td>{{ data.status }}</td>
+                        <td>
+                            <nz-select nzShowSearch nzPlaceHolder="Seleccionar" [(ngModel)]="data.status"
+                                (ngModelChange)="updateStudentStatus($event, data);">
+                                <nz-option *ngFor="let state of status" [nzValue]="state" [nzLabel]="state"></nz-option>
+                            </nz-select>
+                        </td>
                         <td [nzAlign]="'center'">
-                            <a (click)="openModal(data)" [ngClass]="data.behavioralHistory.finalConclusion ? 'green' : 'grey'">
+                            <a (click)="openModal(data)"
+                                [ngClass]="data.behavioralHistory.finalConclusion ? 'green' : 'grey'">
                                 <i nz-icon nzType="edit" nzTheme="outline"></i>
                             </a>
                         </td>

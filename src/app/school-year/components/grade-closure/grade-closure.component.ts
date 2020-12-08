@@ -4,17 +4,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
+import { StudentStatus } from './../../../shared/student-status.enum';
 import { History } from 'src/app/history/shared/history.model';
 import { HistoryService } from 'src/app/history/shared/history.service';
 import { StudentService } from 'src/app/students/shared/student.service';
 import { UserService } from 'src/app/users/shared/user.service';
+import { Student } from 'src/app/students/shared/student.model';
 
 export interface Grade {
   name: string;
   id: number;
 }
 
-export interface Student {
+export interface StudentHistory {
   id: number;
   firstname: string;
   lastname: string;
@@ -36,10 +38,11 @@ export class GradeClosureComponent implements OnInit {
   // Table
   listOfColumn = [];
   progress: number;
-  students: Student[] = [];
+  students: StudentHistory[] = [];
+  status: string[] = [];
 
   // Modal
-  currentStudent: Student = null;
+  currentStudent: StudentHistory = null;
   modalTitle: string;
   isVisible = false;
   conclusionForm!: FormGroup;
@@ -60,6 +63,12 @@ export class GradeClosureComponent implements OnInit {
   }
 
   init(): void {
+    this.status = Object.keys(StudentStatus).filter((k) => isNaN(Number(k)));
+
+    this.conclusionForm = this.fb.group({
+      conclusion: [null, Validators.required]
+    });
+
     this.listOfColumn = [
       {
         title: 'Nombre',
@@ -72,10 +81,6 @@ export class GradeClosureComponent implements OnInit {
         priority: 2
       }
     ];
-
-    this.conclusionForm = this.fb.group({
-      conclusion: [null, Validators.required]
-    });
   }
 
   getProfile(): void {
@@ -116,7 +121,7 @@ export class GradeClosureComponent implements OnInit {
     }
   }
 
-  openModal(student: Student): void {
+  openModal(student: StudentHistory): void {
     this.modalTitle = `Comentario final para ${student.firstname} ${student.lastname}`;
     this.currentStudent = student;
 
@@ -153,7 +158,9 @@ export class GradeClosureComponent implements OnInit {
         const id = this.students.findIndex((x) => x.id === this.currentStudent.id);
         this.students[id].behavioralHistory.finalConclusion = this.currentStudent.behavioralHistory.finalConclusion;
 
-        this.message.success(`El comentario final se ha actualizado con éxito`);
+        this.message.success(
+          `El comentario final de ${this.currentStudent.firstname} ${this.currentStudent.lastname} se ha actualizado con éxito`
+        );
 
         const answered = this.students.filter((x) => x.behavioralHistory.finalConclusion !== null);
         const total = this.students.length;
@@ -161,6 +168,8 @@ export class GradeClosureComponent implements OnInit {
         this.progress = answered.length / total;
 
         this.isConfirmLoading = false;
+
+        this.handleCancel();
       },
       (error) => {
         const statusCode = error.statusCode;
@@ -178,9 +187,19 @@ export class GradeClosureComponent implements OnInit {
             }
           );
         }
+
+        this.handleCancel();
       }
     );
+  }
 
-    this.handleCancel();
+  updateStudentStatus(status: string, student: StudentHistory): void {
+    const _student = new Student();
+    _student.id = student.id;
+    _student.status = status;
+
+    this.studentService.updateStudent(_student).subscribe(() => {
+      this.message.success(`El estado de ${student.firstname} ${student.lastname} se ha actualizado con éxito`);
+    });
   }
 }
