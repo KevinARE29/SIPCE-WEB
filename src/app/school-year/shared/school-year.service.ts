@@ -273,6 +273,59 @@ export class SchoolYearService {
       .pipe(catchError(this.handleError()));
   }
 
+  getClosingStatus(): Observable<unknown> {
+    return this.http.get<unknown>(`${this.baseUrl}academics/school-year/closing-status`).pipe(
+      map((response) => {
+        const shifts: unknown[] = [];
+
+        Object.values(response['cycleDetails']).forEach((data) => {
+          const grades: unknown[] = [];
+          // Cycle
+          data['cyclesDetails'].forEach((cycle) => {
+            // Grade
+            cycle['gradeDetails'].forEach((grade) => {
+              let sections: unknown[] = [];
+              // Section
+              grade['sectionDetails'].forEach((section) => {
+                sections.push({
+                  id: section['section']['id'],
+                  name: section['section']['name'],
+                  teacher: section['teacher']['firstname'].concat(' ', section['teacher']['lastname']),
+                  closed: section['closed']
+                });
+              });
+
+              // Sort sections
+              sections.sort((a, b) => a['name'].localeCompare(b['name']));
+              sections = sections
+                .filter((x) => x['name'].length === 1)
+                .concat(sections.filter((x) => x['name'].length > 1));
+
+              grades.push({
+                id: grade['grade']['id'],
+                name: grade['grade']['name'],
+                gradePercentage: grade['gradePercentage'],
+                sections: sections
+              });
+            });
+          });
+
+          shifts.push({
+            id: data['cyclesDetails'][0]['shift']['id'],
+            name: data['cyclesDetails'][0]['shift']['name'],
+            shiftPercentage: data['shiftPercentage'],
+            grades: grades.sort((a, b) => a['id'] - b['id'])
+          });
+        });
+
+        response['shifts'] = shifts;
+
+        return response;
+      }),
+      catchError(this.handleError())
+    );
+  }
+
   startSchoolYear(): Observable<void> {
     const body = JSON.stringify({ status: 'En curso' });
 
