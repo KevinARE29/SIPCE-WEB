@@ -106,6 +106,18 @@
 
                 <ng-container *ngIf="reportResult.length > 0">
                     <div nz-row>
+
+                        <div nz-col nzSpan="12">
+                            <canvas *ngIf="chart" baseChart
+                                [datasets]="chart.datasets"
+                                [labels]="chart.labels"
+                                [options]="chart.options"
+                                [legend]="chart.legend"
+                                [chartType]="chart.type"
+                                [colors]="chart.colors">
+                            </canvas>
+                        </div>
+
                         <div nz-col nzSpan="12">
 
                             <div nz-row [nzJustify]="'end'">

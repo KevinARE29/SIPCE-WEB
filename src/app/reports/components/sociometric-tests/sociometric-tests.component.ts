@@ -11,6 +11,7 @@ import { StudentService } from 'src/app/students/shared/student.service';
 import { Student } from 'src/app/students/shared/student.model';
 import { ReportService } from '../../shared/report.service';
 import { SociometricReport } from '../../shared/sociometric-report.model';
+import { NgChart } from 'src/app/dashboard/shared/chart.model';
 
 class ShiftGradeSection {
   id: number;
@@ -40,6 +41,9 @@ export class SociometricTestsComponent implements OnInit {
   selectedStudent: Student;
   loadingReport: boolean;
   reportResult: SociometricReport[];
+
+  // Chart
+  chart: NgChart;
 
   constructor(
     private studentService: StudentService,
@@ -118,12 +122,14 @@ export class SociometricTestsComponent implements OnInit {
           this.results = [];
           this.selectedStudent = null;
           this.reportResult = null;
+          this.chart = null;
         } else if (results.length === 1) {
           this.selectStudent(results[0]);
         } else {
           this.results = results;
           this.selectedStudent = null;
           this.reportResult = null;
+          this.chart = null;
         }
 
         this.loading = false;
@@ -150,6 +156,7 @@ export class SociometricTestsComponent implements OnInit {
     this.loadingReport = true;
     this.reportService.getSociometricTestReport(this.selectedStudent.id).subscribe((r) => {
       this.reportResult = r;
+      this.generateChart();
       this.loadingReport = false;
     });
   }
@@ -172,5 +179,42 @@ export class SociometricTestsComponent implements OnInit {
 
     /* Save to file */
     XLSX.writeFile(wb, fileName);
+  }
+
+  generateChart(): void {
+    this.chart = new NgChart();
+    this.chart.datasets = [
+      {
+        label: 'Aceptación',
+        data: this.reportResult.map((r) => r.acceptance)
+      },
+      {
+        label: 'Rechazo',
+        data: this.reportResult.map((r) => r.rejection)
+      },
+      {
+        label: 'Liderazgo',
+        data: this.reportResult.map((r) => r.leadership)
+      }
+    ];
+
+    this.chart.labels = this.reportResult.map((r) => r.year.toString());
+    this.chart.type = 'line';
+    this.chart.legend = true;
+    this.chart.colors = [
+      {
+        backgroundColor: '#eeeeee'
+      },
+      {
+        backgroundColor: '#aaaaaa'
+      },
+      {
+        backgroundColor: '#444444'
+      }
+    ];
+    this.chart.options = {
+      responsive: true,
+      legend: { position: 'top' }
+    };
   }
 }
