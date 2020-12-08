@@ -130,13 +130,18 @@
         {
             "title": "Año escolar",
             "icon": "contacts",
-            "permissions": [19],
+            "permissions": [19, 23],
             "allowed": null,
             "children": [
                 {
-                    "route": "/asignaciones",
+                    "route": "/asignaciones/institucion",
                     "name": "Año escolar",
                     "permission": 19,
+                    "allowed": false
+                }, {
+                    "route": "/asignaciones/grado",
+                    "name": "Año escolar",
+                    "permission": 23,
                     "allowed": false
                 }
             ]

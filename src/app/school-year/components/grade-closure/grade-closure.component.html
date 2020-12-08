@@ -1,0 +1,81 @@
+<div nz-row>
+    <div nz-col>
+        <h1>Año escolar</h1>
+    </div>
+    <div nz-col *ngIf="teacherAssignation.length === 1" class="grade-name">
+        {{ teacherAssignation[0].name }}
+    </div>
+</div>
+
+<div nz-row *ngIf="!teacherAssignation.length">
+    <nz-alert nzType="warning" nzCloseable nzShowIcon
+        nzMessage="Debe tener grados asignados para poder consultar la asignación actual de estudiantes y vincularlos.">
+    </nz-alert>
+</div>
+
+<!-- Grade -->
+<div class="gutter-row grade" nz-col nzXs="16" nzSm="12" nzMd="10" nzLg="8" nzXl="6"
+    *ngIf="teacherAssignation.length > 1">
+    <label>Grado: </label>
+    <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar grado" [(ngModel)]="currentGrade"
+        (ngModelChange)="getStudents()">
+        <nz-option *ngFor="let assignation of teacherAssignation" [nzLabel]="assignation.name"
+            [nzValue]="assignation.id"></nz-option>
+    </nz-select>
+</div>
+
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+    <!-- Table -->
+    <div nz-row>
+        <div nz-col nzSpan="24">
+            <nz-table #filterTable [nzData]="students" nzTableLayout="auto" nzSize="small">
+                <thead>
+                    <tr>
+                        <th *ngFor="let column of listOfColumn" [nzSortFn]="column.compare"
+                            [nzSortPriority]="column.priority">
+                            {{ column.title }}</th>
+                        <th [nzAlign]="'center'">Estado</th>
+                        <th [nzAlign]="'center'">Comentario</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let data of filterTable.data">
+                        <td>{{ data.firstname }}</td>
+                        <td>{{ data.lastname }}</td>
+                        <td>{{ data.status }}</td>
+                        <td>
+                            <a href=""></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </div>
+    </div>
+    <nz-progress [nzPercent]="progress"></nz-progress>
+</nz-spin>
+
+<!-- Create cycle modal -->
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" nzOkText="Guardar"
+    nzCancelText="Cancelar" [nzFooter]="modalFooter" (nzOnOk)="handleOk()" (nzOnCancel)="handleCancel()">
+    <!-- Modal content -->
+    <form nz-form [formGroup]="conclusionForm">
+        <ng-template #modalContent>
+            <nz-form-item nzJustify="space-around">
+                <nz-form-control [nzSpan]="16" [nzErrorTip]="errorConclusion">
+                    <textarea nz-input formControlName="conclusion" placeholder="Comentario final"></textarea>
+                    <ng-template #errorConclusion let-control>
+                        <ng-container *ngIf="control.hasError('required')">
+                            El comentario final es requerido<br>
+                        </ng-container>
+                    </ng-template>
+                </nz-form-control>
+            </nz-form-item>
+        </ng-template>
+    </form>
+    <!-- Modal footer -->
+    <ng-template #modalFooter>
+        <button nz-button nzType="default" (click)="handleCancel()">Cancelar</button>
+        <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">Guardar</button>
+    </ng-template>
+</nz-modal>

@@ -298,6 +298,12 @@ export class StudentService {
       .pipe(catchError(this.handleError()));
   }
 
+  getStudentResumes(id: number): Observable<unknown> {
+    return this.http
+      .get<unknown>(`${this.baseUrl}students-year-resumes?currentGrade=${id}`)
+      .pipe(catchError(this.handleError()));
+  }
+
   mergeStudentAndCatalogs(id: number): Observable<unknown> {
     return forkJoin({
       sections: this.sectionService.getAllSections(),
