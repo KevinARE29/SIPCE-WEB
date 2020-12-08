@@ -3,11 +3,15 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+
 import { environment } from 'src/environments/environment';
 import { ErrorMessageService } from 'src/app/shared/error-message.service';
 import { GroupalResult } from './groupal-result.model';
 import { SociometricValues } from './sociometric-values.model';
 import { IndividualResult } from './individual-result.model';
+import { SociometricResult } from './sociometric-result.model';
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +59,20 @@ export class SociometricResultService {
 
         return individualResult;
       })
+    );
+  }
+
+  exportSociometricTest(testId: number, token: string, filters: string[]): Observable<SociometricResult> {
+    const url = this.baseUrl + 'reporting/tests/' + testId + '?token=' + token + '&filter=' + filters.join(',');
+
+    return this.http.get<SociometricResult>(url).pipe(
+      map((r) => {
+        const data: SociometricResult = r['data'];
+        data.date = format(new Date(), 'd/MMMM/yyyy', { locale: es });
+
+        return data;
+      }),
+      catchError(this.handleError())
     );
   }
 
