@@ -99,5 +99,36 @@
     </ng-container>
     <ng-container *ngIf="selectedStudent">
         <h2>{{selectedStudent.firstname}} {{selectedStudent.lastname}} ({{selectedStudent.code}})</h2>
+
+        <nz-spin [nzSpinning]="loadingReport" nzTip="Cargando...">
+            <ng-container *ngIf="reportResult">
+                <nz-empty *ngIf="reportResult.length === 0" nzNotFoundContent="No se encontraron resultados"></nz-empty>
+
+                <ng-container *ngIf="reportResult.length > 0">
+                    <div nz-row>
+                        <div nz-col nzSpan="12">
+                            <nz-table #table [nzData]="reportResult" [nzFrontPagination]="false" nzTableLayout="fixed" nzSize="small">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th [nzAlign]="'center'">Aceptación</th>
+                                        <th [nzAlign]="'center'">Rechazo</th>
+                                        <th [nzAlign]="'center'">Liderazgo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let data of table.data">
+                                        <th [nzAlign]="'center'">{{data.year}}</th>
+                                        <th [nzAlign]="'center'">{{data.acceptance}}</th>
+                                        <th [nzAlign]="'center'">{{data.rejection}}</th>
+                                        <th [nzAlign]="'center'">{{data.leadership}}</th>
+                                    </tr>
+                                </tbody>
+                            </nz-table>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </nz-spin>
     </ng-container>
 </nz-spin>

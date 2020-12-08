@@ -6,6 +6,8 @@ import { SchoolYearService } from 'src/app/school-year/shared/school-year.servic
 import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 import { StudentService } from 'src/app/students/shared/student.service';
 import { Student } from 'src/app/students/shared/student.model';
+import { ReportService } from '../../shared/report.service';
+import { SociometricReport } from '../../shared/sociometric-report.model';
 
 class ShiftGradeSection {
   id: number;
@@ -33,11 +35,14 @@ export class SociometricTestsComponent implements OnInit {
 
   // Selection.
   selectedStudent: Student;
+  loadingReport: boolean;
+  reportResult: SociometricReport[];
 
   constructor(
     private studentService: StudentService,
     private schoolYearService: SchoolYearService,
-    private notification: NzNotificationService
+    private notification: NzNotificationService,
+    private reportService: ReportService
   ) {}
 
   ngOnInit(): void {
@@ -109,11 +114,13 @@ export class SociometricTestsComponent implements OnInit {
         if (!results || !results.length) {
           this.results = [];
           this.selectedStudent = null;
+          this.reportResult = null;
         } else if (results.length === 1) {
           this.selectStudent(results[0]);
         } else {
           this.results = results;
           this.selectedStudent = null;
+          this.reportResult = null;
         }
 
         this.loading = false;
@@ -135,5 +142,12 @@ export class SociometricTestsComponent implements OnInit {
   selectStudent(student: Student): void {
     this.selectedStudent = student;
     this.results = null;
+    this.reportResult = null;
+
+    this.loadingReport = true;
+    this.reportService.getSociometricTestReport(this.selectedStudent.id).subscribe((r) => {
+      this.reportResult = r;
+      this.loadingReport = false;
+    });
   }
 }
