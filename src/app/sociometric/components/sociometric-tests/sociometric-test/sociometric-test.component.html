@@ -5,7 +5,7 @@
                 <h1>Prueba sociométrica</h1>
             </div>
             <div nz-col nzFlex="110px">
-                <a class="report" nz-button nzGhost nzType="primary">Generar reporte</a>
+                <button nz-button nzGhost [nzLoading]="loadingReport" nzType="primary" (click)="setShowReportModal(true)">Generar reporte</button>
             </div>
         </div>
 
@@ -274,4 +274,31 @@
         <button nz-button nzType="default" (click)="resetForm()">Cancelar</button>
         <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">Guardar</button>
     </ng-template>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="showReportModal" nzTitle="Generar reporte de prueba sociométrica"
+            nzCancelText="Cancelar" nzOkText="Generar reporte" (nzOnOk)="exportTest()" (nzOnCancel)="setShowReportModal(false)">
+
+        <p>Seleccione los elementos que desea incluir en el reporte:</p>
+        <div nz-row>
+            <div nz-col nzSpan="22" nzOffset="1">
+                <label nz-checkbox [(ngModel)]="filterParticipants">Listado de participantes</label><br>
+                <label nz-checkbox [(ngModel)]="filterQuestionBank">Modelo de la prueba</label><br>
+                <label nz-checkbox [(ngModel)]="filterGroup" [nzIndeterminate]="filterGroupIndeterminate" (ngModelChange)="updateAllGroup()">Informe general del grupo</label><br>
+            </div>
+
+            <div nz-col nzSpan="20" nzOffset="2">
+                <label nz-checkbox [(ngModel)]="filterSociomatrix" (ngModelChange)="updateSingleGroup()">Matrices sociométricas</label><br>
+                <label nz-checkbox [(ngModel)]="fitlerGroupalIndexes" (ngModelChange)="updateSingleGroup()">Índices grupales</label><br>
+            </div>
+
+            <div nz-col nzSpan="22" nzOffset="1">
+                <label nz-checkbox [(ngModel)]="filterIndividual" [nzIndeterminate]="filterIndividualIndeterminate" (ngModelChange)="updateAllIndividual()">Informe por estudiante</label><br>
+            </div>
+
+            <div nz-col nzSpan="20" nzOffset="2">
+                <label nz-checkbox [(ngModel)]="filterSociometricValues" (ngModelChange)="updateSingleIndividual()">Valores sociométricos individuales</label><br>
+                <label nz-checkbox [(ngModel)]="filterIndividualIndexes" (ngModelChange)="updateSingleIndividual()">Índices individuales</label><br>
+            </div>
+        </div>
 </nz-modal>

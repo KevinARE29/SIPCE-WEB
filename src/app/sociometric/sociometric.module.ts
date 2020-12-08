@@ -14,6 +14,7 @@ import { CreateSociometricTestComponent } from './components/sociometric-tests/c
 import { StudentSociometricTestComponent } from './components/sociometric-tests/student-sociometric-test/student-sociometric-test.component';
 import { SociometricGroupalResultComponent } from './components/sociometric-result/sociometric-groupal-result/sociometric-groupal-result.component';
 import { SociometricIndividualResultComponent } from './components/sociometric-result/sociometric-individual-result/sociometric-individual-result.component';
+import { ExportSociometricComponent } from './components/sociometric-result/export-sociometric/export-sociometric.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { SociometricIndividualResultComponent } from './components/sociometric-r
     CreateSociometricTestComponent,
     StudentSociometricTestComponent,
     SociometricGroupalResultComponent,
-    SociometricIndividualResultComponent
+    SociometricIndividualResultComponent,
+    ExportSociometricComponent
   ],
   imports: [AntDesignModule, CommonModule, FormsModule, ReactiveFormsModule, SociometricRoutingModule]
 })
