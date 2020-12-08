@@ -305,6 +305,7 @@ export class SchoolYearService {
                 id: grade['grade']['id'],
                 name: grade['grade']['name'],
                 gradePercentage: grade['gradePercentage'],
+                expand: false,
                 sections: sections
               });
             });

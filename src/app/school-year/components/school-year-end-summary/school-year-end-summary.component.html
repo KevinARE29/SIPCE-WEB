@@ -3,23 +3,33 @@
         <nz-table #fixedTable [nzData]="shift.grades" nzSize="small" nzTableLayout="auto" [nzFrontPagination]="false">
             <thead>
                 <tr>
-                    <!-- <th nzWidth="60px"></th> -->
+                    <th nzWidth="60px"></th>
                     <th>Grado</th>
-                    <th>Porcentaje completado</th>
+                    <th [nzAlign]="'center'">Porcentaje completado</th>
                 </tr>
             </thead>
 
             <tbody>
-                <tr *ngFor="let item of shift.grades">
-                    <!-- <td [nzExpand]="expandSet.has(item.id)" (nzExpandChange)="onExpandChange(item.id, $event)"></td> -->
-                    <td>{{ item.name }}</td>
-                    <td>
-                        <nz-progress [nzPercent]="item.gradePercentage"></nz-progress>
-                    </td>
+                <ng-container *ngFor="let item of fixedTable.data">
+                    <tr>
+                        <td [nzExpand]="expandSet.has(item.id)" (nzExpandChange)="onExpandChange(item.id, $event)"></td>
+                        <td>{{ item.name }}</td>
+                        <td>
+                            <nz-progress [nzPercent]="item.gradePercentage"></nz-progress>
+                        </td>
+                    </tr>
+                    <tr [nzExpand]="expandSet.has(item.id)">
+                        <ng-container *ngFor="let section of item.sections">
+                    <tr>
+                        <td [nzIndentSize]="1 * 20"><strong>{{ section.name }}</strong> - {{ section.teacher }}</td>
+                        <td [nzIndentSize]="2 * 20">
+                            <i nz-icon nzType="check-circle" nzTheme="outline"
+                                [ngClass]="section.closed ? 'green' : 'grey'"></i>
+                        </td>
+                    </tr>
+                </ng-container>
                 </tr>
-                <!-- <tr [nzExpand]="expandSet.has(item.id)">
-                    <span>H</span>
-                </tr> -->
+                </ng-container>
             </tbody>
         </nz-table>
     </nz-tab>
