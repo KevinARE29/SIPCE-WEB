@@ -1,0 +1,8 @@
+version: '3.7'
+
+services:
+  siapce-web:
+    build:
+      context: .
+    ports:
+      - '80:80'
