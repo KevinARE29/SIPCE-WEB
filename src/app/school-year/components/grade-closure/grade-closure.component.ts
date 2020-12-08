@@ -10,10 +10,12 @@ import { HistoryService } from 'src/app/history/shared/history.service';
 import { StudentService } from 'src/app/students/shared/student.service';
 import { UserService } from 'src/app/users/shared/user.service';
 import { Student } from 'src/app/students/shared/student.model';
+import { SchoolYearService } from '../../shared/school-year.service';
 
 export interface Grade {
-  name: string;
   id: number;
+  name: string;
+  sectionId: number;
 }
 
 export interface StudentHistory {
@@ -54,6 +56,7 @@ export class GradeClosureComponent implements OnInit {
     private notification: NzNotificationService,
     private userService: UserService,
     private studentService: StudentService,
+    private schoolYearService: SchoolYearService,
     private historyService: HistoryService
   ) {}
 
@@ -96,13 +99,17 @@ export class GradeClosureComponent implements OnInit {
             assignation['shift']['name'],
             ')'
           );
-          // const grade = assignation['shift']['id'].toString().concat(';', assignation['grade']['id']);
-          this.teacherAssignation.push({ name, id: assignation['grade']['id'] });
+
+          this.teacherAssignation.push({
+            name,
+            id: assignation['grade']['id'],
+            sectionId: assignation['sectionDetailId']
+          });
         });
 
         if (this.teacherAssignation.length === 1) {
           this.currentGrade = this.teacherAssignation[0].id;
-          // this.getStudents();
+          this.getStudents();
         }
 
         this.loading = false;
@@ -201,5 +208,27 @@ export class GradeClosureComponent implements OnInit {
     this.studentService.updateStudent(_student).subscribe(() => {
       this.message.success(`El estado de ${student.firstname} ${student.lastname} se ha actualizado con éxito`);
     });
+  }
+
+  close(): void {
+    const grade = this.teacherAssignation.filter((x) => x.id === this.currentGrade)[0];
+
+    this.schoolYearService.closeSection(grade.sectionId).subscribe(
+      () => {
+        this.message.success(`Se ha cerrado con éxito el año escolar para ${grade.name}`);
+      },
+      (error) => {
+        const statusCode = error.statusCode;
+        const notIn = [401, 403];
+
+        this.isConfirmLoading = false;
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create('error', 'Ocurrió un error al intentar cerrar el año escolar.', error.message, {
+            nzDuration: 30000
+          });
+        }
+      }
+    );
   }
 }

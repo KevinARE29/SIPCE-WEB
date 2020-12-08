@@ -2,7 +2,7 @@ h1 {
     margin-right: 10px;
 }
 
-.grade-name, nz-table, nz-progress {
+.grade-name, nz-table, nz-progress, .close {
   margin-top: 15px;
 }
 

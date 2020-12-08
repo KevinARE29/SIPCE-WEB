@@ -279,6 +279,12 @@ export class SchoolYearService {
     return this.http.patch<void>(`${this.baseUrl}academics/school-year`, body).pipe(catchError(this.handleError()));
   }
 
+  closeSection(sectionId: number): Observable<void> {
+    return this.http
+      .get<void>(`${this.baseUrl}academics/school-year/close-section/${sectionId}`)
+      .pipe(catchError(this.handleError()));
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.

@@ -17,7 +17,7 @@
 <div class="gutter-row grade" nz-col nzXs="16" nzSm="12" nzMd="10" nzLg="8" nzXl="6"
     *ngIf="teacherAssignation.length > 1">
     <label>Grado: </label>
-    <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar grado" [(ngModel)]="currentGrade"
+    <nz-select class="grade" nzShowSearch nzPlaceHolder="Seleccionar grado" [(ngModel)]="currentGrade"
         (ngModelChange)="getStudents()">
         <nz-option *ngFor="let assignation of teacherAssignation" [nzLabel]="assignation.name"
             [nzValue]="assignation.id"></nz-option>
@@ -60,7 +60,12 @@
             </nz-table>
         </div>
     </div>
+
     <nz-progress [nzPercent]="progress"></nz-progress>
+
+    <div nz-row nzJustify="center" *ngIf="currentGrade">
+        <a class="close" nz-button nzType="primary" (click)="close()">Cerrar año escolar</a>
+    </div>
 </nz-spin>
 
 <!-- Final conclusion -->
