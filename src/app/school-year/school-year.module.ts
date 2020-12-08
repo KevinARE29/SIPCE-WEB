@@ -13,6 +13,7 @@ import { CounselorsComponent } from './components/counselors/counselors.componen
 import { NewSchoolYearSummaryComponent } from './components/new-school-year-summary/new-school-year-summary.component';
 import { SchoolYearEndSummaryComponent } from './components/school-year-end-summary/school-year-end-summary.component';
 import { TeachersComponent } from './components/teachers/teachers.component';
+import { GradeClosureComponent } from './components/grade-closure/grade-closure.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { TeachersComponent } from './components/teachers/teachers.component';
     CounselorsComponent,
     NewSchoolYearSummaryComponent,
     SchoolYearEndSummaryComponent,
-    TeachersComponent
+    TeachersComponent,
+    GradeClosureComponent
   ],
   imports: [CommonModule, ReactiveFormsModule, AntDesignModule, SchoolYearRoutingModule]
 })

@@ -93,7 +93,7 @@ export class HistoryService {
       finalConclusion: history.finalConclusion
     };
 
-    return this.http.patch<void>(url, JSON.stringify(data)).pipe(catchError(this.handleError));
+    return this.http.patch<void>(url, JSON.stringify(data)).pipe(catchError(this.handleError()));
   }
 
   exportHistory(
