@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
+import * as XLSX from 'xlsx';
+import { format } from 'date-fns';
+
 import { SchoolYearService } from 'src/app/school-year/shared/school-year.service';
 import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 import { StudentService } from 'src/app/students/shared/student.service';
@@ -149,5 +152,25 @@ export class SociometricTestsComponent implements OnInit {
       this.reportResult = r;
       this.loadingReport = false;
     });
+  }
+
+  exportExcel(): void {
+    this.notification.create('info', 'Exportación en progreso', 'El archivo estará listo en unos momentos.');
+
+    const fileName = `Pruebas sociométricas - 
+      ${this.selectedStudent.firstname} ${this.selectedStudent.lastname} - 
+      ${format(new Date(), 'ddMMyyyyHHmmss')}.xlsx
+    `;
+
+    /* Table id is passed over here */
+    const element = document.getElementById('excel-table');
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+
+    /* Generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Pruebas sociométricas');
+
+    /* Save to file */
+    XLSX.writeFile(wb, fileName);
   }
 }

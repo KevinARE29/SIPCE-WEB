@@ -107,6 +107,13 @@
                 <ng-container *ngIf="reportResult.length > 0">
                     <div nz-row>
                         <div nz-col nzSpan="12">
+
+                            <div nz-row [nzJustify]="'end'">
+                                <a style="cursor: pointer" (click)="exportExcel()">
+                                    Excel <i nz-icon nzType="download" nzTheme="outline"></i>
+                                </a>
+                            </div>
+
                             <nz-table #table [nzData]="reportResult" [nzFrontPagination]="false" nzTableLayout="fixed" nzSize="small">
                                 <thead>
                                     <tr>
@@ -118,10 +125,10 @@
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let data of table.data">
-                                        <th [nzAlign]="'center'">{{data.year}}</th>
-                                        <th [nzAlign]="'center'">{{data.acceptance}}</th>
-                                        <th [nzAlign]="'center'">{{data.rejection}}</th>
-                                        <th [nzAlign]="'center'">{{data.leadership}}</th>
+                                        <td [nzAlign]="'center'">{{data.year}}</td>
+                                        <td [nzAlign]="'center'">{{data.acceptance}}</td>
+                                        <td [nzAlign]="'center'">{{data.rejection}}</td>
+                                        <td [nzAlign]="'center'">{{data.leadership}}</td>
                                     </tr>
                                 </tbody>
                             </nz-table>
@@ -132,3 +139,29 @@
         </nz-spin>
     </ng-container>
 </nz-spin>
+
+<div *ngIf="reportResult && reportResult.length">
+    <table id="excel-table" hidden>
+        <thead>
+            <tr>
+                <td colspan="2">Estudiante</td>
+                <td colspan="2">{{selectedStudent.firstname}} {{selectedStudent.lastname}}</td>
+            </tr>
+            <tr></tr>
+            <tr>
+                <th>Año</th>
+                <th>Aceptación</th>
+                <th>Rechazo</th>
+                <th>Liderazgo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of reportResult">
+                <td>{{data.year}}</td>
+                <td>{{data.acceptance}}</td>
+                <td>{{data.rejection}}</td>
+                <td>{{data.leadership}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
