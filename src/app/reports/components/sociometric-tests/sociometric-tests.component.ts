@@ -4,6 +4,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 import * as XLSX from 'xlsx';
 import { format } from 'date-fns';
+import { NgChart } from 'src/app/dashboard/shared/chart.model';
 
 import { SchoolYearService } from 'src/app/school-year/shared/school-year.service';
 import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
@@ -11,7 +12,6 @@ import { StudentService } from 'src/app/students/shared/student.service';
 import { Student } from 'src/app/students/shared/student.model';
 import { ReportService } from '../../shared/report.service';
 import { SociometricReport } from '../../shared/sociometric-report.model';
-import { NgChart } from 'src/app/dashboard/shared/chart.model';
 
 class ShiftGradeSection {
   id: number;
@@ -186,32 +186,53 @@ export class SociometricTestsComponent implements OnInit {
     this.chart.datasets = [
       {
         label: 'Aceptación',
+        fill: false,
+        lineTension: 0,
         data: this.reportResult.map((r) => r.acceptance)
       },
       {
         label: 'Rechazo',
+        fill: false,
+        lineTension: 0,
         data: this.reportResult.map((r) => r.rejection)
       },
       {
         label: 'Liderazgo',
+        fill: false,
+        lineTension: 0,
         data: this.reportResult.map((r) => r.leadership)
       }
     ];
 
     this.chart.labels = this.reportResult.map((r) => r.year.toString());
     this.chart.type = 'line';
-    this.chart.legend = true;
     this.chart.colors = [
       {
-        backgroundColor: '#eeeeee'
+        backgroundColor: 'rgba(200,200,200,0.2)',
+        borderColor: 'rgba(200,200,200,1)',
+        pointBackgroundColor: 'rgba(200,200,200,1)',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgba(200,200,200,0.8)'
       },
       {
-        backgroundColor: '#aaaaaa'
+        backgroundColor: 'rgba(120,120,120,0.2)',
+        borderColor: 'rgba(120,120,120,1)',
+        pointBackgroundColor: 'rgba(120,120,120,1)',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgba(120,120,120,0.8)'
       },
       {
-        backgroundColor: '#444444'
+        backgroundColor: 'rgba(50,50,50,0.2)',
+        borderColor: 'rgba(50,50,50,1)',
+        pointBackgroundColor: 'rgba(50,50,50,1)',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgba(50,50,50,0.8)'
       }
     ];
+    this.chart.legend = true;
     this.chart.options = {
       responsive: true,
       legend: { position: 'top' }
