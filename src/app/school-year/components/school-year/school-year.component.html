@@ -82,7 +82,7 @@
         <ng-container *ngSwitchCase="'En curso'">
             <!-- #region Active school year -->
             <nz-tabset>
-                <!-- <nz-tab nzTitle="Ciclos, grados y secciones">
+                <nz-tab nzTitle="Ciclos, grados y secciones">
                     <div class="shifts">
                         <app-academic-assignments [catalogs]="catalogs" [assignation]="schoolYear" [isActive]="true">
                         </app-academic-assignments>
@@ -127,7 +127,7 @@
                             <button nz-button nzType="primary" (click)="counselorsStep(null)">Actualizar</button>
                         </div>
                     </div>
-                </nz-tab> -->
+                </nz-tab>
                 <nz-tab nzTitle="Cerrar año escolar">
                     <app-school-year-end-summary></app-school-year-end-summary>
                 </nz-tab>

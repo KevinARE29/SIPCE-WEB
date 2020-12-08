@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+
 import { SchoolYearService } from '../../shared/school-year.service';
 
 interface Section {
@@ -32,11 +36,15 @@ export class SchoolYearEndSummaryComponent implements OnInit {
   data: unknown;
   shifts: Shift[] = [];
   expandSet = new Set<number>();
+  btnLoading = false;
 
-  constructor(private schoolYearService: SchoolYearService) {}
+  constructor(
+    private schoolYearService: SchoolYearService,
+    private message: NzMessageService,
+    private notification: NzNotificationService
+  ) {}
 
   ngOnInit(): void {
-    console.log('Init end year');
     this.getData();
   }
 
@@ -44,7 +52,6 @@ export class SchoolYearEndSummaryComponent implements OnInit {
     this.schoolYearService.getClosingStatus().subscribe((data) => {
       this.data = data;
       this.shifts = data['shifts'];
-      console.log(this.data, this.shifts);
     });
   }
 
@@ -54,5 +61,27 @@ export class SchoolYearEndSummaryComponent implements OnInit {
     } else {
       this.expandSet.delete(id);
     }
+  }
+
+  close(): void {
+    this.btnLoading = true;
+    this.schoolYearService.closeSchoolYear().subscribe(
+      () => {
+        this.btnLoading = false;
+        this.message.success(`El año escolar ${this.data['year']} se ha cerrado con éxito`);
+      },
+      (error) => {
+        const statusCode = error.statusCode;
+        const notIn = [401, 403];
+
+        this.btnLoading = false;
+
+        if (!notIn.includes(statusCode) && statusCode < 500) {
+          this.notification.create('error', 'Ocurrió un error al cerrar el año escolar.', error.message, {
+            nzDuration: 30000
+          });
+        }
+      }
+    );
   }
 }

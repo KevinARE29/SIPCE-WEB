@@ -333,6 +333,12 @@ export class SchoolYearService {
     return this.http.patch<void>(`${this.baseUrl}academics/school-year`, body).pipe(catchError(this.handleError()));
   }
 
+  closeSchoolYear(): Observable<void> {
+    const body = JSON.stringify({ status: 'Histórico' });
+
+    return this.http.patch<void>(`${this.baseUrl}academics/school-year`, body).pipe(catchError(this.handleError()));
+  }
+
   closeSection(sectionId: number): Observable<void> {
     return this.http
       .get<void>(`${this.baseUrl}academics/school-year/close-section/${sectionId}`)
