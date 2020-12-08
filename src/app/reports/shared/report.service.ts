@@ -9,6 +9,8 @@ import { environment } from 'src/environments/environment';
 
 import { UserService } from 'src/app/users/shared/user.service';
 import { SchoolYearService } from 'src/app/school-year/shared/school-year.service';
+import { SociometricReport } from './sociometric-report.model';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -88,5 +90,28 @@ export class ReportService {
       assignation: this.schoolYearService.getSchoolYear(),
       counselors: this.userService.getUsersByRole(4)
     });
+  }
+
+  getSociometricTestReport(studentId: number): Observable<SociometricReport[]> {
+    const url = this.baseUrl + 'reporting/students/' + studentId;
+
+    return this.http.get(url).pipe(
+      map((data) => {
+        const result: SociometricReport[] = [];
+
+        if (data) {
+          Object.keys(data).forEach((key) => {
+            result.push({
+              year: Number(key),
+              acceptance: data[key].acceptance,
+              leadership: data[key].leadership,
+              rejection: data[key].rejection
+            });
+          });
+        }
+
+        return result;
+      })
+    );
   }
 }

@@ -76,7 +76,11 @@ export class StudentService {
 
       if (search.email) queryParams += '&email=' + search.email;
 
+      if (search.shift && search.shift.id) queryParams += '&currentShift=' + search.shift.id;
+
       if (search.grade && search.grade.id) queryParams += '&currentGrade=' + search.grade.id;
+
+      if (search.section && search.section.id) queryParams += '&currentSection=' + search.section.id;
 
       if (search.status) queryParams += '&status=' + search.status;
 
