@@ -5,3 +5,8 @@ nz-select {
 .btn-container {
     height: 100%;
 }
+
+li {
+    margin-bottom: 5px;
+    cursor: pointer;
+}

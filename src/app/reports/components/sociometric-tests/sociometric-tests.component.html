@@ -80,3 +80,24 @@
         </div>
     </div>
 </nz-spin>
+
+<br>
+
+<nz-spin [nzSpinning]="loading" nzTip="Cargando...">
+
+    <ng-container *ngIf="results">
+
+        <nz-empty *ngIf="results.length === 0" nzNotFoundContent="No se encontraron resultados"></nz-empty>
+
+        <ng-container *ngIf="results.length > 0">
+            <strong>{{results.length}} resultados</strong>
+            <ul>
+                <li *ngFor="let student of results" (click)="selectStudent(student)">{{student.firstname}} {{student.lastname}}</li>  
+            </ul>
+        </ng-container>
+
+    </ng-container>
+    <ng-container *ngIf="selectedStudent">
+        <h2>{{selectedStudent.firstname}} {{selectedStudent.lastname}} ({{selectedStudent.code}})</h2>
+    </ng-container>
+</nz-spin>

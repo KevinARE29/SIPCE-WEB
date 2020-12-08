@@ -31,6 +31,9 @@ export class SociometricTestsComponent implements OnInit {
   grades: ShiftGradeSection[];
   sections: ShiftGradeSection[];
 
+  // Selection.
+  selectedStudent: Student;
+
   constructor(
     private studentService: StudentService,
     private schoolYearService: SchoolYearService,
@@ -101,7 +104,17 @@ export class SociometricTestsComponent implements OnInit {
 
     this.studentService.getStudents(null, this.searchParams, true, false).subscribe(
       (data) => {
-        this.results = data['data'];
+        const results: Student[] = data['data'];
+
+        if (!results || !results.length) {
+          this.results = [];
+          this.selectedStudent = null;
+        } else if (results.length === 1) {
+          this.selectStudent(results[0]);
+        } else {
+          this.results = results;
+          this.selectedStudent = null;
+        }
 
         this.loading = false;
       },
@@ -117,5 +130,10 @@ export class SociometricTestsComponent implements OnInit {
         }
       }
     );
+  }
+
+  selectStudent(student: Student): void {
+    this.selectedStudent = student;
+    this.results = null;
   }
 }
