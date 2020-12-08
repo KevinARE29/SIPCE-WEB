@@ -3,5 +3,5 @@ export enum InterventionProgramTypes {
   CONDUCTUAL = 'Individual conductual',
   EMOCIONAL = 'Individual emocional',
   MIXTO = 'Individual mixto',
-  GRUPAL = 'Grupales'
+  GROUPAL = 'Grupales'
 }

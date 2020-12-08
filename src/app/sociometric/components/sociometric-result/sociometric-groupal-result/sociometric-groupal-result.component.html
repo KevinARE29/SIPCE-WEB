@@ -1,0 +1,172 @@
+<nz-spin [nzSpinning]="loadingTest" nzTip="Cargando...">
+    <div nz-row>
+        <div nz-col>
+            <h1>Prueba sociométrica</h1>
+            <p *ngIf="sociometricTest"><strong>{{sociometricTest.shift.name}}, <span class="text-color">{{sociometricTest.grade.name}} {{sociometricTest.section.name}}</span> ({{sociometricTest.createdAt | date: 'yyyy'}})</strong></p>
+        </div>
+    </div>
+    
+    <div nz-row nzGutter="20">
+        <div nz-col>
+            Pregunta: 
+        </div>
+        <div nz-col nzXs="24" nzMd="16">
+            <nz-select nzShowSearch [(ngModel)]="questionId"
+                (ngModelChange)="onQuestionSelect()" nzPlaceHolder="Seleccionar" [nzLoading]="loadingTest">
+                <nz-option *ngFor="let question of questions" [nzValue]="question.id" [nzLabel]="question.questionN ? question.questionP + '/' + question.questionN : question.questionP">
+                </nz-option>
+            </nz-select>
+        </div>
+    </div>
+</nz-spin>
+
+<nz-spin [nzSpinning]="loadingResult" nzTip="Cargando...">
+    <ng-container *ngIf="questionId">
+        <nz-collapse [nzBordered]="false">
+            <!-- Sociomatrix -->
+            <nz-collapse-panel nzHeader="Matriz sociométrica" [nzActive]="true">
+
+                <div nz-row nzJustify="center" *ngIf="!loadingResult && sociometricResult">
+                    <div nz-col>
+                        <nz-table class="sociomatrix">
+                            <tr>
+                                <th>Estudiantes</th>
+                                <th class="sociomatrix-data" *ngFor="let student of sociometricResult.participants; let i = index">{{i + 1}}</th>
+                                <th class="sociomatrix-data">Ep</th>
+                                <th *ngIf="!questionIsAboutLidership" class="sociomatrix-data">En</th>
+                                <th class="sociomatrix-data">Rp</th>
+                                <th *ngIf="!questionIsAboutLidership" class="sociomatrix-data">Rn</th>
+                            </tr>
+                            <tr *ngFor="let student of sociometricResult.participants; let i = index">
+                                <td>{{i + 1}}. {{student.firstname}} {{student.lastname}}</td>
+                                <td class="sociomatrix-data" [class.gray-bg]="i === j" *ngFor="let value of sociometricResult.sociomatrix[i]; let j = index">{{value || ''}}</td>
+                                <td class="sociomatrix-data">{{sociometricResult.sociometricValues.epArray[i]}}</td>
+                                <td *ngIf="!questionIsAboutLidership" class="sociomatrix-data">{{sociometricResult.sociometricValues.enArray[i]}}</td>
+                                <td class="sociomatrix-data">{{sociometricResult.sociometricValues.rpArray[i]}}</td>
+                                <td *ngIf="!questionIsAboutLidership" class="sociomatrix-data">{{sociometricResult.sociometricValues.rnArray[i]}}</td>
+                            </tr>
+                            <tr>
+                                <th>Sp</th>
+                                <td class="sociomatrix-data" *ngFor="let value of sociometricResult.sociometricValues.spArray">{{value}}</td>
+                            </tr>
+                            <tr>
+                                <th>Sp Val</th>
+                                <td class="sociomatrix-data" *ngFor="let value of sociometricResult.sociometricValues.spValArray">{{value}}</td>
+                            </tr>
+                            <tr *ngIf="!questionIsAboutLidership">
+                                <th>Sn</th>
+                                <td class="sociomatrix-data" *ngFor="let value of sociometricResult.sociometricValues.snArray">{{value}}</td>
+                            </tr>
+                            <tr *ngIf="!questionIsAboutLidership">
+                                <th>Sn Val</th>
+                                <td class="sociomatrix-data" *ngFor="let value of sociometricResult.sociometricValues.snValArray">{{value}}</td>
+                            </tr>
+                        </nz-table>
+                    </div>
+                </div>
+
+            </nz-collapse-panel>
+
+            <!-- Group Indexes -->
+            <nz-collapse-panel nzHeader="Índices sociométricos grupales" [nzActive]="true">
+
+                <div *ngIf="!loadingResult && sociometricResult" nz-row [nzGutter]="[20, 20]" nzJustify="space-around">
+                    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="6">
+                        <div class="groupal-index">
+                            <p class="groupal-index-title">Asociación</p>
+                            <p class="groupal-index-abbr">IA</p>
+                            <p class="groupal-index-value">{{sociometricResult.groupalIndexes.ia | number: '.2'}}</p>
+                        </div>
+                    </div>
+                    <div *ngIf="!questionIsAboutLidership" nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="6">
+                        <div class="groupal-index">
+                            <p class="groupal-index-title">Disociación</p>
+                            <p class="groupal-index-abbr">ID</p>
+                            <p class="groupal-index-value">{{sociometricResult.groupalIndexes.id | number: '.2'}}</p>
+                        </div>
+                    </div>
+                    <div nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="6">
+                        <div class="groupal-index">
+                            <p class="groupal-index-title">Coherencia</p>
+                            <p class="groupal-index-abbr">IC</p>
+                            <p class="groupal-index-value">{{sociometricResult.groupalIndexes.ic | number: '.2'}}</p>
+                        </div>
+                    </div>
+                    <div *ngIf="!questionIsAboutLidership" nz-col nzXs="24" nzSm="12" nzMd="8" nzLg="6">
+                        <div class="groupal-index">
+                            <p class="groupal-index-title">Intensidad social</p>
+                            <p class="groupal-index-abbr">IS</p>
+                            <p class="groupal-index-value">{{sociometricResult.groupalIndexes.is | number: '.2'}}</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </nz-collapse-panel>
+
+            <!-- Individual indexes -->
+            <nz-collapse-panel nzHeader="Índices individuales" [nzActive]="true">
+
+                <div nz-row nzJustify="center" *ngIf="!loadingResult && sociometricResult">
+                    <div nz-col nzXs="24" nzMd="20" nzLg="16">
+                        <nz-table #filterTable [nzData]="sociometricResult.individualIndexes" [nzFrontPagination]="false" nzTableLayout="fixed" nzSize="small">
+                            <thead>
+                                <tr>
+                                    <th nzWidth="60px"></th>
+                                    <th [nzSortFn]="sortIndexesByName" [nzSortPriority]="1">Estudiante</th>
+                                    <th [nzSortFn]="sortIndexesByPop" [nzSortPriority]="2" [nzAlign]="'center'">Pop.</th>
+                                    <th *ngIf="!questionIsAboutLidership" [nzSortFn]="sortIndexesByAnt" [nzSortPriority]="3" [nzAlign]="'center'">Ant.</th>
+                                    <th [nzSortFn]="sortIndexesByExpP" [nzSortPriority]="4" [nzAlign]="'center'">Exp. p.</th>
+                                    <th *ngIf="!questionIsAboutLidership" [nzSortFn]="sortIndexesByExpN" [nzSortPriority]="5" [nzAlign]="'center'">Exp. n.</th>
+                                    <th [nzSortFn]="sortIndexesByCA" [nzSortPriority]="6" [nzAlign]="'center'">CA</th>
+                                </tr>
+                            </thead>
+            
+                            <tbody>
+                                <ng-container *ngFor="let data of filterTable.data">
+                                    <tr>
+                                        <td [nzExpand]="expandSet.has(data.student.id)" (nzExpandChange)="onExpandChange(data.student.id, $event)"></td>
+                                        <td>{{data.student.firstname}} {{data.student.lastname}}</td>
+                                        <td [nzAlign]="'center'">{{data.pop | number: '.2'}}</td>
+                                        <td *ngIf="!questionIsAboutLidership" [nzAlign]="'center'">{{data.ant | number: '.2'}}</td>
+                                        <td [nzAlign]="'center'">{{data.expP | number: '.2'}}</td>
+                                        <td *ngIf="!questionIsAboutLidership" [nzAlign]="'center'">{{data.expN | number: '.2'}}</td>
+                                        <td [nzAlign]="'center'">{{data.ca | number: '.2'}}</td>
+                                    </tr>
+                                    <tr [nzExpand]="expandSet.has(data.student.id)">
+                                        <div nz-row [nzGutter]="[10, 10]">
+                                            <div class="align-center" nz-col nzSpan="6">
+                                                <strong>Ep = {{data.sociometricValues.ep}}</strong>
+                                            </div>
+                                            <div *ngIf="!questionIsAboutLidership" class="align-center" nz-col nzSpan="6">
+                                                <strong>En = {{data.sociometricValues.en}}</strong>
+                                            </div>
+                                            <div class="align-center" nz-col nzSpan="6">
+                                                <strong>Rp = {{data.sociometricValues.rp}}</strong>
+                                            </div>
+                                            <div *ngIf="!questionIsAboutLidership" class="align-center" nz-col nzSpan="6">
+                                                <strong>Rn = {{data.sociometricValues.rn}}</strong>
+                                            </div>
+                                            <div class="align-center" nz-col nzSpan="6">
+                                                <strong>Sp = {{data.sociometricValues.sp}}</strong>
+                                            </div>
+                                            <div class="align-center" nz-col nzSpan="6">
+                                                <strong>Sp val. = {{data.sociometricValues.spVal}}</strong>
+                                            </div>
+                                            <div *ngIf="!questionIsAboutLidership" class="align-center" nz-col nzSpan="6">
+                                                <strong>Sn = {{data.sociometricValues.sn}}</strong>
+                                            </div>
+                                            <div *ngIf="!questionIsAboutLidership" class="align-center" nz-col nzSpan="6">
+                                                <strong>Sn val. = {{data.sociometricValues.snVal}}</strong>
+                                            </div>
+                                        </div>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </nz-table>
+                    </div>
+                </div>
+
+            </nz-collapse-panel>
+        </nz-collapse>
+    </ng-container>
+</nz-spin>
