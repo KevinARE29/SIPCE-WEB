@@ -205,13 +205,19 @@
                     "name": "Citas por tipo de sesión",
                     "permission": 34,
                     "allowed": false
-                }, {
+                },
+                {
                     "route": "reportes/tipos-de-servicio",
                     "name": "Citas por tipo de servicio",
                     "permission": 34,
                     "allowed": false
+                },
+                {
+                    "route": "reportes/pruebas-sociometricas",
+                    "name": "Pruebas sociométricas",
+                    "permission": 32,
+                    "allowed": false
                 }
-
             ]
         },
         {

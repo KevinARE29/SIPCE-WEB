@@ -5,6 +5,7 @@ import { AuthGuard } from '../login/guards/auth.guard';
 
 import { ServiceTypeComponent } from './components/service-type/service-type.component';
 import { SessionTypeComponent } from './components/session-type/session-type.component';
+import { SociometricTestsComponent } from './components/sociometric-tests/sociometric-tests.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,12 @@ const routes: Routes = [
     component: ServiceTypeComponent,
     canActivate: [AuthGuard],
     data: { permission: 34 }
+  },
+  {
+    path: 'pruebas-sociometricas',
+    component: SociometricTestsComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 32 }
   }
 ];
 
