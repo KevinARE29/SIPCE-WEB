@@ -16,12 +16,17 @@ import { SociometricTestService } from 'src/app/sociometric/shared/sociometric-t
 import { Student } from 'src/app/students/shared/student.model';
 import { PresetService } from 'src/app/sociometric/shared/sociometric-test/preset.service';
 
+import { ReportService } from 'src/app/shared/report.service';
+import { ReportTypes } from 'src/app/shared/enums/report-types.enum';
+
 @Component({
   selector: 'app-sociometric-test',
   templateUrl: './sociometric-test.component.html',
   styleUrls: ['./sociometric-test.component.css']
 })
 export class SociometricTestComponent implements OnInit {
+  testId: number;
+
   loading = false;
   sociometricTest: SociometricTest;
   copyOfSociometricTest: SociometricTest;
@@ -56,6 +61,20 @@ export class SociometricTestComponent implements OnInit {
   sections: ShiftPeriodGrade[];
   questionBanks: QuestionBank[] = [];
 
+  // Report
+  showReportModal = false;
+  filterParticipants = true;
+  filterQuestionBank = true;
+  filterGroup = true;
+  filterGroupIndeterminate = false;
+  filterSociomatrix = true;
+  fitlerGroupalIndexes = true;
+  filterIndividual = true;
+  filterIndividualIndeterminate = false;
+  filterSociometricValues = true;
+  filterIndividualIndexes = true;
+  loadingReport: boolean;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -64,7 +83,8 @@ export class SociometricTestComponent implements OnInit {
     private notification: NzNotificationService,
     private presetService: PresetService,
     private questionBankService: QuestionBankService,
-    private sociometricTestService: SociometricTestService
+    private sociometricTestService: SociometricTestService,
+    private reportService: ReportService
   ) {}
 
   ngOnInit(): void {
@@ -77,14 +97,13 @@ export class SociometricTestComponent implements OnInit {
   getSociometricTest(): void {
     this.route.paramMap.subscribe((params) => {
       const param: string = params.get('sociometrictest');
-      let id: number;
 
       this.loading = true;
 
       if (typeof param === 'string' && !Number.isNaN(Number(param))) {
-        id = Number(param);
+        this.testId = Number(param);
 
-        this.sociometricTestService.getSociometricTest(id).subscribe(
+        this.sociometricTestService.getSociometricTest(this.testId).subscribe(
           (data) => {
             this.loading = false;
             this.sociometricTest = data['data'];
@@ -388,4 +407,72 @@ export class SociometricTestComponent implements OnInit {
     );
   };
   //#endregion
+
+  // Report
+  setShowReportModal(show: boolean): void {
+    this.showReportModal = show;
+  }
+
+  updateAllGroup(): void {
+    this.filterGroupIndeterminate = false;
+
+    this.filterSociomatrix = this.filterGroup;
+    this.fitlerGroupalIndexes = this.filterGroup;
+  }
+
+  updateSingleGroup(): void {
+    if (this.filterSociomatrix && this.fitlerGroupalIndexes) {
+      this.filterGroupIndeterminate = false;
+      this.filterGroup = true;
+    } else if (!this.filterSociomatrix && !this.fitlerGroupalIndexes) {
+      this.filterGroupIndeterminate = false;
+      this.filterGroup = false;
+    } else {
+      this.filterGroupIndeterminate = true;
+    }
+  }
+
+  updateAllIndividual(): void {
+    this.filterIndividualIndeterminate = false;
+
+    this.filterSociometricValues = this.filterIndividual;
+    this.filterIndividualIndexes = this.filterIndividual;
+  }
+
+  updateSingleIndividual(): void {
+    if (this.filterSociometricValues && this.filterIndividualIndexes) {
+      this.filterIndividualIndeterminate = false;
+      this.filterIndividual = true;
+    } else if (!this.filterSociometricValues && !this.filterIndividualIndexes) {
+      this.filterIndividualIndeterminate = false;
+      this.filterIndividual = false;
+    } else {
+      this.filterIndividualIndeterminate = true;
+    }
+  }
+
+  exportTest(): void {
+    this.loadingReport = true;
+    this.setShowReportModal(false);
+
+    const filters = [];
+    if (this.filterParticipants) filters.push('participants');
+    if (this.filterQuestionBank) filters.push('questionBank');
+    if (this.fitlerGroupalIndexes) filters.push('groupalIndexes');
+    if (this.filterSociomatrix) filters.push('sociomatrix');
+    if (this.filterIndividualIndexes) filters.push('individualIndexes');
+    if (this.filterSociometricValues) filters.push('sociometricValues');
+
+    const path = '/pruebas-sociometricas/tests/' + this.testId + '/exportar';
+
+    this.reportService.createReport(ReportTypes.PRUEBA_SOCIOMÉTRICA, path, filters).subscribe((r) => {
+      const downloadURL = window.URL.createObjectURL(r);
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = ReportTypes.PRUEBA_SOCIOMÉTRICA + '.pdf';
+      link.click();
+
+      this.loadingReport = false;
+    });
+  }
 }
