@@ -46,7 +46,7 @@
                 <input nz-input [(ngModel)]="searchParams.code" placeholder="Buscar NIE" />
             </nz-input-group>
             <ng-template #inputClearCode>
-                <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.code" (click)="searchParams.code = null; getHistory(null)"></i>
+                <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.code" (click)="searchParams.code = null"></i>
             </ng-template>
         </div>
 
