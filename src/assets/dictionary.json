@@ -81,6 +81,8 @@
         },
         "presets": {},
         "sociometric-tests": {
+            "email": "Correo electrónico",
+            "password": "Contraseña",
             "studentsIds": "Estudiantes"
         },
         "disciplinary-catalog": {
