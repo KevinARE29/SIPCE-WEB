@@ -1,1 +1,82 @@
-<p>sociometric-tests works!</p>
+<div nz-row nzJustify="space-between">
+    <div nz-col>
+        <h1>Reporte de pruebas sociométricas</h1>
+    </div>
+</div>
+
+<nz-spin [nzSpinning]="loadingSearchLists" nzTip="Cargando...">
+    <div nz-row [nzGutter]="[10, 10]">
+        <!-- Shift -->
+        <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="7">
+            <label>Turno: </label>
+            <nz-input-group>
+                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar turno"
+                    [(ngModel)]="searchParams.shift.id"  (ngModelChange)="onChangeShift($event);">
+                    <nz-option *ngFor="let shift of shifts" [nzLabel]="shift.name" [nzValue]="shift.id"></nz-option>
+                </nz-select>
+            </nz-input-group>
+        </div>
+
+        <!-- Grade -->
+        <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="7">
+            <label>Grado: </label>
+            <nz-input-group>
+                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar grado"
+                    [(ngModel)]="searchParams.grade.id" (ngModelChange)="onChangeGrade($event);">
+                    <nz-option *ngFor="let grade of grades" [nzLabel]="grade.name" [nzValue]="grade.id"></nz-option>
+                </nz-select>
+            </nz-input-group>
+        </div>
+
+        <!-- Section -->
+        <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="7">
+            <label>Sección: </label>
+            <nz-input-group>
+                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar sección"
+                    [(ngModel)]="searchParams.section.id">
+                    <nz-option *ngFor="let section of sections" [nzLabel]="section.name" [nzValue]="section.id"></nz-option>
+                </nz-select>
+            </nz-input-group>
+        </div>
+
+        <!-- Code -->
+        <div nz-col nzXs="24" nzSm="12" nzLg="7">
+            <label>NIE: </label>
+            <nz-input-group [nzSuffix]="inputClearCode">
+                <input nz-input [(ngModel)]="searchParams.code" placeholder="Buscar NIE" />
+            </nz-input-group>
+            <ng-template #inputClearCode>
+                <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.code" (click)="searchParams.code = null; getHistory(null)"></i>
+            </ng-template>
+        </div>
+
+        <!-- Name -->
+        <div nz-col nzXs="24" nzSm="12" nzLg="7">
+            <label>Nombre: </label>
+            <nz-input-group [nzSuffix]="inputClearName">
+                <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Buscar nombre" />
+            </nz-input-group>
+            <ng-template #inputClearName>
+                <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.firstname" (click)="searchParams.firstname = null"></i>
+            </ng-template>
+        </div>
+
+        <!-- Lastname -->
+        <div nz-col nzXs="24" nzSm="12" nzLg="7">
+            <label>Apellido: </label>
+            <nz-input-group [nzSuffix]="inputClearLastname">
+                <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Buscar apellido" />
+            </nz-input-group>
+            <ng-template #inputClearLastname>
+                <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.lastname" (click)="searchParams.lastname = null"></i>
+            </ng-template>
+        </div>
+
+        <!-- Search button-->
+        <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="24" nzXl="3">
+        <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+            <button nz-button nzType="primary" (click)="getStudents()">Buscar</button>
+        </div>
+        </div>
+    </div>
+</nz-spin>
