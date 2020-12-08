@@ -1,5 +1,6 @@
 ::ng-deep .ant-layout {
     background-color: white;
+    color: black;
 }
 
 .ant-card-body {
@@ -62,7 +63,7 @@ p {
 
 .groupal-index-abbr {
     font-size: 14px;
-    color: gray;
+    color: black;
     margin-bottom: 2px;
 }
 
@@ -84,6 +85,7 @@ p {
 .sociomatrix-data {
     width: 30px;
     text-align: center;
+    color: black;
 }
 
 .gray-bg {
