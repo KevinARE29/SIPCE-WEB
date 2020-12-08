@@ -80,6 +80,7 @@
             "name": "Nombre"
         },
         "presets": {},
+        "sessions": {},
         "sociometric-tests": {
             "studentsIds": "Estudiantes"
         },

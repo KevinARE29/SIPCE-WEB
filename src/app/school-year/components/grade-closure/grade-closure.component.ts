@@ -107,8 +107,9 @@ export class GradeClosureComponent implements OnInit {
 
   getStudents(): void {
     if (this.currentGrade) {
+      this.loading = true;
       this.studentService.getStudentResumes(this.currentGrade).subscribe((data) => {
-        console.log(data['data']);
+        this.loading = false;
         this.progress = data['data']['progress'];
         this.students = data['data']['students'];
       });
@@ -116,14 +117,12 @@ export class GradeClosureComponent implements OnInit {
   }
 
   openModal(student: Student): void {
-    this.modalTitle = `Comentario final para {{ student.firstname }} {{ student.lastname }}`;
+    this.modalTitle = `Comentario final para ${student.firstname} ${student.lastname}`;
     this.currentStudent = student;
 
-    if (student.behavioralHistory.finalConclusion) {
-      this.conclusionForm.setValue({
-        conclusion: student.behavioralHistory.finalConclusion
-      });
-    }
+    this.conclusionForm.setValue({
+      conclusion: student.behavioralHistory.finalConclusion
+    });
 
     this.isVisible = true;
   }
@@ -156,6 +155,11 @@ export class GradeClosureComponent implements OnInit {
 
         this.message.success(`El comentario final se ha actualizado con éxito`);
 
+        const answered = this.students.filter((x) => x.behavioralHistory.finalConclusion !== null);
+        const total = this.students.length;
+
+        this.progress = answered.length / total;
+
         this.isConfirmLoading = false;
       },
       (error) => {
@@ -176,5 +180,7 @@ export class GradeClosureComponent implements OnInit {
         }
       }
     );
+
+    this.handleCancel();
   }
 }

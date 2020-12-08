@@ -44,8 +44,10 @@
                         <td>{{ data.firstname }}</td>
                         <td>{{ data.lastname }}</td>
                         <td>{{ data.status }}</td>
-                        <td>
-                            <a href=""></a>
+                        <td [nzAlign]="'center'">
+                            <a (click)="openModal(data)" [ngClass]="data.behavioralHistory.finalConclusion ? 'green' : 'grey'">
+                                <i nz-icon nzType="edit" nzTheme="outline"></i>
+                            </a>
                         </td>
                     </tr>
                 </tbody>
@@ -55,7 +57,7 @@
     <nz-progress [nzPercent]="progress"></nz-progress>
 </nz-spin>
 
-<!-- Create cycle modal -->
+<!-- Final conclusion -->
 <nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" nzOkText="Guardar"
     nzCancelText="Cancelar" [nzFooter]="modalFooter" (nzOnOk)="handleOk()" (nzOnCancel)="handleCancel()">
     <!-- Modal content -->
