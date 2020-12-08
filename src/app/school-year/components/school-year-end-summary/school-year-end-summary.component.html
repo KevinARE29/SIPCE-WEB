@@ -1,1 +1,26 @@
-<p>school-year-end-summary works!</p>
+<nz-tabset nzTabPosition="left" [nzType]="'line'">
+    <nz-tab *ngFor="let shift of shifts" [nzTitle]="shift.name.concat(' (', shift.shiftPercentage,'%)')">
+        <nz-table #fixedTable [nzData]="shift.grades" nzSize="small" nzTableLayout="auto" [nzFrontPagination]="false">
+            <thead>
+                <tr>
+                    <!-- <th nzWidth="60px"></th> -->
+                    <th>Grado</th>
+                    <th>Porcentaje completado</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let item of shift.grades">
+                    <!-- <td [nzExpand]="expandSet.has(item.id)" (nzExpandChange)="onExpandChange(item.id, $event)"></td> -->
+                    <td>{{ item.name }}</td>
+                    <td>
+                        <nz-progress [nzPercent]="item.gradePercentage"></nz-progress>
+                    </td>
+                </tr>
+                <!-- <tr [nzExpand]="expandSet.has(item.id)">
+                    <span>H</span>
+                </tr> -->
+            </tbody>
+        </nz-table>
+    </nz-tab>
+</nz-tabset>
