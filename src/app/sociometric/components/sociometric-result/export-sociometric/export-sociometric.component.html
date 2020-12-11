@@ -84,60 +84,63 @@
 
         <ol>
             <li *ngFor="let result of data.generalReports; let i = index">
-                <p>
-                    {{data.questionBank.questions[i].questionP}} 
-                    <nz-tag *ngIf="data.questionBank.questions[i].questionN" nzColor="green">Aceptación</nz-tag>
-                    <nz-tag *ngIf="!data.questionBank.questions[i].questionN" nzColor="blue">Liderazgo</nz-tag>
-                </p>
-                <p *ngIf="data.questionBank.questions[i].questionN">
-                    {{data.questionBank.questions[i].questionN}} 
-                    <nz-tag nzColor="red">Rechazo</nz-tag>
-                </p>
-
-                <div class="not-break-inside" *ngIf="filters.includes('sociomatrix')">
-                    <p><strong>Matriz sociométrica</strong></p>
-
-                    <div nz-row nzJustify="center">
-                        <div nz-col>
-                            <nz-table class="sociomatrix">
-                                <tr>
-                                    <th>Estudiantes</th>
-                                    <th class="sociomatrix-data" *ngFor="let student of result.sociomatrixData.participants; let i = index">{{i + 1}}</th>
-                                    <th class="sociomatrix-data">Ep</th>
-                                    <th *ngIf="data.questionBank.questions[i].questionN" class="sociomatrix-data">En</th>
-                                    <th class="sociomatrix-data">Rp</th>
-                                    <th *ngIf="data.questionBank.questions[i].questionN" class="sociomatrix-data">Rn</th>
-                                </tr>
-                                <tr *ngFor="let student of result.sociomatrixData.participants; let j = index">
-                                    <td>{{j + 1}}. {{student.firstname}} {{student.lastname}}</td>
-                                    <td class="sociomatrix-data" [class.gray-bg]="j === k" *ngFor="let value of result.sociomatrixData.sociomatrix[j]; let k = index">{{value || ''}}</td>
-                                    <td class="sociomatrix-data">{{result.sociomatrixData.sociometricValues.epArray[j]}}</td>
-                                    <td *ngIf="data.questionBank.questions[i].questionN" class="sociomatrix-data">{{result.sociomatrixData.sociometricValues.enArray[j]}}</td>
-                                    <td class="sociomatrix-data">{{result.sociomatrixData.sociometricValues.rpArray[j]}}</td>
-                                    <td *ngIf="data.questionBank.questions[i].questionN" class="sociomatrix-data">{{result.sociomatrixData.sociometricValues.rnArray[j]}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Sp</th>
-                                    <td class="sociomatrix-data" *ngFor="let value of result.sociomatrixData.sociometricValues.spArray">{{value}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Sp Val</th>
-                                    <td class="sociomatrix-data" *ngFor="let value of result.sociomatrixData.sociometricValues.spValArray">{{value}}</td>
-                                </tr>
-                                <tr *ngIf="data.questionBank.questions[i].questionN">
-                                    <th>Sn</th>
-                                    <td class="sociomatrix-data" *ngFor="let value of result.sociomatrixData.sociometricValues.snArray">{{value}}</td>
-                                </tr>
-                                <tr *ngIf="data.questionBank.questions[i].questionN">
-                                    <th>Sn Val</th>
-                                    <td class="sociomatrix-data" *ngFor="let value of result.sociomatrixData.sociometricValues.snValArray">{{value}}</td>
-                                </tr>
-                            </nz-table>
+                <div class="not-break-inside">
+                    <p>
+                        {{data.questionBank.questions[i].questionP}} 
+                        <nz-tag *ngIf="data.questionBank.questions[i].questionN" nzColor="green">Aceptación</nz-tag>
+                        <nz-tag *ngIf="!data.questionBank.questions[i].questionN" nzColor="blue">Liderazgo</nz-tag>
+                    </p>
+                    <p *ngIf="data.questionBank.questions[i].questionN">
+                        {{data.questionBank.questions[i].questionN}} 
+                        <nz-tag nzColor="red">Rechazo</nz-tag>
+                    </p>
+    
+                    <ng-container *ngIf="filters.includes('sociomatrix')">
+                        <p><strong>Matriz sociométrica</strong></p>
+    
+                        <div nz-row nzJustify="center">
+                            <div nz-col>
+                                <nz-table class="sociomatrix">
+                                    <tr>
+                                        <th>Estudiantes</th>
+                                        <th class="sociomatrix-data" *ngFor="let student of result.sociomatrixData.participants; let i = index">{{i + 1}}</th>
+                                        <th class="sociomatrix-data">Ep</th>
+                                        <th *ngIf="data.questionBank.questions[i].questionN" class="sociomatrix-data">En</th>
+                                        <th class="sociomatrix-data">Rp</th>
+                                        <th *ngIf="data.questionBank.questions[i].questionN" class="sociomatrix-data">Rn</th>
+                                    </tr>
+                                    <tr *ngFor="let student of result.sociomatrixData.participants; let j = index">
+                                        <td>{{j + 1}}. {{student.firstname}} {{student.lastname}}</td>
+                                        <td class="sociomatrix-data" [class.gray-bg]="j === k" *ngFor="let value of result.sociomatrixData.sociomatrix[j]; let k = index">{{value || ''}}</td>
+                                        <td class="sociomatrix-data">{{result.sociomatrixData.sociometricValues.epArray[j]}}</td>
+                                        <td *ngIf="data.questionBank.questions[i].questionN" class="sociomatrix-data">{{result.sociomatrixData.sociometricValues.enArray[j]}}</td>
+                                        <td class="sociomatrix-data">{{result.sociomatrixData.sociometricValues.rpArray[j]}}</td>
+                                        <td *ngIf="data.questionBank.questions[i].questionN" class="sociomatrix-data">{{result.sociomatrixData.sociometricValues.rnArray[j]}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Sp</th>
+                                        <td class="sociomatrix-data" *ngFor="let value of result.sociomatrixData.sociometricValues.spArray">{{value}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Sp Val</th>
+                                        <td class="sociomatrix-data" *ngFor="let value of result.sociomatrixData.sociometricValues.spValArray">{{value}}</td>
+                                    </tr>
+                                    <tr *ngIf="data.questionBank.questions[i].questionN">
+                                        <th>Sn</th>
+                                        <td class="sociomatrix-data" *ngFor="let value of result.sociomatrixData.sociometricValues.snArray">{{value}}</td>
+                                    </tr>
+                                    <tr *ngIf="data.questionBank.questions[i].questionN">
+                                        <th>Sn Val</th>
+                                        <td class="sociomatrix-data" *ngFor="let value of result.sociomatrixData.sociometricValues.snValArray">{{value}}</td>
+                                    </tr>
+                                </nz-table>
+                            </div>
                         </div>
-                    </div>
-
-                    <br>
+    
+                        <br>
+                    </ng-container>
                 </div>
+            
                 <div class="not-break-inside" *ngIf="filters.includes('groupalIndexes')">
                     <p><strong>Índices sociométricos grupales</strong></p>
 

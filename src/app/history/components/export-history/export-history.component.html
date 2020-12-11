@@ -53,14 +53,14 @@
     <ng-container *ngIf="filters.includes('annotations')">
         <nz-divider class="section-divider text-blue" nzOrientation="center" nzText="Anotaciones conductuales"></nz-divider>
 
-        <ng-container *ngFor="let annotation of data.behavioralHistory.annotations">
+        <div class="not-break-inside" *ngFor="let annotation of data.behavioralHistory.annotations">
             <p class="text-blue-light"><strong>Fecha: </strong>{{annotation.annotationDateString}}</p>
             <p><strong>Título: </strong>{{annotation.title}}</p>
             <p><strong>Reporte de: </strong>{{annotation.reporter.firstname}} {{annotation.reporter.lastname}}</p>
             <p><strong>Descripción del evento: </strong> <br> {{annotation.description}}</p>
 
             <br>
-        </ng-container>
+        </div>
     </ng-container>
     <!-- / Annotations -->
 
@@ -69,28 +69,30 @@
         <nz-divider class="section-divider text-blue" nzOrientation="center" nzText="Faltas y sanciones"></nz-divider>
 
         <ng-container *ngFor="let counter of data.behavioralHistory.behavioralHistoryfouls">
-            <p class="text-blue"><strong>{{counter.period}}</strong></p>
-            <p>Total de faltas y sanciones asignadas en el {{counter.period | lowercase}}:</p>
-            <div nz-row>
-                <div nz-col nzSpan="6">
-                    <p class="counter-header">Faltas leves</p>
-                    <p class="counter">{{counter.foulsCounter.minorFouls}}</p>
-                </div>
-                <div  nz-col nzSpan="6">
-                    <p class="counter-header">Faltas graves</p>
-                    <p class="counter">{{counter.foulsCounter.seriousFouls}}</p>
-                </div>
-                <div nz-col nzSpan="6">
-                    <p class="counter-header">Faltas muy graves</p>
-                    <p class="counter">{{counter.foulsCounter.verySeriousFouls}}</p>
-                </div>
-                <div nz-col nzSpan="6">
-                    <p class="counter-header">Sanciones</p>
-                    <p class="counter">{{counter.foulsCounter.totalSanctions}}</p>
-                </div>
+            <div class="not-break-inside">
+                <p class="text-blue"><strong>{{counter.period}}</strong></p>
+                <p>Total de faltas y sanciones asignadas en el {{counter.period | lowercase}}:</p>
+                <div nz-row>
+                    <div nz-col nzSpan="6">
+                        <p class="counter-header">Faltas leves</p>
+                        <p class="counter">{{counter.foulsCounter.minorFouls}}</p>
+                    </div>
+                    <div  nz-col nzSpan="6">
+                        <p class="counter-header">Faltas graves</p>
+                        <p class="counter">{{counter.foulsCounter.seriousFouls}}</p>
+                    </div>
+                    <div nz-col nzSpan="6">
+                        <p class="counter-header">Faltas muy graves</p>
+                        <p class="counter">{{counter.foulsCounter.verySeriousFouls}}</p>
+                    </div>
+                    <div nz-col nzSpan="6">
+                        <p class="counter-header">Sanciones</p>
+                        <p class="counter">{{counter.foulsCounter.totalSanctions}}</p>
+                    </div>
             </div> 
+            </div>
 
-            <ng-container *ngFor="let assignation of counter.fouls">
+            <div class="not-break-inside" *ngFor="let assignation of counter.fouls">
                 <p class="text-blue-light"><strong>Fecha: </strong>{{assignation.issueDateString}}</p>
                 <nz-tag> Tipo: {{ assignation.foul.foulsType }}</nz-tag>
                 <nz-tag> Numeral de la falta: {{ assignation.foul.numeral }}</nz-tag>
@@ -98,13 +100,13 @@
                 <p><strong>Sanción: </strong>{{assignation.sanction ? assignation.sanction.name : 'Sin sanción asignadda'}}</p>
                 <p *ngIf="assignation.sanction"><strong>Descripción de la sanción: </strong> <br> {{assignation.sanction.description}}</p>
                 <br>
-            </ng-container>
+            </div>
         </ng-container>
     </ng-container>
     <!-- / Fouls assignations -->
 
     <!-- Final expedient conclusion -->
-    <div nz-row *ngIf="filters.includes('expedients')">
+    <div class="not-break-inside" nz-row *ngIf="filters.includes('expedients')">
         <div nz-col nzSpan="24">
             <p><strong class="text-blue-light">Comentario final de consejería</strong></p>
             <ng-container *ngIf="data.behavioralHistory.expedients && data.behavioralHistory.expedients.length">
@@ -116,7 +118,7 @@
     <!-- / Final expedient conclusion -->
 
     <!-- Final history conclusion -->
-    <div nz-row *ngIf="filters.includes('finalConclusion')">
+    <div class="not-break-inside" nz-row *ngIf="filters.includes('finalConclusion')">
         <div nz-col nzSpan="24">
             <p><strong class="text-blue-light">Comentario resultados generales al final del año</strong></p>
             <p>
@@ -127,7 +129,7 @@
     <!-- / Final history conclusion -->
 
     <!-- Signatures -->
-    <div class="signatures" nz-row>
+    <div class="signatures not-break-inside" nz-row>
         <div nz-col nzSpan="24">
             
             <div nz-row [nzGutter]="[30, 30]">

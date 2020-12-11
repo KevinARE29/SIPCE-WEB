@@ -57,7 +57,7 @@
         </div>
     </div>
 
-    <div nz-row>
+    <div nz-row class="not-break-inside">
         <div nz-col nzSpan="12" *ngIf="filters.includes('externalPsychologicalTreatments')">
             <p><strong class="text-blue-light">Tratamientos psicológicos externos</strong></p>
             <p *ngIf="!data.expedient.externalPsychologicalTreatments || data.expedient.externalPsychologicalTreatments.length === 0">
@@ -82,7 +82,7 @@
         </div>
     </div>
 
-    <div nz-row>
+    <div nz-row class="not-break-inside">
         <div nz-col nzSpan="24" *ngIf="filters.includes('diagnosticImpression')">
             <p><strong class="text-blue-light">Impresión diagnóstica</strong></p>
 
@@ -95,7 +95,7 @@
         </div>
     </div>
 
-    <div nz-row>
+    <div nz-row class="not-break-inside">
         <div nz-col nzSpan="24" *ngIf="filters.includes('actionPlan')">
             <p><strong class="text-blue-light">Plan de acción</strong></p>
             <p>
@@ -109,7 +109,7 @@
     <nz-divider class="section-divider text-blue" nzOrientation="center" nzText="Sesiones y entrevistas"></nz-divider>
 
     <ng-container *ngFor="let session of data.expedient.sessions">
-        <div nz-row>
+        <div nz-row class="not-break-inside">
             <div nz-col nzSpan="24">
                 <p><strong>{{session.sessionType}} {{session.identifier || ''}}</strong> Fecha: {{session.startDateString}}</p>
             </div>
@@ -175,7 +175,7 @@
     <!-- / Sessions -->
 
     <!-- Final conclusion -->
-    <div nz-row>
+    <div nz-row class="not-break-inside">
         <div nz-col nzSpan="24">
             <p><strong class="text-blue-light">Comentario final</strong></p>
             <p>
@@ -186,7 +186,7 @@
     <!-- / Final conclusion -->
 
     <!-- Signatures -->
-    <div class="signatures" nz-row>
+    <div class="signatures not-break-inside" nz-row>
         <div nz-col nzSpan="24">
             
             <div nz-row [nzGutter]="[30, 30]">

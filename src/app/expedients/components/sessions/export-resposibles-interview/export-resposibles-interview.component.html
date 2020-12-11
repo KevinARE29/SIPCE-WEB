@@ -57,7 +57,7 @@
                 </div>
             </div>
 
-            <div nz-row [nzGutter]="[30, 30]">
+            <div class="not-break-inside" nz-row [nzGutter]="[30, 30]">
                 <div *ngIf="data.session.sessionResponsibleAssistence.responsible1Assistence" nz-col nzSpan="8">
                     <nz-divider class="signature-divider"></nz-divider>
                     {{data.session.sessionResponsibleAssistence.responsible1.firstname}} {{data.session.sessionResponsibleAssistence.responsible1.lastname}} <br>
