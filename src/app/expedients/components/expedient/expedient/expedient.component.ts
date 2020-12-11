@@ -36,6 +36,9 @@ export class ExpedientComponent implements OnInit {
   filterActionPlan = true;
   loadingReport: boolean;
 
+  // Current year, to add it to labels.
+  currentYear = new Date().getFullYear();
+
   constructor(
     private route: ActivatedRoute,
     private expedientService: ExpedientService,
