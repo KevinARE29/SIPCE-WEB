@@ -94,7 +94,7 @@
                     <nz-tag nzColor="red">Rechazo</nz-tag>
                 </p>
 
-                <ng-container *ngIf="filters.includes('sociomatrix')">
+                <div class="not-break-inside" *ngIf="filters.includes('sociomatrix')">
                     <p><strong>Matriz sociométrica</strong></p>
 
                     <div nz-row nzJustify="center">
@@ -137,8 +137,8 @@
                     </div>
 
                     <br>
-                </ng-container>
-                <ng-container *ngIf="filters.includes('groupalIndexes')">
+                </div>
+                <div class="not-break-inside" *ngIf="filters.includes('groupalIndexes')">
                     <p><strong>Índices sociométricos grupales</strong></p>
 
                     <div nz-row nzGutter="10" nzJustify="space-around">
@@ -172,7 +172,7 @@
                         </div>
                     </div>
 
-                </ng-container>
+                </div>
                 <br>
             </li>
         </ol>
@@ -187,7 +187,7 @@
             <p><strong>{{i + 1}}. {{result.firstname}} {{result.lastname}}</strong></p>
 
             <ol>
-                <li *ngFor="let r of result.questions">
+                <li class="not-break-inside" *ngFor="let r of result.questions">
                     <p>
                         {{r.question.questionP}} 
                         <nz-tag *ngIf="r.question.questionN" nzColor="green">Aceptación</nz-tag>
