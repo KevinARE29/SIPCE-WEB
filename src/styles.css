@@ -126,3 +126,7 @@ a.ant-btn:not(.ant-btn-icon-only), .ant-btn:not(.ant-btn-icon-only) {
 .not-break-inside {
   page-break-inside: avoid;
 }
+
+.break-before {
+  page-break-before: always;
+}

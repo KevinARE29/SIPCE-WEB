@@ -79,7 +79,7 @@
     <!-- / Question bank -->
 
     <!-- Groupal result -->
-    <ng-container *ngIf="filters.includes('sociomatrix') || filters.includes('groupalIndexes') ">
+    <ng-container *ngIf="filters.includes('sociomatrix') || filters.includes('groupalIndexes')">
         <nz-divider class="section-divider text-blue" nzOrientation="left" nzText="Reporte general del grupo"></nz-divider>
 
         <ol>
@@ -184,6 +184,9 @@
 
     <!-- Individual result -->
     <ng-container *ngIf="filters.includes('individualIndexes') || filters.includes('sociometricValues') ">
+
+        <div *ngIf="filters.includes('sociomatrix') || filters.includes('groupalIndexes')" class="break-before"></div>
+
         <nz-divider class="section-divider text-blue" nzOrientation="left" nzText="Informe por estudiante"></nz-divider>
 
         <ng-container *ngFor="let result of data.individualReports; let i = index">
