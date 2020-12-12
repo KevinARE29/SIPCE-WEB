@@ -167,8 +167,7 @@ export class SociometricTestsComponent implements OnInit {
 
     const fileName = `Pruebas sociométricas - 
       ${this.selectedStudent.firstname} ${this.selectedStudent.lastname} - 
-      ${format(new Date(), 'ddMMyyyyHHmmss')}.xlsx
-    `;
+      ${format(new Date(), 'ddMMyyyyHHmmss')}.xlsx`;
 
     /* Table id is passed over here */
     const element = document.getElementById('excel-table');
