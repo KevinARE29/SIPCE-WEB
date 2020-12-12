@@ -208,28 +208,28 @@ export class SociometricTestsComponent implements OnInit {
     this.chart.type = 'line';
     this.chart.colors = [
       {
-        backgroundColor: 'rgba(200,200,200,0.2)',
-        borderColor: 'rgba(200,200,200,1)',
-        pointBackgroundColor: 'rgba(200,200,200,1)',
+        backgroundColor: 'rgba(33,206,47,0.2)',
+        borderColor: 'rgba(33,206,47,1)',
+        pointBackgroundColor: 'rgba(33,206,47,1)',
         pointBorderColor: '#fff',
         pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(200,200,200,0.8)'
+        pointHoverBorderColor: 'rgba(33,206,47,0.8)'
       },
       {
-        backgroundColor: 'rgba(120,120,120,0.2)',
-        borderColor: 'rgba(120,120,120,1)',
-        pointBackgroundColor: 'rgba(120,120,120,1)',
+        backgroundColor: 'rgba(214,48,29,0.2)',
+        borderColor: 'rgba(214,48,29,1)',
+        pointBackgroundColor: 'rgba(214,48,29,1)',
         pointBorderColor: '#fff',
         pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(120,120,120,0.8)'
+        pointHoverBorderColor: 'rgba(214,48,29,0.8)'
       },
       {
-        backgroundColor: 'rgba(50,50,50,0.2)',
-        borderColor: 'rgba(50,50,50,1)',
-        pointBackgroundColor: 'rgba(50,50,50,1)',
+        backgroundColor: 'rgba(2,48,71,0.2)',
+        borderColor: 'rgba(2,48,71,1)',
+        pointBackgroundColor: 'rgba(2,48,71,1)',
         pointBorderColor: '#fff',
         pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(50,50,50,0.8)'
+        pointHoverBorderColor: 'rgba(2,48,71,0.8)'
       }
     ];
     this.chart.legend = true;
