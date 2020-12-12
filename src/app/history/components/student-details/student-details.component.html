@@ -20,7 +20,7 @@
                 <div nz-col>
                     <a [routerLink]="['/estudiantes', student.id, 'detalle']">Perfil</a>
                     <nz-divider *ngIf="showAlert" nzType="vertical"></nz-divider>
-                    <nz-badge [nzDot]="showCounterAlert">
+                    <nz-badge [nzDot]="showAlert && showCounterAlert">
                         <a *ngIf="showAlert" (click)="setShowModal(true)"><i nz-icon nzType="alert" nzTheme="outline"></i></a>
                     </nz-badge>
                 </div>
