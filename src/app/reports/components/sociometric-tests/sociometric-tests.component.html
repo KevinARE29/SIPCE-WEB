@@ -110,6 +110,7 @@
                         <div nz-col nzSpan="12">
                             <canvas *ngIf="chart" baseChart
                                 [datasets]="chart.datasets"
+                                [data]="chart.data"
                                 [labels]="chart.labels"
                                 [options]="chart.options"
                                 [legend]="chart.legend"

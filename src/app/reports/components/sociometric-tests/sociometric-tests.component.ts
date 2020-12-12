@@ -44,6 +44,7 @@ export class SociometricTestsComponent implements OnInit {
 
   // Chart
   chart: NgChart;
+  serieLength = 0;
 
   constructor(
     private studentService: StudentService,
@@ -182,7 +183,14 @@ export class SociometricTestsComponent implements OnInit {
   }
 
   generateChart(): void {
+    this.serieLength = this.reportResult.map((r) => r.leadership).length;
+
+    this.serieLength === 1 ? this.pieChart() : this.lineChart();
+  }
+
+  lineChart(): void {
     this.chart = new NgChart();
+
     this.chart.datasets = [
       {
         label: 'Aceptación',
@@ -236,6 +244,36 @@ export class SociometricTestsComponent implements OnInit {
     this.chart.options = {
       responsive: true,
       legend: { position: 'top' }
+    };
+  }
+
+  pieChart(): void {
+    this.chart = new NgChart();
+
+    this.chart.labels = ['Aceptación', 'Rechazo', 'Liderazgo'];
+    this.chart.data = [
+      this.reportResult.map((r) => r.acceptance)[0],
+      this.reportResult.map((r) => r.rejection)[0],
+      this.reportResult.map((r) => r.leadership)[0]
+    ];
+    this.chart.type = 'pie';
+    this.chart.legend = true;
+    this.chart.colors = [
+      {
+        backgroundColor: ['rgba(33,206,47,1)', 'rgba(214,48,29,1)', 'rgba(2,48,71,1)']
+      }
+    ];
+    this.chart.options = {
+      responsive: true,
+      legend: { position: 'top' },
+      plugins: {
+        datalabels: {
+          formatter: (ctx) => {
+            const label = ctx.chart.data.labels[ctx.dataIndex];
+            return label;
+          }
+        }
+      }
     };
   }
 }
