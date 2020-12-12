@@ -105,9 +105,9 @@
                 <nz-empty *ngIf="reportResult.length === 0" nzNotFoundContent="No se encontraron resultados"></nz-empty>
 
                 <ng-container *ngIf="reportResult.length > 0">
-                    <div nz-row>
+                    <div nz-row [nzGutter]="[20, 20]">
 
-                        <div nz-col nzSpan="12">
+                        <div nz-col [nzSpan]="reportResult.length >= 5 ? 24 : 12">
                             <canvas *ngIf="chart" baseChart
                                 [datasets]="chart.datasets"
                                 [data]="chart.data"
@@ -119,7 +119,7 @@
                             </canvas>
                         </div>
 
-                        <div nz-col nzSpan="12">
+                        <div nz-col [nzSpan]="reportResult.length >= 5 ? 24 : 12">
 
                             <div nz-row [nzJustify]="'end'">
                                 <a style="cursor: pointer" (click)="exportExcel()">
