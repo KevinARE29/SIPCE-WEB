@@ -11,7 +11,7 @@
                     <i nz-icon nzType="left" nzTheme="outline"></i>
                 </a>
 
-                {{selectedExpedientExists ? selectedExpedient.expedientGrade : 'Abrir expediente'}}
+                {{selectedExpedientExists ? selectedExpedient.expedientGrade : 'Abrir expediente ' + currentYear }}
 
                 <a nz-button nzType="link" [disabled]="selectedExpedientIsFirst" (click)="setSelectedExpedient(this.selectedExpedientIndex - 1)">
                     <i nz-icon nzType="right" nzTheme="outline"></i>
@@ -19,7 +19,7 @@
             </p>
         </div>
 
-        <div nz-col>
+        <div nz-col nzXs="24" nzMd="6" nzLg="4" nzXl="3">
             <button *ngIf="selectedExpedientExists" nz-button nzGhost [nzLoading]="loadingReport" nzType="primary" (click)="setShowReportModal(true)">Generar reporte</button>
         </div>
     </div>
@@ -31,6 +31,7 @@
                             [studentId]="studentId"
                             [expedient]="selectedExpedientExists ? selectedExpedient : null"
                             [isEditable]="selectedExpedientIsEditable"
+                            [currentYear]="currentYear"
                             (initEditing)="setEditing(true)"
         ></app-expedient-view>
 

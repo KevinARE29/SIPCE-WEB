@@ -15,6 +15,9 @@ export class ExpedientViewComponent implements OnChanges {
   @Input() studentId: number;
   @Output() initEditing = new EventEmitter<void>();
 
+  // Current year, to add it to labels.
+  @Input() currentYear: number;
+
   // Edit final comment.
   editing = false;
   loadingAction = false;
