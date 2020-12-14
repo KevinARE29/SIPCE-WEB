@@ -28,3 +28,13 @@
         <p class="counter">{{sessionsCounter.parentsInterviewCounter}}</p>
     </div>
 </div>
+
+<br>
+
+<div nz-row nzJustify="center">  
+    <div nz-col>
+        <a nz-button nzType="primary" [routerLink]="['/expedientes/estudiantes', this.expedientId, this.studentId, 'sesiones']">
+            Ver sesiones
+        </a>
+    </div>
+</div>
