@@ -80,7 +80,7 @@
             "name": "Nombre"
         },
         "presets": {},
-        "sessions": {},
+        "expedients": {},
         "sociometric-tests": {
             "email": "Correo electrónico",
             "password": "Contraseña",
@@ -91,6 +91,8 @@
             "description": "Descripción",
             "numeral": "Numeral de la falta",
             "fousType": "Tipo de la falta"
-        }
+        },
+        "reports": {},
+        "history": {}
     }
 }
