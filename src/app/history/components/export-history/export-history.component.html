@@ -3,11 +3,11 @@
     <!-- Header -->
     <div nz-row nzGutter="20">
         <div nz-col>
-            <img class="logo" src="assets/logo-maristas-color.png" alt="">
+            <img class="logo" [src]="logo" alt="Logo">
         </div>
 
         <div nz-col nzSpan="9">
-            <h2 class="document-institution text-blue">LICEO SALVADOREÑO</h2>
+            <h2 class="document-institution text-blue">{{ name | uppercase }}</h2>
             <h3>Historial académico y conductual</h3>
             <p class="text-blue-light">Fecha: {{data.date}}</p>
         </div>

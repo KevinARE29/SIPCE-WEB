@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { environment } from 'src/environments/environment';
+
 import { SessionService } from 'src/app/expedients/shared/session.service';
 import { StudentWithSession } from 'src/app/expedients/shared/student-with-session.model';
 
@@ -10,6 +12,9 @@ import { StudentWithSession } from 'src/app/expedients/shared/student-with-sessi
   styleUrls: ['./export-resposibles-interview.component.css']
 })
 export class ExportResposiblesInterviewComponent implements OnInit {
+  logo: string;
+  name: string;
+
   // Param.
   studentId: number;
   expedientId: number;
@@ -21,7 +26,10 @@ export class ExportResposiblesInterviewComponent implements OnInit {
   sessionStartDate: string;
   sessionEndDate: Date;
 
-  constructor(private route: ActivatedRoute, private router: Router, private sessionService: SessionService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private sessionService: SessionService) {
+    this.logo = environment.logo;
+    this.name = environment.name;
+  }
 
   ngOnInit(): void {
     const token = this.route.snapshot.queryParams['token'];

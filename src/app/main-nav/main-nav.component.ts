@@ -9,6 +9,7 @@ import { Component, OnInit, AfterContentChecked } from '@angular/core';
 import { Router } from '@angular/router';
 
 import MenuJson from '../../assets/menu.json';
+import { environment } from 'src/environments/environment';
 import { AuthService } from '../login/shared/auth.service';
 import { Permission } from '../shared/permission.model';
 
@@ -37,7 +38,7 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
   avatar: string;
   username: string;
   year: number;
-  dot = true;
+  logo: string;
 
   startDate: Date;
   tomorrowDate: Date;
@@ -54,7 +55,9 @@ export class MainNavComponent implements OnInit, AfterContentChecked {
     private socketService: SocketioService,
     private authService: AuthService,
     private eventService: EventService
-  ) {}
+  ) {
+    this.logo = environment.whiteLogo;
+  }
 
   ngOnInit(): void {
     this.year = new Date().getFullYear();

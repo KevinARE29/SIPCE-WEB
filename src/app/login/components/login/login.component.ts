@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { environment } from 'src/environments/environment';
+
 import { AuthService } from '../../shared/auth.service';
 
 @Component({
@@ -10,11 +12,14 @@ import { AuthService } from '../../shared/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  logo: string;
   userLogin: FormGroup;
   errorMessage: boolean;
   btnLoading = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {}
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+    this.logo = environment.whiteLogo;
+  }
 
   ngOnInit(): void {
     this.userLogin = this.fb.group({

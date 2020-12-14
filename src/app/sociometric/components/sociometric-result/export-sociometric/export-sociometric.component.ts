@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { environment } from 'src/environments/environment';
+
 import { SociometricResultService } from 'src/app/sociometric/shared/sociometric-result/sociometric-result.service';
 import { SociometricResult } from 'src/app/sociometric/shared/sociometric-result/sociometric-result.model';
 
@@ -10,6 +12,9 @@ import { SociometricResult } from 'src/app/sociometric/shared/sociometric-result
   styleUrls: ['./export-sociometric.component.css']
 })
 export class ExportSociometricComponent implements OnInit {
+  logo: string;
+  name: string;
+
   // Param.
   testId: number;
 
@@ -33,7 +38,10 @@ export class ExportSociometricComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private sociometricService: SociometricResultService
-  ) {}
+  ) {
+    this.logo = environment.logo;
+    this.name = environment.name;
+  }
 
   ngOnInit(): void {
     const token = this.route.snapshot.queryParams['token'];
