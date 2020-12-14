@@ -149,7 +149,7 @@ export class HistoryService {
   private handleError() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (error: any) => {
-      error.error.message = this.errorMessageService.transformMessage('sessions', error.error.message);
+      error.error.message = this.errorMessageService.transformMessage('history', error.error.message);
       return throwError(error.error);
     };
   }
