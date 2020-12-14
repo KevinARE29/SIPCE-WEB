@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { environment } from 'src/environments/environment';
+
 import { ExpedientService } from 'src/app/expedients/shared/expedient.service';
 import { StudentWithExpedient } from 'src/app/expedients/shared/student-with-expedient.model';
 
@@ -10,6 +12,9 @@ import { StudentWithExpedient } from 'src/app/expedients/shared/student-with-exp
   styleUrls: ['./export-expedient.component.css']
 })
 export class ExportExpedientComponent implements OnInit {
+  logo: string;
+  name: string;
+
   // Param.
   studentId: number;
   expedientId: number;
@@ -29,7 +34,10 @@ export class ExportExpedientComponent implements OnInit {
 
   filters: string[] = [];
 
-  constructor(private route: ActivatedRoute, private router: Router, private expedientService: ExpedientService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private expedientService: ExpedientService) {
+    this.logo = environment.logo;
+    this.name = environment.name;
+  }
 
   ngOnInit(): void {
     const token = this.route.snapshot.queryParams['token'];

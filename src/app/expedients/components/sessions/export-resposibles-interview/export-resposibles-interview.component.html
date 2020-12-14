@@ -1,10 +1,10 @@
 <div *ngIf="!loadingData" class="ant-card-body">
     <div nz-row nzGutter="30">
         <div nz-col nzOffset="1">
-            <img class="logo" src="assets/logo-maristas-color.png" alt="">
+            <img class="logo" [src]="logo" alt="Logo">
         </div>
         <div nz-col>
-            <h2 class="document-institution">LICEO SALVADOREÑO</h2>
+            <h2 class="document-institution">{{ name | uppercase }}</h2>
             <h3>ASISTENCIA A ENTREVISTA PADRES DE FAMILIA</h3>
 
             <div nz-row nzGutter="20">
