@@ -44,7 +44,7 @@ export class FoulsSanctionsService {
 
         return data;
       }),
-      catchError(this.handleError)
+      catchError(this.handleError())
     );
   }
 
@@ -106,7 +106,7 @@ export class FoulsSanctionsService {
 
     url += queryParams;
 
-    return this.http.get<FoulAssignation[]>(url).pipe(catchError(this.handleError));
+    return this.http.get<FoulAssignation[]>(url).pipe(catchError(this.handleError()));
   }
 
   saveAssignation(studentId: number, historyId: number, assignation: FoulAssignation): Observable<FoulAssignation> {
