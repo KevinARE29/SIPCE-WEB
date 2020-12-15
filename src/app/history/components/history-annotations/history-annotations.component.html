@@ -28,9 +28,9 @@
     <div nz-col nzXs="24" nzSm="12" nzLg="8" nzXl="5">
         <label>Persona que reporta: </label>
         <nz-input-group>
-            <nz-select nzShowSearch nzAllowClear [(ngModel)]="search.reporter.firstname"
+            <nz-select nzShowSearch nzAllowClear [(ngModel)]="search.reporter.id"
                 (ngModelChange)="getAnnotations(null)" nzPlaceHolder="Seleccionar" [nzLoading]="loadingUsers">
-                <nz-option *ngFor="let user of userResults" [nzValue]="user.firstname" [nzLabel]="user.firstname + ' ' + user.lastname">
+                <nz-option *ngFor="let user of userResults" [nzValue]="user.id" [nzLabel]="user.firstname + ' ' + user.lastname">
                 </nz-option>
             </nz-select>
         </nz-input-group>

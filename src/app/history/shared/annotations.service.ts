@@ -57,7 +57,7 @@ export class AnnotationsService {
     }
 
     if (search) {
-      if (search.reporter.firstname) queryParams += '&reporter=' + search.reporter.firstname;
+      if (search.reporter.id) queryParams += '&reporter=' + search.reporter.id;
 
       if (search.title) queryParams += '&title=' + search.title;
 
