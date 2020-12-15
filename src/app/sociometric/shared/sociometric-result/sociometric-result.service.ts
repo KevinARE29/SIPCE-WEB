@@ -71,14 +71,6 @@ export class SociometricResultService {
         const data: SociometricResult = r['data'];
         data.date = format(new Date(), 'd/MMMM/yyyy', { locale: es });
 
-        // Fix: when there is not questionBank but there is groupal data.
-        if (!data.questionBank && data.generalReports) {
-          data.questionBank = new QuestionBank();
-          data.questionBank.questions = data.individualReports
-            ? data.individualReports[0].questions.map((q) => q.question)
-            : [];
-        }
-
         return data;
       }),
       catchError(this.handleError())
