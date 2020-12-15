@@ -133,12 +133,18 @@
         <div nz-col nzSpan="24">
             
             <div nz-row [nzGutter]="[30, 30]">
+                <div nz-col nzSpan="8" *ngIf="data.user.id !== data.behavioralHistory.authorId">
+                    <nz-divider class="signature-divider"></nz-divider>
+                    {{data.user.firstname}} {{data.user.lastname}}<br>
+                </div>
+
                 <div nz-col nzSpan="8">
                     <nz-divider class="signature-divider"></nz-divider>
                     {{data.behavioralHistory.author}} <br>
                     Docente títular
                 </div>
             </div>
+
         </div>
     </div>
     <!-- / Signatures -->
