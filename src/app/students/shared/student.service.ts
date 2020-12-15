@@ -35,13 +35,17 @@ export class StudentService {
     params: NzTableQueryParams,
     search: Student,
     isActive: boolean,
-    paginate: boolean
+    paginate: boolean,
+    getAll = false
   ): Observable<Student[]> {
     let url = this.baseUrl + 'students';
     let queryParams = '';
 
-    // Paginate?
+    // Paginate? Add page param.
     if (paginate) queryParams += '?page=' + params.pageIndex;
+
+    // getAll? set paginate = false.
+    if (getAll) queryParams += '?paginate=false';
 
     // Params
     if (params) {
