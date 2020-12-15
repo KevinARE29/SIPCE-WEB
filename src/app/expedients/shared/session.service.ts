@@ -214,7 +214,7 @@ export class SessionService {
   private handleError() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (error: any) => {
-      error.error.message = this.errorMessageService.transformMessage('sessions', error.error.message);
+      error.error.message = this.errorMessageService.transformMessage('expedients', error.error.message);
       return throwError(error.error);
     };
   }

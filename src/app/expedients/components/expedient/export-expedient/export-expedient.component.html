@@ -3,11 +3,11 @@
     <!-- Header -->
     <div nz-row nzGutter="30">
         <div nz-col nzOffset="1">
-            <img class="logo" src="assets/logo-maristas-color.png" alt="">
+            <img class="logo" [src]="logo" alt="Logo">
         </div>
 
         <div nz-col nzSpan="8">
-            <h2 class="document-institution text-blue">LICEO SALVADOREÑO</h2>
+            <h2 class="document-institution text-blue">{{ name | uppercase }}</h2>
             <h3>Expediente psicológico</h3>
             <p class="text-blue-light">Fecha: {{data.date}}</p>
         </div>

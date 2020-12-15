@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { environment } from 'src/environments/environment';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 import { WelcomeService } from '../../shared/welcome.service';
@@ -11,6 +12,7 @@ import { WelcomeService } from '../../shared/welcome.service';
   styleUrls: ['./welcome.component.css']
 })
 export class WelcomeComponent implements OnInit {
+  logo: string;
   btnLoading = false;
   counselingConsultationForm!: FormGroup;
 
@@ -18,7 +20,9 @@ export class WelcomeComponent implements OnInit {
     private fb: FormBuilder,
     private notification: NzNotificationService,
     private welcomeService: WelcomeService
-  ) {}
+  ) {
+    this.logo = environment.whiteLogo;
+  }
 
   ngOnInit(): void {
     const emailPattern = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);

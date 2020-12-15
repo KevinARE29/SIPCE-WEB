@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { environment } from 'src/environments/environment';
+
 import { HistoryService } from 'src/app/history/shared/history.service';
 import { StudentWithHistory } from 'src/app/history/shared/student-with-history.model';
 
@@ -10,6 +12,9 @@ import { StudentWithHistory } from 'src/app/history/shared/student-with-history.
   styleUrls: ['./export-history.component.css']
 })
 export class ExportHistoryComponent implements OnInit {
+  logo: string;
+  name: string;
+
   // Param.
   studentId: number;
   historyId: number;
@@ -23,7 +28,10 @@ export class ExportHistoryComponent implements OnInit {
 
   filters: string[] = [];
 
-  constructor(private route: ActivatedRoute, private router: Router, private historyService: HistoryService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private historyService: HistoryService) {
+    this.logo = environment.logo;
+    this.name = environment.name;
+  }
 
   ngOnInit(): void {
     const token = this.route.snapshot.queryParams['token'];
