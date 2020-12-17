@@ -71,10 +71,10 @@
                                         <a nz-row nzJustify="center" (click)="selectStudent(student)">
                                             <nz-badge [nzCount]="student.position" [nzOffset]="[-10, 8]" [nzStyle]="{ backgroundColor: '#ef6c00' }">
                                                 <ng-container *ngIf="student.currentPhoto; else defaultPhoto">
-                                                    <nz-avatar [ngClass]="{'selected': student.position != 0}" [nzSize]="75" [nzSrc]="student.currentPhoto['path']"></nz-avatar>
+                                                    <nz-avatar [ngClass]="{'selected': student.position != 0}" [nzSize]="110" [nzSrc]="student.currentPhoto['path']"></nz-avatar>
                                                 </ng-container>
                                                 <ng-template #defaultPhoto>
-                                                    <nz-avatar [ngClass]="{'selected': student.position != 0}" [nzSize]="75" nzIcon="user"></nz-avatar>
+                                                    <nz-avatar [ngClass]="{'selected': student.position != 0}" [nzSize]="110" nzIcon="user"></nz-avatar>
                                                 </ng-template>
                                             </nz-badge>
                                         </a>
