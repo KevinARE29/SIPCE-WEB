@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -300,6 +301,17 @@ export class CsvToJsonService {
                 field.message = null;
               }
             }
+          } else if (validate.value.includes('length')) {
+            if (!this.fieldLength(field.value, validate.value)) {
+              field.isValid = false;
+              field.message = validate.message;
+              flag = false;
+            } else {
+              if (flag) {
+                field.isValid = true;
+                field.message = null;
+              }
+            }
           }
           break;
       }
@@ -356,6 +368,11 @@ export class CsvToJsonService {
   maxlength(field, limit) {
     const max = limit.split(',');
     return field.length <= max[1];
+  }
+
+  fieldLength(field, limit) {
+    const max = limit.split(',');
+    return field.length == max[1];
   }
 
   replaceAccents(text: string): string {
