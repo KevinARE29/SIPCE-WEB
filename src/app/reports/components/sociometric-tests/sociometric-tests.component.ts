@@ -115,7 +115,7 @@ export class SociometricTestsComponent implements OnInit {
   getStudents(): void {
     this.loading = true;
 
-    this.studentService.getStudents(null, this.searchParams, true, false).subscribe(
+    this.studentService.getStudents(null, this.searchParams, true, false, true).subscribe(
       (data) => {
         const results: Student[] = data['data'];
 

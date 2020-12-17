@@ -30,6 +30,7 @@ export class Expedient {
   evaluations: Evaluation[];
 
   sessionsCounter: SessionsCounter;
+  createdAt: Date;
 
   // Report fields
   sessions: Session[];

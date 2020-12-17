@@ -102,6 +102,7 @@ export class ExpedientService {
         data.student.section = data.student['sectionDetails'] ? data.student['sectionDetails'][0].section : null;
         data.student.age = differenceInYears(new Date(), new Date(data.student.birthdate));
         data.expedient = this.mapExpedient(data.expedient);
+        data.expedient.createdAtString = format(new Date(data.expedient.createdAt), 'd/MMMM/yyyy', { locale: es });
 
         // data.expedient.createdAtString = format(new Date(data.expedient['createdAt']), 'd/MMMM/yyyy', { locale: es });
         data.expedient.expedientYear = data.expedient.expedientGrade.substring(
