@@ -159,8 +159,8 @@
                         "value": "number",
                         "message": "El NIE debe ser un número"
                     }, {
-                        "value": "maxlength,8",
-                        "message": "La longitud máxima es de 8 caracteres"
+                        "value": "length,8",
+                        "message": "El NIE se compone de 8 dígitos"
                     }
                 ]
             },
