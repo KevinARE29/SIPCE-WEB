@@ -15,8 +15,9 @@ const routes: Routes = [
   },
   {
     path: 'prueba-sociometrica',
-    component: SociometricTestComponent
-    // Avoid access 
+    component: SociometricTestComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 0 }
   }
 ];
 
