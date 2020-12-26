@@ -60,3 +60,7 @@ nz-collapse-panel p{
 .gray-bg {
     background-color: rgb(211, 211, 211);
 }
+
+.red {
+    color: red;
+}
