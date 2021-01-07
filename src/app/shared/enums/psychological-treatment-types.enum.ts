@@ -1,7 +1,12 @@
 export enum PsychologicalTreatmentTypes {
-  'Tratamiento 1',
-  'Tratamiento 2',
-  'Tratamiento 3',
-  'Tratamiento 4',
+  'Tratamiento con neurólogo',
+  'Tratamiento con psiquiatra',
+  'Tratamiento medicina general',
+  'Psicoterapia',
+  'Terapia del lenguaje',
+  'Terapia psicopedagógica',
+  'Terapia multisensorial',
+  'Terapia en aula de apoyo',
+  'Refuerzo escolar',
   OTRO = 'Otro'
 }
