@@ -58,9 +58,9 @@
 
     <div nz-row class="not-break-inside">
         <div nz-col nzSpan="12" *ngIf="filters.includes('externalPsychologicalTreatments')">
-            <p><strong class="text-blue-light">Tratamientos psicológicos externos</strong></p>
+            <p><strong class="text-blue-light">Tratamientos externos</strong></p>
             <p *ngIf="!data.expedient.externalPsychologicalTreatments || data.expedient.externalPsychologicalTreatments.length === 0">
-                No se han registrado tratamientos psicológicos externos
+                No se han registrado tratamientos externos
             </p>
             <ul>
                 <li *ngFor="let treatment of data.expedient.externalPsychologicalTreatments">{{treatment}}</li>
