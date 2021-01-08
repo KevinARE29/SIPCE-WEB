@@ -97,7 +97,16 @@ export class DashboardService {
         studentsByShiftAndGrade.legend = true;
         studentsByShiftAndGrade.options = {
           responsive: true,
-          legend: { position: 'right' }
+          legend: { position: 'right' },
+          scales: {
+            xAxes: [
+              {
+                ticks: {
+                  beginAtZero: true
+                }
+              }
+            ]
+          }
         };
         response['studentsByCurrentShiftAndGrade'] = response['studentsByCurrentShiftAndGrade'].sort(
           (a, b) => a.gradeId - b.gradeId
