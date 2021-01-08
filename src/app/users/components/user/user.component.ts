@@ -84,28 +84,28 @@ export class UserComponent implements OnInit {
 
       const newUserForm = this.fb.group({
         code: [null, [Validators.required, Validators.maxLength(32), Validators.pattern('[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$')]],
-        username: [null, [Validators.required, Validators.maxLength(64), Validators.pattern('[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$')]],
+        username: [null, [Validators.required, Validators.maxLength(32), Validators.pattern('[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$')]],
         firstname: [
           null,
-          [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+          [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
         ],
         lastname: [
           null,
-          [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+          [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
         ],
         email: [null, [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]]
       });
 
       const updateUserForm = this.fb.group({
         code: [null, [Validators.required]],
-        username: [null, [Validators.required, Validators.maxLength(64), Validators.pattern('[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$')]],
+        username: [null, [Validators.required, Validators.maxLength(32), Validators.pattern('[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$')]],
         firstname: [
           null,
-          [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+          [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
         ],
         lastname: [
           null,
-          [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+          [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
         ],
         email: [null, [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]]
       });
@@ -178,7 +178,7 @@ export class UserComponent implements OnInit {
             'error',
             'Ocurrió un error al obtener al usuario. Por favor verifique lo siguiente:',
             err.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
       }
@@ -228,7 +228,7 @@ export class UserComponent implements OnInit {
             'error',
             'Ocurrió un error al crear el usuario. Por favor verifique lo siguiente:',
             err.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
 
@@ -259,7 +259,7 @@ export class UserComponent implements OnInit {
             'error',
             'Ocurrió un error al actualizar al usuario. Por favor verifique lo siguiente:',
             err.message,
-            { nzDuration: 0 }
+            { nzDuration: 30000 }
           );
         }
 
@@ -338,6 +338,7 @@ export class UserComponent implements OnInit {
   }
 
   filterOption(inputValue: string, item: any): boolean {
-    return item.description.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
+    return item.title.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+            || item.description.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
   }
 }

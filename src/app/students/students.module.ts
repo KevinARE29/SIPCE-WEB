@@ -10,6 +10,7 @@ import { StudentsComponent } from './components/students/students.component';
 import { NewStudentComponent } from './components/new-student/new-student.component';
 import { StudentComponent } from './components/student/student.component';
 import { UpdateStudentComponent } from './components/update-student/update-student.component';
+import { StudentsAssignmentComponent } from './components/students-assignment/students-assignment.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { UpdateStudentComponent } from './components/update-student/update-stude
     StudentsComponent,
     NewStudentComponent,
     StudentComponent,
-    UpdateStudentComponent
+    UpdateStudentComponent,
+    StudentsAssignmentComponent
   ],
   imports: [CommonModule, ReactiveFormsModule, AntDesignModule, StudentsRoutingModule]
 })

@@ -1,0 +1,34 @@
+nz-divider i {
+    cursor: pointer;
+}
+
+:host >>> .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.65);
+}
+
+nz-collapse {
+    background: transparent;
+}
+
+nz-collapse-panel p{
+    margin: 0;
+}
+
+.evaluations {
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.btn-editing-conclusion {
+    text-align: right;
+}
+
+.btn-cancel-editing {
+    margin-right: 10px;
+    color: gray;
+}

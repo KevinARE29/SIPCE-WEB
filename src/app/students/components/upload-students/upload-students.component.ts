@@ -8,8 +8,8 @@ import { UploadFile } from 'ng-zorro-antd/upload';
 
 import DictionaryJson from './../../../../assets/dictionary.json';
 import { CsvToJsonService } from 'src/app/shared/csv-to-json.service';
-import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
-import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
+import { GradeService } from 'src/app/academic-catalogs/shared/grade.service';
+import { ShiftService } from 'src/app/academic-catalogs/shared/shift.service';
 import { StudentService } from '../../shared/student.service';
 
 @Component({
@@ -119,7 +119,7 @@ export class UploadStudentsComponent implements OnInit {
               'Ocurrió un error al intentar cargar el archivo.',
               'Verifique que las columnas ingresadas correspondan a las esperadas. O que el archivo tenga datos.',
               {
-                nzDuration: 0
+                nzDuration: 30000
               }
             );
 
@@ -131,7 +131,7 @@ export class UploadStudentsComponent implements OnInit {
         },
         (error) => {
           this.notification.create('error', 'Ocurrió un error al intentar cargar el archivo.', error, {
-            nzDuration: 0
+            nzDuration: 30000
           });
         }
       );
@@ -303,7 +303,7 @@ export class UploadStudentsComponent implements OnInit {
         'No se puede proceder con la carga de datos.',
         'Se han detectado errores dentro del contenido de la tabla. Por favor corríjalos para continuar.',
         {
-          nzDuration: 0
+          nzDuration: 30000
         }
       );
     } else {
@@ -325,7 +325,7 @@ export class UploadStudentsComponent implements OnInit {
         if (!notIn.includes(error.statusCode) && error.statusCode < 500) {
           this.message.warning(
             'Se encontraron errores en algunos registros, si desea subirlos corríjalos e intente nuevamente.',
-            { nzDuration: 4500 }
+            { nzDuration: 30000 }
           );
         }
 

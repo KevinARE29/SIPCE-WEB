@@ -22,7 +22,6 @@ export class SchoolYearComponent implements OnInit {
   loading = false;
   previousSchoolYear: SchoolYear;
   schoolYear: SchoolYear;
-  cacheSchoolYear: SchoolYear;
   catalogs: Catalogs;
 
   // No active or draft school year
@@ -64,7 +63,6 @@ export class SchoolYearComponent implements OnInit {
 
         // School Year
         this.schoolYear = data['schoolYear'][0];
-        this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
 
         // Catalogs
         this.catalogs.shifts = data['shifts']['data'].filter((x) => x.active === true).sort((a, b) => a.id - b.id);
@@ -92,7 +90,9 @@ export class SchoolYearComponent implements OnInit {
   initializeShifts(): void {
     if (this.schoolYear.shifts.length === 0) {
       this.catalogs.shifts.forEach((shift) => {
-        const _shift = this.previousSchoolYear.shifts.find((x) => x['shift']['id'] === shift.id);
+        let _shift =  null;
+        
+        if (this.previousSchoolYear['id']) _shift = this.previousSchoolYear.shifts.find((x) => x['shift']['id'] === shift.id);
 
         if (_shift) this.schoolYear.shifts.push(_shift);
         else {
@@ -110,16 +110,15 @@ export class SchoolYearComponent implements OnInit {
         }
       });
     }
-
-    this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
   }
 
   initializeCycleCoordinators(): void {
     this.checkEmptyCoordinators();
 
-    if (this.emptyUsers['total'] === this.emptyUsers['empty']) {
+    if (this.emptyUsers['total'] === this.emptyUsers['empty'] && this.previousSchoolYear['id']) {
       this.previousSchoolYear.shifts.forEach((shift) => {
         const _shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === shift['shift']['id']);
+
         shift['shift']['cycles'].forEach((cycle) => {
           const _cycle = _shift['shift']['cycles'].find((x) => x['cycle']['id'] === cycle['cycle']['id']);
           _cycle['cycleCoordinator'] = cycle['cycleCoordinator'];
@@ -131,14 +130,12 @@ export class SchoolYearComponent implements OnInit {
         });
       });
     }
-
-    this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
   }
 
   initializeHeadTeachers(): void {
     this.checkEmptyHeadTeachers();
 
-    if (this.emptyUsers['total'] === this.emptyUsers['empty']) {
+    if (this.emptyUsers['total'] === this.emptyUsers['empty'] && this.previousSchoolYear['id']) {
       this.previousSchoolYear.shifts.forEach((shift) => {
         const _shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === shift['shift']['id']);
 
@@ -166,15 +163,13 @@ export class SchoolYearComponent implements OnInit {
           });
         });
       });
-
-      this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
     }
   }
 
   initializeCounselors(): void {
     this.checkEmptyCounselors();
     
-    if (this.emptyUsers['total'] === this.emptyUsers['empty']) {
+    if (this.emptyUsers['total'] === this.emptyUsers['empty'] && this.previousSchoolYear['id']) {
       this.previousSchoolYear.shifts.forEach((shift) => {
         const _shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === shift['shift']['id']);
 
@@ -197,8 +192,6 @@ export class SchoolYearComponent implements OnInit {
         });
       });
     }
-  
-    this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
   }
 
   //#region New school year
@@ -246,7 +239,7 @@ export class SchoolYearComponent implements OnInit {
 
             if (!notIn.includes(statusCode) && statusCode < 500) {
               this.notification.create('error', 'Ocurrió un error al intentar aperturar el año escolar.', err.message, {
-                nzDuration: 0
+                nzDuration: 30000
               });
             }
           })
@@ -297,6 +290,10 @@ export class SchoolYearComponent implements OnInit {
             });
 
             shift['shift']['cycles'].push(newCycle);
+          } else if (actualCycle) {
+            if (!actualCycle['gradeDetails'].length) {
+              shift['shift']['cycles'] = shift['shift']['cycles'].filter((x) => x['cycle']['id'] !== actualCycle['cycle'].id);
+            }
           }
         } else {
           if (content['field'] && !newCycle) {
@@ -404,6 +401,15 @@ export class SchoolYearComponent implements OnInit {
       
     }
   }
+
+  updateTeachers(content: unknown): void {
+    const shift = this.schoolYear.shifts.find((x) => x['shift']['id'] === content['shift']['id']);
+    const cycle = shift['shift']['cycles'].find((x) => x['cycle'].id === content['grade']['cycle']['id']);
+    const grade = cycle['gradeDetails'].find((x) => x['grade'].id === content['grade']['grade']['id']);
+    const section = grade['sectionDetails'].find((x) => x['section'].id === content['section']['section']['id']);
+
+    section['auxTeachers'] = content['aux_teachers'] ? content['aux_teachers'] : new Array<User>();
+  }
   //#endregion
 
   //#region Steps
@@ -456,14 +462,14 @@ export class SchoolYearComponent implements OnInit {
   
               if (!notIn.includes(statusCode) && statusCode < 500) {
                 this.notification.create('error', 'Ocurrió un error al aperturar el año escolar.', err.message, {
-                  nzDuration: 0
+                  nzDuration: 30000
                 });
               }
             })
       });
     } else {
       this.notification.create('error', 'Ocurrió un error al aperturar el año escolar. Verifique lo siguiente: ', errorMessage, {
-        nzDuration: 0
+        nzDuration: 30000
       });
     }
   }
@@ -493,7 +499,7 @@ export class SchoolYearComponent implements OnInit {
   academicAssignmentsStep(next: boolean): void {
     let emptyShifts = false;
     this.schoolYear.shifts.forEach((shift) => {
-      if (!shift['shift']['cycles']) emptyShifts = true;
+      if (!shift['shift']['cycles'].length) emptyShifts = true;
     });
     if (!emptyShifts) {
       this.loading = true;
@@ -511,7 +517,6 @@ export class SchoolYearComponent implements OnInit {
 
           this.loading = false;
           this.message.success(`La asignación de ciclos, grados y secciones se ha guardado con éxito`);
-          this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
           if (next) this.currentStep += 1;
         },
         (error) => {
@@ -519,11 +524,11 @@ export class SchoolYearComponent implements OnInit {
           const notIn = [401, 403];
           if (!notIn.includes(statusCode) && statusCode < 500) {
               this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
-              nzDuration: 0
+              nzDuration: 30000
             });
           } else if (typeof error === 'string') {
             this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
-              nzDuration: 0
+              nzDuration: 30000
             });
           }
           this.loading = false;
@@ -535,7 +540,7 @@ export class SchoolYearComponent implements OnInit {
         'Uno o más turnos vacíos.',
         'Debe asignar al menos un grado a algún ciclo para poder continuar',
         {
-          nzDuration: 15000
+          nzDuration: 30000
         }
       );
     }
@@ -546,42 +551,38 @@ export class SchoolYearComponent implements OnInit {
     if (this.emptyUsers['empty'] > 0 && this.emptyUsers['valid']) this.emptyUsers['valid'] = false;
 
     if (this.emptyUsers['valid']) {
-      if (JSON.stringify(this.schoolYear) !== JSON.stringify(this.cacheSchoolYear)) {
-        this.loading = true;
-        this.schoolYearService.saveCycleCoordinators(this.schoolYear).subscribe(
-          () => {
-            this.loading = false;
-            this.message.success(`La asignación de coordinadores se ha guardado con éxito`);
-            this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
-            next ? (this.currentStep += 1) : (this.currentStep -= 1);
-          },
-          (error) => {
-            const statusCode = error.statusCode;
-            const notIn = [401, 403];
-            if (!notIn.includes(statusCode) && statusCode < 500) {
-              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
-                nzDuration: 0
-              });
-            } else if (typeof error === 'string') {
-              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
-                nzDuration: 0
-              });
-            }
-            this.loading = false;
+      this.loading = true;
+      this.schoolYearService.saveCycleCoordinators(this.schoolYear).subscribe(
+        () => {
+          this.loading = false;
+          this.message.success(`La asignación de coordinadores se ha guardado con éxito`);
+          next ? (this.currentStep += 1) : (this.currentStep -= 1);
+        },
+        (error) => {
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
+              nzDuration: 30000
+            });
+          } else if (typeof error === 'string') {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
+              nzDuration: 30000
+            });
           }
-        );
-      } else {
-        next ? (this.currentStep += 1) : (this.currentStep -= 1);
-      }
+          this.loading = false;
+        }
+      );
     } else {
       this.notification.create(
         'error',
         'Error en la asignación de coordinadores.',
         'Verifique que los valores ingresados en todos los turnos son correctos, no se permiten campos vacíos.',
         {
-          nzDuration: 15000
+          nzDuration: 30000
         }
       );
+      this.loading = false;
     }
   }
 
@@ -590,84 +591,98 @@ export class SchoolYearComponent implements OnInit {
     if (this.emptyUsers['empty'] > 0 && this.emptyUsers['valid']) this.emptyUsers['valid'] = false;
 
     if (this.emptyUsers['valid']) {
-      if (JSON.stringify(this.schoolYear) !== JSON.stringify(this.cacheSchoolYear)) {
-        this.loading = true;
-        this.schoolYearService.saveHeadteachers(this.schoolYear).subscribe(
-          () => {
-            this.loading = false;
-            this.message.success(`La asignación de docentes titulares se ha guardado con éxito`);
-            this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
-            next ? (this.currentStep += 1) : (this.currentStep -= 1);
-          },
-          (error) => {
-            const statusCode = error.statusCode;
-            const notIn = [401, 403];
-            if (!notIn.includes(statusCode) && statusCode < 500) {
-              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
-                nzDuration: 0
-              });
-            } else if (typeof error === 'string') {
-              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
-                nzDuration: 0
-              });
-            }
-            this.loading = false;
+      this.loading = true;
+      this.schoolYearService.saveHeadteachers(this.schoolYear).subscribe(
+        () => {
+          this.loading = false;
+          this.message.success(`La asignación de docentes titulares se ha guardado con éxito`);
+          next ? (this.currentStep += 1) : (this.currentStep -= 1);
+        },
+        (error) => {
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
+              nzDuration: 30000
+            });
+          } else if (typeof error === 'string') {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
+              nzDuration: 30000
+            });
           }
-        );
-      } else {
-        next ? (this.currentStep += 1) : (this.currentStep -= 1);
-      }
+          this.loading = false;
+        }
+      );
     } else {
       this.notification.create(
         'error',
         'Error en la asignación de docentes titulares.',
         'Verifique que los valores ingresados en todos los turnos son correctos, no se permiten campos vacíos.',
         {
-          nzDuration: 15000
+          nzDuration: 30000
         }
       );
     }
   }
+
+  teachersTab(): void {
+      this.loading = true;
+      this.schoolYearService.saveTeachers(this.schoolYear).subscribe(
+        () => {
+          this.loading = false;
+          this.message.success(`La asignación de docentes auxiliares se ha guardado con éxito`);
+        },
+        (error) => {
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
+              nzDuration: 30000
+            });
+          } else if (typeof error === 'string') {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
+              nzDuration: 30000
+            });
+          }
+          this.loading = false;
+        }
+      );
+    }
 
   counselorsStep(next: boolean): void {
     this.checkEmptyCounselors();
     if (this.emptyUsers['empty'] > 0 && this.emptyUsers['valid']) this.emptyUsers['valid'] = false;
 
     if (this.emptyUsers['valid']) {
-      if (JSON.stringify(this.schoolYear) !== JSON.stringify(this.cacheSchoolYear)) {
-        this.loading = true;
-        this.schoolYearService.saveCounselors(this.schoolYear).subscribe(
-          () => {
-            this.loading = false;
-            this.message.success(`La asignación de orientadores se ha guardado con éxito`);
-            this.cacheSchoolYear = JSON.parse(JSON.stringify(this.schoolYear));
-            next ? (this.currentStep += 1) : (this.currentStep -= 1);
-          },
-          (error) => {
-            const statusCode = error.statusCode;
-            const notIn = [401, 403];
-            if (!notIn.includes(statusCode) && statusCode < 500) {
-              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
-                nzDuration: 0
-              });
-            } else if (typeof error === 'string') {
-              this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
-                nzDuration: 0
-              });
-            }
-            this.loading = false;
+      this.loading = true;
+      this.schoolYearService.saveCounselors(this.schoolYear).subscribe(
+        () => {
+          this.loading = false;
+          this.message.success(`La asignación de orientadores se ha guardado con éxito`);
+          next ? (this.currentStep += 1) : (this.currentStep -= 1);
+        },
+        (error) => {
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error.message, {
+              nzDuration: 30000
+            });
+          } else if (typeof error === 'string') {
+            this.notification.create('error', 'Ocurrió un error al guardar la asignación actual.', error, {
+              nzDuration: 30000
+            });
           }
-        );
-      } else {
-        next ? (this.currentStep += 1) : (this.currentStep -= 1);
-      }
+          this.loading = false;
+        }
+      );
     } else {
       this.notification.create(
         'error',
         'Error en la asignación de orientadores.',
         'Verifique que todos los grados hayan sido asignados a las orientadoras en todos los turnos.',
         {
-          nzDuration: 15000
+          nzDuration: 30000
         }
       );
     }
@@ -684,9 +699,9 @@ export class SchoolYearComponent implements OnInit {
     this.schoolYear.shifts.forEach((shift) => {
       shift['shift']['cycles'].forEach((cycle) => {
         this.emptyUsers['total']++;
-        if (!cycle['cycleCoordinator']) this.emptyUsers['empty']++;
 
-        if (cycle['cycleCoordinator'] && cycle['cycleCoordinator']['isValid'] && !cycle['cycleCoordinator']['isValid'])
+        if (!cycle['cycleCoordinator'] || !cycle['cycleCoordinator'].id) this.emptyUsers['empty']++;
+        if (cycle['cycleCoordinator'] && cycle['cycleCoordinator']['isValid'] === false)
           this.emptyUsers['valid'] = false;
       });
     });
@@ -701,8 +716,8 @@ export class SchoolYearComponent implements OnInit {
           grade['sectionDetails'].forEach((section) => {
             this.emptyUsers['total']++;
 
-            if (!section['teacher']) this.emptyUsers['empty']++;
-            if (section['teacher'] && section['teacher']['isValid'] && !section['teacher']['isValid'])
+            if (!section['teacher'] || !section['teacher'].id) this.emptyUsers['empty']++;
+            if (section['teacher'] && section['teacher']['isValid'] === false)
               this.emptyUsers['valid'] = false;
           });
         });
@@ -718,8 +733,8 @@ export class SchoolYearComponent implements OnInit {
         cycle['gradeDetails'].forEach((grade) => {
           this.emptyUsers['total']++;
           
-          if (!grade['counselor']) this.emptyUsers['empty']++;
-          if (grade['counselor'] && grade['counselor']['isValid'] && !grade['counselor']['isValid'])
+          if (!grade['counselor'] || !grade['counselor'].id) this.emptyUsers['empty']++;
+          if (grade['counselor'] && grade['counselor']['isValid'] === false)
               this.emptyUsers['valid'] = false;
         });
       });

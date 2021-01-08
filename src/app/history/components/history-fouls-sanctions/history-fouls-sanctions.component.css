@@ -1,0 +1,31 @@
+nz-date-picker, nz-select, nz-range-picker {
+    width: 100%;
+    border-radius: 7px;
+}
+
+nz-table {
+    margin-top: 15px;
+}
+
+.btn-container {
+    height: 100%;
+}
+
+.assignation-header {
+    text-align: center;
+    font-weight: bold;
+    color: #ef6c00;
+}
+
+.assignation-header nz-tag {
+    margin-left: 10px;
+    font-weight: normal;
+}
+
+nz-form-item {
+    margin-bottom: 15px;
+}
+
+nz-form-label {
+    padding: 0px;
+}

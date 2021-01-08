@@ -1,7 +1,7 @@
 /*
   Path: app/main-nav/main-nav.component.css
   Objective: Define main navigation style
-  Author: Esme López 
+  Author: Esme López
 */
 
 :host {
@@ -11,8 +11,54 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+nz-badge {
+  margin-right: 20px;
+}
+
+nz-divider {
+  width: 150%;
+}
+
+.icon-style {
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  line-height: 35px;
+  text-align: center;
+  color: #ffffff;
+  border-radius: 50%;
+  background: #001529;
+  display: inline-block;
+  vertical-align: middle;
+  border: 0px;
+}
+
+.calendar-style {
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+  margin: 3px;
+}
+
+.markAsReadButton {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5%;
+}
+
+.upcoming-events {
+  display: inline-block;
+  vertical-align: middle;
+  padding-bottom: 5px;
+}
+
+.eventType-style {
+  margin-bottom: 5px;
+}
+
 .app-layout {
-  min-height: 100vh;
+  min-height: 100vh; 
 }
 
 .menu-sidebar {
@@ -69,26 +115,96 @@
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 }
 
-nz-content {
-  margin: 24px;
-  overflow: initial;
-}
-
 nz-avatar {
   margin-left: 5px;
 }
 
 .inner-content {
-  padding: 24px;
+  padding: 24px 50px;
   background: #fff;
   height: 100%;
 }
 
 .ant-layout-footer {
-  padding: 0%;
+  padding: 0;
+  background-color: white;
+  color: black;
+}
+
+.requests {
+  width: 32px;
+  height: 32px;
+  border-radius: 50px;
+  background: #001529;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.requestsCounter nz-badge a i {
+  font-size: 20px;
+  color: #ffffff;
+  margin: 5px;
+}
+
+.scroll-style {
+  max-height: 500px;
+  max-width: 300px;
+  overflow-y: scroll;
+}
+
+
+.popover-notification {
+  width: 250px;
+  padding-bottom: 25%;
+}
+
+.popover {
+  width: 250px;
+  margin-bottom: -10px;
+}
+
+hr {
+  border-top: 0.5px solid #e0e0e0;
+}
+
+/* Change footer style on login, forgot password, etc. */
+.fixed-footer {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  background-color: transparent;
+  color: white;
 }
 
 nz-footer img {
   height: 50px;
   margin-right: 5px;
+}
+
+/* User dropdown */
+.user-dropdown-item{
+  background-color: white;
+  border: #ef6c00 0.5px solid;
+  border-radius: 30px;
+  margin-bottom: 10px;
+  box-shadow: none;
+}
+
+.user-dropdown-item:first-of-type {
+  border-top-right-radius: 0px;
+}
+
+.user-dropdown-item li{
+  border-radius: 30px;
+  text-align: center;
+}
+
+.user-dropdown-item:first-of-type li {
+  border-top-right-radius: 0px;
+}
+
+@media (max-height: 650px) {
+  .fixed-footer {
+    display: none;
+  }
 }

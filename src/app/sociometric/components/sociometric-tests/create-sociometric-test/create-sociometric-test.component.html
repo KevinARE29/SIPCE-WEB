@@ -1,0 +1,90 @@
+<h1>Prueba sociométrica</h1>
+
+<div nz-row *ngIf="!shifts.length">
+    <nz-alert nz-col nzXs="24" [nzMd]="{ span: 18, offset: 3 }" [nzLg]="{ span: 16, offset: 4 }"
+        [nzXl]="{ span: 14, offset: 5 }" nzType="warning" nzCloseable nzShowIcon
+        nzMessage="No se encontraron grados asignados a su usuario.">
+    </nz-alert>
+</div>
+
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+    <form nz-form [formGroup]="sociometricTestForm" nzLayout="vertical" (ngSubmit)="submitForm()">
+        <div nz-row [nzGutter]="10">
+            <!-- Shift -->
+            <div nz-col nzXs="24" nzMd="8" [nzLg]="{ span: 6, offset: 3 }"> 
+                <nz-form-item>
+                    <nz-form-label nzFor="shift">Turno:</nz-form-label>
+                    <nz-form-control nzErrorTip="El turno es requerido">
+                        <nz-select id="shift" nzShowSearch nzAllowClear formControlName="shift" nzPlaceHolder="Seleccionar"
+                            (ngModelChange)="updateSelectors('shift', $event);">
+                            <nz-option *ngFor="let shift of shifts" [nzValue]="shift.id" [nzLabel]="shift.name"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+    
+            <!-- Grade -->
+            <div nz-col nzXs="24" nzMd="8" nzLg="6">
+                <nz-form-item>
+                    <nz-form-label nzFor="grade">Grado:</nz-form-label>
+                    <nz-form-control nzErrorTip="El grado es requerido">
+                        <nz-select id="grade" nzShowSearch nzAllowClear formControlName="grade" nzPlaceHolder="Seleccionar"
+                            (ngModelChange)="updateSelectors('grade', $event);">
+                            <nz-option *ngFor="let grade of grades" [nzValue]="grade.id" [nzLabel]="grade.name">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+    
+            <!-- Section -->
+            <div nz-col nzXs="24" nzMd="8" nzLg="6">
+                <nz-form-item>
+                    <nz-form-label nzFor="section">Sección:</nz-form-label>
+                    <nz-form-control nzErrorTip="La sección es requerida">
+                        <nz-select id="grade" nzShowSearch nzAllowClear formControlName="section"
+                            nzPlaceHolder="Seleccionar">
+                            <nz-option *ngFor="let section of sections" [nzValue]="section.id" [nzLabel]="section.name">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+    
+            <!-- Question bank -->
+            <div nz-col nzXs="24" nzMd="16" [nzLg]="{ span: 12, offset: 3 }">
+                <nz-form-item>
+                    <nz-form-label nzFor="questionBank">Banco de preguntas:</nz-form-label>
+                    <nz-form-control nzErrorTip="El banco de preguntas es requerido">
+                        <nz-select nzShowSearch nzAllowClear formControlName="questionBank" nzPlaceHolder="Seleccionar">
+                            <nz-option *ngFor="let questionBank of questionBanks" [nzValue]="questionBank.id"
+                                [nzLabel]="questionBank.name">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+    
+            <!-- Answers per question -->
+            <div nz-col nzXs="24" nzMd="8" nzLg="6">
+                <nz-form-item>
+                    <nz-form-label nzFor="answersPerQuestion">Respuestas por pregunta:
+                    </nz-form-label>
+                    <nz-form-control nzErrorTip="La cantidad de respuestas es requerida">
+                        <nz-input-number [nzMin]="1" [nzMax]="5" [nzStep]="1" placeholder="Seleccionar"
+                            formControlName="answersPerQuestion"></nz-input-number>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+    
+        <!-- Actions -->
+        <div nz-row nzJustify="center">
+            <nz-form-item>
+                <nz-form-control nz-col nzSpan="2">
+                    <button nz-button nzType="primary" [nzLoading]="btnLoading">Guardar</button>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+    </form>
+</nz-spin>

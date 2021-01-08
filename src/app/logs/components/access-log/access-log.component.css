@@ -6,41 +6,18 @@
   color: #52c41a;
 }
 
-.search {
-  margin-bottom: 20px;
+.access-log {
+  margin-top: 20px;
 }
 
-@media (max-width: 767px) {
-  .search div {
-    margin-top: 5px;
-  }
-}
-@media (min-width: 768px) and (max-width: 991px) {
-  .status-code,
-  .date,
-  button {
-    margin-top: 5px;
-  }
-}
-@media (min-width: 992px) and (max-width: 1200px) {
-  .date {
-    margin-top: 15px;
-  }
-
-  button {
-    margin-top: 15px;
-  }
+.btn-container {
+  height: 100%;
 }
 
-@media (min-width: 992px) and (max-width: 1147px) {
-  button {
-    margin-top: 35px;
-  }
+nz-select, nz-range-picker {
+  width: 100%;
 }
 
-@media (min-width: 1200px) and (max-width: 1650px) {
-  button {
-    margin-top: 20px;
-    margin-left: -10px;
-  }
+nz-range-picker {
+  border-radius: 7px;
 }

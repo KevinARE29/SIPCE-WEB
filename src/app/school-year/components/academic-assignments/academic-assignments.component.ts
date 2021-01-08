@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 
 import { Catalogs } from '../../shared/catalogs.model';
-import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
+import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 
 interface ItemData {
   cycle: ShiftPeriodGrade;
@@ -51,21 +51,23 @@ export class AcademicAssignmentsComponent implements OnInit {
       const listOfData = new Array<ItemData>();
 
       // Get current assignation
-      Object.entries(currentShift[0]['shift']['cycles']).forEach(([key, value]) => {
-        const cycle = value['cycle'];
-        Object.entries(value['gradeDetails']).forEach(([key, value]) => {
-          const sections = new Array<ShiftPeriodGrade>();
-          Object.entries(value['sectionDetails']).forEach(([key, value]) => {
-            sections.push(value['section']);
-          });
+      if (currentShift[0]) {
+        Object.entries(currentShift[0]['shift']['cycles']).forEach(([key, value]) => {
+          const cycle = value['cycle'];
+          Object.entries(value['gradeDetails']).forEach(([key, value]) => {
+            const sections = new Array<ShiftPeriodGrade>();
+            Object.entries(value['sectionDetails']).forEach(([key, value]) => {
+              sections.push(value['section']);
+            });
 
-          preConfig.push({
-            cycle: { ...cycle },
-            grade: { ...value['grade'] },
-            sections: sections
+            preConfig.push({
+              cycle: { ...cycle },
+              grade: { ...value['grade'] },
+              sections: sections
+            });
           });
         });
-      });
+      }
 
       // Merge data
       this.catalogs.grades.forEach((grade) => {

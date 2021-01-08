@@ -7,17 +7,27 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './login/guards/auth.guard';
+import { ConfirmRequestComponent } from './welcome/components/confirm-request/confirm-request.component';
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: '/welcome' },
+  {
+    path: '',
+    loadChildren: () => import('./welcome/welcome.module').then((m) => m.WelcomeModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'counseling/requests',
+    component: ConfirmRequestComponent,
+    canActivate: [AuthGuard]
+  },
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then((m) => m.LoginModule),
     canLoad: [AuthGuard]
   },
   {
-    path: 'welcome',
-    loadChildren: () => import('./pages/welcome/welcome.module').then((m) => m.WelcomeModule),
+    path: 'inicio',
+    loadChildren: () => import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
     canLoad: [AuthGuard]
   },
   {
@@ -52,8 +62,7 @@ const routes: Routes = [
   },
   {
     path: 'catalogos',
-    loadChildren: () =>
-      import('./manage-academic-catalogs/academic-catalogs.module').then((m) => m.AcademicCatalogsModule),
+    loadChildren: () => import('./academic-catalogs/academic-catalogs.module').then((m) => m.AcademicCatalogsModule),
     canLoad: [AuthGuard]
   },
   {
@@ -64,6 +73,37 @@ const routes: Routes = [
   {
     path: 'asignaciones',
     loadChildren: () => import('./school-year/school-year.module').then((m) => m.SchoolYearModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'calendario',
+    loadChildren: () => import('./calendar/calendar.module').then((m) => m.CalendarModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'expedientes',
+    loadChildren: () => import('./expedients/expedients.module').then((m) => m.ExpedientsModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'historial',
+    loadChildren: () => import('./history/history.module').then((m) => m.HistoryModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'reportes',
+    loadChildren: () => import('./reports/reports.module').then((m) => m.ReportsModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'reglamento',
+    loadChildren: () =>
+      import('./disciplinary-catalogs/disciplinary-catalog.module').then((m) => m.DisciplinaryCatalogModule)
+    // canLoad: [AuthGuard]
+  },
+  {
+    path: 'pruebas-sociometricas',
+    loadChildren: () => import('./sociometric/sociometric.module').then((m) => m.SociometricModule),
     canLoad: [AuthGuard]
   },
   {

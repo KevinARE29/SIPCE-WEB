@@ -1,8 +1,9 @@
 <h1>Bitácora de acciones</h1>
 
-<div class="search" nz-row nzJustify="space-around">
+<div nz-row [nzGutter]="[10, 10]">
     <!-- Username -->
-    <div class="user" nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="6" [nzXl]="{ span: 5, offset: 1}">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8" nzXl="8">
+      <label>Usuario: </label>
         <nz-input-group [nzSuffix]="inputClearUser">
             <input nz-input [(ngModel)]="searchParams.user.username" placeholder="Buscar usuario" />
         </nz-input-group>
@@ -12,7 +13,8 @@
     </div>
 
     <!-- Endpoint -->
-    <div class="user" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="7" nzXl="6">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8" nzXl="8">
+        <label>Ruta: </label>
         <nz-input-group [nzSuffix]="inputClearEndpoint">
             <input nz-input [(ngModel)]="searchParams.endpoint" placeholder="Buscar ruta" />
         </nz-input-group>
@@ -22,7 +24,7 @@
     </div>
 
     <!-- Status Code -->
-    <div class="status-code" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="10" nzXl="8">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8" nzXl="8">
         <label>Código de respuesta: </label>
         <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.statusCode" (ngModelChange)="search()">
             <nz-option nzLabel="200" nzValue="200"></nz-option>
@@ -40,7 +42,7 @@
     </div>
 
     <!-- Action -->
-    <div class="action" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="8" nzXl="8">
         <label>Acción: </label>
         <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.action" (ngModelChange)="search()">
             <nz-option nzLabel="Actualizar" nzValue="1"></nz-option>
@@ -51,26 +53,28 @@
     </div>
 
     <!-- Date range -->
-    <div class="date" nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="11" nzXl="9">
+    <div nz-col nzXs="24" nzSm="24" nzMd="16" nzLg="12" nzXl="8">
         <label>Fecha: </label>
-        <nz-range-picker 
-            nzFormat="dd/MM/yyyy" 
+        <nz-range-picker
+            nzFormat="dd/MM/yyyy"
             [ngModel]="searchParams.attemptTime"
             [nzDisabledDate]="disabledDate"
             (ngModelChange)="onChangeDatePicker($event)"
         ></nz-range-picker>
     </div>
 
-    <div nz-col nzXs="8" nzSm="20" nzMd="2" nzLg="1" nzXl="5">
+    <div nz-col nzXs="24" nzSm="24" nzMd="8" nzLg="4" nzXl="8">
+      <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
         <button nz-button nzType="primary" (click)="search()">Buscar</button>
+      </div>
     </div>
 </div>
 
 <div class="actions-log" nz-row>
-    <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 24 }" [nzXl]="{ span: 20, offset: 2 }">
+    <div nz-col nzSpan="24">
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-            <nz-table #filterTable 
-                [nzData]="listOfDisplayData" 
+            <nz-table #filterTable
+                [nzData]="listOfDisplayData"
                 nzTableLayout="fixed"
                 [nzFrontPagination]="false"
                 [nzTotal]="pagination.totalItems"
@@ -88,17 +92,17 @@
                         <th nzColumnKey="attemptTime" [nzSortFn]="true" [nzSortPriority]="5">Fecha y hora</th>
                     </tr>
                 </thead>
-                
+
                 <tbody>
                     <tr *ngFor="let data of filterTable.data">
                         <td>{{ data.user.username }}</td>
                         <td>{{ data.action }}</td>
                         <td>{{ data.endpoint }}</td>
-                        <td [ngClass]="{ 
-                            'success': data.statusCode >= 200 && data.statusCode <= 299, 
+                        <td [ngClass]="{
+                            'success': data.statusCode >= 200 && data.statusCode <= 299,
                             'error': data.statusCode >= 400 && data.statusCode <= 499,
                             'server': data.statusCode >= 500 && data.statusCode <= 599}">
-                            {{ data.statusCode }} 
+                            {{ data.statusCode }}
                         </td>
                         <td>{{ data.attemptTime | date:"dd/MM/yyyy hh:mm aa" }}</td>
                     </tr>
@@ -108,7 +112,7 @@
     </div>
 </div>
 
-<div class="status-codes" nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 15 }">
+<div class="status-codes" nz-col nzMd="24" nzLg="16">
     <nz-table nzTemplateMode [nzSize]="tableSize">
         <thead>
           <tr>

@@ -1,5 +1,5 @@
 export enum StudentStatus {
-  'Cursando año escolar' = 1,
+  'Cursando Año Escolar' = 1,
   'Aprobado',
   'Repetidor',
   'Reprobado',

@@ -1,0 +1,70 @@
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loadingExpedients">
+
+    <div nz-row nzJustify="space-between">
+        <div nz-col nzXs="24" nzMd="6" nzLg="4" nzXl="3">
+            <h1>Expediente</h1>
+        </div>
+
+        <div nz-col *ngIf="!loadingExpedients">
+            <p class="navigator">
+                <a nz-button nzType="link" [disabled]="selectedExpedientIsLast" (click)="setSelectedExpedient(this.selectedExpedientIndex + 1)">
+                    <i nz-icon nzType="left" nzTheme="outline"></i>
+                </a>
+
+                {{selectedExpedientExists ? selectedExpedient.expedientGrade : 'Abrir expediente ' + currentYear }}
+
+                <a nz-button nzType="link" [disabled]="selectedExpedientIsFirst" (click)="setSelectedExpedient(this.selectedExpedientIndex - 1)">
+                    <i nz-icon nzType="right" nzTheme="outline"></i>
+                </a>
+            </p>
+        </div>
+
+        <div nz-col nzXs="24" nzMd="6" nzLg="4" nzXl="3">
+            <button *ngIf="selectedExpedientExists" nz-button nzGhost [nzLoading]="loadingReport" nzType="primary" (click)="setShowReportModal(true)">Generar reporte</button>
+        </div>
+    </div>
+
+    <ng-container *ngIf="!loadingExpedients">
+        <app-students-details-expedient [id]="studentId"></app-students-details-expedient>
+
+        <app-expedient-view *ngIf="!editing"
+                            [studentId]="studentId"
+                            [expedient]="selectedExpedientExists ? selectedExpedient : null"
+                            [isEditable]="selectedExpedientIsEditable"
+                            [currentYear]="currentYear"
+                            (initEditing)="setEditing(true)"
+        ></app-expedient-view>
+
+        <app-expedient-form *ngIf="editing"
+                            [studentId]="studentId"
+                            [expedient]="selectedExpedientExists ? selectedExpedient : null"
+                            (expedientSaved)="onExpedientSaved($event)"
+                            (cancelEditing)="setEditing(false)"
+        ></app-expedient-form>
+
+       <app-sessions-counter *ngIf="selectedExpedientExists"
+                            [studentId]="studentId"
+                            [expedientId]="selectedExpedient.id"
+                            [isEditable]="selectedExpedientIsEditable"
+                            [sessionsCounter]="selectedExpedient.sessionsCounter"
+       ></app-sessions-counter> 
+    </ng-container>
+
+</nz-spin>
+
+<nz-modal [(nzVisible)]="showReportModal" nzTitle="Exportar expediente del estudiante"
+            nzCancelText="Cancelar" nzOkText="Generar reporte" (nzOnOk)="exportExpedient()" (nzOnCancel)="setShowReportModal(false)">
+
+        <p>Seleccione los elementos que desea incluir en el reporte:</p>
+        <div nz-row>
+            <div nz-col nzXs="24" nzSm="12">
+                <label nz-checkbox [(ngModel)]="filterReferences">Referencia</label><br>
+                <label nz-checkbox [(ngModel)]="filterTreatments">Tratamientos externos</label><br>
+                <label nz-checkbox [(ngModel)]="filterEvaluations">Evaluaciones</label><br>
+            </div>
+            <div nz-col nzXs="24" nzSm="12">
+                <label nz-checkbox [(ngModel)]="filterDiagnosticImpression">Impresión diagnóstica</label><br>
+                <label nz-checkbox [(ngModel)]="filterActionPlan">Plan de acción</label><br>
+            </div>
+        </div>
+</nz-modal>

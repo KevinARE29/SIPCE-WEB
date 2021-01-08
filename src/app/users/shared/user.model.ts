@@ -1,5 +1,5 @@
 import { Cycle } from '../../shared/cycle.model';
-import { ShiftPeriodGrade } from './../../manage-academic-catalogs/shared/shiftPeriodGrade.model';
+import { ShiftPeriodGrade } from './../../academic-catalogs/shared/shiftPeriodGrade.model';
 import { Section } from '../../shared/section.model';
 import { Role } from '../../roles/shared/role.model';
 import { Permission } from 'src/app/shared/permission.model';

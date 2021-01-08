@@ -1,0 +1,61 @@
+ejs-schedule {
+    display: none;
+}
+
+.param a {
+    color: rgba(0, 0, 0, 0.65);
+}
+
+.param, .param-key, .param-value {
+    float: left;
+}
+
+.param, nz-pagination {
+    margin: 10px;
+}
+
+.param-value {
+    margin:  -5px 0 0 5px;
+}
+
+.param-value i {
+    font-size: 11px;
+}
+
+.caret-down {
+    margin-top: -12px;
+}
+
+.ant-btn:not(.ant-btn-icon-only) {
+    min-width: 50px;
+}
+
+nz-card {
+    border-radius: 10px;
+}
+
+.btn-container {
+    height: 100%;
+}
+
+.ant-card-body {
+    padding: 5px;
+}
+
+p {
+    text-align: center;
+}
+
+.name {
+    margin: auto 0;
+    padding: 15px;
+    text-align: center;
+}
+
+nz-select, nz-range-picker {
+    width: 100%;
+}
+  
+nz-range-picker {
+    border-radius: 7px;
+}

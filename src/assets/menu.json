@@ -46,41 +46,37 @@
             ]
         },
         {
-            "title": "Catálogos Académicos",
+            "title": "Catálogos académicos",
             "icon": "ordered-list",
             "permissions": [13],
             "allowed": null,
-            "children": [
-                {
-                    "route": "/catalogos/grados",
-                    "name": "Grados",
-                    "permission": 13,
-                    "allowed": false
-                },   
-                {
-                    "route": "/catalogos/secciones",
-                    "name": "Secciones",
-                    "permission": 13,
-                    "allowed": false
-                },
-                {
-                    "route": "/catalogos/ciclos",
-                    "name": "Ciclos",
-                    "permission": 13,
-                    "allowed": false
-                }, 
+            "children": [ 
                 {
                     "route": "/catalogos/turnos",
                     "name": "Turnos",
                     "permission": 13,
                     "allowed": false
-                },
-                {
+                }, {
+                    "route": "/catalogos/ciclos",
+                    "name": "Ciclos",
+                    "permission": 13,
+                    "allowed": false
+                }, {
+                    "route": "/catalogos/grados",
+                    "name": "Grados",
+                    "permission": 13,
+                    "allowed": false
+                }, {
+                    "route": "/catalogos/secciones",
+                    "name": "Secciones",
+                    "permission": 13,
+                    "allowed": false
+                }, {
                     "route": "/catalogos/periodos",
                     "name": "Periodos",
                     "permission": 13,
                     "allowed": false
-                }             
+                }
             ]
         },
         {
@@ -110,7 +106,7 @@
         {
             "title": "Estudiantes",
             "icon": "solution",
-            "permissions": [18, 17],
+            "permissions": [18, 17, 23],
             "allowed": null,
             "children": [
                 {
@@ -123,19 +119,147 @@
                     "name": "Cargar estudiantes",
                     "permission": 17,
                     "allowed": false
+                }, {
+                    "route": "/estudiantes/asignar",
+                    "name": "Asignar estudiantes",
+                    "permission": 23,
+                    "allowed": false
                 }
             ]
         },
         {
             "title": "Año escolar",
             "icon": "contacts",
-            "permissions": [19],
+            "permissions": [19, 23],
             "allowed": null,
             "children": [
                 {
-                    "route": "/asignaciones",
+                    "route": "/asignaciones/institucion",
                     "name": "Año escolar",
                     "permission": 19,
+                    "allowed": false
+                }, {
+                    "route": "/asignaciones/grado",
+                    "name": "Año escolar",
+                    "permission": 23,
+                    "allowed": false
+                }
+            ]
+        },
+        {
+            "title": "Agenda",
+            "icon": "calendar",
+            "permissions": [19, 22],
+            "allowed": null,
+            "children": [
+                {
+                    "route": "/calendario/eventos",
+                    "name": "Calendario",
+                    "permission": 19,
+                    "allowed": false
+                }, {
+                    "route": "/calendario/solicitudes",
+                    "name": "Solicitudes de consejería",
+                    "permission": 22,
+                    "allowed": false
+                }
+            ]
+        },
+        {
+            "title": "Expediente psicológico",
+            "icon": "reconciliation",
+            "permissions": [33],
+            "allowed": null,
+            "children": [
+                {
+                    "route": "expedientes/estudiantes",
+                    "name": "Estudiantes",
+                    "permission": 33,
+                    "allowed": false
+                },
+                {
+                    "route": "expedientes/programas",
+                    "name": "Programas de intervención",
+                    "permission": 33,
+                    "allowed": false
+                }
+            ]
+        },
+        {
+            "title": "Historial acádemico y conductual",
+            "icon": "history",
+            "permissions": [47],
+            "allowed": null,
+            "children": [
+                {
+                    "route": "historial",
+                    "name": "Estudiantes",
+                    "permission": 47,
+                    "allowed": false
+                }
+            ]
+        },
+        {
+            "title": "Reportes",
+            "icon": "book",
+            "permissions": [34],
+            "allowed": false,
+            "children": [
+                {
+                    "route": "reportes/tipos-de-sesion",
+                    "name": "Citas por tipo de sesión",
+                    "permission": 34,
+                    "allowed": false
+                },
+                {
+                    "route": "reportes/tipos-de-servicio",
+                    "name": "Citas por tipo de servicio",
+                    "permission": 34,
+                    "allowed": false
+                },
+                {
+                    "route": "reportes/pruebas-sociometricas",
+                    "name": "Pruebas sociométricas",
+                    "permission": 32,
+                    "allowed": false
+                }
+            ]
+        },
+        {
+            "title": "Prueba sociométrica",
+            "icon": "form",
+            "permissions": [30],
+            "allowed": false,
+            "children": [
+                {
+                    "route": "pruebas-sociometricas/bancos-de-preguntas",
+                    "name": "Bancos de preguntas",
+                    "permission": 30,
+                    "allowed": false
+                }, {
+                    "route": "pruebas-sociometricas/tests",
+                    "name": "Pruebas sociométricas",
+                    "permission": 30,
+                    "allowed": false
+                }
+
+            ]
+        },
+        {
+            "title": "Faltas y sanciones",
+            "icon": "safety-certificate",
+            "permissions": [27, 29],
+            "allowed": null,
+            "children": [
+                {
+                    "route": "reglamento/sanciones",
+                    "name": "Sanciones",
+                    "permission": 29,
+                    "allowed": false
+                }, {
+                    "route": "reglamento/faltas",
+                    "name": "Faltas",
+                    "permission": 27,
                     "allowed": false
                 }
             ]

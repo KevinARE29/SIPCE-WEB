@@ -1,0 +1,100 @@
+<div nz-row nzJustify="space-between">
+    <div nz-col>
+        <h1>Programas de intervención</h1>
+    </div>
+    <div nz-col>
+        <a nz-button nzType="primary" (click)="openModal(null)">Crear</a>
+    </div>
+</div>
+
+<div nz-row [nzGutter]="[10, 10]">
+    <!-- Name -->
+    <div nz-col nzXs="24" nzMd="12" nzLg="8">
+        <label>Título: </label>
+        <nz-input-group [nzSuffix]="inputClearName">
+            <input nz-input [(ngModel)]="search.name" placeholder="Buscar título" />
+        </nz-input-group>
+        <ng-template #inputClearName>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="search.name" (click)="search.name = null; getPrograms(null)"></i>
+        </ng-template>
+    </div>
+
+    <!-- Type -->
+    <div nz-col nzXs="24" nzMd="12" nzLg="8">
+        <label>Tipo: </label>
+        <nz-input-group>
+            <nz-select nzShowSearch nzAllowClear [(ngModel)]="search.type"
+                (ngModelChange)="getPrograms(null)" nzPlaceHolder="Seleccionar tipo">
+                <nz-option *ngFor="let type of programTypes" [nzValue]="type" [nzLabel]="type">
+                </nz-option>
+            </nz-select>
+        </nz-input-group>
+    </div>
+
+    <!-- State -->
+    <div nz-col nzXs="24" nzSm="12" nzLg="4">
+        <label>Estado: </label>
+        <nz-input-group>
+            <nz-switch [(ngModel)]="search.status" [nzCheckedChildren]="'Activos'" [nzUnCheckedChildren]="'Históricos'"></nz-switch>
+        </nz-input-group>
+    </div>
+
+    <!-- Search button-->
+    <div nz-col nzXs="24" nzSm="12" nzLg="4">
+        <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+            <button nz-button nzType="primary" (click)="getPrograms(null)">Buscar</button>
+        </div>
+    </div>
+</div>
+
+<div nz-row>
+    <div nz-col nzSpan="24">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loadingData">
+            <nz-table #filterTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems" [nzPageSize]="pagination.perPage" [nzPageIndex]="pagination.page"
+                nzSize="small" (nzQueryParams)="getPrograms($event)">
+                <thead>
+                    <tr>
+                        <th nzWidth="60px"></th>
+                        <th nzColumnKey="name" [nzSortFn]="true" [nzSortPriority]="1">Título</th>
+                        <th nzColumnKey="type" [nzSortFn]="true" [nzSortPriority]="2">Tipo</th>
+                        <th [nzAlign]="'center'">Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <ng-container *ngFor="let data of filterTable.data">
+                        <tr>
+                            <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
+                            <td>{{data.name}}</td>
+                            <td>{{data.type}}</td>
+                            <td [nzAlign]="'center'">
+                                <a (click)="openModal(data)">
+                                    <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
+                                </a>
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <a (click)="confirmDelete(data)">
+                                    <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
+                                </a> 
+                            </td>
+                        </tr>
+                        <tr [nzExpand]="expandSet.has(data.id)">
+                            <span>{{ data.description }}</span>
+                          </tr>
+                    </ng-container>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>
+
+<!-- Create / update modal -->
+<nz-modal [(nzVisible)]="showModal" [nzTitle]="modalTitle" [nzContent]="modalContent"
+    nzOkText="Guardar" nzCancelText="Cancelar" (nzOnOk)="onModalOk()" (nzOnCancel)="setShowModal(false)">
+    
+    <!-- Modal content -->
+    <ng-template #modalContent>
+        <app-intervention-programs-form (formChange)="onFormChanged($event)" [program]="programModal"></app-intervention-programs-form>
+    </ng-template>
+
+</nz-modal>

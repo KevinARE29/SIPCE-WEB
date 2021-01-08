@@ -21,7 +21,8 @@
         },
         "ShiftPeriodGrades": {
             "name": "Nombre",
-            "active": "activo"
+            "active": "activo",
+            "gradeId": "Grado"
         },
         "users": {
             "firstname": "Nombres",
@@ -55,11 +56,43 @@
             "contact": "Contacto",
             "responsibleEmail": "Correo electrónico del responsable",
             "responsiblePhone": "Número de teléfono del responsable",
-            "phone": "Número de teléfono del responsable"
+            "phone": "Número de teléfono del responsable",
+            "status": "Estado"
         },
         "school-year": {
             "year": "Año",
             "status": "Estado"
-        }
+        },
+        "schedule": {
+            "Subject": "Asunto",
+            "EventType": "Tipo de evento",
+            "Location": "lugar",
+            "StartTime": "Fecha de inicio",
+            "EndTime": "Fecha de fin",
+            "Description": "Descripcion",
+            "Participants": "Empleados",
+            "Student": "Estudiantes"
+        },
+        "counseling": {
+            "confirmationToken": "Token de confirmación"
+        },
+        "question-banks": {
+            "name": "Nombre"
+        },
+        "presets": {},
+        "expedients": {},
+        "sociometric-tests": {
+            "email": "Correo electrónico",
+            "password": "Contraseña",
+            "studentsIds": "Estudiantes"
+        },
+        "disciplinary-catalog": {
+            "name": "Nombre de la sanción",
+            "description": "Descripción",
+            "numeral": "Numeral de la falta",
+            "fousType": "Tipo de la falta"
+        },
+        "reports": {},
+        "history": {}
     }
 }

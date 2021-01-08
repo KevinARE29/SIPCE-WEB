@@ -1,0 +1,24 @@
+.questions-title {
+    margin-bottom: 15px;
+}
+
+.identifier {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.identifier div strong {
+    margin-right: 10px;
+}
+
+.left-space {
+    margin-left: 15px;
+}
+
+.add-button {
+    margin-top: 5px;
+}
+
+nz-tag {
+    border-radius: 7px;
+}

@@ -29,7 +29,9 @@
               }
             ],
             "styles": ["src/theme.less", "src/styles.css"],
-            "scripts": []
+            "scripts": [
+              "node_modules/@ckeditor/ckeditor5-build-classic/build/translations/es.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -51,7 +53,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumError": "6mb"
                 },
                 {
                   "type": "anyComponentStyle",

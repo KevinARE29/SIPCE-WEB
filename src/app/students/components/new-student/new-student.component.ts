@@ -9,9 +9,9 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { Student } from '../../shared/student.model';
 import { Responsible } from '../../shared/responsible.model';
 import { KinshipRelationship } from './../../../shared/kinship-relationship.enum';
-import { ShiftPeriodGrade } from 'src/app/manage-academic-catalogs/shared/shiftPeriodGrade.model';
-import { ShiftService } from 'src/app/manage-academic-catalogs/shared/shift.service';
-import { GradeService } from 'src/app/manage-academic-catalogs/shared/grade.service';
+import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
+import { ShiftService } from 'src/app/academic-catalogs/shared/shift.service';
+import { GradeService } from 'src/app/academic-catalogs/shared/grade.service';
 import { StudentService } from '../../shared/student.service';
 
 @Component({
@@ -64,14 +64,14 @@ export class NewStudentComponent implements OnInit {
     const phonePattern = new RegExp(/^[267]{1}[0-9]{3}[-]{1}[0-9]{4}$/);
 
     this.studentForm = this.fb.group({
-      code: ['', [Validators.required, Validators.maxLength(32), Validators.pattern('[0-9]+$')]],
+      code: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
       firstname: [
         '',
-        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
       ],
       lastname: [
         '',
-        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
       ],
       email: ['', [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]],
       dateOfBirth: ['', [Validators.required]],
@@ -81,11 +81,11 @@ export class NewStudentComponent implements OnInit {
       registrationYear: [''],
       responsibleFirstname: [
         '',
-        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
       ],
       responsibleLastname: [
         '',
-        [Validators.required, Validators.maxLength(128), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+        [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
       ],
       responsibleEmail: ['', [Validators.required, Validators.maxLength(128), Validators.pattern(emailPattern)]],
       responsiblePhone: ['', [Validators.required, Validators.pattern(phonePattern)]],
@@ -150,7 +150,7 @@ export class NewStudentComponent implements OnInit {
     this.studentService.createStudent(this.student).subscribe(
       (r) => {
         this.message.success(`El estudiante ${this.student.firstname} ${this.student.lastname} ha sido creado`);
-        // this.router.navigate['estudiantes/consultar'];
+        this.studentForm.reset();
       },
       (error) => {
         this.loading = false;
@@ -159,7 +159,7 @@ export class NewStudentComponent implements OnInit {
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
-            nzDuration: 0
+            nzDuration: 30000
           });
         }
       }

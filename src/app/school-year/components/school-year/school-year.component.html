@@ -37,8 +37,6 @@
             <!-- Steps content -->
             <div class="steps-content">
                 <div class="shifts">
-                    <!-- <nz-tabset nzTabPosition="left" [nzType]="'line'"> -->
-                    <!-- <nz-tab *ngFor="let shift of catalogs.shifts" [nzTitle]="shift.name"> -->
                     <div class="step-content" [ngSwitch]="currentStep">
                         <ng-container *ngSwitchCase="0">
                             <app-academic-assignments [catalogs]="catalogs" [assignation]="schoolYear"
@@ -63,8 +61,6 @@
                             <app-new-school-year-summary [assignation]="schoolYear"></app-new-school-year-summary>
                         </ng-container>
                     </div>
-                    <!-- </nz-tab> -->
-                    <!-- </nz-tabset> -->
                 </div>
             </div>
 
@@ -102,7 +98,7 @@
                         </div>
                     </div>
                 </nz-tab>
-                <nz-tab nzTitle="Docentes">
+                <nz-tab nzTitle="Docentes titulares">
                     <div class="shifts">
                         <app-head-teachers [catalogs]="catalogs" [assignation]="schoolYear" [isValid]="emptyUsers.valid"
                             (headTeachersEvent)="updateHeadTeachers($event)">
@@ -110,6 +106,14 @@
                         
                         <div nz-row nzJustify="space-around">
                             <button nz-button nzType="primary" (click)="headTeachersStep(null)">Actualizar</button>
+                        </div>
+                    </div>
+                </nz-tab>
+                <nz-tab nzTitle="Docentes auxiliares">
+                    <div class="shifts">
+                        <app-teachers [catalogs]="catalogs" [assignation]="schoolYear" (teachersEvent)="updateTeachers($event)"></app-teachers>
+                        <div nz-row nzJustify="space-around">
+                            <button nz-button nzType="primary" (click)="teachersTab()">Actualizar</button>
                         </div>
                     </div>
                 </nz-tab>
@@ -124,8 +128,9 @@
                         </div>
                     </div>
                 </nz-tab>
-                <!-- <nz-tab nzTitle="Cerrar año escolar">
-                </nz-tab> -->
+                <nz-tab nzTitle="Cerrar año escolar">
+                    <app-school-year-end-summary></app-school-year-end-summary>
+                </nz-tab>
             </nz-tabset>
             <!-- #endregion -->
         </ng-container>

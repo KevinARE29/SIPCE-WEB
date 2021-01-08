@@ -124,7 +124,7 @@ export class UnauthenticatedUsersComponent implements OnInit {
 
           if (!notIn.includes(statusCode) && statusCode < 500) {
             this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
-              nzDuration: 0
+              nzDuration: 30000
             });
           }
         }
@@ -149,7 +149,7 @@ export class UnauthenticatedUsersComponent implements OnInit {
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create('error', 'Ocurrió un error al intentar recuperar los datos.', error.message, {
-            nzDuration: 0
+            nzDuration: 30000
           });
         }
       }
@@ -222,7 +222,7 @@ export class UnauthenticatedUsersComponent implements OnInit {
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create('error', 'Ocurrió un error al crear las credenciales.', error.message, {
-            nzDuration: 0
+            nzDuration: 30000
           });
         }
       }
@@ -266,7 +266,7 @@ export class UnauthenticatedUsersComponent implements OnInit {
             this.refreshCheckedStatus();
             if (!notIn.includes(statusCode) && statusCode < 500) {
               this.notification.create('error', 'Ocurrió un error al eliminar el usuario.', err.message, {
-                nzDuration: 0
+                nzDuration: 30000
               });
             }
           })

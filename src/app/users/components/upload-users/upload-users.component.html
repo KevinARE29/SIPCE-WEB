@@ -1,24 +1,30 @@
 <h1>Cargar usuarios</h1>
 <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-    <div nz-row nzJustify="space-around" [nzGutter]="[0, 10]">
-        <div nz-col nzSm="24" nzMd="24" nzLg="6" nzXl="5" class="gutter-row">
-            <nz-upload [nzFileList]="fileList" [nzBeforeUpload]="beforeUpload" [nzCustomRequest]="customReq" [nzRemove]="handleChange">
+    <div nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
+        <div nz-col nzXs="24" nzMd="8">
+          <div nz-row nzJustify="start">
+            <div nz-col>
+              <nz-upload [nzFileList]="fileList" [nzBeforeUpload]="beforeUpload" [nzCustomRequest]="customReq" [nzRemove]="handleChange">
                 <button nz-button>Seleccionar archivo</button>
                 <i class="question" nz-icon nzType="question-circle"  nz-tooltip [nzTooltipTitle]="filesHelp" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ef6c00'"></i>
-            </nz-upload>
-            <span class="error">{{uploadMsg}}</span>
+              </nz-upload>
+              <span class="error">{{uploadMsg}}</span>
+            </div>
+          </div>
         </div>
 
-        <div nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
+        <div nz-col nzXs="24" nzMd="16">
+          <div nz-row nzJustify="end" [nzGutter]="[10, 10]">
             <div nz-col>
-                <button nz-button nzType="primary" (click)="uploadCsv()">Iniciar carga de usuarios</button>
+              <button nz-button nzType="primary" (click)="uploadCsv()">Iniciar carga de usuarios</button>
             </div>
             <div nz-col>
-                <a nz-button nz-popconfirm nzTitle="¿Desea limpiar la pantalla?" (nzOnConfirm)="clearScreen()">Limpiar pantalla</a>
+              <a nz-button nz-popconfirm nzTitle="¿Desea limpiar la pantalla?" (nzOnConfirm)="clearScreen()">Limpiar pantalla</a>
             </div>
+          </div>
         </div>
     </div>
-    
+
     <ng-container *ngIf="_listOfColumns">
         <nz-table #editRowTable [nzData]="listOfData" nzTableLayout="fixed" nzSize="small">
             <thead>

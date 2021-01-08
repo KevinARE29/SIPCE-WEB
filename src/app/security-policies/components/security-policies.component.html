@@ -1,17 +1,14 @@
-<!--  
+<!--
   Path: app/security-policies/components/security-policies.component.html
   Objective: Define security policies view
-  Author: Esme López 
+  Author: Esme López
 -->
 
-<h1 nz-typography>Políticas de seguridad</h1>
-
-<hr>
+<h1>Políticas de seguridad</h1>
 
 <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-  <div class="policies" nz-row>
-    <div nz-col [nzXs]="{ span: 20, offset: 2 }" [nzSm]="{ span: 20, offset: 2 }" [nzMd]="{ span: 20, offset: 2 }"
-      [nzLg]="{ span: 8, offset: 8 }">
+  <div class="policies" nz-row nzJustify="center">
+    <div nz-col>
       <div class="policy">
         <label nz-checkbox [(ngModel)]="securityPolicy.minActive" (change)="updateMin()"
           [nzDisabled]="!checkPermission(1)">Mínimo de caracteres: </label>
@@ -37,8 +34,9 @@
           nzTooltipTitle="Caracteres permitidos !  # $ % &  ( ) * + , - . / :  < = > ? @ [ \ ] ^ _  { | } ~"></i>
       </div>
 
-      <button *ngIf="checkPermission(1)" nz-button nzType="primary" (click)="showConfirm()">ACTUALIZAR
-        POLÍTICAS</button>
+      <div class="align-center">
+        <button *ngIf="checkPermission(1)" nz-button nzType="primary" (click)="showConfirm()">Actualizar políticas</button>
+      </div>
     </div>
   </div>
 </nz-spin>

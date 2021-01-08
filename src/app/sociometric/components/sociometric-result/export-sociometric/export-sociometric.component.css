@@ -1,0 +1,106 @@
+::ng-deep .ant-layout {
+    background-color: white;
+    color: black;
+}
+
+.ant-card-body {
+    width: 791px;
+    background-color: white;
+    margin: 0 auto;
+    padding: 50px;
+}
+
+.document-institution {
+    margin-bottom: 0px;
+    line-height: 25px;
+}
+
+.text-blue {
+    color: rgb(0, 82, 136);
+}
+
+.text-blue-light {
+    color: rgb(50, 116, 159);
+}
+
+.logo {
+    height: 85px;
+}
+
+p {
+    margin-bottom: 10px;
+    text-align: justify;
+}
+
+.main-divider {
+    height: 2px;
+    background-color: rgb(0, 82, 136);
+    margin-top: 5px;
+}
+
+.section-divider {
+    height: 2px;
+    margin-top: 25px;
+    margin-bottom: 15px
+}
+
+:host >>> .ant-divider-horizontal.ant-divider-with-text-left::before, :host >>> .ant-divider-horizontal.ant-divider-with-text-left::after {
+    border-top-color: rgb(0, 82, 136);
+}
+
+ /* Groupal */
+.groupal-index {
+    border: 1px black solid;
+    border-radius: 10px;
+    min-height: 100px;
+    padding: 15px;
+}
+
+.groupal-index-title {
+    font-size: 16px;
+    margin-bottom: 2px;
+}
+
+.groupal-index-abbr {
+    font-size: 14px;
+    color: black;
+    margin-bottom: 2px;
+}
+
+.groupal-index-value {
+    font-size: 20px;
+    text-align: center;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.sociomatrix th, .sociomatrix td {
+    font-size: 13px;
+    border: 1px rgb(211, 211, 211) solid;
+    padding: 5px;
+}
+
+.sociomatrix-data {
+    width: 30px;
+    text-align: center;
+    color: black;
+}
+
+.gray-bg {
+    background-color: rgb(211, 211, 211);
+}
+
+ /* Individual */
+ .index-data p {
+    text-align: center;
+    margin-bottom: 0px;
+    font-size: 13px;
+}
+
+.title {
+    text-align: center;
+    font-size: 20px;
+    margin-top: 20px;
+}

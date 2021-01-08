@@ -1,8 +1,9 @@
 <h1>Usuarios sin credenciales</h1>
 
-<div class="search" nz-row nzJustify="space-around" [nzGutter]="[10, 10]">
+<div nz-row [nzGutter]="[10, 10]">
     <!-- Name -->
-    <div class="name" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="7" class="gutter-row">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+      <label>Nombre: </label>
         <nz-input-group [nzSuffix]="inputClearName">
             <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Buscar nombre" />
         </nz-input-group>
@@ -12,7 +13,8 @@
     </div>
 
     <!-- Lastname -->
-    <div class="lastname" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="7" nzXl="5" class="gutter-row">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>Apellido: </label>
         <nz-input-group [nzSuffix]="inputClearLastname">
             <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Buscar apellido" />
         </nz-input-group>
@@ -22,7 +24,8 @@
     </div>
 
     <!-- Email -->
-    <div class="email" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="5" class="gutter-row">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>Correo electrónico: </label>
         <nz-input-group [nzSuffix]="inputClearEmail">
             <input nz-input [(ngModel)]="searchParams.email" placeholder="Buscar correo electrónico" />
         </nz-input-group>
@@ -32,7 +35,7 @@
     </div>
 
     <!-- Roles -->
-    <div class="role" nz-col nzXs="24" nzSm="10" nzMd="12" nzLg="8" nzXl="6" class="gutter-row">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
         <label>Rol: </label>
         <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="roleSearch" (ngModelChange)="search()">
             <nz-option *ngFor="let rol of roles" [nzLabel]="rol.name" [nzValue]="rol.id"></nz-option>
@@ -40,35 +43,38 @@
     </div>
 
     <!-- Date range -->
-    <div class="date" nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="16" nzXl="12">
-        <label>Fecha de creación: </label>
-        <nz-range-picker 
-            nzFormat="dd/MM/yyyy" 
-            [ngModel]="searchParams.createdAt"
-            [nzDisabledDate]="disabledDate"
-            (ngModelChange)="onChangeDatePicker($event)"
-        ></nz-range-picker>
+    <div class="date" nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="12" nzXl="12">
+      <label>Fecha de creación: </label>
+      <nz-range-picker
+        nzFormat="dd/MM/yyyy"
+        [ngModel]="searchParams.createdAt"
+        [nzDisabledDate]="disabledDate"
+        (ngModelChange)="onChangeDatePicker($event)"
+      ></nz-range-picker>
     </div>
 
-    <!-- Status & search button-->
-    <div class="status" nz-col class="gutter-row">
-        <button nz-button nzType="primary" (click)="search()">Buscar</button>
+    <!-- Search button-->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="12" nzXl="12">
+      <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+        <button nz-col nz-button nzType="primary" (click)="search()">Buscar</button>
+      </div>
     </div>
 </div>
 
+
 <div class="unauthorized-users" nz-row>
-    <div nz-col [nzXs]="{ span: 24 }" [nzSm]="{ span: 24 }"  [nzMd]="{ span: 24 }" [nzLg]="{ span: 24 }" [nzXl]="{ span: 22, offset: 1 }">
+    <div nz-col nzSpan="24">
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-            <nz-table #filterTable 
-                [nzData]="listOfData" 
+            <nz-table #filterTable
+                [nzData]="listOfData"
                 nzTableLayout="fixed"
+                nzSize="small"
                 [nzFrontPagination]="false"
                 [nzTotal]="pagination.totalItems"
                 [nzPageSize]="pagination.perPage"
                 [nzPageIndex]="pagination.page"
                 nzShowSizeChanger
                 [nzPageSizeOptions]="[5, 10, 25]"
-                nzSize="small"
                 (nzQueryParams)="getUsers($event)"
                 (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
             >
@@ -83,7 +89,7 @@
                         <th [nzAlign]="'center'" *ngIf="checkPermission(14)">Acción</th>
                     </tr>
                 </thead>
-                
+
                 <tbody>
                     <tr *ngFor="let data of filterTable.data">
                         <td
@@ -139,10 +145,10 @@
                 <ng-container *ngIf="!isLast">
                     <nz-divider nzType="vertical"></nz-divider>
                 </ng-container>
-            </ng-container> 
+            </ng-container>
         </p>
         <br>
-        <i>Se generarán credenciales y se habilitará el acceso a  {{ setOfCheckedId.size }} 
+        <i>Se generarán credenciales y se habilitará el acceso a  {{ setOfCheckedId.size }}
             <ng-container *ngIf="setOfCheckedId.size === 1;else plural">usuario nuevo.</ng-container>
             <ng-template #plural>usuarios nuevos.</ng-template>
         </i>

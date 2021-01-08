@@ -1,1 +1,42 @@
-<p>school-year-end-summary works!</p>
+<nz-tabset nzTabPosition="left" [nzType]="'line'">
+    <nz-tab *ngFor="let shift of shifts" [nzTitle]="shift.name.concat(' (', shift.shiftPercentage,'%)')">
+        <div nz-col nzXs="24" [nzMd]="{ span: 18, offset: 3 }" [nzXl]="{ span: 16, offset: 4 }">
+            <nz-table #fixedTable [nzData]="shift.grades" nzSize="small" nzTableLayout="auto" [nzFrontPagination]="false">
+                <thead>
+                    <tr>
+                        <th nzWidth="60px"></th>
+                        <th>Grado</th>
+                        <th [nzAlign]="'center'">Porcentaje completado</th>
+                    </tr>
+                </thead>
+    
+                <tbody>
+                    <ng-container *ngFor="let item of fixedTable.data">
+                        <tr>
+                            <td [nzExpand]="expandSet.has(item.id)" (nzExpandChange)="onExpandChange(item.id, $event)"></td>
+                            <td>{{ item.name }}</td>
+                            <td>
+                                <nz-progress [nzPercent]="item.gradePercentage"></nz-progress>
+                            </td>
+                        </tr>
+                        <tr [nzExpand]="expandSet.has(item.id)">
+                            <ng-container *ngFor="let section of item.sections">
+                        <tr>
+                            <td [nzIndentSize]="1 * 20"><strong>{{ section.name }}</strong> - {{ section.teacher }}</td>
+                            <td [nzIndentSize]="2 * 20">
+                                <i nz-icon nzType="check-circle" nzTheme="outline"
+                                    [ngClass]="section.closed ? 'green' : 'grey'"></i>
+                            </td>
+                        </tr>
+                    </ng-container>
+                    </tr>
+                    </ng-container>
+                </tbody>
+            </nz-table>
+    
+            <div nz-row nzJustify="center">
+                <a class="close" nz-button nzType="primary" (click)="close()" [nzLoading]="btnLoading">Cerrar año escolar</a>
+            </div>
+        </div>
+    </nz-tab>
+</nz-tabset>

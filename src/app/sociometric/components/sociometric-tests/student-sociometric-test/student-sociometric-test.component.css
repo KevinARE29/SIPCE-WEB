@@ -1,0 +1,60 @@
+.completed {
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  background: #ef6c00;
+  border: 3px solid #ef6c00;
+  color: #ffffff;
+  text-align: center;
+  font-size: 1em;
+  padding-top: 1px;
+  margin-bottom: 5px;
+}
+
+.incomplete {
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  background: #cccccc;
+  border: 3px solid #cccccc;
+  color: #ffffff;
+  text-align: center;
+  font-size: 1em;
+  padding-top: 1px;
+  margin-bottom: 5px;
+}
+
+.current {
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  background: #fd9727;
+  border: 3px solid #fd9727;
+  color: #ffffff;
+  text-align: center;
+  font-size: 1em;
+  padding-top: 1px;
+  margin-bottom: 5px;
+}
+
+.question-number {
+  color: #ef6c00;
+  font-weight: 500;
+  font-size: 1.3em;
+}
+
+.selected {
+  border: 5px solid #ef6c00;
+}
+
+student {
+  margin: auto;
+}
+
+.student-name {
+  text-align: center;
+}
+
+.steps-action button {
+  margin-right: 10px;
+}
