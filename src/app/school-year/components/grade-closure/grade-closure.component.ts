@@ -24,6 +24,7 @@ export interface StudentHistory {
   lastname: string;
   status: string;
   behavioralHistory: History;
+  expedientAlert: boolean;
 }
 
 @Component({
@@ -36,6 +37,7 @@ export class GradeClosureComponent implements OnInit {
   btnLoading = false;
   teacherAssignation: Grade[] = [];
   currentGrade: number;
+  closedSection: boolean;
 
   // Table
   listOfColumn = [];
@@ -124,6 +126,7 @@ export class GradeClosureComponent implements OnInit {
         this.loading = false;
         this.progress = data['data']['progress'];
         this.students = data['data']['students'];
+        this.closedSection = data['data']['closedSection'];
       });
     }
   }
