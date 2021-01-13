@@ -24,6 +24,7 @@ export interface StudentHistory {
   lastname: string;
   status: string;
   behavioralHistory: History;
+  expedientAlert: boolean;
 }
 
 @Component({
@@ -36,6 +37,7 @@ export class GradeClosureComponent implements OnInit {
   btnLoading = false;
   teacherAssignation: Grade[] = [];
   currentGrade: number;
+  closedSection: boolean;
 
   // Table
   listOfColumn = [];
@@ -120,10 +122,12 @@ export class GradeClosureComponent implements OnInit {
   getStudents(): void {
     if (this.currentGrade) {
       this.loading = true;
+
       this.studentService.getStudentResumes(this.currentGrade).subscribe((data) => {
         this.loading = false;
         this.progress = data['data']['progress'];
         this.students = data['data']['students'];
+        this.closedSection = data['data']['closedSection'];
       });
     }
   }
@@ -172,7 +176,7 @@ export class GradeClosureComponent implements OnInit {
         const answered = this.students.filter((x) => x.behavioralHistory.finalConclusion !== null);
         const total = this.students.length;
 
-        this.progress = answered.length / total;
+        this.progress = Math.round((answered.length / total) * 100);
 
         this.isConfirmLoading = false;
 
@@ -213,15 +217,19 @@ export class GradeClosureComponent implements OnInit {
   close(): void {
     const grade = this.teacherAssignation.filter((x) => x.id === this.currentGrade)[0];
 
+    this.btnLoading = true;
+
     this.schoolYearService.closeSection(grade.sectionId).subscribe(
       () => {
         this.message.success(`Se ha cerrado con éxito el año escolar para ${grade.name}`);
+        this.closedSection = true;
+        this.btnLoading = false;
       },
       (error) => {
         const statusCode = error.statusCode;
         const notIn = [401, 403];
 
-        this.isConfirmLoading = false;
+        this.btnLoading = false;
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create('error', 'Ocurrió un error al intentar cerrar el año escolar.', error.message, {

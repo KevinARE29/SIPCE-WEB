@@ -26,8 +26,8 @@
 
 <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
     <!-- Table -->
-    <div nz-row>
-        <div nz-col nzSpan="24">
+    <div nz-row nzJustify="center">
+        <div nz-col nzXs="24" nzSm="24" nzMd="20" nzLg="16" nzXl="12">
             <nz-table #filterTable [nzData]="students" nzTableLayout="auto" nzSize="small">
                 <thead>
                     <tr>
@@ -54,6 +54,10 @@
                                 [ngClass]="data.behavioralHistory.finalConclusion ? 'green' : 'grey'">
                                 <i nz-icon nzType="edit" nzTheme="outline"></i>
                             </a>
+                            <ng-container *ngIf="data.expedientAlert">
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <i nz-icon nzType="warning" nzTheme="outline" [nzTheme]="'twotone'" [nzTwotoneColor]="'#ff0000'" nz-tooltip nzTooltipTitle="El expediente del estudiante no posee comentario final."></i>
+                            </ng-container>
                         </td>
                     </tr>
                 </tbody>
@@ -61,10 +65,22 @@
         </div>
     </div>
 
-    <nz-progress [nzPercent]="progress"></nz-progress>
+    <div nz-row nzJustify="center">
+        <nz-progress nz-col nzXs="24" nzSm="24" nzMd="20" nzLg="16" nzXl="12" [nzPercent]="progress"></nz-progress>
+    </div>
 
-    <div nz-row nzJustify="center" *ngIf="currentGrade">
-        <a class="close" nz-button nzType="primary" (click)="close()">Cerrar año escolar</a>
+    <div *ngIf="currentGrade">
+        <div nz-row nzJustify="center" *ngIf="!closedSection && progress == 100">
+            <nz-alert nzType="info" nzMessage="Se han agregado todos los comentarios de los estudiantes, es posible cerrar el año escolar." nzCloseable nzShowIcon></nz-alert>
+        </div>
+
+        <div nz-row nzJustify="center" *ngIf="closedSection">
+            <nz-alert nzType="info" nzMessage="El año escolar se ha cerrado con éxito." nzCloseable nzShowIcon></nz-alert>
+        </div>
+
+        <div nz-row nzJustify="center">
+            <a class="close" nz-button nzType="primary" (click)="close()" [disabled]="closedSection" [nzLoading]="btnLoading">Cerrar año escolar</a>
+        </div>
     </div>
 </nz-spin>
 
@@ -89,6 +105,6 @@
     <!-- Modal footer -->
     <ng-template #modalFooter>
         <button nz-button nzType="default" (click)="handleCancel()">Cancelar</button>
-        <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">Guardar</button>
+        <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading" [disabled]="closedSection">Guardar</button>
     </ng-template>
 </nz-modal>
