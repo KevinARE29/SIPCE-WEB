@@ -145,9 +145,8 @@ export class HistoryListComponent implements OnInit {
             });
           });
         }
-
-        this.loadingSearchLists = false;
       }
+      this.loadingSearchLists = false;
     });
   }
 
