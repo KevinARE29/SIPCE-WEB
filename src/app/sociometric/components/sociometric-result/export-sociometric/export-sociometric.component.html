@@ -46,7 +46,7 @@
 
             <div nz-col>
                 <ng-container *ngFor="let student of data.students; let i = index">
-                    <p *ngIf="i > data.students.length / 2">{{i + 1}}. {{student.firstname}} {{student.lastname}}</p>
+                    <p *ngIf="i >= data.students.length / 2">{{i + 1}}. {{student.firstname}} {{student.lastname}}</p>
                 </ng-container>
             </div>
         </div>
@@ -99,7 +99,7 @@
                         <p><strong>Matriz sociométrica</strong></p>
     
                         <div nz-row nzJustify="center">
-                            <div nz-col>
+                            <div nz-col class="sociomatrix-div">
                                 <nz-table class="sociomatrix">
                                     <tr>
                                         <th>{{result.sociomatrixData.participants.length > MAX_STUDENTS ? '#' : 'Estudiantes'}}</th>
