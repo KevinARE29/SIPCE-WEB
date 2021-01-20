@@ -46,7 +46,7 @@
 
             <div nz-col>
                 <ng-container *ngFor="let student of data.students; let i = index">
-                    <p *ngIf="i > data.students.length / 2">{{i + 1}}. {{student.firstname}} {{student.lastname}}</p>
+                    <p *ngIf="i >= data.students.length / 2">{{i + 1}}. {{student.firstname}} {{student.lastname}}</p>
                 </ng-container>
             </div>
         </div>
