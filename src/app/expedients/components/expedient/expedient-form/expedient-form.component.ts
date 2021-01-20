@@ -50,7 +50,10 @@ export class ExpedientFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.expedientForm = this.fb.group({
-      referrerName: [this.expedient ? this.expedient.referrerName : null, [Validators.required]],
+      referrerName: [
+        this.expedient ? this.expedient.referrerName : null,
+        [Validators.required, Validators.maxLength(64)]
+      ],
       reason: [this.expedient ? this.expedient.reason : null, [Validators.required]],
       problemDescription: [this.expedient ? this.expedient.problemDescription : null, [Validators.required]],
       diagnosticImpressionCategories: [this.expedient ? this.expedient.diagnosticImpressionCategories : null],
