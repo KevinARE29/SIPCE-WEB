@@ -113,9 +113,9 @@ export class GradeClosureComponent implements OnInit {
           this.currentGrade = this.teacherAssignation[0].id;
           this.getStudents();
         }
-
-        this.loading = false;
       }
+
+      this.loading = false;
     });
   }
 
