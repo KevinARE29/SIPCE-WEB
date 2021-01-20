@@ -76,6 +76,10 @@ p {
     text-align: center;
 }
 
+.sociomatrix-div {
+    margin-left: -70px;
+}
+
 .sociomatrix th, .sociomatrix td {
     font-size: 13px;
     border: 1px rgb(211, 211, 211) solid;
