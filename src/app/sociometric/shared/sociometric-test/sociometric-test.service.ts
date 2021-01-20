@@ -88,6 +88,7 @@ export class SociometricTestService {
   getSociometricTest(id: number): Observable<SociometricTest> {
     return this.http.get<SociometricTest>(`${this.baseUrl}sociometric/tests/${id}`).pipe(
       map((result) => {
+        let students = 0;
         // Presets
         result['data'].presets.forEach((preset) => {
           preset.duration = differenceInMinutes(new Date(preset.endedAt), new Date(preset.startedAt));
@@ -100,10 +101,15 @@ export class SociometricTestService {
 
         // Students
         for (const student of result['data'].students) {
-          if (!student.completed) {
-            result['data'].status = 'In progress';
-            break;
-          }
+          if (student.completed) students++;
+        }
+
+        if (students === result['data'].students.length) {
+          result['data'].status = 'Finalizada';
+        } else if (students === 0) {
+          result['data'].status = 'Creada';
+        } else {
+          result['data'].status = 'In progress';
         }
 
         return result;
