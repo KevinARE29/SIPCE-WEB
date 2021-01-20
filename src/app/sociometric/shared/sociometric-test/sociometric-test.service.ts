@@ -100,7 +100,7 @@ export class SociometricTestService {
 
         // Students
         for (const student of result['data'].students) {
-          if (student.completed) {
+          if (!student.completed) {
             result['data'].status = 'In progress';
             break;
           }
