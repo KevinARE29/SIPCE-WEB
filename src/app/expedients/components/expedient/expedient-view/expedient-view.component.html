@@ -56,7 +56,7 @@
             <div nz-row>
                 <div nz-col nzXs="24">
                     <p><strong>Tratamiento psicológicos externos:</strong>
-                        {{expedient.externalPsychologicalTreatments && expedient.externalPsychologicalTreatments.length ? '' : 'No se han registrado tratamientos psicológicos externos'}}
+                        {{expedient.externalPsychologicalTreatments && expedient.externalPsychologicalTreatments.length ? '' : 'No se han registrado tratamientos externos'}}
                     </p>
                     <ul>
                         <li *ngFor="let treatment of expedient.externalPsychologicalTreatments">{{treatment}}</li>

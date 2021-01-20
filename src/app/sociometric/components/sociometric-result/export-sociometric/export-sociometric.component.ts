@@ -12,6 +12,8 @@ import { SociometricResult } from 'src/app/sociometric/shared/sociometric-result
   styleUrls: ['./export-sociometric.component.css']
 })
 export class ExportSociometricComponent implements OnInit {
+  MAX_STUDENTS = 25;
+
   logo: string;
   name: string;
 

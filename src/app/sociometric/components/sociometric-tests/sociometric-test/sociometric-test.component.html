@@ -143,7 +143,7 @@
                             </a>
                         </ng-template>
                     </div>
-                    <div nz-col nzXs="24" nzMd="3">
+                    <div nz-col nzXs="24" nzMd="3" *ngIf="sociometricTest.status !== 'Finalizada'">
                         <a class="right" nz-tooltip nzTooltipTitle="Editar" (click)="openModal(item)">
                             <i nz-icon nzType="edit" nzTheme="outline"></i>
                         </a>
@@ -155,7 +155,7 @@
                     </div>
                 </ng-container>
             </div>
-            <div nz-col nzSpan="24">
+            <div nz-col nzSpan="24" *ngIf="sociometricTest.status !== 'Finalizada'">
                 <button nz-button nzGhost nzType="primary" class="add-button" (click)="openModal(null)">
                     Agregar programación
                 </button>

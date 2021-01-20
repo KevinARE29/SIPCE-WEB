@@ -46,7 +46,7 @@
 
             <div nz-col>
                 <ng-container *ngFor="let student of data.students; let i = index">
-                    <p *ngIf="i > data.students.length / 2">{{i + 1}}. {{student.firstname}} {{student.lastname}}</p>
+                    <p *ngIf="i >= data.students.length / 2">{{i + 1}}. {{student.firstname}} {{student.lastname}}</p>
                 </ng-container>
             </div>
         </div>
@@ -99,19 +99,24 @@
                         <p><strong>Matriz sociométrica</strong></p>
     
                         <div nz-row nzJustify="center">
-                            <div nz-col>
+                            <div nz-col class="sociomatrix-div">
                                 <nz-table class="sociomatrix">
                                     <tr>
-                                        <th>Estudiantes</th>
-                                        <th class="sociomatrix-data" *ngFor="let student of result.sociomatrixData.participants; let i = index">{{i + 1}}</th>
+                                        <th>{{result.sociomatrixData.participants.length > MAX_STUDENTS ? '#' : 'Estudiantes'}}</th>
+                                        <th class="sociomatrix-data" [class.sociomatrix-data-large-set]="result.sociomatrixData.participants.length > MAX_STUDENTS" *ngFor="let student of result.sociomatrixData.participants; let i = index">{{i + 1}}</th>
                                         <th class="sociomatrix-data">Ep</th>
                                         <th *ngIf="data.questionBank.questions[i].questionN" class="sociomatrix-data">En</th>
                                         <th class="sociomatrix-data">Rp</th>
                                         <th *ngIf="data.questionBank.questions[i].questionN" class="sociomatrix-data">Rn</th>
                                     </tr>
                                     <tr *ngFor="let student of result.sociomatrixData.participants; let j = index">
-                                        <td>{{j + 1}}. {{student.firstname}} {{student.lastname}}</td>
-                                        <td class="sociomatrix-data" [class.gray-bg]="j === k" *ngFor="let value of result.sociomatrixData.sociomatrix[j]; let k = index">{{value || ''}}</td>
+                                        <td class="sociomatrix-student">
+                                            <ng-container *ngIf="result.sociomatrixData.participants.length <= MAX_STUDENTS">
+                                                {{j + 1}}. {{student.firstname}} {{student.lastname}}
+                                            </ng-container>
+                                            <strong *ngIf="result.sociomatrixData.participants.length > MAX_STUDENTS">{{j + 1}}</strong>
+                                        </td>
+                                        <td class="sociomatrix-data" [class.sociomatrix-data-large-set]="result.sociomatrixData.participants.length > MAX_STUDENTS" [class.gray-bg]="j === k" *ngFor="let value of result.sociomatrixData.sociomatrix[j]; let k = index">{{value || ''}}</td>
                                         <td class="sociomatrix-data">{{result.sociomatrixData.sociometricValues.epArray[j]}}</td>
                                         <td *ngIf="data.questionBank.questions[i].questionN" class="sociomatrix-data">{{result.sociomatrixData.sociometricValues.enArray[j]}}</td>
                                         <td class="sociomatrix-data">{{result.sociomatrixData.sociometricValues.rpArray[j]}}</td>
