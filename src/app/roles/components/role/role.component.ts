@@ -83,7 +83,7 @@ export class RoleComponent implements OnInit {
       this.roleForm = this.fb.group({
         name: [
           null,
-          [Validators.required, Validators.maxLength(32), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
+          [Validators.required, Validators.maxLength(64), Validators.pattern('[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚñÑ ]+$')]
         ]
       });
 

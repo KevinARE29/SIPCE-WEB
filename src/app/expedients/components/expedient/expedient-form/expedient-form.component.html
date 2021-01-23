@@ -15,6 +15,7 @@
 
                             <ng-template #referrerNameErrors let-control>
                                 <ng-container *ngIf="control.hasError('required')">La persona que refiere es requerida<br></ng-container>
+                                <ng-container *ngIf="control.hasError('maxlength')">El nombre de la persona que refiere debe contener máximo 64 caracteres<br></ng-container>
                             </ng-template>
                         </nz-form-control>
                     </nz-form-item>
