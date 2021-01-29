@@ -43,6 +43,7 @@
         </span>
       </nz-page-header-tags>
       <nz-page-header-extra>
+        <a routerLink="/acerca-de">Acerca de</a>
         <!-- Request notifications -->
         <span class="requestsCounter" *ngIf="checkPermission(25)">
           <nz-badge [nzCount]="requestNotifications?.total">

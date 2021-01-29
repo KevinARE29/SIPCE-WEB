@@ -1,0 +1,44 @@
+<div nz-col nzXs="16" [nzLg]="{ span: 20, offset: 2}" [nzXl]="{ span: 16, offset: 4}">
+<div nz-row>
+      <h1>¿Que es SIAPCE?</h1>
+</div>
+
+<div nz-row>
+    <p>Las siglas SIAPCE significan Sistema Informático Academico y Psicologico de la Comunidad Educativa, 
+       el objetivo es apoyar las tareas realizadas por el departamento de orientación y el personal docente
+        en el ámbito conductual y psicológico de los estudiantes, a través del seguimiento y control del historial conductual
+        y expediente psicológico de cada alumno mediante la optimización del análisis y ejecución de pruebas sociométricas.  </p>
+    <h2>Creadores del Sistema Informático:</h2>
+</div>
+<center>
+<div nz-row [nzGutter]="[24, 24]">
+   <div nz-col nzSpan="12">
+   <nz-card nzHoverable [nzCover]="coverTemplate">
+        <nz-card-meta nzTitle="Equipo de trabajo de graduación" nzDescription="Universidad de El Salvador">
+        </nz-card-meta>
+        <nz-card-meta class="description "
+            nzDescription="El grupo de estudiantes desarrollo SIAPCE, como parte de su trabajo de graduación, utilizando estandares de desarrollo y tecnologias vanguardistas para garantizar un producto final de calidad.">
+        </nz-card-meta>
+    </nz-card>
+    <ng-template #coverTemplate>
+        <img alt="Minerva" src="../../../assets/Minerva-about-page.png" />
+    </ng-template>
+   </div>
+ 
+   <div nz-col nzSpan="10">
+    <nz-card nzHoverable [nzCover]="coverTemplateTwo">
+        <nz-card-meta nzTitle="Supervisora del proyecto" nzDescription="Liceo Salvadoreño">
+        </nz-card-meta>
+        <nz-card-meta class="description"
+            nzDescription="Para la validación del producto desarrollado se conto con el apoyo de las autoridades del Liceo Salvadoreño, personal administrativo,
+             técnico y el departamento de orientación. Se agradece especialmente la supervisión de la Licenciada Sandra Coto">
+        </nz-card-meta>
+    </nz-card>
+    <ng-template #coverTemplateTwo>
+        <img alt="Liceo-Salvadoreño" src="../../../assets/logos/logo-color.png" />
+    </ng-template>
+    </div>
+</div>
+</center>
+</div>
+

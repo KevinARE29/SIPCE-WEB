@@ -107,6 +107,11 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'acerca-de',
+    loadChildren: () => import('./about-page/about-page.module').then((m) => m.AboutPageModule)
+    // canLoad: [AuthGuard]
+  },
+  {
     path: '**',
     redirectTo: '/error404',
     pathMatch: 'full'
