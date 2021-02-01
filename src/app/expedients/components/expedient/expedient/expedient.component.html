@@ -35,7 +35,7 @@
         <app-expedient-view *ngIf="!editing"
                             [studentId]="studentId"
                             [expedient]="selectedExpedientExists ? selectedExpedient : null"
-                            [isEditable]="selectedExpedientIsEditable"
+                            [isEditable]="selectedExpedientIsEditable && !selectedExpedient.finalConclusion"
                             [currentYear]="currentYear"
                             (initEditing)="setEditing(true)"
         ></app-expedient-view>
@@ -50,7 +50,7 @@
        <app-sessions-counter *ngIf="selectedExpedientExists"
                             [studentId]="studentId"
                             [expedientId]="selectedExpedient.id"
-                            [isEditable]="selectedExpedientIsEditable"
+                            [isEditable]="selectedExpedientIsEditable && !selectedExpedient.finalConclusion"
                             [sessionsCounter]="selectedExpedient.sessionsCounter"
        ></app-sessions-counter> 
     </ng-container>
