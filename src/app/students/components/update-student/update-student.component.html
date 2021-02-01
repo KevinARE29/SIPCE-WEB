@@ -89,7 +89,7 @@
                 <div nz-row  [nzGutter]="10">
                     <nz-divider nzText="Asignación" nzOrientation="left"></nz-divider>
                     <!-- Shift -->
-                    <div nz-col nzXs="24" nzLg="8" [nzXl]="{span: 7, offset: 1}">
+                    <div nz-col nzXs="24" nzLg="8" [nzXl]="{span: 8, offset: 1}">
                         <nz-form-item>
                             <nz-form-label nzXs="9" nzLg="9" nzXl="10" nzFor="shift">Turno</nz-form-label>
                             <nz-form-control nzErrorTip="El turno es requerido">
@@ -103,7 +103,7 @@
                     </div>
 
                     <!-- Grade -->
-                    <div nz-col nzXs="24" nzLg="8" nzXl="7">
+                    <div nz-col nzXs="24" nzLg="8" nzXl="8">
                         <nz-form-item>
                             <nz-form-label nzXs="9" nzLg="9" nzXl="10" nzFor="currentGrade">Grado</nz-form-label>
                             <nz-form-control nzErrorTip="El grado es requerido">
@@ -115,27 +115,13 @@
                             </nz-form-control>
                         </nz-form-item>
                     </div>
-
-                    <!-- Section -->
-                    <div nz-col nzXs="24" nzLg="8" nzXl="7">
-                        <nz-form-item>
-                            <nz-form-label nzXs="9" nzLg="9" nzXl="10" nzFor="section">Sección</nz-form-label>
-                            <nz-form-control nzErrorTip="La sección es requerida">
-                                <nz-select id="section" nzShowSearch formControlName="section"
-                                    nzPlaceHolder="Seleccionar">
-                                    <nz-option *ngFor="let section of sections" [nzValue]="section.id"
-                                        [nzLabel]="section.name"></nz-option>
-                                </nz-select>
-                            </nz-form-control>
-                        </nz-form-item>
-                    </div>
                 </div>
 
                 <!----------        Registration data        ---------->
                 <div nz-row [nzGutter]="10">
                     <nz-divider nzText="Ingreso" nzOrientation="left"></nz-divider>
                     <!-- Registration Year -->
-                    <div nz-col nzXs="24" nzLg="12" nzXl="11">
+                    <div nz-col nzXs="24" nzLg="8" [nzXl]="{span: 8, offset: 1}">
                         <nz-form-item>
                             <nz-form-label nzXs="9" nzLg="10" nzXl="10">Año de ingreso</nz-form-label>
                             <nz-form-control nzDisableAutoTips [nzErrorTip]="registrationYearError">
@@ -150,7 +136,7 @@
                     </div>
 
                     <!-- Registration Grade -->
-                    <div nz-col nzXs="24" nzLg="12" nzXl="11">
+                    <div nz-col nzXs="24" nzLg="8" nzXl="8">
                         <nz-form-item>
                             <nz-form-label nzXs="9" nzLg="12" nzXl="10" nzFor="registrationGrade">Grado</nz-form-label>
                             <nz-form-control nzDisableAutoTips [nzErrorTip]="registrationGradeError">
