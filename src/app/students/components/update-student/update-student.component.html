@@ -147,9 +147,7 @@
                                 </nz-select>
                                 <ng-template #registrationGradeError let-control>
                                     <ng-container *ngIf="control.hasError('required')">El grado de ingreso es requerido</ng-container>
-                                    <!-- <ng-container *ngIf="control.hasError('higherthan')">
-                                      El grado de registro no puede ser mayor al grado actual.
-                                    </ng-container> -->
+                                    <ng-container *ngIf="control.hasError('registrationAfterCurrent')">El grado de registro debe ser igual o menor que el grado actual.<br></ng-container>
                                 </ng-template>
                             </nz-form-control>
                         </nz-form-item>

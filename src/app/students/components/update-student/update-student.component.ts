@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { differenceInCalendarDays, getYear } from 'date-fns';
@@ -120,11 +120,28 @@ export class UpdateStudentComponent implements OnInit {
       status: ['', [Validators.required]],
       shift: ['', [Validators.required]],
       currentGrade: ['', [Validators.required]],
-      registrationGrade: ['', [Validators.required]],
+      registrationGrade: ['', [Validators.required, this.validateRegistrationGrade]],
       registrationYear: ['', [Validators.required]],
       searchSibling: ['']
     });
+
+    this.studentForm.get('currentGrade').valueChanges.subscribe(() => {
+      this.studentForm.get('registrationGrade').updateValueAndValidity();
+    });
   }
+
+  validateRegistrationGrade = (control: FormControl): { [s: string]: boolean } => {
+    console.log(this.studentForm, this.activeGrades);
+    if (this.studentForm && this.activeGrades) {
+      const currentGrade = this.studentForm.controls.currentGrade.value;
+      console.log(currentGrade, control.value);
+      if (control.value && control.value > currentGrade) {
+        return { registrationAfterCurrent: true };
+      }
+    }
+
+    return {};
+  };
 
   validateRouteParam(): void {
     this.route.paramMap.subscribe((params) => {
