@@ -89,7 +89,6 @@ export class UploadUsersComponent implements OnInit {
             this._listOfColumns = JSON.parse(JSON.stringify(r['headers']));
             this.generateTable(r);
           } else {
-            // TODO: Improve this code
             this.notification.create(
               'error',
               'Ocurrió un error al intentar cargar el archivo.',
