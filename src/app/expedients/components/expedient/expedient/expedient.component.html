@@ -1,4 +1,4 @@
-<nz-spin nzTip="Cargando ..." [nzSpinning]="loadingExpedients">
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loadingExpedients && !errorMessage">
 
     <div nz-row nzJustify="space-between">
         <div nz-col nzXs="24" nzMd="6" nzLg="4" nzXl="3">
@@ -23,6 +23,11 @@
             <button *ngIf="selectedExpedientExists" nz-button nzGhost [nzLoading]="loadingReport" nzType="primary" (click)="setShowReportModal(true)">Generar reporte</button>
         </div>
     </div>
+
+    <p>
+        <!-- If there's an error, show it. -->
+        {{errorMessage}}
+    </p>  
 
     <ng-container *ngIf="!loadingExpedients">
         <app-students-details-expedient [id]="studentId"></app-students-details-expedient>

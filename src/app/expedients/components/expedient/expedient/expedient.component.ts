@@ -39,6 +39,9 @@ export class ExpedientComponent implements OnInit {
   // Current year, to add it to labels.
   currentYear = new Date().getFullYear();
 
+  // Error message
+  errorMessage: string;
+
   constructor(
     private route: ActivatedRoute,
     private expedientService: ExpedientService,
@@ -52,11 +55,16 @@ export class ExpedientComponent implements OnInit {
     }
 
     this.loadingExpedients = true;
-    this.expedientService.getExpedients(this.studentId).subscribe((r) => {
-      this.expedients = r;
-      this.setSelectedExpedient(0);
-      this.loadingExpedients = false;
-    });
+    this.expedientService.getExpedients(this.studentId).subscribe(
+      (r) => {
+        this.expedients = r;
+        this.setSelectedExpedient(0);
+        this.loadingExpedients = false;
+      },
+      (error) => {
+        this.errorMessage = error.message;
+      }
+    );
   }
 
   setSelectedExpedient(index: number): void {
