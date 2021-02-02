@@ -131,10 +131,9 @@ export class UpdateStudentComponent implements OnInit {
   }
 
   validateRegistrationGrade = (control: FormControl): { [s: string]: boolean } => {
-    console.log(this.studentForm, this.activeGrades);
     if (this.studentForm && this.activeGrades) {
       const currentGrade = this.studentForm.controls.currentGrade.value;
-      console.log(currentGrade, control.value);
+
       if (control.value && control.value > currentGrade) {
         return { registrationAfterCurrent: true };
       }
