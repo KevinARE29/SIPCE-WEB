@@ -23,6 +23,7 @@ export class EditQuestionBankComponent implements OnInit {
   questionBankForm!: FormGroup;
   questionBank: QuestionBank;
   listOfControl: Array<{ id: number; controlInstance: string; type: string; counter: number }> = [];
+  minQuestionsError = false;
 
   constructor(
     private router: Router,
@@ -186,6 +187,8 @@ export class EditQuestionBankComponent implements OnInit {
 
         break;
     }
+
+    this.minQuestionsError = false;
   }
 
   removeField(i: { id: number; controlInstance: string; type: string; counter: number }, e: MouseEvent): void {
@@ -199,6 +202,8 @@ export class EditQuestionBankComponent implements OnInit {
     });
 
     if (elementsToRemove.length) this.reorderCounters();
+
+    if (!this.listOfControl.length) this.minQuestionsError = true;
   }
 
   submitForm(): void {
@@ -209,6 +214,8 @@ export class EditQuestionBankComponent implements OnInit {
 
     if (this.questionBankForm.valid) {
       this.transformBody();
+    } else {
+      if (!this.listOfControl.length) this.minQuestionsError = true;
     }
   }
 
@@ -247,29 +254,33 @@ export class EditQuestionBankComponent implements OnInit {
   }
 
   editQuestionBank(): void {
-    this.loading = true;
-    this.questionBankService.updateQuestionBank(this.questionBank).subscribe(
-      () => {
-        this.loading = false;
-        this.message.success(`El banco de preguntas '${this.questionBank.name}' se ha actualizado con éxito.`);
-      },
-      (error) => {
-        this.loading = false;
-        const statusCode = error.statusCode;
-        const notIn = [401, 403];
+    if (this.questionBank.questions.length) {
+      this.questionBankService.updateQuestionBank(this.questionBank).subscribe(
+        () => {
+          this.loading = false;
+          this.message.success(`El banco de preguntas '${this.questionBank.name}' se ha actualizado con éxito.`);
+        },
+        (error) => {
+          this.loading = false;
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
 
-        if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create(
-            'error',
-            'Ocurrió un error al intentar actualizar el banco de preguntas.',
-            error.message,
-            {
-              nzDuration: 30000
-            }
-          );
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create(
+              'error',
+              'Ocurrió un error al intentar actualizar el banco de preguntas.',
+              error.message,
+              {
+                nzDuration: 30000
+              }
+            );
+          }
         }
-      }
-    );
+      );
+    } else {
+      this.loading = false;
+      this.minQuestionsError = true;
+    }
   }
 
   reorderCounters(): void {
