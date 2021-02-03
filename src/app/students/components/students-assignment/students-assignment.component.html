@@ -339,10 +339,11 @@
     <ng-template #modalTitle> Vincular estudiantes </ng-template>
 
     <ng-template #modalContent>
-        <p *ngFor="let data of filteredList">
-            {{ data.student.firstname}} {{ data.student.lastname }}
-        </p>
-        <br>
+        <div class="students">
+            <p *ngFor="let data of filteredList">
+                {{ data.student.firstname}} {{ data.student.lastname }}
+            </p>
+        </div>
         <i>Se vinculará a {{ setOfCheckedId.size }}
             <ng-container *ngIf="setOfCheckedId.size === 1;else plural">estudiante.</ng-container>
             <ng-template #plural>estudiantes.</ng-template>
@@ -361,10 +362,11 @@
     <ng-template #modalTitleU> Desvincular estudiantes </ng-template>
 
     <ng-template #modalContentU>
-        <p *ngFor="let data of filteredList">
-            {{ data.student.firstname}} {{ data.student.lastname }}
-        </p>
-        <br>
+        <div class="students">
+            <p *ngFor="let data of filteredList">
+                {{ data.student.firstname}} {{ data.student.lastname }}
+            </p>
+        </div>
         <i>Se desvinculará a {{ setOfStudentsCheckedId.size }}
             <ng-container *ngIf="setOfStudentsCheckedId.size === 1;else pluralU">estudiante.</ng-container>
             <ng-template #pluralU>estudiantes.</ng-template>

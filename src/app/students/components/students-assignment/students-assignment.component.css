@@ -18,3 +18,9 @@ nz-select {
 .btn-container {
   height: 100%;
 }
+
+.students {
+  margin-bottom: 15px;
+  max-height: 360px;
+  overflow-y: auto;
+}
