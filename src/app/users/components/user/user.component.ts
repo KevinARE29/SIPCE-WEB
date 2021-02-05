@@ -338,6 +338,7 @@ export class UserComponent implements OnInit {
   }
 
   filterOption(inputValue: string, item: any): boolean {
-    return item.description.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
+    return item.title.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+            || item.description.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
   }
 }

@@ -1,0 +1,75 @@
+<div class="welcome-background-image">
+    <div nz-row nzAlign="middle" nzJustify="space-around" class="welcome-background-color">
+        
+        <!-- Logo and links -->
+        <div class="welcome-background" nz-col nzXl="6" nzLg="7" nzMd="8">
+            <div nz-row nzJustify="center">
+                <img class="welcome-logo" [src]="logo" alt="Logo">
+            </div>
+            <div class="welcome-link">
+                <strong class="hide-on-small">¿Ya tiene una cuenta en SIAPCE?</strong>
+                <p class="hide-on-small">Inicie sesión en tu cuenta <a class="primary" [routerLink]="['/login']">aquí</a></p>
+                <a nz-button nzType="primary" [routerLink]="['/login']">Iniciar sesión</a>
+            </div>
+            <div class="welcome-link">
+                <strong class="hide-on-small">¿Tiene una prueba sociométrica agendada?</strong>
+                <p class="hide-on-small">Acceda a la prueba <a class="primary" [routerLink]="['/prueba-sociometrica']">aquí</a></p>
+                <a nz-button nzType="primary" [routerLink]="['/prueba-sociometrica']"> Realizar prueba </a>
+            </div>
+        </div>
+        <!-- / Logo and links -->
+
+        <!-- Form -->
+        <div class="welcome-background-card" nz-col nzXl="8" nzLg="9" nzMd="12" nzSm="16" nzXs="20">
+            <nz-card>
+                <h2>Solicitar consulta de consejería</h2>
+                <p>Recuerda que si eres estudiante a partir de sexto grado puedes solicitar tu consulta de consejería
+                    aquí.</p>
+                <form nz-form [formGroup]="counselingConsultationForm" (submit)="requestConsulation()">
+                    <nz-form-item>
+                        <nz-form-label nzSpan="24">Correo electrónico</nz-form-label>
+                        <nz-form-control [nzErrorTip]="emailErrors">
+                            <input type="email" nz-input placeholder="Correo electrónico institucional"
+                                formControlName="email" />
+                                <ng-template #emailErrors let-control>
+                                    <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres<br></ng-container>
+                                    <ng-container *ngIf="control.hasError('required')">El correo electrónico es requerido<br></ng-container>
+                                    <ng-container *ngIf="control.hasError('pattern')">Ingrese un correo electrónico válido<br></ng-container>
+                                </ng-template>
+                            </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label nzSpan="24">Asunto</nz-form-label>
+                        <nz-form-control [nzErrorTip]="subjectErrors">
+                            <input type="text" nz-input placeholder="Asunto de la consulta" formControlName="subject" />
+                            <ng-template #subjectErrors let-control>
+                                <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 128 caracteres<br></ng-container>
+                                <ng-container *ngIf="control.hasError('required')">El asunto es requerido<br></ng-container>
+                                <ng-container *ngIf="control.hasError('pattern')">El asunto solo puede contener letras<br></ng-container>
+                            </ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label nzSpan="24">Comentario</nz-form-label>
+                        <nz-form-control [nzErrorTip]="commentErrors">
+                            <textarea formControlName="comment" nz-input rows=""></textarea>
+                            <ng-template #commentErrors let-control>
+                                <ng-container *ngIf="control.hasError('maxlength')">La longitud máxima es de 512 caracteres<br></ng-container>
+                            </ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item nzJustify="space-around">
+                        <button nz-button [nzLoading]="btnLoading" [nzType]="'primary'">
+                            Solicitar consulta
+                        </button>
+                    </nz-form-item>
+                </form>
+            </nz-card>
+        </div>
+        <!-- / Form -->
+
+    </div>
+</div>

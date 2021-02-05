@@ -241,11 +241,110 @@ export class SchoolYearService {
       .pipe(catchError(this.handleError()));
   }
 
+  saveTeachers(schoolYear: unknown): Observable<void> {
+    const assignment = new Array<unknown>();
+
+    schoolYear['shifts'].forEach((shift) => {
+      const grades = new Array<unknown>();
+
+      shift['shift']['cycles'].forEach((cycle) => {
+        cycle['gradeDetails'].forEach((grade) => {
+          const sections = new Array<unknown>();
+
+          grade['sectionDetails'].forEach((section) => {
+            const teachers = new Array<number>();
+            section['auxTeachers'].forEach((teacher) => {
+              teachers.push(teacher.id);
+            });
+            sections.push({ sectionId: section['section']['id'], auxTeacherIds: teachers });
+          });
+
+          grades.push({ gradeId: grade['grade']['id'], sections });
+        });
+      });
+      // eslint-disable-next-line prefer-const
+      const mappedShift = { shiftId: shift['shift'].id, grades: grades };
+
+      assignment.push(mappedShift);
+    });
+
+    return this.http
+      .post<void>(`${this.baseUrl}academics/school-year/aux-teachers`, JSON.stringify({ shifts: assignment }))
+      .pipe(catchError(this.handleError()));
+  }
+
+  getClosingStatus(): Observable<unknown> {
+    return this.http.get<unknown>(`${this.baseUrl}academics/school-year/closing-status`).pipe(
+      map((response) => {
+        const shifts: unknown[] = [];
+
+        Object.values(response['cycleDetails']).forEach((data) => {
+          const grades: unknown[] = [];
+          // Cycle
+          data['cyclesDetails'].forEach((cycle) => {
+            // Grade
+            cycle['gradeDetails'].forEach((grade) => {
+              let sections: unknown[] = [];
+              // Section
+              grade['sectionDetails'].forEach((section) => {
+                sections.push({
+                  id: section['section']['id'],
+                  name: section['section']['name'],
+                  teacher: section['teacher']['firstname'].concat(' ', section['teacher']['lastname']),
+                  closed: section['closed']
+                });
+              });
+
+              // Sort sections
+              sections.sort((a, b) => a['name'].localeCompare(b['name']));
+              sections = sections
+                .filter((x) => x['name'].length === 1)
+                .concat(sections.filter((x) => x['name'].length > 1));
+
+              grades.push({
+                id: grade['grade']['id'],
+                name: grade['grade']['name'],
+                gradePercentage: grade['gradePercentage'],
+                expand: false,
+                sections: sections
+              });
+            });
+          });
+
+          shifts.push({
+            id: data['cyclesDetails'][0]['shift']['id'],
+            name: data['cyclesDetails'][0]['shift']['name'],
+            shiftPercentage: data['shiftPercentage'],
+            grades: grades.sort((a, b) => a['id'] - b['id'])
+          });
+        });
+
+        response['shifts'] = shifts;
+
+        return response;
+      }),
+      catchError(this.handleError())
+    );
+  }
+
   startSchoolYear(): Observable<void> {
     const body = JSON.stringify({ status: 'En curso' });
 
     return this.http.patch<void>(`${this.baseUrl}academics/school-year`, body).pipe(catchError(this.handleError()));
   }
+
+  closeSchoolYear(): Observable<void> {
+    const body = JSON.stringify({ status: 'Histórico' });
+
+    return this.http.patch<void>(`${this.baseUrl}academics/school-year`, body).pipe(catchError(this.handleError()));
+  }
+
+  closeSection(sectionId: number): Observable<void> {
+    return this.http
+      .get<void>(`${this.baseUrl}academics/school-year/close-section/${sectionId}`)
+      .pipe(catchError(this.handleError()));
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.

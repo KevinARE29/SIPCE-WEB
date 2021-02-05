@@ -6,14 +6,28 @@
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CalendarComponent } from './components/calendar.component';
-
 import { AuthGuard } from '../login/guards/auth.guard';
+
+import { UpcomingEventsComponent } from './components/upcoming-events/upcoming-events.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
+import { CounselingRequestsComponent } from './components/counseling-requests/counseling-requests.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'eventos',
     component: CalendarComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 19 }
+  },
+  {
+    path: 'proximos',
+    component: UpcomingEventsComponent,
+    canActivate: [AuthGuard],
+    data: { permission: 19 }
+  },
+  {
+    path: 'solicitudes',
+    component: CounselingRequestsComponent,
     canActivate: [AuthGuard],
     data: { permission: 22 }
   },

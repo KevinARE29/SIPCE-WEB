@@ -1,0 +1,54 @@
+<div nz-row nzGutter="20">
+    <div nz-col nzXs="24" nzSm="12">
+        <nz-card>
+            <p>
+                <strong>Resultados generales al final del año</strong>
+                <i nz-icon nzType="question-circle" nzTheme="outline" class="help" nz-tooltip 
+                    nzTooltipTitle="Al agregar el comentario final el historial dejará de ser editable y solamente podrán realizarse actualizaciones sobre este comentario."></i>
+            </p>
+            
+            <!-- Show existing final conclusion, if exists. -->
+            <p *ngIf="history.finalConclusion && !editing">
+                {{history.finalConclusion}} <i *ngIf="isEditable" (click)="onInitiEditingFinalConclusion()" nz-icon nzType="edit" nzTheme="outline"></i>
+            </p>
+
+            <!-- Show image and option if it doesn't exist-->
+            <ng-container *ngIf="!history.finalConclusion && !editing">
+                <nz-empty  [nzNotFoundContent]="isEditable ? addFinalConclusion : 'Sin resultado general'"></nz-empty>
+
+                <ng-template #addFinalConclusion>
+                    <a (click)="onInitiEditingFinalConclusion()">Agregar comentario final</a>
+                </ng-template>
+            </ng-container>
+
+            <!-- Add or edit final conclusion -->
+            <ng-container *ngIf="editing">
+                <nz-spin nzTip="Cargando ..." [nzSpinning]="loadingAction">
+                    <textarea nz-input [(ngModel)]="finalConclusion" placeholder="Resultado general"></textarea>
+                    <p class="btn-editing-conclusion">
+                        <a class="btn-cancel-editing" (click)="cancelEditignFinalConclusion()">Cancelar</a>
+                        <a (click)="saveHistory()">Guardar</a>
+                    </p>
+                </nz-spin>
+            </ng-container>
+        </nz-card>
+    </div>
+    <div nz-col nzXs="24" nzSm="12">
+        <nz-card>
+            <p><strong>Seguimiento de consejería</strong></p>
+
+            <ng-container *ngIf="history.expedients && history.expedients.length; else noConclusion">
+                <div *ngFor="let expedient of history.expedients">
+                    <ng-container *ngIf="expedient.finalConclusion; else noConclusion">
+                        <p class="expedient-comment">{{expedient.finalConclusion}}</p>
+                        <p class="expedient-author">Autor: {{expedient.author}}</p>
+                    </ng-container>
+                </div>
+            </ng-container>
+
+            <ng-template #noConclusion>
+                <nz-empty nzNotFoundContent="Sin comentario final de consejería"></nz-empty>
+            </ng-template>
+        </nz-card>
+    </div>
+</div> 

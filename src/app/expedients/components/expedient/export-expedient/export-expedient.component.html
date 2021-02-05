@@ -1,0 +1,202 @@
+<div *ngIf="!loadingData" class="ant-card-body">
+
+    <!-- Header -->
+    <div nz-row nzGutter="30">
+        <div nz-col nzOffset="1">
+            <img class="logo" [src]="logo" alt="Logo">
+        </div>
+
+        <div nz-col nzSpan="8">
+            <h2 class="document-institution text-blue">{{ name | uppercase }}</h2>
+            <h3>Expediente psicológico</h3>
+            <p class="text-blue-light">Fecha: {{data.date}}</p>
+        </div>
+
+        <div nz-col nzSpan="11">
+            <div class="student-data" nz-row nzGutter="10" nzAlign="bottom">
+
+                <div nz-col nzSpan="24">
+                    <p>Estudiante: {{data.student.firstname}} {{data.student.lastname}}</p>
+                </div>
+
+                <div nz-col nzSpan="9">
+                    <p>NIE: {{data.student.code}}</p>
+                    <p>Turno: {{data.student.currentShift.name}}</p>
+                </div>
+
+                <div nz-col nzSpan="8">
+                    <p>Edad: {{data.student.age}} años</p>
+                    <p>Grado: {{data.student.currentGrade.name}}</p>
+                </div>
+
+                <div nz-col nzSpan="7">
+                    <p></p>
+                    <p>Sección: {{data.student.section.name}}</p>
+                </div>
+            </div>
+        </div>        
+    </div>
+
+    <nz-divider class="main-divider text-blue"></nz-divider>
+    <!-- / Header -->
+
+    <!-- General data -->
+    <p>Registro generado con los registros del estudiantes desde el día {{data.expedient.createdAtString}} a la fecha.</p>
+
+    <p class="title">Expediente {{data.expedient.expedientYear}}</p>
+
+    <p><strong class="text-blue-light">Orientador: </strong>{{data.expedient.expedientCounselor.firstname}}  {{data.expedient.expedientCounselor.lastname}}</p>
+
+    <div nz-row *ngIf="filters.includes('references')">
+        <div nz-col>
+            <p><strong class="text-blue-light">Referencia</strong></p>
+            <p><strong>Fue referido por: </strong>{{data.expedient.referrerName}}</p>
+            <p><strong>Motivo: </strong>{{data.expedient.reason}}</p>
+            <p><strong>Descripción de la problemática: </strong>{{data.expedient.problemDescription}}</p>
+        </div>
+    </div>
+
+    <div nz-row class="not-break-inside">
+        <div nz-col nzSpan="12" *ngIf="filters.includes('externalPsychologicalTreatments')">
+            <p><strong class="text-blue-light">Tratamientos externos</strong></p>
+            <p *ngIf="!data.expedient.externalPsychologicalTreatments || data.expedient.externalPsychologicalTreatments.length === 0">
+                No se han registrado tratamientos externos
+            </p>
+            <ul>
+                <li *ngFor="let treatment of data.expedient.externalPsychologicalTreatments">{{treatment}}</li>
+                <li *ngIf="data.expedient.otherExternalPsychologicalTreatment"> {{ data.expedient.otherExternalPsychologicalTreatment }}</li> 
+            </ul>
+        </div>
+
+        <div nz-col nzSpan="12">
+            <p><strong class="text-blue-light">Programas de intervención</strong></p>
+
+            <p *ngIf="!data.expedient.activeInterventionPrograms || data.expedient.activeInterventionPrograms.length === 0">
+                No se han registrado programas de intervención
+            </p>
+
+            <ul>
+                <li *ngFor="let program of data.expedient.activeInterventionPrograms">{{program.name}}</li>
+            </ul>
+        </div>
+    </div>
+
+    <div nz-row class="not-break-inside">
+        <div nz-col nzSpan="24" *ngIf="filters.includes('diagnosticImpression')">
+            <p><strong class="text-blue-light">Impresión diagnóstica</strong></p>
+
+            <nz-tag *ngFor="let category of data.expedient.diagnosticImpressionCategories"> {{ category }}</nz-tag>
+            <nz-tag *ngIf="data.expedient.otherDiagnosticImpressionCategory"> {{ data.expedient.otherDiagnosticImpressionCategory }}</nz-tag> 
+
+            <p>
+                {{data.expedient.diagnosticImpression || 'No se ha registrado una impresión diagnóstica'}}
+            </p>
+        </div>
+    </div>
+
+    <div nz-row class="not-break-inside">
+        <div nz-col nzSpan="24" *ngIf="filters.includes('actionPlan')">
+            <p><strong class="text-blue-light">Plan de acción</strong></p>
+            <p>
+                {{data.expedient.actionPlan || 'No se ha registrado el plan de acción'}}
+            </p>
+        </div>
+    </div>
+    <!-- / General data -->
+
+    <!-- Sessions -->
+    <nz-divider class="section-divider text-blue" nzOrientation="center" nzText="Sesiones y entrevistas"></nz-divider>
+
+    <ng-container *ngFor="let session of data.expedient.sessions">
+        <div nz-row class="not-break-inside">
+            <div nz-col nzSpan="24">
+                <p><strong>{{session.sessionType}} {{session.identifier || ''}}</strong> Fecha: {{session.startDateString}}</p>
+            </div>
+
+            <div nz-col nzSpan="22" nzOffset="1">
+                
+                <!-- Participants -->
+                <div nz-row *ngIf="(session.counselor && session.counselor.length) || session.sessionResponsibleAssistence">
+                    <div nz-col>
+                        <p><strong>Participantes:</strong></p>
+                
+                        <ul *ngIf="session.counselor.length">
+                            <li *ngFor="let participant of session.counselor">
+                                {{participant.firstname}} {{participant.lastname}}
+                            </li>
+                        </ul>
+                        
+                        <ul *ngIf="session.sessionResponsibleAssistence">
+                            <li *ngIf="session.sessionResponsibleAssistence.responsible1Assistence">
+                                {{session.sessionResponsibleAssistence.responsible1.firstname}} {{session.sessionResponsibleAssistence.responsible1.lastname}}
+                            </li>
+                            
+                            <li *ngIf="session.sessionResponsibleAssistence.responsible2Assistence">
+                                {{session.sessionResponsibleAssistence.responsible2.firstname}} {{session.sessionResponsibleAssistence.responsible2.lastname}}
+                            </li>
+                            
+                            <li *ngIf="session.sessionResponsibleAssistence.otherResponsibleName">
+                                {{session.sessionResponsibleAssistence.otherResponsibleName}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- / Participants -->
+
+                <!-- Evaluations -->
+                <div nz-row *ngIf="filters.includes('evaluations')">
+                    <div nz-col>
+                        <p><strong>Evaluaciones:</strong></p>
+                        <p *ngIf="session.evaluations.length === 0">No se han registrado evaluaciones</p>
+                        
+                        <ul>
+                            <li *ngFor="let evaluation of session.evaluations">
+                                {{evaluation.description}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- / Evaluations -->
+
+                <!-- Comments -->
+                <div nz-row>
+                    <div nz-col>
+                        <p><strong>Comentarios:</strong></p>
+                        <div [innerHTML]="session.comments"></div>
+                    </div>
+                </div>
+                <!-- / Comments -->
+
+            </div>
+
+        </div>
+    </ng-container>
+    <!-- / Sessions -->
+
+    <!-- Final conclusion -->
+    <div nz-row class="not-break-inside">
+        <div nz-col nzSpan="24">
+            <p><strong class="text-blue-light">Comentario final</strong></p>
+            <p>
+                {{data.expedient.finalConclusion || 'No se ha registrado el comentario final'}}
+            </p>
+        </div>
+    </div>
+    <!-- / Final conclusion -->
+
+    <!-- Signatures -->
+    <div class="signatures not-break-inside" nz-row>
+        <div nz-col nzSpan="24">
+            
+            <div nz-row [nzGutter]="[30, 30]">
+                <div nz-col nzSpan="8">
+                    <nz-divider class="signature-divider"></nz-divider>
+                    {{data.expedient.expedientCounselor.firstname}}  {{data.expedient.expedientCounselor.lastname}} <br>
+                    Orientador
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / Signatures -->
+
+</div>

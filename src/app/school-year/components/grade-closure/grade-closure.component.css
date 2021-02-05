@@ -1,0 +1,19 @@
+h1 {
+    margin-right: 10px;
+}
+
+.grade-name, nz-table, nz-progress, .close {
+  margin-top: 15px;
+}
+
+.green {
+  color: #00CE4E;
+}
+
+.grey {
+  color: #999999;
+}
+
+nz-select {
+  width: 100%;
+}

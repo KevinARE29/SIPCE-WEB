@@ -1,0 +1,162 @@
+<nz-spin [nzSpinning]="loadingTest" nzTip="Cargando...">
+    <div nz-row nzGutter="20">
+        <div nz-col>
+            <h1>Prueba sociométrica</h1>
+            <p *ngIf="sociometricTest">{{sociometricTest.shift.name}}, <span class="text-color">{{sociometricTest.grade.name}} {{sociometricTest.section.name}}</span> ({{sociometricTest.createdAt | date: 'yyyy'}})</p>
+        </div>
+    </div>
+
+    <div nz-row nzJustify="center" *ngIf="student">
+        <div nz-col>
+            <p><strong>{{student.firstname}} {{student.lastname}}</strong></p>
+        </div>
+    </div>
+
+    <div nz-row nzGutter="20">
+        <div nz-col>
+            Pregunta: 
+        </div>
+        <div nz-col nzXs="24" nzMd="16">
+            <nz-select nzShowSearch [(ngModel)]="questionId"
+                (ngModelChange)="onQuestionSelect()" nzPlaceHolder="Seleccionar" [nzLoading]="loadingTest">
+                <nz-option *ngFor="let question of questions" [nzValue]="question.id" [nzLabel]="question.questionN ? question.questionP + '/' + question.questionN : question.questionP">
+                </nz-option>
+            </nz-select>
+        </div>
+    </div>
+</nz-spin>
+
+<nz-spin [nzSpinning]="loadingResult" nzTip="Cargando...">
+    <ng-container *ngIf="questionId">
+        <nz-divider nzText="Valores sociométricos" nzOrientation="left"></nz-divider>
+
+        <div *ngIf="!loadingResult && sociometricResult" nz-row [nzGutter]="[20, 20]">
+            <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Expansividad positiva <i nz-icon nzType="info-circle" nzTheme="outline" nz-tooltip nzTooltipTitle="Número de elecciones realizadas"></i></p>
+                <p>Ep <strong>{{sociometricResult.individualIndex.sociometricValues.ep}}</strong></p>
+            </div>
+
+            <div *ngIf="!questionIsAboutLidership" class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Expansividad negativa <i nz-icon nzType="info-circle" nzTheme="outline" nz-tooltip nzTooltipTitle="Número de rechazos realizados"></i></p>
+                <p>En <strong>{{sociometricResult.individualIndex.sociometricValues.en}}</strong></p>
+            </div>
+
+            <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Elecciones recíprocas <i nz-icon nzType="info-circle" nzTheme="outline" nz-tooltip nzTooltipTitle="Número de elecciones mutuas"></i></p>
+                <p>Rp <strong>{{sociometricResult.individualIndex.sociometricValues.rp}}</strong></p>
+            </div>
+
+            <div *ngIf="!questionIsAboutLidership" class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Rechazos recíprocos <i nz-icon nzType="info-circle" nzTheme="outline" nz-tooltip nzTooltipTitle="Número de rechazos mutuos"></i></p>
+                <p>Rn <strong>{{sociometricResult.individualIndex.sociometricValues.rn}}</strong></p>
+            </div>
+
+            <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Estatus de elecciones <i nz-icon nzType="info-circle" nzTheme="outline" nz-tooltip nzTooltipTitle="Número de elecciones recibidas"></i></p>
+                <p>Sp <strong>{{sociometricResult.individualIndex.sociometricValues.sp}}</strong></p>
+            </div>
+
+            <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Estatus de elecciones valorizados <i nz-icon nzType="info-circle" nzTheme="outline" nz-tooltip nzTooltipTitle="Ponderación del valor de cada elección con base en el orden de preferencia"></i></p>
+                <p>Sp val. <strong>{{sociometricResult.individualIndex.sociometricValues.spVal}}</strong></p>
+            </div>
+
+            <div *ngIf="!questionIsAboutLidership" class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Estatus de rechazo <i nz-icon nzType="info-circle" nzTheme="outline" nz-tooltip nzTooltipTitle="Número de rechazos recibidos"></i></p>
+                <p>Sn <strong>{{sociometricResult.individualIndex.sociometricValues.sn}}</strong></p>
+            </div>
+
+            <div *ngIf="!questionIsAboutLidership" class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Estatus de rechazo valorizados <i nz-icon nzType="info-circle" nzTheme="outline" nz-tooltip nzTooltipTitle="Ponderación del valor de cada rechazo con base en el orden de preferencia"></i></p>
+                <p>Sn val. <strong>{{sociometricResult.individualIndex.sociometricValues.snVal}}</strong></p>
+            </div>
+        </div> 
+
+        <br>
+        <nz-divider nzText="Índices sociométricos" nzOrientation="left"></nz-divider>
+
+        <div *ngIf="!loadingResult && sociometricResult" nz-row nzJustify="space-around">
+            <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="4">
+                <p>Popularidad <i nz-icon nzType="info-circle" nzTheme="outline" nz-tooltip nzTooltipTitle="Grado en que el estudiante es elegido por el resto del grupo"></i></p>
+                <p>Pop. <strong>{{sociometricResult.individualIndex.pop | number: '.2'}}</strong></p>
+            </div>
+
+            <div *ngIf="!questionIsAboutLidership" class="index-data" nz-col nzXs="24" nzMd="12" nzLg="4">
+                <p>Antipatía <i nz-icon nzType="info-circle" nzTheme="outline" nz-tooltip nzTooltipTitle="Grado en que el estudiante es rechazado por el resto del grupo"></i></p>
+                <p>Ant. <strong>{{sociometricResult.individualIndex.ant | number: '.2'}}</strong></p>
+            </div>
+
+            <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Expansividad positiva <i nz-icon nzType="info-circle" nzTheme="outline" nz-tooltip nzTooltipTitle="Expansividad afectiva positiva del estudiante dentro del grupo"></i></p>
+                <p>Exp. p. <strong>{{sociometricResult.individualIndex.expP | number: '.2'}}</strong></p>
+            </div>
+
+            <div *ngIf="!questionIsAboutLidership" class="index-data" nz-col nzXs="24" nzMd="12" nzLg="6">
+                <p>Expansividad negativa <i nz-icon nzType="info-circle" nzTheme="outline" nz-tooltip nzTooltipTitle="Expansividad afectiva negativa del estudiante dentro del grupo"></i></p>
+                <p>Exp. n. <strong>{{sociometricResult.individualIndex.expN | number: '.2'}}</strong></p>
+            </div>
+
+            <div class="index-data" nz-col nzXs="24" nzMd="12" nzLg="4">
+                <p>Conexión afectiva <i nz-icon nzType="info-circle" nzTheme="outline" nz-tooltip nzTooltipTitle="Proporción de congruencia entre reprocidad y elecciones de un estudiante"></i></p>
+                <p>CA <strong>{{sociometricResult.individualIndex.ca | number: '.2'}}</strong></p>
+            </div>
+        </div> 
+
+        <br>
+        <nz-divider nzText="Respuestas" nzOrientation="left"></nz-divider>
+        
+        <div *ngIf="!loadingResult && sociometricResult" nz-row [nzGutter]="[10, 10]" nzJustify="space-around">
+            <div nz-col nzXs="24" nzSm="12" nzMd="10" nzLg="8" nzXl="7">
+                <ng-container *ngIf="questionIsAboutLidership">
+                    <p class="question">¿A quiénes considera líderes?</p>
+                    <ul>
+                        <li *ngFor="let student of sociometricResult.answer.myAnswers.answersP">{{student.firstname}}  {{student.lastname}}</li>
+                    </ul>
+                </ng-container>
+
+                <ng-container *ngIf="!questionIsAboutLidership">
+                    <nz-tag nzColor="green">Aceptación</nz-tag>
+                    <p class="question">¿A quiénes elige?</p>
+                    <ul>
+                        <li *ngFor="let student of sociometricResult.answer.myAnswers.answersP">{{student.firstname}}  {{student.lastname}}</li>
+                    </ul>
+
+                    <br>
+
+                    <p class="question">¿Quiénes lo eligen?</p>
+                    <p *ngIf="sociometricResult.answer.studentsAnswers.answersP.length === 0">Ninguno</p>
+                    <ul>
+                        <li *ngFor="let student of sociometricResult.answer.studentsAnswers.answersP">{{student.firstname}}  {{student.lastname}}</li>
+                    </ul>
+
+                </ng-container>
+            </div>
+
+            <div nz-col nzXs="24" nzSm="12" nzMd="10" nzLg="8" nzXl="7">
+                <ng-container *ngIf="questionIsAboutLidership">
+                    <p class="question">¿Quiénes lo consideran líder?</p>
+                    <p *ngIf="sociometricResult.answer.studentsAnswers.answersP.length === 0">Ninguno</p>
+                    <ul>
+                        <li *ngFor="let student of sociometricResult.answer.studentsAnswers.answersP">{{student.firstname}}  {{student.lastname}}</li>
+                    </ul>
+                </ng-container>
+
+                <ng-container *ngIf="!questionIsAboutLidership">
+                    <nz-tag nzColor="red">Rechazo</nz-tag>
+                    <p class="question">¿A quiénes rechaza?</p>
+                    <ul>
+                        <li *ngFor="let student of sociometricResult.answer.myAnswers.answersN">{{student.firstname}}  {{student.lastname}}</li>
+                    </ul>
+
+                    <br>
+
+                    <p class="question">¿Quiénes lo rechazan?</p>
+                    <p *ngIf="sociometricResult.answer.studentsAnswers.answersN.length === 0">Ninguno</p>
+                    <ul>
+                        <li *ngFor="let student of sociometricResult.answer.studentsAnswers.answersN">{{student.firstname}}  {{student.lastname}}</li>
+                    </ul>
+                </ng-container>
+            </div>
+        </div> 
+    </ng-container>
+</nz-spin>

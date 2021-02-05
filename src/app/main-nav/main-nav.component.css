@@ -11,8 +11,54 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+nz-badge {
+  margin-right: 20px;
+}
+
+nz-divider {
+  width: 150%;
+}
+
+.icon-style {
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  line-height: 35px;
+  text-align: center;
+  color: #ffffff;
+  border-radius: 50%;
+  background: #001529;
+  display: inline-block;
+  vertical-align: middle;
+  border: 0px;
+}
+
+.calendar-style {
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+  margin: 3px;
+}
+
+.markAsReadButton {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5%;
+}
+
+.upcoming-events {
+  display: inline-block;
+  vertical-align: middle;
+  padding-bottom: 5px;
+}
+
+.eventType-style {
+  margin-bottom: 5px;
+}
+
 .app-layout {
-  min-height: 100vh;
+  min-height: 100vh; 
 }
 
 .menu-sidebar {
@@ -83,6 +129,42 @@ nz-avatar {
   padding: 0;
   background-color: white;
   color: black;
+}
+
+.requests {
+  width: 32px;
+  height: 32px;
+  border-radius: 50px;
+  background: #001529;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.requestsCounter nz-badge a i {
+  font-size: 20px;
+  color: #ffffff;
+  margin: 5px;
+}
+
+.scroll-style {
+  max-height: 500px;
+  max-width: 300px;
+  overflow-y: scroll;
+}
+
+
+.popover-notification {
+  width: 250px;
+  padding-bottom: 25%;
+}
+
+.popover {
+  width: 250px;
+  margin-bottom: -10px;
+}
+
+hr {
+  border-top: 0.5px solid #e0e0e0;
 }
 
 /* Change footer style on login, forgot password, etc. */

@@ -35,13 +35,17 @@ export class StudentService {
     params: NzTableQueryParams,
     search: Student,
     isActive: boolean,
-    paginate: boolean
+    paginate: boolean,
+    getAll = false
   ): Observable<Student[]> {
     let url = this.baseUrl + 'students';
     let queryParams = '';
 
-    // Paginate?
+    // Paginate? Add page param.
     if (paginate) queryParams += '?page=' + params.pageIndex;
+
+    // getAll? set paginate = false.
+    if (getAll) queryParams += '?paginate=false';
 
     // Params
     if (params) {
@@ -76,7 +80,11 @@ export class StudentService {
 
       if (search.email) queryParams += '&email=' + search.email;
 
+      if (search.shift && search.shift.id) queryParams += '&currentShift=' + search.shift.id;
+
       if (search.grade && search.grade.id) queryParams += '&currentGrade=' + search.grade.id;
+
+      if (search.section && search.section.id) queryParams += '&currentSection=' + search.section.id;
 
       if (search.status) queryParams += '&status=' + search.status;
 
@@ -186,6 +194,7 @@ export class StudentService {
         student.startedGrade = result['data'].startedGrade;
         student.siblings = result['data'].siblings;
         student.registrationYear = result['data'].registrationYear;
+        student.currentPhoto = result['data'].currentPhoto;
 
         student.responsibles = new Array<Responsible>();
         student.images = new Array<unknown>();
@@ -294,6 +303,12 @@ export class StudentService {
     const data = JSON.stringify({ studentIds: students, vinculate });
     return this.http
       .patch<unknown>(`${this.baseUrl}students-assignation?currentGradeId=${gradeId}&currentShiftId=${shiftId}`, data)
+      .pipe(catchError(this.handleError()));
+  }
+
+  getStudentResumes(id: number): Observable<unknown> {
+    return this.http
+      .get<unknown>(`${this.baseUrl}students-year-resumes?currentGrade=${id}`)
       .pipe(catchError(this.handleError()));
   }
 

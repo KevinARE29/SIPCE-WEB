@@ -1,0 +1,168 @@
+<div nz-row>
+    <div nz-col nzXs="12" nzLg="6">
+        <h1>Faltas</h1>
+    </div>
+    <div nz-col nzXs="12" nzLg="16" nzXl="14">
+        <a class="float-right" nz-button nzType="primary" *ngIf="checkPermission(26)" (click)="create()">Crear falta</a>
+    </div>
+</div>
+
+<!--Foul searcher-->
+<div nz-row [nzGutter]="[10, 10]">
+
+    <!-- Filters -->
+    <div nz-col nzXs="24" nzSm="12" [nzLg]="{ span: 8, offset: 2}" [nzXl]="{ span: 6, offset: 4}">
+        <label>Numeral: </label>
+        <nz-input-group [nzSuffix]="inputClearFoul">
+            <input nz-input [(ngModel)]="searchParams.numeral" placeholder="Buscar numeral" />
+        </nz-input-group>
+        <ng-template #inputClearFoul>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.numeral"
+                (click)="searchParams.numeral = null; search()"></i>
+        </ng-template>
+    </div>
+
+    <div nz-col nzXs="24" nzSm="12" nzLg="8" nzXl="6">
+        <label>Tipo de falta: </label>
+        <nz-select nzAllowClear nzPlaceHolder="Seleccionar" [(ngModel)]="searchParams.foulsType" (ngModelChange)="search()">
+            <nz-option *ngFor="let type of foulTypes" [nzValue]="type" [nzLabel]="type"></nz-option>
+        </nz-select>
+    </div>
+
+    <div nz-col nzXs="24" nzLg="4">
+        <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+            <button nz-button nzType="primary" (click)="search()">Buscar</button>
+        </div>
+    </div>
+</div>
+
+<!--Table-->
+<div nz-row>
+    <div nz-col nzXs="24" [nzLg]="{ span: 20, offset: 2}" [nzXl]="{ span: 16, offset: 4}">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <nz-table #filterTable nzTableLayout="fixed" nzSize="small" [nzData]="listOfDisplayData"
+                [nzFrontPagination]="false" [nzTotal]="pagination.totalItems" [nzPageSize]="pagination.perPage"
+                [nzPageIndex]="pagination.page" (nzQueryParams)="getFouls($event)">
+                <thead>
+                    <tr>
+                        <th nzWidth="60px"></th>
+                        <th nzColumnKey="numeral" [nzSortFn]="true">Numeral</th>
+                        <th>Descripción</th>
+                        <th nzColumnKey="foulsType" [nzSortFn]="true">Tipo de falta</th>
+                        <th *ngIf="checkPermission(26)" [nzAlign]="'center'">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let data of filterTable.data">
+                        <tr>
+                            <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
+                            <td>{{ data.numeral }}</td>
+                            <td nzEllipsis>{{ data.description }}</td>
+                            <td>{{ data.foulsType }}</td>
+
+                            <td *ngIf="checkPermission(26)" [nzAlign]="'center'">
+                                <span>
+                                    <a nz-tooltip nzTooltipTitle="Actualizar">
+                                        <i nz-icon nzType="edit" nzTheme="outline" (click)="edit(data)"></i>
+                                    </a>
+                                    <nz-divider nzType="vertical"></nz-divider>
+                                    <a nz-tooltip nzTooltipTitle="Eliminar" (click)="showConfirm(data)">
+                                        <i nz-icon nzType="delete" nzTheme="outline"></i>
+                                    </a>
+                                </span>
+                            </td>
+
+                        </tr>
+
+                        <!-- Expandable content -->
+                        <tr [nzExpand]="expandSet.has(data.id)">
+                            <strong>Descripción: </strong><span>{{ data.description }}</span>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>
+
+
+<!-- Create foul modal -->
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()">
+    
+    <!-- Modal content -->
+    <ng-template #modalContent>
+        <form nz-form nzLayout="vertical" [formGroup]="foulForm">
+            <div nz-row nzJustify="center" [nzGutter]="10">
+
+                <!-- Numeral -->
+                <div nz-col nzXs="24">
+                    <nz-form-item>
+                        <nz-form-label><strong>Numeral</strong></nz-form-label>
+                        <nz-form-control [nzErrorTip]="numeralError">
+        
+                            <input nz-input formControlName="numeral" placeholder="Numeral de la falta" />
+                            
+                            <ng-template #numeralError let-control>
+                                <ng-container *ngIf="control.hasError('required')">
+                                    El numeral es requerido. <br>
+                                </ng-container>
+                                <ng-container *ngIf="control.hasError('pattern')">
+                                    El numeral debe contener solo numeros y puntos. <br>
+                                </ng-container>
+                                <ng-container *ngIf="control.hasError('maxlength')">
+                                    El numeral debe contener máximo 8 caracteres.
+                                </ng-container>
+                            </ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <!-- Type -->
+                <div nz-col nzXs="24">
+                    <nz-form-item>
+                        <nz-form-label><strong>Tipo de falta</strong></nz-form-label>
+                        <nz-form-control [nzErrorTip]="typeError">
+        
+                            <nz-select formControlName="foulsType" nzPlaceHolder="Seleccionar el tipo de falta">
+                                <nz-option *ngFor="let type of foulTypes" [nzValue]="type" [nzLabel]="type"></nz-option>
+                            </nz-select>
+        
+                            <ng-template #typeError let-control>
+                                <ng-container *ngIf="control.hasError('required')">
+                                    El tipo de la falta es requerido. <br>
+                                </ng-container>
+                            </ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <!-- Description -->
+                <div nz-col nzXs="24">
+                    <nz-form-item>
+                        <nz-form-label><strong>Descripción</strong></nz-form-label>
+                        <nz-form-control [nzErrorTip]="descriptionError">
+        
+                            <textarea rows="4" nz-input formControlName="description" placeholder="Descripción de la falta"></textarea>
+                            
+                            <ng-template #descriptionError let-control>
+                                <ng-container *ngIf="control.hasError('required')">
+                                    La descripción es requerida. <br>
+                                </ng-container>
+                                <ng-container *ngIf="control.hasError('maxlength')">
+                                    La descripción debe contener máximo 256 caracteres.
+                                </ng-container>
+                            </ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+            </div>
+        </form>
+    </ng-template>
+
+    <!-- Modal footer -->
+    <ng-template #modalFooter>
+        <button nz-button nzType="default" (click)="handleCancel()">Cancelar</button>
+        <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">Guardar</button>
+    </ng-template>
+</nz-modal>

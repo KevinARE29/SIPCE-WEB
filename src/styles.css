@@ -121,3 +121,12 @@ a.ant-btn:not(.ant-btn-icon-only), .ant-btn:not(.ant-btn-icon-only) {
 .auth-form .ant-form-item-has-error .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-focused) input{
   background-color: transparent;
 }
+
+/* Reporting styles */
+.not-break-inside {
+  page-break-inside: avoid;
+}
+
+.break-before {
+  page-break-before: always;
+}

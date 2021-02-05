@@ -1,0 +1,110 @@
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loadingHistory && !errorMessage">
+
+    <div nz-row nzJustify="space-between">
+        <div nz-col>
+            <h1>Historial académico y conductual</h1>
+        </div>
+
+        <div nz-col>
+            <button *ngIf="selectedHistory" nz-button nzGhost [nzLoading]="loadingReport" nzType="primary" (click)="setShowReportModal(true)">Generar reporte</button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div nz-row nzJustify="center" *ngIf="selectedHistory">
+        <div nz-col>
+            <p class="navigator">
+                <a nz-button nzType="link" [disabled]="selectedHistoryIsLast" (click)="setHistory(this.selectedHistoryIndex + 1)">
+                    <i nz-icon nzType="left" nzTheme="outline"></i>
+                </a>
+
+                {{selectedHistory.behavioralHistoryGrade}}
+
+                <a nz-button nzType="link" [disabled]="selectedHistoryIsFirst" (click)="setHistory(this.selectedHistoryIndex - 1)">
+                    <i nz-icon nzType="right" nzTheme="outline"></i>
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <p>
+        <!-- If there's an error, show it. -->
+        {{errorMessage}}
+    </p>  
+
+    <!-- Student details -->
+    <app-student-details *ngIf="!errorMessage"
+                         [id]="studentId"
+                         [history]="selectedHistory"
+                         [showAlert]="selectedHistoryIsActive && checkPermission(46)"   
+    ></app-student-details>
+
+    <br><br>
+
+    <!-- If there is not history -->
+    <div nz-row nzJustify="center" *ngIf="!loadingHistory && !selectedHistory">
+        <div nz-col>
+            <nz-empty [nzNotFoundContent]="null"></nz-empty>
+        </div>
+    </div>
+
+    <!-- History comments summary. -->
+    <app-history-summary *ngIf="selectedHistory"
+                         [studentId]="studentId"
+                         [history]="selectedHistory"
+                         [isEditable]="selectedHistoryIsActive && checkPermission(31) && (selectedHistory.authorId === this.userId)"
+    ></app-history-summary>
+
+    <br><br>
+
+    <!-- History tabs. -->
+    <nz-tabset *ngIf="selectedHistory">
+
+        <!-- Annotations -->
+        <nz-tab nzTitle="Diario de clases" *ngIf="checkPermission(44)">
+            <app-history-annotations [studentId]="studentId"
+                                     [historyId]="selectedHistory.id"
+                                     [isEditable]="selectedHistoryIsActive && !selectedHistory.finalConclusion"
+                                     [showAdd]="checkPermission(36)"
+                                     [showEdit]="checkPermission(37)"
+                                     [showDelete]="checkPermission(38)"
+                                     [currentUser]="userId"></app-history-annotations>
+        </nz-tab>
+
+        <!-- Fouls and sanctions -->
+        <nz-tab nzTitle="Faltas y sanciones" *ngIf="checkPermission(46)">
+            <app-history-fouls-sanctions [studentId]="studentId"
+                                         [historyId]="selectedHistory.id"
+                                         [isEditable]="selectedHistoryIsActive && (selectedHistory.authorId === this.userId) && !selectedHistory.finalConclusion"
+                                         [showAdd]="checkPermission(41)"
+                                         [showEdit]="checkPermission(42)"
+                                         [showDelete]="checkPermission(43)"></app-history-fouls-sanctions>
+        </nz-tab>
+
+        <!-- Comments -->
+        <nz-tab nzTitle="Comentarios finales de años previos">
+            <app-history-comments [histories]="histories" [index]="selectedHistoryIndex"></app-history-comments>
+        </nz-tab>
+      </nz-tabset>
+</nz-spin>
+
+<nz-modal [(nzVisible)]="showReportModal" nzTitle="Exportar historial académico y conductual"
+            nzCancelText="Cancelar" nzOkText="Generar reporte" (nzOnOk)="exportHistory()" (nzOnCancel)="setShowReportModal(false)">
+
+        <p>Seleccione los elementos que desea incluir en el reporte:</p>
+        <div nz-row>
+            <div nz-col nzSpan="22" nzOffset="1">
+                <label nz-checkbox [(ngModel)]="filterFinalConclusion">Comentario de resultados generales al final del año</label><br>
+                <label nz-checkbox [(ngModel)]="filterExpedients">Comentario final de consejería</label><br>
+                <label nz-checkbox [(ngModel)]="filterAnnotations">Diario de clases</label><br>
+                <label nz-checkbox [(ngModel)]="filterPeriods" [nzIndeterminate]="filterPeriodsIndeterminate" (ngModelChange)="updateAllPeriods()">Faltas y sanciones</label><br>
+            </div>
+
+            <div nz-col nzSpan="20" nzOffset="2">
+                <label nz-checkbox [(ngModel)]="filterPeriod1" (ngModelChange)="updateSinglePeriod()">Primer periodo</label><br>
+                <label nz-checkbox [(ngModel)]="filterPeriod2" (ngModelChange)="updateSinglePeriod()">Segundo periodo</label><br>
+                <label nz-checkbox [(ngModel)]="filterPeriod3" (ngModelChange)="updateSinglePeriod()">Tercer periodo</label><br>
+                <label nz-checkbox [(ngModel)]="filterPeriod4" (ngModelChange)="updateSinglePeriod()">Cuarto periodo</label><br>
+            </div>
+        </div>
+</nz-modal>

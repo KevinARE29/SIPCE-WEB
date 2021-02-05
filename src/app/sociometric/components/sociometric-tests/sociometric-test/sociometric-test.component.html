@@ -1,0 +1,306 @@
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+    <ng-container *ngIf="sociometricTest">
+        <div nz-row nzJustify="space-around">
+            <div nz-col nzFlex="auto">
+                <h1>Prueba sociométrica</h1>
+            </div>
+            <div nz-col nzFlex="110px">
+                <button nz-button nzGhost [nzLoading]="loadingReport" nzType="primary" (click)="setShowReportModal(true)">Generar reporte</button>
+            </div>
+        </div>
+
+        <!-- View -->
+        <div nz-row *ngIf="!editing">
+            <div nz-col nzSpan="24">
+                <h3 class="principal">{{ sociometricTest.grade.name }} {{ sociometricTest.section.name }}
+                    ({{ sociometricTest.shift.name }})</h3>
+                <a class="principal" (click)="editing = true; setForm()" *ngIf="sociometricTest.status == 'Creada'">
+                    <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
+                </a>
+            </div>
+            <div nz-col nzSpan="24">
+                <h4>{{ sociometricTest.questionBank.name }}</h4>
+            </div>
+            <div nz-col nzSpan="24">
+                <ul>
+                    <li>Cantidad de preguntas: <strong>{{sociometricTest.questionBank.questions.length }}</strong></li>
+                    <li>Respuestas por pregunta: <strong>{{ sociometricTest.answersPerQuestion }}</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- #region Edit -->
+        <div nz-row *ngIf="editing">
+            <form nz-form [formGroup]="sociometricTestForm" nzLayout="vertical" (ngSubmit)="submitForm()">
+                <div nz-row [nzGutter]="10">
+                    <!-- Shift -->
+                    <div nz-col nzXs="24" nzMd="8" [nzLg]="{ span: 6, offset: 3 }">
+                        <nz-form-item>
+                            <nz-form-label nzFor="shift">Turno:</nz-form-label>
+                            <nz-form-control nzErrorTip="El turno es requerido">
+                                <nz-select id="shift" nzShowSearch nzAllowClear formControlName="shift"
+                                    nzPlaceHolder="Seleccionar" (ngModelChange)="updateSelectors('shift', $event);">
+                                    <nz-option *ngFor="let shift of shifts" [nzValue]="shift.id" [nzLabel]="shift.name">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+
+                    <!-- Grade -->
+                    <div nz-col nzXs="24" nzMd="8" nzLg="6">
+                        <nz-form-item>
+                            <nz-form-label nzFor="grade">Grado:</nz-form-label>
+                            <nz-form-control nzErrorTip="El grado es requerido">
+                                <nz-select id="grade" nzShowSearch nzAllowClear formControlName="grade"
+                                    nzPlaceHolder="Seleccionar" (ngModelChange)="updateSelectors('grade', $event);">
+                                    <nz-option *ngFor="let grade of grades" [nzValue]="grade.id" [nzLabel]="grade.name">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+
+                    <!-- Section -->
+                    <div nz-col nzXs="24" nzMd="8" nzLg="6">
+                        <nz-form-item>
+                            <nz-form-label nzFor="section">Sección:</nz-form-label>
+                            <nz-form-control nzErrorTip="La sección es requerida">
+                                <nz-select id="grade" nzShowSearch nzAllowClear formControlName="section"
+                                    nzPlaceHolder="Seleccionar">
+                                    <nz-option *ngFor="let section of sections" [nzValue]="section.id"
+                                        [nzLabel]="section.name">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+
+                    <!-- Question bank -->
+                    <div nz-col nzXs="24" nzMd="16" [nzLg]="{ span: 12, offset: 3 }">
+                        <nz-form-item>
+                            <nz-form-label nzFor="questionBank">Banco de preguntas:</nz-form-label>
+                            <nz-form-control nzErrorTip="El banco de preguntas es requerido">
+                                <nz-select nzShowSearch nzAllowClear formControlName="questionBank"
+                                    nzPlaceHolder="Seleccionar">
+                                    <nz-option *ngFor="let questionBank of questionBanks" [nzValue]="questionBank.id"
+                                        [nzLabel]="questionBank.name">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+
+                    <!-- Answers per question -->
+                    <div nz-col nzXs="24" nzMd="8" nzLg="6">
+                        <nz-form-item>
+                            <nz-form-label nzFor="answersPerQuestion">Respuestas por pregunta:
+                            </nz-form-label>
+                            <nz-form-control nzErrorTip="La cantidad de respuestas es requerida">
+                                <nz-input-number [nzMin]="1" [nzMax]="5" [nzStep]="1" placeholder="Seleccionar"
+                                    formControlName="answersPerQuestion"></nz-input-number>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div nz-row nzJustify="center">
+                    <nz-form-item>
+                        <nz-form-control nz-col nzSpan="24">
+                            <a class="btn-cancel" nz-button nzType="default" (click)="editing=false;">Cancelar</a>
+                            <button nz-button nzType="primary" [nzLoading]="btnLoading">Actualizar</button>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </form>
+        </div>
+        <!-- #endregion -->
+
+        <!-- #region Schedule -->
+        <ng-container *ngIf="sociometricTest.grade.id > 6">
+            <nz-divider nzText="Pruebas programadas" nzOrientation="left"></nz-divider>
+            <div id="presets" nz-row *ngFor="let item of sociometricTest.presets">
+                <ng-container *ngIf="item">
+                    <div nz-col nzXs="24" nzXl="10" nzXXl="7">
+                        <i class="right" nz-icon nzType="calendar" nzTheme="outline"></i> 
+                        <strong>Fecha y hora:</strong> {{ item.startedAtInWords }}
+                    </div>
+                    <div nz-col nzXl="24" nzSm="11" nzMd="9" nzXl="5" nzXXl="3">
+                        <strong>Duración:</strong> {{ item.durationInWords }}
+                    </div>
+                    <div nz-col nzXl="24" nzSm="13" nzMd="12" nzXl="6" nzXXl="4">
+                        <strong>Contraseña:</strong>
+                        <ng-container *ngIf="item.isPassVisible; else hidePass">
+                            {{ item.password }}
+                            <a class="grey right" (click)="item.isPassVisible = false"><i nz-icon nzType="eye-invisible"
+                                    nzTheme="outline"></i></a>
+                        </ng-container>
+                        <ng-template #hidePass>
+                            ********
+                            <a class="grey right" (click)="item.isPassVisible = true">
+                                <i nz-icon nzType="eye" nzTheme="outline"></i>
+                            </a>
+                        </ng-template>
+                    </div>
+                    <div nz-col nzXs="24" nzMd="3" *ngIf="sociometricTest.status !== 'Finalizada'">
+                        <a class="right" nz-tooltip nzTooltipTitle="Editar" (click)="openModal(item)">
+                            <i nz-icon nzType="edit" nzTheme="outline"></i>
+                        </a>
+                        <a class="right" nz-tooltip nzTooltipTitle="Eliminar" nz-popconfirm
+                            nzPopconfirmTitle="¿Desea eliminar la programación?" nzOkText="Sí" nzCancelText="No"
+                            (nzOnConfirm)="deletePreset(item.id)">
+                            <i nz-icon nzType="delete" nzTheme="outline"></i>
+                        </a>
+                    </div>
+                </ng-container>
+            </div>
+            <div nz-col nzSpan="24" *ngIf="sociometricTest.status !== 'Finalizada'">
+                <button nz-button nzGhost nzType="primary" class="add-button" (click)="openModal(null)">
+                    Agregar programación
+                </button>
+                <i nz-icon nzType="question-circle" nzTheme="outline" class="help" nz-tooltip
+                    nzTooltipTitle="La prueba sociométrica podrá programarse siempre y cuando hayan estudiantes que se encuentren Cursando año escolar que aún no hayan completado la prueba."></i>
+            </div>
+        </ng-container>
+        <!-- #endregion -->
+
+        <!-- #region Students -->
+        <nz-divider nzText="Estudiantes" nzOrientation="left"></nz-divider>
+        <div nz-col nzXs="24" [nzMd]="{ span: 20, offset: 2}" [nzLg]="{ span: 18, offset: 3}"
+            [nzXl]="{ span: 16, offset: 4}">
+            <nz-table #sortTable [nzData]="sociometricTest.students" nzSize="small" nzTableLayout="fixed"
+                nzShowSizeChanger="true">
+                <thead>
+                    <tr>
+                        <th *ngFor="let column of listOfColumn" [nzSortFn]="column.compare"
+                            [nzSortPriority]="column.priority">
+                            {{ column.title }}</th>
+                        <th [nzAlign]="'center'">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of sortTable.data">
+                        <td>{{ data.code }}</td>
+                        <td>{{ data.firstname }}</td>
+                        <td>{{ data.lastname }}</td>
+                        <td [nzAlign]="'center'">
+                            <ng-container *ngIf="data['completed'];else emptyTest">
+                                <a [routerLink]="['resultados', data.id]">
+                                    <i nz-icon nzType="eye" nz-tooltip nzTooltipTitle="Ver resultados"
+                                        nzTheme="outline"></i>
+                                </a>
+                            </ng-container>
+                            <ng-template #emptyTest>
+                                <ng-container *ngIf="sociometricTest.grade.id > 6;else minorStudents">
+                                    <a disabled>
+                                        <i nz-icon nzType="eye" nzTheme="outline"></i>
+                                    </a>
+                                </ng-container>
+                                <ng-template #minorStudents>
+                                    <a [routerLink]="['estudiante', sociometricTest.sectionDetailId, data.id]">
+                                        <i nz-icon nzType="form" nz-tooltip nzTooltipTitle="Realizar prueba"
+                                            nzTheme="outline"></i>
+                                    </a>
+                                </ng-template>
+                            </ng-template>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+
+            <div nz-row nzJustify="center">
+                <div nz-col>
+                    <a routerLink="resultados"><strong>Ver resultados grupales</strong></a>
+                </div>
+            </div>
+        </div>
+        <!-- #endregion -->
+    </ng-container>
+
+</nz-spin>
+
+<!-- Create/Update modal -->
+<nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]="modalTitle"
+    [nzContent]="modalContent"
+    [nzFooter]="modalFooter"
+    (nzOnCancel)="resetForm()"
+>
+    <ng-template #modalTitle> Programación de prueba sociométrica </ng-template>
+
+    <ng-template #modalContent>
+        <form nz-form [formGroup]="presetForm">
+            <nz-form-item>
+                <nz-form-label>Fecha y hora</nz-form-label>
+                <nz-form-control [nzErrorTip]="startedAtErrors">
+                    <nz-date-picker 
+                        formControlName="startedAt"
+                        [nzShowTime]="{nzHideDisabledOptions: true, nzFormat: 'HH:mm'}"
+                        nzFormat="dd/MM/yyyy HH:mm" [nzDisabledDate]="disabledDate"
+                        nzPlaceHolder="Seleccionar">
+                    </nz-date-picker>
+                    <ng-template #startedAtErrors let-control>
+                        <ng-container *ngIf="control.hasError('required')">
+                            La fecha y hora son requeridas<br>
+                        </ng-container>
+                    </ng-template>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label nzFor="duration">Duración</nz-form-label>
+                <nz-form-control [nzErrorTip]="durationErrors">
+                    <nz-input-number [nzStep]="15"
+                        formControlName="duration"
+                        [nzFormatter]="durationFormatter" [nzParser]="durationParser"
+                        nzPlaceHolder="Seleccionar"></nz-input-number>
+                    <ng-template #durationErrors let-control>
+                        <ng-container *ngIf="control.hasError('required')">
+                            La duración es requerida<br>
+                        </ng-container>
+                        <ng-container *ngIf="control.hasError('min')">
+                            La duración mínima es de 15min<br>
+                        </ng-container>
+                        <ng-container *ngIf="control.hasError('max')">
+                            La duración máxima es de 4h (240min)<br>
+                        </ng-container>
+                    </ng-template>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </ng-template>
+
+    <ng-template #modalFooter>
+        <button nz-button nzType="default" (click)="resetForm()">Cancelar</button>
+        <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">Guardar</button>
+    </ng-template>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="showReportModal" nzTitle="Generar reporte de prueba sociométrica"
+            nzCancelText="Cancelar" nzOkText="Generar reporte" (nzOnOk)="exportTest()" (nzOnCancel)="setShowReportModal(false)">
+
+        <p>Seleccione los elementos que desea incluir en el reporte:</p>
+        <div nz-row>
+            <div nz-col nzSpan="22" nzOffset="1">
+                <label nz-checkbox [(ngModel)]="filterParticipants">Listado de participantes</label><br>
+                <label nz-checkbox [(ngModel)]="filterQuestionBank">Modelo de la prueba</label><br>
+                <label nz-checkbox [(ngModel)]="filterGroup" [nzIndeterminate]="filterGroupIndeterminate" (ngModelChange)="updateAllGroup()">Informe general del grupo</label><br>
+            </div>
+
+            <div nz-col nzSpan="20" nzOffset="2">
+                <label nz-checkbox [(ngModel)]="filterSociomatrix" (ngModelChange)="updateSingleGroup()">Matrices sociométricas</label><br>
+                <label nz-checkbox [(ngModel)]="fitlerGroupalIndexes" (ngModelChange)="updateSingleGroup()">Índices grupales</label><br>
+            </div>
+
+            <div nz-col nzSpan="22" nzOffset="1">
+                <label nz-checkbox [(ngModel)]="filterIndividual" [nzIndeterminate]="filterIndividualIndeterminate" (ngModelChange)="updateAllIndividual()">Informe por estudiante</label><br>
+            </div>
+
+            <div nz-col nzSpan="20" nzOffset="2">
+                <label nz-checkbox [(ngModel)]="filterSociometricValues" (ngModelChange)="updateSingleIndividual()">Valores sociométricos individuales</label><br>
+                <label nz-checkbox [(ngModel)]="filterIndividualIndexes" (ngModelChange)="updateSingleIndividual()">Índices individuales</label><br>
+            </div>
+        </div>
+</nz-modal>

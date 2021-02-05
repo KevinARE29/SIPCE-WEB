@@ -20,4 +20,9 @@ export class Student {
   images: unknown[];
   siblings: Student[];
   canBeDeleted: boolean;
+  currentShift: ShiftPeriodGrade;
+  currentGrade: ShiftPeriodGrade;
+  currentPhoto: unknown;
+
+  position: number; // sociometric question
 }

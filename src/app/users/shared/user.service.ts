@@ -12,7 +12,6 @@ import { User } from './user.model';
 import { subMonths } from 'date-fns';
 import { RoleService } from 'src/app/roles/shared/role.service';
 import { PermissionService } from 'src/app/roles/shared/permission.service';
-import { ShiftPeriodGrade } from 'src/app/academic-catalogs/shared/shiftPeriodGrade.model';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +49,8 @@ export class UserService {
               shift: assignation[0]['shift'],
               cycle: assignation[0]['cycle'],
               grade: assignation[0]['gradeDetails'][0]['grade'],
-              section: assignation[0]['gradeDetails'][0]['sectionDetails'][0]['section']
+              section: assignation[0]['gradeDetails'][0]['sectionDetails'][0]['section'],
+              sectionDetailId: assignation[0]['gradeDetails'][0]['sectionDetails'][0]['id']
             });
           });
 
@@ -121,7 +121,7 @@ export class UserService {
           user.fullname = user['firstname'].concat(' ', user['lastname']);
         });
 
-        response['data'] = response['data'].filter((x) => x.active === true); // TODO: Remove
+        response['data'] = response['data'].filter((x) => x.active === true);
 
         return response;
       }),

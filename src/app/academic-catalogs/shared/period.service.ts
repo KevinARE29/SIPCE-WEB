@@ -17,6 +17,12 @@ export class PeriodService {
     this.baseUrl = environment.apiURL;
   }
 
+  getAllPeriods(): Observable<ShiftPeriodGrade[]> {
+    return this.http
+      .get<ShiftPeriodGrade[]>(`${this.baseUrl}academics/periods?paginate=false`)
+      .pipe(catchError(this.handleError()));
+  }
+
   togglePeriodStatus(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}academics/periods/${id}`).pipe(catchError(this.handleError()));
   }

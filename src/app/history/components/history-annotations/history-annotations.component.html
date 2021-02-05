@@ -1,0 +1,150 @@
+<div nz-row nzJustify="end">
+    <div nz-col>
+        <a *ngIf="isEditable && showAdd" nz-button nzType="primary" (click)="openModal(null)">Agregar anotación</a>
+    </div>
+</div>
+
+<div nz-row [nzGutter]="[10, 10]">
+    <!-- Date -->
+    <div nz-col nzXs="24" nzMd="12" nzLg="8" nzXl="10">
+        <label>Fecha: </label>
+        <nz-input-group>
+            <nz-range-picker nzFormat="dd/MM/yyyy" [nzDisabledDate]="disabledDate" [(ngModel)]="dateRangeSearch" (ngModelChange)="onChangeDatePicker()"></nz-range-picker>
+        </nz-input-group>
+    </div>
+
+    <!-- Title -->
+    <div nz-col nzXs="24" nzSm="12" nzLg="8" nzXl="6">
+        <label>Título: </label>
+        <nz-input-group [nzSuffix]="inputClearName">
+            <input nz-input [(ngModel)]="search.title" placeholder="Buscar título" />
+        </nz-input-group>
+        <ng-template #inputClearName>
+            <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="search.title" (click)="search.title = null; getAnnotations(null)"></i>
+        </ng-template>
+    </div>
+
+    <!-- Reporter -->
+    <div nz-col nzXs="24" nzSm="12" nzLg="8" nzXl="5">
+        <label>Persona que reporta: </label>
+        <nz-input-group>
+            <nz-select nzShowSearch nzAllowClear [(ngModel)]="search.reporter.id"
+                (ngModelChange)="getAnnotations(null)" nzPlaceHolder="Seleccionar" [nzLoading]="loadingUsers">
+                <nz-option *ngFor="let user of userResults" [nzValue]="user.id" [nzLabel]="user.firstname + ' ' + user.lastname">
+                </nz-option>
+            </nz-select>
+        </nz-input-group>
+    </div>
+
+    <!-- Search button-->
+    <div nz-col nzXs="24" nzXl="3">
+        <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+            <button nz-button nzType="primary" (click)="getAnnotations(null)">Buscar</button>
+        </div>
+    </div>
+</div>
+
+<div nz-row>
+    <div nz-col nzSpan="24">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loadingData">
+            <nz-table #filterTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzFrontPagination]="false"
+                [nzTotal]="pagination.totalItems" [nzPageSize]="pagination.perPage" [nzPageIndex]="pagination.page"
+                nzSize="small" (nzQueryParams)="getAnnotations($event)">
+                <thead>
+                    <tr>
+                        <th nzWidth="60px"></th>
+                        <th nzColumnKey="annotationDate" [nzSortFn]="true" [nzSortPriority]="1">Fecha</th>
+                        <th nzColumnKey="title" [nzSortFn]="true" [nzSortPriority]="2">Título</th>
+                        <th nzColumnKey="reporterId" [nzSortFn]="true" [nzSortPriority]="3">Reporte de</th>
+                        <th [nzAlign]="'center'">Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <ng-container *ngFor="let data of filterTable.data">
+                        <tr>
+                            <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
+                            <td>{{data.annotationDate | date: 'dd/MM/yyyy'}}</td>
+                            <td>{{data.title}}</td>
+                            <td>{{data.reporter.firstname}} {{data.reporter.lastname}}</td>
+                            <td [nzAlign]="'center'">
+                                <a *ngIf="showEdit && data.editable" (click)="openModal(data)">
+                                    <i nz-icon nzType="edit" nz-tooltip nzTooltipTitle="Editar" nzTheme="outline"></i>
+                                </a>
+                                <nz-divider *ngIf="showDelete && data.editable" nzType="vertical"></nz-divider>
+                                <a *ngIf="showDelete && data.editable" (click)="confirmDelete(data)">
+                                    <i nz-icon nzType="delete" nz-tooltip nzTooltipTitle="Eliminar" nzTheme="outline"></i>
+                                </a> 
+                            </td>
+                        </tr>
+                        <tr [nzExpand]="expandSet.has(data.id)">
+                            <strong>Descripción del evento: </strong><span>{{ data.description }}</span>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>
+
+<!-- Create / update modal -->
+<nz-modal [(nzVisible)]="showModal" [nzTitle]="modalTitle" [nzContent]="modalContent"
+    nzOkText="Guardar" nzCancelText="Cancelar" (nzOnOk)="onModalOk()" (nzOnCancel)="setShowModal(false)">
+    
+    <!-- Modal content -->
+    <ng-template #modalContent>
+        <ng-container *ngIf="showModal">
+            <form nz-form nzLayout="vertical" [formGroup]="form">
+                <div nz-row nzJustify="center" [nzGutter]="10">
+            
+                    <!-- Name -->
+                    <div nz-col nzXs="24">
+                        <nz-form-item>
+                            <nz-form-label><strong>Título</strong></nz-form-label>
+                            <nz-form-control [nzErrorTip]="nameErrors">
+                                
+                                <input nz-input formControlName="title" placeholder="Título" />
+        
+                                <ng-template #nameErrors let-control>
+                                    <ng-container *ngIf="control.hasError('required')">El título es requerido<br></ng-container>
+                                    <ng-container *ngIf="control.hasError('maxlength')">El título debe contener máximo 64 caracteres<br></ng-container>
+                                </ng-template>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+
+                    <!-- Date -->
+                    <div nz-col nzXs="24">
+                        <nz-form-item>
+                            <nz-form-label><strong>Fecha</strong></nz-form-label>
+                            <nz-form-control [nzErrorTip]="dateErrors">
+                                <nz-date-picker formControlName="annotationDate" nzFormat="dd/MM/yyyy" [nzDisabledDate]="disabledDate" nzPlaceHolder="Seleccionar">
+                                </nz-date-picker>
+                                <ng-template #dateErrors let-control>
+                                    <ng-container *ngIf="control.hasError('required')">La fecha es requerida<br></ng-container>
+                                </ng-template>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+        
+                    <!-- Description -->
+                    <div nz-col nzXs="24">
+                        <nz-form-item>
+                            <nz-form-label><strong>Descripción</strong></nz-form-label>
+                            <nz-form-control [nzErrorTip]="descriptionErrors">
+                                
+                                <textarea nz-input formControlName="description" placeholder="Descripción"></textarea>
+        
+                                <ng-template #descriptionErrors let-control>
+                                    <ng-container *ngIf="control.hasError('required')">La descripción es requerida<br></ng-container>
+                                </ng-template>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+        
+                </div>
+            </form>
+        </ng-container>
+    </ng-template>
+
+</nz-modal>

@@ -1,0 +1,271 @@
+<ejs-schedule #scheduleObj [eventSettings]="eventData" locale="es" (popupOpen)="onPopupOpen($event)"
+    (actionBegin)="onBegin($event)">
+    <ng-template #editorTemplate let-data>
+        <form class="custom-event-editor">
+            <div>
+                <label class="e-textlabel">Asunto</label>
+                <input id="Subject" class="e-field e-input" type="text" data-name="Subject" name="Subject" />
+            </div>
+
+            <div>
+                <label class="e-textlabel">Lugar</label>
+
+                <input id="Location" class="e-field e-input" value="{{ data.Location }}" type="text"
+                    data-name="Location" name="Location" />
+            </div>
+
+            <div>
+                <label class="e-textlabel">Inicio</label>
+                <input id="StartTime" class="e-field" type="text" data-name="StartTime" name="StartTime" />
+            </div>
+
+            <div>
+                <label class="e-textlabel">Fin</label>
+                <input id="EndTime" class="e-field" type="text" data-name="EndTime" name="EndTime" />
+            </div>
+
+            <div>
+                <label class="e-textlabel">Descripción</label>
+                <textarea id="Description" class="e-field e-input" data-name="Description" name="Description" rows="3"
+                    cols="50" style="width: 100%; height: 60px !important; resize: vertical;"></textarea>
+            </div>
+        </form>
+    </ng-template>
+</ejs-schedule>
+
+<ng-container *ngIf="shifts.length; else noShifts">
+    <!-- Search engine -->
+    <div nz-row [nzGutter]="[10, 10]">
+        <!-- Code -->
+        <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" nzXl="6">
+            <label>NIE: </label>
+            <nz-input-group [nzSuffix]="inputClearCode">
+                <input nz-input [(ngModel)]="searchParams.code" placeholder="Buscar NIE" />
+            </nz-input-group>
+            <ng-template #inputClearCode>
+                <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="searchParams.code"
+                    (click)="searchParams.code = null; getCounselingRequests()"></i>
+            </ng-template>
+        </div>
+
+        <!-- Name -->
+        <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" nzXl="6">
+            <label>Nombre: </label>
+            <nz-input-group [nzSuffix]="inputClearName">
+                <input nz-input [(ngModel)]="searchParams.firstname" placeholder="Buscar nombre" />
+            </nz-input-group>
+            <ng-template #inputClearName>
+                <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
+                    *ngIf="searchParams.firstname" (click)="searchParams.firstname = null; getCounselingRequests()"></i>
+            </ng-template>
+        </div>
+
+        <!-- Lastname -->
+        <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" nzXl="6">
+            <label>Apellido: </label>
+            <nz-input-group [nzSuffix]="inputClearLastname">
+                <input nz-input [(ngModel)]="searchParams.lastname" placeholder="Buscar apellido" />
+            </nz-input-group>
+            <ng-template #inputClearLastname>
+                <i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
+                    *ngIf="searchParams.lastname" (click)="searchParams.lastname = null; getCounselingRequests()"></i>
+            </ng-template>
+        </div>
+
+        <!-- Shift -->
+        <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" nzXl="6">
+            <label>Turno: </label>
+            <nz-input-group>
+                <nz-select class="shift" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar turno"
+                    [(ngModel)]="searchParams.currentShift.id" (ngModelChange)="cleanGradesSelect($event);">
+                    <nz-option *ngFor="let shift of shifts" [nzLabel]="shift.name" [nzValue]="shift.id"></nz-option>
+                </nz-select>
+            </nz-input-group>
+        </div>
+
+        <!-- Grade -->
+        <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" nzXl="6">
+            <label>Grado: </label>
+            <nz-input-group>
+                <nz-select class="grade" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar grado"
+                    [(ngModel)]="searchParams.grade.id" (ngModelChange)="getCounselingRequests()">
+                    <nz-option *ngFor="let grade of grades" [nzLabel]="grade.name" [nzValue]="grade.id"></nz-option>
+                </nz-select>
+            </nz-input-group>
+        </div>
+
+        <!-- Created at -->
+        <div nz-col nzXs="24" nzSm="24" nzMd="18" nzLg="12" nzXl="6">
+            <label>Fecha: </label>
+            <nz-input-group>
+                <nz-range-picker nzFormat="dd/MM/yyyy" [ngModel]="searchParams['createdAt']"
+                    [nzDisabledDate]="disabledDate" (ngModelChange)="onChangeDatePicker($event)"></nz-range-picker>
+            </nz-input-group>
+        </div>
+
+        <!-- Search button-->
+        <div nz-col nzXs="24" nzSm="24" nzMd="6" nzLg="6" nzXl="12">
+            <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+                <button nz-button nzType="primary" (click)="getCounselingRequests()">Buscar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sorters -->
+    <div nz-row>
+        <div class="params">
+            <div class="param">
+                <a (click)="updateParams('code')">
+                    <div class="param-key">NIE</div>
+                    <div class="param-value">
+                        <div><i nz-icon nzType="caret-up" nzTheme="outline"
+                                [ngClass]="{'principal': params.sort[0].value === 'ascend'}"></i></div>
+                        <div class="caret-down"><i nz-icon nzType="caret-down" nzTheme="outline"
+                                [ngClass]="{'principal': params.sort[0].value === 'descend'}"></i></div>
+                    </div>
+                </a>
+            </div>
+            <div class="param">
+                <a (click)="updateParams('firstname')">
+                    <div class="param-key">Nombres</div>
+                    <div class="param-value">
+                        <div><i nz-icon nzType="caret-up" nzTheme="outline"
+                                [ngClass]="{'principal': params.sort[1].value === 'ascend'}"></i></div>
+                        <div class="caret-down"><i nz-icon nzType="caret-down" nzTheme="outline"
+                                [ngClass]="{'principal': params.sort[1].value === 'descend'}"></i></div>
+                    </div>
+                </a>
+            </div>
+            <div class="param">
+                <a (click)="updateParams('lastname')">
+                    <div class="param-key">Apellidos</div>
+                    <div class="param-value">
+                        <div><i nz-icon nzType="caret-up" nzTheme="outline"
+                                [ngClass]="{'principal': params.sort[2].value === 'ascend'}"></i></div>
+                        <div class="caret-down"><i nz-icon nzType="caret-down" nzTheme="outline"
+                                [ngClass]="{'principal': params.sort[2].value === 'descend'}"></i></div>
+                    </div>
+                </a>
+            </div>
+            <div class="param">
+                <a (click)="updateParams('currentShift')">
+                    <div class="param-key">Turno</div>
+                    <div class="param-value">
+                        <div><i nz-icon nzType="caret-up" nzTheme="outline"
+                                [ngClass]="{'principal': params.sort[3].value === 'ascend'}"></i></div>
+                        <div class="caret-down"><i nz-icon nzType="caret-down" nzTheme="outline"
+                                [ngClass]="{'principal': params.sort[3].value === 'descend'}"></i></div>
+                    </div>
+                </a>
+            </div>
+            <div class="param">
+                <a (click)="updateParams('currentGrade')">
+                    <div class="param-key">Grado</div>
+                    <div class="param-value">
+                        <div><i nz-icon nzType="caret-up" nzTheme="outline"
+                                [ngClass]="{'principal': params.sort[4].value === 'ascend'}"></i></div>
+                        <div class="caret-down"><i nz-icon nzType="caret-down" nzTheme="outline"
+                                [ngClass]="{'principal': params.sort[4].value === 'descend'}"></i></div>
+                    </div>
+                </a>
+            </div>
+            <div class="param">
+                <a (click)="updateParams('createdAt')">
+                    <div class="param-key">Fecha de solicitud</div>
+                    <div class="param-value">
+                        <div><i nz-icon nzType="caret-up" nzTheme="outline"
+                                [ngClass]="{'principal': params.sort[5].value === 'ascend'}"></i></div>
+                        <div class="caret-down"><i nz-icon nzType="caret-down" nzTheme="outline"
+                                [ngClass]="{'principal': params.sort[5].value === 'descend'}"></i></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student's requests -->
+    <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+        <div nz-row nzJustify="center" [nzGutter]="[16, 24]" *ngIf="listOfDisplayData.length;else empty">
+            <div *ngFor="let data of listOfDisplayData" nz-col nzXs="23" nzSm="11" nzMd="12" nzLg="8" nzXl="6" nzXXl="5"
+                class="gutter-row student">
+                <nz-card>
+                    <div nz-row>
+                        <div nz-col nzSpan="8">
+                            <ng-container *ngIf="data['student'].currentPhoto;else defaultPhoto">
+                                <nz-avatar [nzSize]="70" [nzSrc]="data['student'].currentPhoto.path"></nz-avatar>
+                            </ng-container>
+                            <ng-template #defaultPhoto>
+                                <nz-avatar [nzSize]="70" nzIcon="user"></nz-avatar>
+                            </ng-template>
+                        </div>
+                        <div nz-col nzSpan="16" class="name">
+                            {{ data.student.firstname }} {{ data.student.lastname }}
+                        </div>
+                    </div>
+                    <p>{{ data['student'].code }}</p>
+                    <p>
+                        {{ data['student'].currentGrade.name }}
+                        <nz-tag [nzColor]="'geekblue'">{{data['student'].currentShift.name}}</nz-tag>
+                    </p>
+                    <p> <strong>Fecha de solicitud:</strong>
+                        {{ data['counselingRequest'].createdAt | date:"dd/MM/yyyy": "es" }}</p>
+                    <p nz-typography nzEllipsis nzEllipsisRows="1">
+                        <strong>Asunto: </strong>
+                        {{ data['counselingRequest']['subject'] }}
+                    </p>
+                    <div nz-row nzJustify="center" nzAlign="top" class="info">
+                        <button nz-button nzType="primary" nzGhost (click)="showModal(data)">Ver</button>
+                    </div>
+                </nz-card>
+                <ng-template #avatarTemplate>
+                    <ng-container *ngIf="data['student'].currentPhoto;else defaultPhoto">
+                        <nz-avatar [nzSrc]="data['student'].currentPhoto.path"></nz-avatar>
+                    </ng-container>
+                    <ng-template #defaultPhoto>
+                        <nz-avatar nzIcon="user"></nz-avatar>
+                    </ng-template>
+                </ng-template>
+            </div>
+        </div>
+        <ng-template #empty>
+            <nz-empty></nz-empty>
+        </ng-template>
+    </nz-spin>
+
+    <!-- Pagination -->
+    <div nz-row nzJustify="center" nzAlign="top">
+        <nz-pagination [nzPageIndex]="pagination.page" [nzTotal]="pagination.totalItems"
+            [nzPageSize]="pagination.perPage" [nzSize]="'small'" (nzPageIndexChange)="paginate($event)"></nz-pagination>
+    </div>
+</ng-container>
+
+<ng-template #noShifts>
+    <nz-alert *ngIf="!loading" nzType="warning" nzCloseable nzShowIcon
+        nzMessage="Debe tener grados asignados para poder consultar las solicitudes de los estudiantes.">
+    </nz-alert>
+</ng-template>
+
+<!-- Modal -->
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter"
+    (nzOnCancel)="close()">
+    <ng-template #modalTitle> Solicitud de consejería </ng-template>
+
+    <ng-template #modalContent>
+        <div>
+            <strong>Estudiante: </strong> {{ currentRequest['student'].firstname }}
+            {{ currentRequest['student'].lastname }}
+        </div>
+        <div>
+            <strong>Asunto: </strong> {{ currentRequest['counselingRequest']['subject'] }}
+        </div>
+        <div *ngIf="currentRequest['counselingRequest']['comment']">
+            <strong>Comentario: </strong>
+            <p>{{ currentRequest['counselingRequest']['comment'] }}</p>
+        </div>
+    </ng-template>
+
+    <ng-template #modalFooter>
+        <button nz-button nzType="default" (click)="reject()" [nzLoading]="isConfirmLoading">Rechazar</button>
+        <button nz-button nzType="primary" (click)="approve()" [nzLoading]="isConfirmLoading">Aprobar</button>
+    </ng-template>
+</nz-modal>

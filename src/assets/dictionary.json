@@ -72,6 +72,27 @@
             "Description": "Descripcion",
             "Participants": "Empleados",
             "Student": "Estudiantes"
-        }
+        },
+        "counseling": {
+            "confirmationToken": "Token de confirmación"
+        },
+        "question-banks": {
+            "name": "Nombre"
+        },
+        "presets": {},
+        "expedients": {},
+        "sociometric-tests": {
+            "email": "Correo electrónico",
+            "password": "Contraseña",
+            "studentsIds": "Estudiantes"
+        },
+        "disciplinary-catalog": {
+            "name": "Nombre de la sanción",
+            "description": "Descripción",
+            "numeral": "Numeral de la falta",
+            "fousType": "Tipo de la falta"
+        },
+        "reports": {},
+        "history": {}
     }
 }

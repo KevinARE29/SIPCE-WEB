@@ -1,0 +1,139 @@
+<h1>Reporte de citas por tipo de sesión</h1>
+
+<!-- Search engine -->
+<div nz-row [nzGutter]="[10, 10]">
+    <!-- Shift -->
+    <div nz-col nzXs="24" nzSm="12" nzMd="24" nzLg="6" nzXl="6">
+        <label>Turno: </label>
+        <nz-input-group>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar turno" [nzLoading]="!shifts"
+                [(ngModel)]="searchParams.shiftId" (ngModelChange)="cleanSelectors('shift', $event)">
+                <nz-option *ngFor="let shift of shifts" [nzLabel]="shift.name" [nzValue]="shift.id"></nz-option>
+            </nz-select>
+        </nz-input-group>
+    </div>
+
+    <!-- Cycle -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>Ciclo: </label>
+        <nz-input-group>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar ciclo" [nzLoading]="!cycles"
+                [(ngModel)]="searchParams.cycleId" (ngModelChange)="cleanSelectors('cycle', $event)">
+                <nz-option *ngFor="let data of cycles" [nzLabel]="data.cycle.name" [nzValue]="data.cycle.id"></nz-option>
+            </nz-select>
+        </nz-input-group>
+    </div>
+
+    <!-- Grade -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="6" nzXl="6">
+        <label>Grado: </label>
+        <nz-input-group>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar grado" [nzLoading]="!grades"
+                [(ngModel)]="searchParams.gradeId" (ngModelChange)="getSessionsReport(null)">
+                <nz-option *ngFor="let data of grades" [nzLabel]="data.grade.name" [nzValue]="data.grade.id"></nz-option>
+            </nz-select>
+        </nz-input-group>
+    </div>
+
+    <!-- Counselor -->
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" nzXl="6">
+        <label>Orientador: </label>
+        <nz-input-group>
+            <nz-select class="shift" nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar orientador" [nzLoading]="!counselors"
+                [(ngModel)]="searchParams.counselorId" (ngModelChange)="getSessionsReport(null);">
+                <nz-option *ngFor="let counselor of counselors" [nzLabel]="counselor.fullname" [nzValue]="counselor.id"></nz-option>
+            </nz-select>
+        </nz-input-group>
+    </div>
+
+    <!-- Session types -->
+    <div nz-col nzXs="24" nzSm="12" nzMd="12" nzLg="6" nzXl="6">
+        <label>Tipo de sesión: </label>
+        <nz-input-group>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccionar tipo de sesión"
+                [(ngModel)]="searchParams['sessionType']" (ngModelChange)="getSessionsReport(null)">
+                <nz-option *ngFor="let type of sessionTypesList" [nzLabel]="type" [nzValue]="type"></nz-option>
+            </nz-select>
+        </nz-input-group>
+    </div>
+
+    <!-- Date -->
+    <div nz-col nzXs="24" nzSm="24" nzMd="18" nzLg="12" nzXl="6">
+        <label>Fecha: </label>
+        <nz-input-group>
+            <nz-range-picker nzFormat="dd/MM/yyyy" [ngModel]="searchParams.dateRange"
+                [nzDisabledDate]="disabledDate" (ngModelChange)="onChangeDatePicker($event)"></nz-range-picker>
+        </nz-input-group>
+    </div>
+
+    <!-- Search button-->
+    <div nz-col nzXs="24" nzSm="24" nzMd="6" nzXl="12">
+        <div class="btn-container" nz-row nzAlign="bottom" nzJustify="end">
+            <button nz-button nzType="primary" (click)="getSessionsReport(null)">Buscar</button>
+        </div>
+    </div>
+</div>
+
+<div nz-row id="sessions-table">
+    <div nz-col nzSpan="24">
+        <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
+            <div nz-row [nzJustify]="'end'">
+                <a style="cursor: pointer" (click)="exportExcel()">
+                    Excel <i nz-icon nzType="download" nzTheme="outline"></i>
+                </a>
+            </div>
+            <nz-table #filterTable
+                [nzData]="listOfDisplayData"
+                nzTableLayout="fixed"
+                nzSize="small"
+                (nzQueryParams)="getSessionsReport($event)"
+            >
+                <thead>
+                    <tr>
+                        <th nzColumnKey="shiftId" [nzSortFn]="true" [nzSortPriority]="1">Turno</th>
+                        <th nzColumnKey="cycleId" [nzSortFn]="true" [nzSortPriority]="2">Ciclo</th>
+                        <th nzColumnKey="gradeId" [nzSortFn]="true" [nzSortPriority]="3">Grado</th>
+                        <th nzColumnKey="counselorId" [nzSortFn]="true" [nzSortPriority]="4">Orientador</th>
+                        <th nzColumnKey="sessionType" [nzSortFn]="true" [nzSortPriority]="5">Tipo de sesión</th>
+                        <th [nzAlign]="'center'">Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let data of filterTable.data">
+                        <td>{{ data.shift }}</td>
+                        <td>{{ data.cycle }}</td>
+                        <td>{{ data.grade }}</td>
+                        <td>{{ data.counselor }}</td>
+                        <td>{{ data.sessionType }}</td>
+                        <td [nzAlign]="'center'">{{ data.count }}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>
+
+<table id="excel-table" hidden>
+    <thead>
+        <tr>
+            <th>Turno</th>
+            <th>Ciclo</th>
+            <th>Grado</th>
+            <th>Orientador</th>
+            <th>Tipo de sesión</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let data of listOfDisplayData">
+            <td>{{ data.shift }}</td>
+            <td>{{ data.cycle }}</td>
+            <td>{{ data.grade }}</td>
+            <td>{{ data.counselor }}</td>
+            <td>{{ data.sessionType }}</td>
+            <td>{{ data.count }}</td>
+        </tr>
+    </tbody>
+</table>
