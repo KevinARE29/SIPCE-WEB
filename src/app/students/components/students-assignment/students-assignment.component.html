@@ -2,6 +2,8 @@
     <div nz-row>
         <div nz-col nzSm="24" nzMd="6" nzXl="4">
             <h1>Estudiantes</h1>
+            <i nz-icon class="icon-style" nzType="question-circle" nzTheme="outline" nz-tooltip 
+                nzTooltipTitle="Los estudiantes que se encuentran en esta pantalla corresponden a estudiantes que tienen por estado Cursando año escolar."></i>
         </div>
         <div nz-col *ngIf="teacherAssignation.length === 1" class="grade-name">
             {{ teacherAssignation[0].name }}

@@ -1,8 +1,12 @@
 <div nz-row nzGutter="20">
     <div nz-col nzXs="24" nzSm="12">
         <nz-card>
-            <p><strong>Resultados generales al final del año</strong></p>
-
+            <p>
+                <strong>Resultados generales al final del año</strong>
+                <i nz-icon nzType="question-circle" nzTheme="outline" class="help" nz-tooltip 
+                    nzTooltipTitle="Al agregar el comentario final el historial dejará de ser editable y solamente podrán realizarse actualizaciones sobre este comentario."></i>
+            </p>
+            
             <!-- Show existing final conclusion, if exists. -->
             <p *ngIf="history.finalConclusion && !editing">
                 {{history.finalConclusion}} <i *ngIf="isEditable" (click)="onInitiEditingFinalConclusion()" nz-icon nzType="edit" nzTheme="outline"></i>
