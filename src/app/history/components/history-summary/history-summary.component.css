@@ -1,29 +1,33 @@
 nz-card {
-    height: 100%;
+  height: 100%;
 }
 
-nz-card p{
-    text-align: center;
+nz-card p {
+  text-align: center;
 }
 
 nz-card p.expedient-comment {
-    text-align: left;
+  text-align: left;
 }
 
 nz-card p.expedient-author {
-    text-align: right;
-    font-style: italic;
+  text-align: right;
+  font-style: italic;
 }
 
 .btn-editing-conclusion {
-    text-align: right;
+  text-align: right;
 }
 
 .btn-cancel-editing {
-    margin-right: 10px;
-    color: gray;
+  margin-right: 10px;
+  color: gray;
 }
 
 i {
-    cursor: pointer;
+  cursor: pointer;
+}
+
+.help {
+  margin-left: 5px;
 }

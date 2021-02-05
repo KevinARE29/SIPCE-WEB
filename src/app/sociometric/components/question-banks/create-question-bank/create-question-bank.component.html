@@ -19,6 +19,7 @@
 
             <!-- Questions -->
             <div nz-row class="questions-title"><strong>Preguntas</strong></div>
+            <span class="error" *ngIf="minQuestionsError">Debe agregar al menos una pregunta</span>
             <nz-form-item nz-row nzJustify="center" *ngFor="let control of listOfControl; let i = index">
                 <!-- Controls -->
                 <nz-form-control [nzXs]="24" [nzSm]="20" [nzErrorTip]="questionErrors">
@@ -55,7 +56,7 @@
                             <ng-container *ngIf="i > 0;else firstQuestion">
                                 El contenido de la pregunta es requerido
                             </ng-container>
-                            <ng-template #firstQuestion>Debe agregar al menos una pregunta a la prueba
+                            <ng-template #firstQuestion>Debe agregar al menos una pregunta
                             </ng-template><br>
                         </ng-container>
                         <ng-container *ngIf="control.hasError('maxlength')">El título debe contener máximo 256

@@ -2,6 +2,8 @@
     <div nz-row>
         <div nz-col nzSm="24" nzMd="6" nzXl="4">
             <h1>Estudiantes</h1>
+            <i nz-icon class="icon-style" nzType="question-circle" nzTheme="outline" nz-tooltip 
+                nzTooltipTitle="Los estudiantes que se encuentran en esta pantalla corresponden a estudiantes que tienen por estado Cursando año escolar."></i>
         </div>
         <div nz-col *ngIf="teacherAssignation.length === 1" class="grade-name">
             {{ teacherAssignation[0].name }}
@@ -10,7 +12,7 @@
 
     <div nz-row *ngIf="!teacherAssignation.length">
         <nz-alert nzType="warning" nzCloseable nzShowIcon
-            nzMessage="Debe tener grados asignados para poder cerrar un año escolar.">
+            nzMessage="Debe tener grados asignados para poder consultar la asignación actual de estudiantes y vincularlos.">
         </nz-alert>
     </div>
 
@@ -339,10 +341,11 @@
     <ng-template #modalTitle> Vincular estudiantes </ng-template>
 
     <ng-template #modalContent>
-        <p *ngFor="let data of filteredList">
-            {{ data.student.firstname}} {{ data.student.lastname }}
-        </p>
-        <br>
+        <div class="students">
+            <p *ngFor="let data of filteredList">
+                {{ data.student.firstname}} {{ data.student.lastname }}
+            </p>
+        </div>
         <i>Se vinculará a {{ setOfCheckedId.size }}
             <ng-container *ngIf="setOfCheckedId.size === 1;else plural">estudiante.</ng-container>
             <ng-template #plural>estudiantes.</ng-template>
@@ -361,10 +364,11 @@
     <ng-template #modalTitleU> Desvincular estudiantes </ng-template>
 
     <ng-template #modalContentU>
-        <p *ngFor="let data of filteredList">
-            {{ data.student.firstname}} {{ data.student.lastname }}
-        </p>
-        <br>
+        <div class="students">
+            <p *ngFor="let data of filteredList">
+                {{ data.student.firstname}} {{ data.student.lastname }}
+            </p>
+        </div>
         <i>Se desvinculará a {{ setOfStudentsCheckedId.size }}
             <ng-container *ngIf="setOfStudentsCheckedId.size === 1;else pluralU">estudiante.</ng-container>
             <ng-template #pluralU>estudiantes.</ng-template>
