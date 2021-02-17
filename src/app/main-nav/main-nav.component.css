@@ -140,6 +140,22 @@ nz-avatar {
   vertical-align: middle;
 }
 
+.about-page {
+  width: 32px;
+  height: 32px;
+  border-radius: 50px;
+  background: #001529;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
+.requestsCounter nz-badge a i {
+  font-size: 20px;
+  color: #ffffff;
+  margin: 5px;
+}
+
 .requestsCounter nz-badge a i {
   font-size: 20px;
   color: #ffffff;
@@ -152,6 +168,12 @@ nz-avatar {
   overflow-y: scroll;
 }
 
+.info-icon {
+  font-size: 20px;
+  color: #ffffff;
+  padding-bottom: 15%;
+  margin: 6px;
+}
 
 .popover-notification {
   width: 250px;

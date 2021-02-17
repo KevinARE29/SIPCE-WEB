@@ -1,16 +1,23 @@
 h1 {
     text-align: center;
     margin:auto;
+    padding-top: 2%;
+}
+
+h2 {
+    text-align: center;
+    margin:auto;
 }
 
 p {
     text-align: justify;
-    margin-top: 25px;
-    margin-bottom: 25px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 nz-row {
-    text-align: center;
+    margin: 10px auto 10px;
+    display: block;
 }
 
 nz-card-meta {
@@ -18,16 +25,19 @@ nz-card-meta {
 }
 
 nz-card {
-    width: 300px; 
-    height: 280px;
-    text-align: center;
+    width: 340px; 
+    height: 475px;
+    background-color: transparent;
+    margin: 10px auto 10px;
+    display: block;
     border-radius: 10px;
 }
 
 img {
-    width: 300px;
-    text-align: center;
-    height: 280px;
+    width: auto;
+    height: 300px;
+    display:block;
+    margin:auto;
 }
 
 .description {
@@ -36,5 +46,11 @@ img {
 }
 
 .align {
-    text-align: center;
+    margin: 10px auto 10px;
+    display: block;
+}
+
+.align-center {   
+    display: flex;
+    justify-content: center;
 }

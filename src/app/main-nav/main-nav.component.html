@@ -42,8 +42,7 @@
           <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
         </span>
       </nz-page-header-tags>
-      <nz-page-header-extra>
-        <a routerLink="/acerca-de">Acerca de</a>
+      <nz-page-header-extra>      
         <!-- Request notifications -->
         <span class="requestsCounter" *ngIf="checkPermission(25)">
           <nz-badge [nzCount]="requestNotifications?.total">
@@ -135,6 +134,9 @@
           <nz-dropdown-menu #menu="nzDropdownMenu">
             <ul nz-menu class="user-dropdown-item">
               <li nz-menu-item routerLink='/contrasena/cambiar'> Cambiar contraseña </li>
+            </ul>
+            <ul nz-menu class="user-dropdown-item">
+              <li nz-menu-item routerLink='/acerca-de'>Acerca de SIAPCE </li>
             </ul>
             <ul nz-menu class="user-dropdown-item">
               <li nz-menu-item (click)='logoutClicked()'> Cerrar sesión
