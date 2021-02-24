@@ -10,13 +10,13 @@ const routes: Routes = [
     path: 'institucion',
     component: SchoolYearComponent,
     canActivate: [AuthGuard],
-    data: { permission: 19 }
+    data: { permission: 49 }
   },
   {
     path: 'grado',
     component: GradeClosureComponent,
     canActivate: [AuthGuard],
-    data: { permission: 23 }
+    data: { permission: 48 }
   }
 ];
 
