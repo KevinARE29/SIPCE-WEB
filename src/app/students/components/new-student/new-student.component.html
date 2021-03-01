@@ -125,12 +125,16 @@
         <div nz-col nzXs="24" nzLg="12" nzXl="11">
             <nz-form-item>
                 <nz-form-label nzXs="9" nzLg="12" nzXl="10" nzFor="registrationGrade">Grado</nz-form-label>
-                <nz-form-control>
+                <nz-form-control [nzErrorTip]="registrationGradeErrors">
                     <nz-select id="registrationGrade" nzShowSearch nzAllowClear formControlName="registrationGrade"
                         nzPlaceHolder="Seleccionar">
                         <nz-option *ngFor="let grade of allGrades" [nzValue]="grade.id" [nzLabel]="grade.name">
                         </nz-option>
                     </nz-select>
+
+                    <ng-template #registrationGradeErrors let-control>
+                        <ng-container *ngIf="control.hasError('registrationAfterCurrent')">El grado de registro debe ser igual o menor que el grado actual.<br></ng-container>
+                    </ng-template>
                 </nz-form-control>
             </nz-form-item>
         </div>

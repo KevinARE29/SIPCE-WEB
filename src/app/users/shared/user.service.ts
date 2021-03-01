@@ -121,7 +121,7 @@ export class UserService {
           user.fullname = user['firstname'].concat(' ', user['lastname']);
         });
 
-        response['data'] = response['data'].filter((x) => x.active === true); // TODO: Remove
+        response['data'] = response['data'].filter((x) => x.active === true);
 
         return response;
       }),

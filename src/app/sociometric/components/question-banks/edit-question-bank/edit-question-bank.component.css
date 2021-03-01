@@ -19,6 +19,10 @@
     margin-top: 5px;
 }
 
+.error {
+    color: #ff4d4f;
+}
+
 nz-tag {
     border-radius: 7px;
 }

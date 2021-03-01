@@ -19,6 +19,7 @@ export class CreateQuestionBankComponent implements OnInit {
   questionBankForm!: FormGroup;
   questionBank: QuestionBank;
   listOfControl: Array<{ id: number; controlInstance: string; type: string; counter: number }> = [];
+  minQuestionsError = false;
 
   constructor(
     private fb: FormBuilder,
@@ -93,10 +94,12 @@ export class CreateQuestionBankComponent implements OnInit {
 
         break;
     }
+
+    this.minQuestionsError = false;
   }
 
   removeField(i: { id: number; controlInstance: string; type: string; counter: number }, e: MouseEvent): void {
-    e.preventDefault();
+    if (e) e.preventDefault();
     const elementsToRemove = this.listOfControl.filter((item) => item.counter == i.counter);
 
     elementsToRemove.forEach((element) => {
@@ -106,6 +109,8 @@ export class CreateQuestionBankComponent implements OnInit {
     });
 
     if (elementsToRemove.length) this.reorderCounters();
+
+    if (!this.listOfControl.length) this.minQuestionsError = true;
   }
 
   submitForm(): void {
@@ -116,6 +121,8 @@ export class CreateQuestionBankComponent implements OnInit {
 
     if (this.questionBankForm.valid) {
       this.transformBody();
+    } else {
+      if (!this.listOfControl.length) this.minQuestionsError = true;
     }
   }
 
@@ -154,29 +161,37 @@ export class CreateQuestionBankComponent implements OnInit {
   }
 
   createQuestionBank(): void {
-    this.questionBankService.createQuestionsBank(this.questionBank).subscribe(
-      () => {
-        this.loading = false;
-        this.message.success(`El banco de preguntas '${this.questionBank.name}' ha sido creado`);
-        this.questionBankForm.reset();
-      },
-      (error) => {
-        this.loading = false;
-        const statusCode = error.statusCode;
-        const notIn = [401, 403];
+    if (this.questionBank.questions.length) {
+      this.questionBankService.createQuestionsBank(this.questionBank).subscribe(
+        () => {
+          this.loading = false;
+          this.message.success(`El banco de preguntas '${this.questionBank.name}' ha sido creado`);
+          this.questionBankForm.reset();
+          this.listOfControl.forEach((question) => {
+            this.removeField(question, null);
+          });
+        },
+        (error) => {
+          this.loading = false;
+          const statusCode = error.statusCode;
+          const notIn = [401, 403];
 
-        if (!notIn.includes(statusCode) && statusCode < 500) {
-          this.notification.create(
-            'error',
-            'Ocurrió un error al intentar crear el banco de preguntas.',
-            error.message,
-            {
-              nzDuration: 30000
-            }
-          );
+          if (!notIn.includes(statusCode) && statusCode < 500) {
+            this.notification.create(
+              'error',
+              'Ocurrió un error al intentar crear el banco de preguntas.',
+              error.message,
+              {
+                nzDuration: 30000
+              }
+            );
+          }
         }
-      }
-    );
+      );
+    } else {
+      this.minQuestionsError = true;
+      this.loading = false;
+    }
   }
 
   reorderCounters(): void {

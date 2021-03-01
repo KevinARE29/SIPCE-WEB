@@ -69,6 +69,8 @@ export class SchoolYearEndSummaryComponent implements OnInit {
       () => {
         this.btnLoading = false;
         this.message.success(`El año escolar ${this.data['year']} se ha cerrado con éxito`);
+
+        window.location.reload();
       },
       (error) => {
         const statusCode = error.statusCode;

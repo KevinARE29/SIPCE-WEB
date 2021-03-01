@@ -1,4 +1,4 @@
-<nz-spin nzTip="Cargando ..." [nzSpinning]="loadingExpedients">
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loadingExpedients && !errorMessage">
 
     <div nz-row nzJustify="space-between">
         <div nz-col nzXs="24" nzMd="6" nzLg="4" nzXl="3">
@@ -24,13 +24,18 @@
         </div>
     </div>
 
+    <p>
+        <!-- If there's an error, show it. -->
+        {{errorMessage}}
+    </p>  
+
     <ng-container *ngIf="!loadingExpedients">
         <app-students-details-expedient [id]="studentId"></app-students-details-expedient>
 
         <app-expedient-view *ngIf="!editing"
                             [studentId]="studentId"
                             [expedient]="selectedExpedientExists ? selectedExpedient : null"
-                            [isEditable]="selectedExpedientIsEditable"
+                            [isEditable]="selectedExpedientIsEditable && !selectedExpedient.finalConclusion"
                             [currentYear]="currentYear"
                             (initEditing)="setEditing(true)"
         ></app-expedient-view>
@@ -45,7 +50,7 @@
        <app-sessions-counter *ngIf="selectedExpedientExists"
                             [studentId]="studentId"
                             [expedientId]="selectedExpedient.id"
-                            [isEditable]="selectedExpedientIsEditable"
+                            [isEditable]="selectedExpedientIsEditable && !selectedExpedient.finalConclusion"
                             [sessionsCounter]="selectedExpedient.sessionsCounter"
        ></app-sessions-counter> 
     </ng-container>

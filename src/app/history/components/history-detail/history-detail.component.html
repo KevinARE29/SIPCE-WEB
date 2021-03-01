@@ -1,4 +1,4 @@
-<nz-spin nzTip="Cargando ..." [nzSpinning]="loadingHistory">
+<nz-spin nzTip="Cargando ..." [nzSpinning]="loadingHistory && !errorMessage">
 
     <div nz-row nzJustify="space-between">
         <div nz-col>
@@ -27,8 +27,14 @@
         </div>
     </div>
 
+    <p>
+        <!-- If there's an error, show it. -->
+        {{errorMessage}}
+    </p>  
+
     <!-- Student details -->
-    <app-student-details [id]="studentId"
+    <app-student-details *ngIf="!errorMessage"
+                         [id]="studentId"
                          [history]="selectedHistory"
                          [showAlert]="selectedHistoryIsActive && checkPermission(46)"   
     ></app-student-details>

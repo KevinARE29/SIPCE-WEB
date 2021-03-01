@@ -1,35 +1,42 @@
 h4 {
-    margin-bottom: 10px;
-    display: block;
+  margin-bottom: 10px;
+  display: block;
 }
 
 h3 {
-    display: inline;
-    margin-right: 15px;
+  display: inline;
+  margin-right: 15px;
 }
 
-nz-input-number, nz-date-picker {
-    border-radius: 7px;
-    width: 100%;
+nz-input-number,
+nz-date-picker {
+  border-radius: 7px;
+  width: 100%;
 }
 
-.btn-cancel, .right {
-    margin-right: 10px;
+.btn-cancel,
+.right {
+  margin-right: 10px;
 }
 
 form i {
-    padding: 5px;
-    font-size: 25px;
+  padding: 5px;
+  font-size: 25px;
 }
 
-.report, #presets {
-    margin-bottom: 10px;
+.report,
+#presets {
+  margin-bottom: 10px;
 }
 
 .add-button {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 .grey {
-    color: #333333;
+  color: #333333;
+}
+
+.help {
+  margin-left: 5px;
 }

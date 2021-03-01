@@ -29,7 +29,7 @@ const routes: Routes = [
     path: 'solicitudes',
     component: CounselingRequestsComponent,
     canActivate: [AuthGuard],
-    data: { permission: 22 } // TODO: Update permission
+    data: { permission: 22 }
   },
   {
     path: '**',

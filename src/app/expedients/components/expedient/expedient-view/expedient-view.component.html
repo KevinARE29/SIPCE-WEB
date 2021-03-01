@@ -56,7 +56,7 @@
             <div nz-row>
                 <div nz-col nzXs="24">
                     <p><strong>Tratamiento psicológicos externos:</strong>
-                        {{expedient.externalPsychologicalTreatments && expedient.externalPsychologicalTreatments.length ? '' : 'No se han registrado tratamientos psicológicos externos'}}
+                        {{expedient.externalPsychologicalTreatments && expedient.externalPsychologicalTreatments.length ? '' : 'No se han registrado tratamientos externos'}}
                     </p>
                     <ul>
                         <li *ngFor="let treatment of expedient.externalPsychologicalTreatments">{{treatment}}</li>
@@ -81,7 +81,12 @@
             <!-- Final conclussion -->
             <div nz-row>
                 <div nz-col nzXs="24">
-                    <p><strong>Comentario final:</strong></p>
+                    <p>
+                        <strong>Comentario final:</strong>
+                        <i nz-icon nzType="question-circle" nzTheme="outline" class="help" nz-tooltip 
+                            nzTooltipTitle="Al agregar el comentario final el expediente dejará de ser editable y solamente podrán realizarse actualizaciones sobre este comentario."></i>
+    
+                    </p>
 
                     <ng-container *ngIf="expedient.finalConclusion && !editing">
                         <p class="text-center">{{expedient.finalConclusion}} <i *ngIf="isEditable" (click)="onInitiEditingFinalConclusion()" nz-icon nzType="edit" nzTheme="outline"></i></p>

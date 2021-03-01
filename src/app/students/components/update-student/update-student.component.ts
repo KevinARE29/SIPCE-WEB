@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { differenceInCalendarDays, getYear } from 'date-fns';
@@ -48,7 +48,6 @@ export class UpdateStudentComponent implements OnInit {
   kinshipRelationships: any;
   activeGrades: Grade[];
   allGrades: Grade[];
-  sections: ShiftPeriodGrade[];
   status: string[];
 
   // Table
@@ -121,12 +120,27 @@ export class UpdateStudentComponent implements OnInit {
       status: ['', [Validators.required]],
       shift: ['', [Validators.required]],
       currentGrade: ['', [Validators.required]],
-      section: [''],
-      registrationGrade: ['', [Validators.required]],
+      registrationGrade: ['', [Validators.required, this.validateRegistrationGrade]],
       registrationYear: ['', [Validators.required]],
       searchSibling: ['']
     });
+
+    this.studentForm.get('currentGrade').valueChanges.subscribe(() => {
+      this.studentForm.get('registrationGrade').updateValueAndValidity();
+    });
   }
+
+  validateRegistrationGrade = (control: FormControl): { [s: string]: boolean } => {
+    if (this.studentForm && this.activeGrades) {
+      const currentGrade = this.studentForm.controls.currentGrade.value;
+
+      if (control.value && control.value > currentGrade) {
+        return { registrationAfterCurrent: true };
+      }
+    }
+
+    return {};
+  };
 
   validateRouteParam(): void {
     this.route.paramMap.subscribe((params) => {
@@ -155,7 +169,6 @@ export class UpdateStudentComponent implements OnInit {
     this.student.startedGrade = new ShiftPeriodGrade();
     this.student.cycle = new ShiftPeriodGrade();
     this.student.grade = new ShiftPeriodGrade();
-    this.student.section = new ShiftPeriodGrade();
     this.student.responsibles = new Array<Responsible>();
     this.student.siblings = new Array<Student>();
     this.student.images = new Array<unknown>();
@@ -163,21 +176,12 @@ export class UpdateStudentComponent implements OnInit {
     this.studentService.mergeStudentAndCatalogs(this.student.id).subscribe(
       (data) => {
         this.student = data['student'];
-        if (!this.student.section) this.student.section = new ShiftPeriodGrade();
         // Student copy
         this.editStudentCache = { ...this.student };
         this.editStudentCache.shift = { ...this.student.shift };
         this.editStudentCache.grade = { ...this.student.grade };
-        this.editStudentCache.section = { ...this.student.section };
         this.editStudentCache.startedGrade = { ...this.student.startedGrade };
         this.editStudentCache.siblings = { ...this.student.siblings };
-
-        // Sections data
-        this.sections = data['sections'].data;
-        this.sections.sort((a, b) => a.id - b.id);
-        this.sections = this.sections
-          .filter((x) => x.name.length === 1)
-          .concat(this.sections.filter((x) => x.name.length > 1));
 
         // Grades data
         this.activeGrades = data['grades'].data.filter((x) => x.active === true);
@@ -194,7 +198,6 @@ export class UpdateStudentComponent implements OnInit {
         this.studentForm.get('shift')?.setValue(this.student.shift.id);
         this.studentForm.get('status')?.setValue(this.student.status);
         this.studentForm.get('currentGrade')?.setValue(this.student.grade.id);
-        this.studentForm.get('section')?.setValue(this.student.section.id);
         this.studentForm.get('registrationYear')?.setValue(new Date(this.student.registrationYear, 0, 1));
         this.studentForm.get('registrationGrade')?.setValue(this.student.startedGrade.id);
 
@@ -275,7 +278,6 @@ export class UpdateStudentComponent implements OnInit {
       this.student.birthdate = this.studentForm.controls['dateOfBirth'].value;
       this.student.shift.id = this.studentForm.controls['shift'].value;
       this.student.grade.id = this.studentForm.controls['currentGrade'].value;
-      this.student.section.id = this.studentForm.controls['section'].value;
       this.student.startedGrade.id = this.studentForm.controls['registrationGrade'].value;
       this.student.registrationYear = this.studentForm.controls['registrationYear'].value;
 
@@ -315,10 +317,9 @@ export class UpdateStudentComponent implements OnInit {
 
     if (update['update']) {
       this.btnLoading = true;
-      if (update['fields'].shift || update['fields'].grade || update['fields'].section) {
+      if (update['fields'].shift || update['fields'].grade) {
         update['fields'].shift = { ...this.student.shift };
         update['fields'].grade = { ...this.student.grade };
-        update['fields'].section = { ...this.student.section };
       }
 
       this.studentService.updateStudent(update['fields']).subscribe(
@@ -329,7 +330,6 @@ export class UpdateStudentComponent implements OnInit {
           this.editStudentCache = { ...this.student };
           this.editStudentCache.shift = { ...this.student.shift };
           this.editStudentCache.grade = { ...this.student.grade };
-          this.editStudentCache.section = { ...this.student.section };
           this.editStudentCache.startedGrade = { ...this.student.startedGrade };
           this.editStudentCache.siblings = { ...this.student.siblings };
           this.btnLoading = false;
@@ -367,7 +367,6 @@ export class UpdateStudentComponent implements OnInit {
       'birthdate',
       'shift',
       'grade',
-      'section',
       'startedGrade',
       'registrationYear',
       'siblings'
@@ -398,7 +397,6 @@ export class UpdateStudentComponent implements OnInit {
             break;
           case 'shift':
           case 'grade':
-          case 'section':
           case 'startedGrade':
             if (actual[property]['id'] !== objCopy[property].id) {
               updateStudent[property] = actual[property];

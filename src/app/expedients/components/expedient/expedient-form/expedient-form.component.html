@@ -15,6 +15,7 @@
 
                             <ng-template #referrerNameErrors let-control>
                                 <ng-container *ngIf="control.hasError('required')">La persona que refiere es requerida<br></ng-container>
+                                <ng-container *ngIf="control.hasError('maxlength')">El nombre de la persona que refiere debe contener máximo 64 caracteres<br></ng-container>
                             </ng-template>
                         </nz-form-control>
                     </nz-form-item>
@@ -110,7 +111,7 @@
                 <!-- Treatments -->
                 <div nz-col nzXs="24">
                     <nz-form-item>
-                        <nz-form-label><strong>Tratamientos psicológicos externos</strong></nz-form-label>
+                        <nz-form-label><strong>Tratamientos externos</strong></nz-form-label>
                         <nz-form-control>
                             <nz-select nzMode="multiple" formControlName="externalPsychologicalTreatments" nzPlaceHolder="Seleccionar" [nzDropdownMatchSelectWidth]="false" (ngModelChange)="onExternalPsychologicalTreatmentChange($event)">
                                 <ng-container *ngFor="let treatment of psychologicalTreatmentTypes">

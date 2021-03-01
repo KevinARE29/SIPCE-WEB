@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 
 import { differenceInCalendarDays } from 'date-fns';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
@@ -77,7 +77,7 @@ export class NewStudentComponent implements OnInit {
       dateOfBirth: ['', [Validators.required]],
       shift: ['', [Validators.required]],
       currentGrade: ['', [Validators.required]],
-      registrationGrade: [''],
+      registrationGrade: ['', [this.validateRegistrationGrade]],
       registrationYear: [''],
       responsibleFirstname: [
         '',
@@ -91,7 +91,22 @@ export class NewStudentComponent implements OnInit {
       responsiblePhone: ['', [Validators.required, Validators.pattern(phonePattern)]],
       responsibleRelationship: ['', Validators.required]
     });
+
+    this.studentForm.get('currentGrade').valueChanges.subscribe(() => {
+      this.studentForm.get('registrationGrade').updateValueAndValidity();
+    });
   }
+
+  validateRegistrationGrade = (control: FormControl): { [s: string]: boolean } => {
+    if (this.studentForm && this.activeGrades) {
+      const currentGrade = this.studentForm.controls.currentGrade.value;
+      if (control.value && control.value > currentGrade) {
+        return { registrationAfterCurrent: true };
+      }
+    }
+
+    return {};
+  };
 
   getGrades(): void {
     this.gradeService.getAllGrades().subscribe((data) => {

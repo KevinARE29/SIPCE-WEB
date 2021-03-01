@@ -12,6 +12,7 @@
 
                         <ng-template #nameErrors let-control>
                             <ng-container *ngIf="control.hasError('required')">El nombre es requerido<br></ng-container>
+                            <ng-container *ngIf="control.hasError('maxlength')">El título debe contener máximo 64 caracteres<br></ng-container>
                         </ng-template>
                     </nz-form-control>
                 </nz-form-item>

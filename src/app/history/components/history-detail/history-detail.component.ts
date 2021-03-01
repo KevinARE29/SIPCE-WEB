@@ -44,6 +44,9 @@ export class HistoryDetailComponent implements OnInit {
   filterPeriod4 = true;
   loadingReport: boolean;
 
+  // Error message
+  errorMessage: string;
+
   constructor(
     private route: ActivatedRoute,
     private historyService: HistoryService,
@@ -102,11 +105,16 @@ export class HistoryDetailComponent implements OnInit {
 
   getHistories(): void {
     this.loadingHistory = true;
-    this.historyService.getStudentHistory(this.studentId).subscribe((r) => {
-      this.histories = r.sort((a, b) => b.behavioralHistoryYear - a.behavioralHistoryYear);
-      this.setHistory(0);
-      this.loadingHistory = false;
-    });
+    this.historyService.getStudentHistory(this.studentId).subscribe(
+      (r) => {
+        this.histories = r.sort((a, b) => b.behavioralHistoryYear - a.behavioralHistoryYear);
+        this.setHistory(0);
+        this.loadingHistory = false;
+      },
+      (error) => {
+        this.errorMessage = error.message;
+      }
+    );
   }
 
   setHistory(index: number): void {

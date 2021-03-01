@@ -27,7 +27,7 @@ export class InterventionProgramsFormComponent implements OnInit, OnChanges {
 
   ngOnChanges(): void {
     this.programForm = this.fb.group({
-      name: [this.program ? this.program.name : null, [Validators.required]],
+      name: [this.program ? this.program.name : null, [Validators.required, Validators.maxLength(64)]],
       type: [this.program ? this.program.type : null, [Validators.required]],
       description: [this.program ? this.program.description : null, [Validators.required]],
       status: [this.program ? this.program.status : true]

@@ -153,7 +153,10 @@ export class HistoryAnnotationsComponent implements OnInit, OnChanges {
     this.annotationModal = annotation;
 
     this.form = this.fb.group({
-      title: [this.annotationModal ? this.annotationModal.title : null, [Validators.required]],
+      title: [
+        this.annotationModal ? this.annotationModal.title : null,
+        [Validators.required, Validators.maxLength(64)]
+      ],
       description: [this.annotationModal ? this.annotationModal.description : null, [Validators.required]],
       annotationDate: [this.annotationModal ? this.annotationModal.annotationDate : null, [Validators.required]]
     });
