@@ -56,7 +56,7 @@ export class AuthGuard implements CanActivate, CanLoad {
       const content = this.authService.jwtDecoder(token);
       if (url === '/') {
         this.router.navigate(['inicio']);
-      } else if (url === '/contrasena/cambiar' || url === '/inicio') {
+      } else if (url === '/contrasena/cambiar' || url === '/inicio' || '/acerca-de') {
         res = true;
       } else if (
         url !== '/login' &&

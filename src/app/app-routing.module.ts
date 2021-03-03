@@ -98,8 +98,8 @@ const routes: Routes = [
   {
     path: 'reglamento',
     loadChildren: () =>
-      import('./disciplinary-catalogs/disciplinary-catalog.module').then((m) => m.DisciplinaryCatalogModule)
-    // canLoad: [AuthGuard]
+      import('./disciplinary-catalogs/disciplinary-catalog.module').then((m) => m.DisciplinaryCatalogModule),
+    canLoad: [AuthGuard]
   },
   {
     path: 'pruebas-sociometricas',
@@ -108,8 +108,8 @@ const routes: Routes = [
   },
   {
     path: 'acerca-de',
-    loadChildren: () => import('./about-page/about-page.module').then((m) => m.AboutPageModule)
-    // canLoad: [AuthGuard]
+    loadChildren: () => import('./about-page/about-page.module').then((m) => m.AboutPageModule),
+    canLoad: [AuthGuard]
   },
   {
     path: '**',

@@ -1,6 +1,4 @@
 /*
-  Path: app/about-page/about-page.module.ts
-  Objetive: Contain the manage academics catalogs routes
   Author: Veronica Reyes
 */
 
@@ -13,8 +11,8 @@ const routes: Routes = [
   {
     path: '',
     component: AboutPageComponent,
-    // canActivate: [AuthGuard]
-    // data: { permission: 13 }
+    canActivate: [AuthGuard],
+    data: { permission: 0 }
   },
   {
     path: '**',
