@@ -146,12 +146,17 @@ nz-avatar {
   margin: 5px;
 }
 
+.requestsCounter nz-badge a i {
+  font-size: 20px;
+  color: #ffffff;
+  margin: 5px;
+}
+
 .scroll-style {
   max-height: 500px;
   max-width: 300px;
   overflow-y: scroll;
 }
-
 
 .popover-notification {
   width: 250px;

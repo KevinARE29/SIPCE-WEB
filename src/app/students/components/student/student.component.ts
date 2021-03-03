@@ -5,6 +5,8 @@ import { Student } from '../../shared/student.model';
 import { Responsible } from '../../shared/responsible.model';
 import { StudentService } from '../../shared/student.service';
 import { ShiftPeriodGrade } from '../../../academic-catalogs/shared/shiftPeriodGrade.model';
+import { AuthService } from 'src/app/login/shared/auth.service';
+import { Permission } from 'src/app/shared/permission.model';
 
 @Component({
   selector: 'app-student',
@@ -12,14 +14,23 @@ import { ShiftPeriodGrade } from '../../../academic-catalogs/shared/shiftPeriodG
   styleUrls: ['./student.component.css']
 })
 export class StudentComponent implements OnInit {
+  permissions: Permission[] = [];
+
   student: Student;
   loading = false;
 
-  constructor(private router: Router, private route: ActivatedRoute, private studentService: StudentService) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private studentService: StudentService
+  ) {}
 
   ngOnInit(): void {
     this.student = new Student();
+
     this.validateRouteParam();
+    this.setPermissions();
   }
 
   validateRouteParam(): void {
@@ -57,5 +68,26 @@ export class StudentComponent implements OnInit {
       this.student = data;
       this.loading = false;
     });
+  }
+
+  /* ------      Control page permissions      ------ */
+  setPermissions(): void {
+    const token = this.authService.getToken();
+    const content = this.authService.jwtDecoder(token);
+
+    const permissions = content.permissions;
+
+    this.permissions.push(new Permission(20, 'edit'));
+
+    this.permissions.forEach((p) => {
+      const index = permissions.indexOf(p.id);
+      p.allow = index == -1 ? false : true;
+    });
+  }
+
+  checkPermission(id: number): boolean {
+    const index = this.permissions.find((p) => p.id === id);
+
+    return index.allow;
   }
 }

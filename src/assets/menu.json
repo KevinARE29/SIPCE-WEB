@@ -16,13 +16,13 @@
         }, {
             "title": "Roles",
             "icon": "lock",
-            "permissions": [4],
+            "permissions": [7],
             "allowed": null,
             "children": [
                 {
                     "route": "/roles",
                     "name": "Roles",
-                    "permission": 4,
+                    "permission": 7,
                     "allowed": false
                 }
             ]
@@ -82,7 +82,7 @@
         {
             "title": "Usuarios",
             "icon": "user",
-            "permissions": [11, 12, 3],
+            "permissions": [16],
             "allowed": null,
             "children": [
                 {
@@ -106,13 +106,13 @@
         {
             "title": "Estudiantes",
             "icon": "solution",
-            "permissions": [18, 17, 23],
+            "permissions": [17, 23, 50],
             "allowed": null,
             "children": [
                 {
                     "route": "/estudiantes/consultar",
                     "name": "Estudiantes",
-                    "permission": 18,
+                    "permission": 50,
                     "allowed": false
                 }, {
                     "route": "/estudiantes/carga-masiva",
@@ -130,18 +130,18 @@
         {
             "title": "Año escolar",
             "icon": "contacts",
-            "permissions": [19, 23],
+            "permissions": [49, 48],
             "allowed": null,
             "children": [
                 {
                     "route": "/asignaciones/institucion",
                     "name": "Año escolar",
-                    "permission": 19,
+                    "permission": 49,
                     "allowed": false
                 }, {
                     "route": "/asignaciones/grado",
                     "name": "Año escolar",
-                    "permission": 23,
+                    "permission": 48,
                     "allowed": false
                 }
             ]
@@ -149,7 +149,7 @@
         {
             "title": "Agenda",
             "icon": "calendar",
-            "permissions": [19, 22],
+            "permissions": [22],
             "allowed": null,
             "children": [
                 {
@@ -202,7 +202,7 @@
         {
             "title": "Reportes",
             "icon": "book",
-            "permissions": [34],
+            "permissions": [32, 34],
             "allowed": false,
             "children": [
                 {
@@ -248,7 +248,7 @@
         {
             "title": "Faltas y sanciones",
             "icon": "safety-certificate",
-            "permissions": [27, 29],
+            "permissions": [26, 28],
             "allowed": null,
             "children": [
                 {
