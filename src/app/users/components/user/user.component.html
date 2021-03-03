@@ -33,7 +33,7 @@
                 <ng-container *ngIf="!user.permissions.length">No se han asignado permisos al usuario.</ng-container>
             </div>
 
-            <button class="edit" nz-button nzType="primary" [nzLoading]="btnLoading" *ngIf="id > 0" (click)="edit = true; this.allowEdition()">Editar</button>
+            <button class="edit" nz-button nzType="primary" [nzLoading]="btnLoading" *ngIf="id > 0 && checkPermission(15)" (click)="edit = true; this.allowEdition()">Editar</button>
         </ng-container>
     </ng-template>
 
