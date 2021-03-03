@@ -21,7 +21,7 @@ const routes: Routes = [
     path: 'consultar',
     component: StudentsComponent,
     canActivate: [AuthGuard],
-    data: { permission: 17 }
+    data: { permission: 50 }
   },
   {
     path: 'nuevo',
