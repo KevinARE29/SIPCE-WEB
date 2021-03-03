@@ -21,13 +21,13 @@
                 </div>
             </div>
 
-            <div class="div-tags" *ngIf="!user.roles">
+            <div class="div-tags" *ngIf="user.roles">
                 <strong>Roles: </strong><br>
                 <nz-tag *ngFor="let rol of user.roles" [nzColor]="'geekblue'"> {{ rol.name }} </nz-tag>
                 <ng-container *ngIf="!user.roles.length;">No se han asignado roles al usuario.</ng-container>
             </div>
 
-            <div class="div-tags" *ngIf="!user.permissions">
+            <div class="div-tags" *ngIf="user.permissions">
                 <strong>Permisos: </strong><br>
                 <nz-tag *ngFor="let permission of user.permissions" [nzColor]="'purple'"> {{ permission.name }} </nz-tag>
                 <ng-container *ngIf="!user.permissions.length">No se han asignado permisos al usuario.</ng-container>
