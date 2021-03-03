@@ -21,21 +21,17 @@
                 </div>
             </div>
 
-            <div class="div-tags">
+            <div class="div-tags" *ngIf="!user.roles">
                 <strong>Roles: </strong><br>
                 <nz-tag *ngFor="let rol of user.roles" [nzColor]="'geekblue'"> {{ rol.name }} </nz-tag>
                 <ng-container *ngIf="!user.roles.length;">No se han asignado roles al usuario.</ng-container>
             </div>
 
-            <br>
-
-            <div class="div-tags">
+            <div class="div-tags" *ngIf="!user.permissions">
                 <strong>Permisos: </strong><br>
                 <nz-tag *ngFor="let permission of user.permissions" [nzColor]="'purple'"> {{ permission.name }} </nz-tag>
-                <ng-container *ngIf="!user.permissions.length;">No se han asignado permisos al usuario.</ng-container>
+                <ng-container *ngIf="!user.permissions.length">No se han asignado permisos al usuario.</ng-container>
             </div>
-
-            <br>
 
             <button class="edit" nz-button nzType="primary" [nzLoading]="btnLoading" *ngIf="id > 0" (click)="edit = true; this.allowEdition()">Editar</button>
         </ng-container>
