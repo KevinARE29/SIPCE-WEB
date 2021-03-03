@@ -1,9 +1,9 @@
-<div nz-col nzXs="16" [nzLg]="{ span: 20, offset: 2}" [nzXl]="{ span: 16, offset: 4}">
-    <div nz-row>
+<div nz-col [nzXs]="{ span: 20, offset: 2}" [nzXl]="{ span: 16, offset: 4}">
+    <div nz-row nzJustify="center">
         <h1>¿Qué es SIAPCE?</h1>
     </div>
 
-    <div nz-row>
+    <div nz-row nzJustify="center">
         <p>Las siglas SIAPCE significan Sistema Informático Académico y Psicológico de la Comunidad Educativa,
             el objetivo es apoyar las tareas realizadas por el departamento de orientación y el personal docente
             en el ámbito conductual y psicológico de los estudiantes, a través del seguimiento y control del historial
@@ -12,40 +12,40 @@
         <h2>Creadores del Sistema Informático:</h2>
     </div>
 
-    <div class="align">
-        <div nz-row>
-            <div nz-col nzFlex="0 1 350px" nzSpan="16">
-                <nz-card nzHoverable [nzCover]="coverTemplate">
-                    <nz-card-meta nzTitle="Universidad de El Salvador">
-                    </nz-card-meta>
-                    <nz-card-meta class="description "
-                        nzDescription="Un grupo de estudiantes desarrollo SIAPCE, como parte de su trabajo de graduación, utilizando estándares de desarrollo y tecnologías vanguardistas para garantizar un producto final de calidad.">
-                    </nz-card-meta>
-                </nz-card>
-                <ng-template #coverTemplate>
-                    <img alt="Minerva" src="../../../assets/Minerva-about-page.png" />
-                </ng-template>
-            </div>
+    <div nz-row nzJustify="space-around">
+        <div nz-col>
+            <nz-card nzHoverable [nzCover]="coverTemplate">
+                <nz-card-meta nzTitle="Universidad de El Salvador">
+                </nz-card-meta>
+                <p>Un grupo de estudiantes desarrollo SIAPCE, como parte de su trabajo de graduación, utilizando
+                    estándares de desarrollo y tecnologías vanguardistas para garantizar un producto final de calidad.
+                </p>
+            </nz-card>
+            <ng-template #coverTemplate>
+                <img alt="Minerva" src="../../../assets/Minerva-about-page.png" />
+            </ng-template>
+        </div>
 
-            <div nz-col nzFlex="0 1 450px" nzSpan="20">
-                <nz-card nzHoverable [nzCover]="coverTemplateTwo">
-                    <nz-card-meta nzTitle="Liceo Salvadoreño">
-                    </nz-card-meta>
-                    <nz-card-meta class="description"
-                        nzDescription="Para el diseño y validación del producto desarrollado se contó con el apoyo de las autoridades del Liceo Salvadoreño, personal administrativo,
-             técnico y el departamento de orientación. Se agradece especialmente la colaboración de la Licenciada Sandra Coto.">
-                    </nz-card-meta>
-                </nz-card>
-                <ng-template #coverTemplateTwo>
-                    <img alt="Liceo-Salvadoreño" src="../../../assets/logos/logo-color.png" />
-                </ng-template>
-            </div>
+        <div nz-col>
+            <nz-card nzHoverable [nzCover]="coverTemplateTwo">
+                <nz-card-meta nzTitle="Liceo Salvadoreño">
+                </nz-card-meta>
+                <p>Para el diseño y validación del producto desarrollado se contó con el apoyo de las autoridades del
+                    Liceo Salvadoreño, personal administrativo,
+                    técnico y el departamento de orientación. Se agradece especialmente la colaboración de la Licenciada
+                    Sandra Coto.</p>
+            </nz-card>
+            <ng-template #coverTemplateTwo>
+                <img alt="Liceo-Salvadoreño" src="../../../assets/logos/logo-color.png" />
+            </ng-template>
         </div>
     </div>
 
-    <h2> Equipo de desarrollo:</h2>
 
-    <div class="align-center">
+    <div nz-row nzJustify="center">
+        <h2>Equipo de desarrollo: </h2>
+    </div>
+    <div nz-row nzJustify="center">
         <ul>
             <li>Lorena Esmeralda López Guadrón</li>
             <li>José Fernando Rivas Arévalo</li>
