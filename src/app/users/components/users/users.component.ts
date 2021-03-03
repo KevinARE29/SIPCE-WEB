@@ -25,6 +25,7 @@ export class UsersComponent implements OnInit {
   listOfDisplayData: User[];
   pagination: Pagination;
   confirmModal?: NzModalRef;
+  currentUser: number;
 
   constructor(
     private userService: UserService,
@@ -58,6 +59,9 @@ export class UsersComponent implements OnInit {
     const content = this.authService.jwtDecoder(token);
 
     const permissions = content.permissions;
+
+    // Get current user id
+    this.currentUser = content.id;
 
     this.permissions.push(new Permission(14, 'Delete user'));
 
