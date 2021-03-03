@@ -16,13 +16,13 @@
         }, {
             "title": "Roles",
             "icon": "lock",
-            "permissions": [4],
+            "permissions": [7],
             "allowed": null,
             "children": [
                 {
                     "route": "/roles",
                     "name": "Roles",
-                    "permission": 4,
+                    "permission": 7,
                     "allowed": false
                 }
             ]
