@@ -5,7 +5,7 @@
     <div class="search-bar" nz-row nzJustify="space-between" [nzGutter]="[10, 10]">
       <div nz-col>
         <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-          <input type="text" nz-input placeholder="Buscar rol" [(ngModel)]="searchValue"/>
+          <input type="text" nz-input placeholder="Buscar rol" [(ngModel)]="searchValue" />
         </nz-input-group>
         <ng-template #suffixIconButton>
           <button nz-button nzType="{{color}}" nzSearch (click)="search()"><i nz-icon nzType="{{icon}}"></i></button>
@@ -20,48 +20,37 @@
     <div class="roles" nz-row>
       <div nz-col>
         <nz-spin nzTip="Cargando ..." [nzSpinning]="loading">
-          <nz-table #filterTable
-                    [nzData]="listOfDisplayData"
-                    nzTableLayout="fixed"
-                    [nzFrontPagination]="false"
-                    [nzTotal]="pagination.totalItems"
-                    [nzPageSize]="pagination.perPage"
-                    [nzPageIndex]="pagination.page"
-                    [nzSize]="tableSize"
-                    (nzQueryParams)="recharge($event)"
-          >
+          <nz-table #filterTable [nzData]="listOfDisplayData" nzTableLayout="fixed" [nzFrontPagination]="false"
+            [nzTotal]="pagination.totalItems" [nzPageSize]="pagination.perPage" [nzPageIndex]="pagination.page"
+            [nzSize]="tableSize" (nzQueryParams)="recharge($event)">
             <thead>
-            <tr>
-              <th nzColumnKey="name" [nzSortFn]="true">Rol</th>
-              <th *ngIf="checkPermission(7) || checkPermission(8) || checkPermission(9)">Acción</th>
-            </tr>
+              <tr>
+                <th nzColumnKey="name" [nzSortFn]="true">Rol</th>
+                <th *ngIf="checkPermission(7) || checkPermission(8) || checkPermission(9)">Acción</th>
+              </tr>
             </thead>
 
             <tbody>
-            <tr *ngFor="let data of filterTable.data">
-              <td>{{ data.name }}</td>
-              <td *ngIf="checkPermission(7) || checkPermission(8) || checkPermission(9)">
-                            <span *ngIf="data.id <= 6">
-                                <a *ngIf="checkPermission(7)" nz-tooltip nzTooltipTitle="Ver"
-                                   (click)="getRole(data.id)">
-                                    <i nz-icon nzType="eye" nzTheme="outline"></i>
-                                </a>
-                            </span>
+              <tr *ngFor="let data of filterTable.data">
+                <td>{{ data.name }}</td>
+                <td *ngIf="checkPermission(7) || checkPermission(8) || checkPermission(9)">
+                  <span *ngIf="data.id <= 7">
+                    <a *ngIf="checkPermission(7)" nz-tooltip nzTooltipTitle="Ver" (click)="getRole(data.id)">
+                      <i nz-icon nzType="eye" nzTheme="outline"></i>
+                    </a>
+                  </span>
 
-                <span *ngIf="data.id > 6">
-                                <a *ngIf="checkPermission(8)" nz-tooltip nzTooltipTitle="Actualizar"
-                                   (click)="getRole(data.id)">
-                                    <i nz-icon nzType="edit" nzTheme="outline"></i>
-                                </a>
-                                <nz-divider *ngIf="checkPermission(8) && checkPermission(9)"
-                                            nzType="vertical"></nz-divider>
-                                <a *ngIf="checkPermission(9)" nz-tooltip nzTooltipTitle="Eliminar"
-                                   (click)="showConfirm(data.id)">
-                                    <i nz-icon nzType="delete" nzTheme="outline"></i>
-                                </a>
-                            </span>
-              </td>
-            </tr>
+                  <span *ngIf="data.id > 7">
+                    <a *ngIf="checkPermission(8)" nz-tooltip nzTooltipTitle="Actualizar" (click)="getRole(data.id)">
+                      <i nz-icon nzType="edit" nzTheme="outline"></i>
+                    </a>
+                    <nz-divider *ngIf="checkPermission(8) && checkPermission(9)" nzType="vertical"></nz-divider>
+                    <a *ngIf="checkPermission(9)" nz-tooltip nzTooltipTitle="Eliminar" (click)="showConfirm(data.id)">
+                      <i nz-icon nzType="delete" nzTheme="outline"></i>
+                    </a>
+                  </span>
+                </td>
+              </tr>
             </tbody>
           </nz-table>
         </nz-spin>
