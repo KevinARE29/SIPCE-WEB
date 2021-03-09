@@ -60,18 +60,19 @@ export class HistoryListComponent implements OnInit {
   }
 
   getSearchLists(): void {
+    let extraData = new Array<unknown>();
     this.loadingSearchLists = true;
 
     this.userService.getUserProfile().subscribe((data) => {
-      // If roles include one of those, show all shifts.
+      // If role is Director, show all shifts.
       if (
         (data['roles'] as unknown[]).some((role) => {
-          return ['Director', 'Coordinador de Ciclo', 'Orientador'].includes(role['name']);
+          return ['Director'].includes(role['name']);
         })
       ) {
         this.getAllShifts();
 
-        // Else, show only the sections assigned to teachers and auxiliary teachers.
+        // Else, show only the sections assigned to teachers, auxiliary teachers, counselors and cycle coordinators.
       } else {
         // Set the filters for teachers.
         if (data['teacherAssignation']) {
@@ -97,9 +98,23 @@ export class HistoryListComponent implements OnInit {
           });
         }
 
+        // Set the filters for counselors.
+        if (data['counselorAssignation']) {
+          extraData.push(data['counselorAssignation']);
+        }
+
         // Set the filters for auxiliary teachers.
         if (data['auxTeacherAssignation']) {
-          Object.values(data['auxTeacherAssignation']).forEach((assignation: unknown[]) => {
+          extraData.push(data['auxTeacherAssignation']);
+        }
+
+        // Set the filters for cycle coordinators.
+        if (data['cycleCoordinatorAssignation']) {
+          extraData.push(data['cycleCoordinatorAssignation']);
+        }
+
+        extraData.forEach((data) => {
+          Object.values(data).forEach((assignation: unknown[]) => {
             assignation.forEach((assigment) => {
               // For each shift, check if it's already registered.
               let shift = this.shifts.find((value) => value.id === assigment['shift'].id);
@@ -144,8 +159,9 @@ export class HistoryListComponent implements OnInit {
               });
             });
           });
-        }
+        });
       }
+
       this.loadingSearchLists = false;
     });
   }
