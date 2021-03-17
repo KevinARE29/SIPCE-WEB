@@ -5,7 +5,7 @@
             <h1>Historial académico y conductual</h1>
         </div>
 
-        <div nz-col>
+        <div nz-col *ngIf="checkPermission(35)">
             <button *ngIf="selectedHistory" nz-button nzGhost [nzLoading]="loadingReport" nzType="primary" (click)="setShowReportModal(true)">Generar reporte</button>
         </div>
     </div>

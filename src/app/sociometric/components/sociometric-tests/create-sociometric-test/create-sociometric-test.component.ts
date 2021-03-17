@@ -145,9 +145,11 @@ export class CreateSociometricTestComponent implements OnInit {
         this.sociometricTestForm.reset();
       },
       (error) => {
-        this.loading = false;
         const statusCode = error.statusCode;
         const notIn = [401, 403];
+
+        this.loading = false;
+        this.btnLoading = false;
 
         if (!notIn.includes(statusCode) && statusCode < 500) {
           this.notification.create(

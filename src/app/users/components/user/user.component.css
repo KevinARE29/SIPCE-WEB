@@ -8,6 +8,10 @@ nz-tag {
   border-radius: 9px;
 }
 
+.div-tags {
+  margin-bottom: 25px;
+}
+
 /* When there are a two o more lines of tags.*/
 nz-tag + nz-tag {
   margin-bottom: 5px;

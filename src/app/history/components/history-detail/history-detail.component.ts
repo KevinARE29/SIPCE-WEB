@@ -88,6 +88,9 @@ export class HistoryDetailComponent implements OnInit {
     this.permissions.push(new Permission(42, ''));
     this.permissions.push(new Permission(43, ''));
 
+    // Export behavioral history report
+    this.permissions.push(new Permission(35, ''));
+
     this.permissions.forEach((p) => {
       const index = permissions.indexOf(p.id);
       p.allow = index == -1 ? false : true;
