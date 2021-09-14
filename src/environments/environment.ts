@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  apiURL: 'https://sipce-api.herokuapp.com/api/v1/',
-  socketURL: 'https://sipce-api.herokuapp.com',
+  apiURL: 'http://localhost:3000/api/v1/',
+  socketURL: 'http://localhost:3000',
   whiteLogo: 'assets/logos/logo-blanco.png',
   logo: 'assets/logos/logo-color.png',
   name: 'Liceo Salvadoreño'
